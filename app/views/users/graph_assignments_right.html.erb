@@ -1,0 +1,85 @@
+<%
+=begin
+This file is part of SSID.
+
+SSID is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+SSID is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with SSID.  If not, see <http://www.gnu.org/licenses/>.
+=end
+%>
+
+<%
+# @assignments
+course = @assignments[0].course
+
+params = ""
+@assignments.each { |assignment|
+  params << "assignment[#{assignment.id}]&"
+}
+params = params[0...-1]
+%>
+<html>
+  <body>
+    <script type="text/javascript" src="../javascripts/wz_tooltip.js"></script>
+    <h2><%= course.code  %>: <%= course.name %></h2>
+    <%
+    @assignments.each { |assignment|
+      clusterings = assignment.clusterings.find(:all, :order => "assignment_clusterings.coc DESC")
+    %>
+      <table width="100%" border="1" cellpadding="5" style="">
+        <col width="100"/>
+        <tr>
+          <th align="left">Assignment</th>
+          <th align="left" colspan="<%=clusterings.length%>"><%=assignment.title%></th>
+        </tr>
+
+        <tr>
+          <th align="left">Cut off criterion</th>
+          <% clusterings.each { |clustering| %>
+            <td><%= clustering.coc.to_s + "%"%></td>
+          <% } %>
+        </tr>
+        <tr>
+          <th align="left">Plagiarism Clusters</th>
+          <% clusterings.each { |clustering| %>
+            <td valign="top" style="white-space:nowrap;">
+              <%
+              clusters = clustering.assignment_clusters
+              for i in (0...clusters.length)
+                cluster = clusters[i]
+                members = cluster.assignment_codes
+                members.each { |member|
+                  coderId = member.coder_id
+                %>
+                  <div id="cId<%=coderId%>" onmouseover="Tip('ID: <b><%=coderId%></b><p />Found in 1 cluster');" onmouseout="UnTip();"><%=coderId%></div>
+                <%
+                } %>
+                <%="<hr />" if (i < clusters.length - 1)%>
+              <%
+              end
+              if (clusters.length == 0)
+              %>
+                &nbsp;
+              <%
+              end
+            %>
+            </td>
+          <% } %>
+        </tr>
+      </table>
+      <p />
+    <%
+    }
+  %>
+  </body>
+</html>
+

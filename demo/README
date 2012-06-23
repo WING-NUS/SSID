@@ -1,0 +1,112 @@
+This file serves as a demostration of how SSID can be used under 
+different scenarios.
+
+----------------------------------------------------------------
+Configuration
+----------------------------------------------------------------
+Note:
+	1) This demonstration assumes SSID is configured.
+	2) All contents in SSID database will be deleted.
+	3) Upload records will be deleted.
+
+1) Reinitialize SSID database by the SQL commands:
+	drop database <database name>
+	cretae database <database name>
+
+2) Execute the following command:
+	mysql <database name> < sql_demo.sql
+
+3) Copy the directories "upload" "upload_log" to the root
+   directory of SSID.
+
+----------------------------------------------------------------
+Scenario 1: Submitting an Assignment and report for plagiarism
+----------------------------------------------------------------
+1) Log in to SSID through the web interface with the following
+   account and password:
+	A/C: instructor1
+	Password: instructor1
+
+2) Click "My Modules" on the top toolbar.
+
+3) You are now at the [Module Management] page. 
+   Select the module "Programming Methodolgy" with the code 
+   "CS1101".
+
+4) Click "New Assignment" at the bottom toolbar.
+
+5) Fill in the following informations:
+	Title: A1
+	Language: Java
+	Minimum Match Length: 2
+	The size of N-Gram: 4
+	Assignment File: CS1101_A1.zip (available in the same 
+					folder of this README)
+
+6) Click "Create"
+
+7) Once the web page has refresh with "A1" shown in the 
+   [Progressing Assignments] table, allow SSID to do the 
+   checking and take a break (=
+
+8) Refresh the web page, once the checking is done, "A1" will
+   be shown in the [Submitted Assignments] table.
+
+9) Click "A1" from the [Submitted Assignments] table.
+
+10) You are now in the [Pairwise Comparison Results Listing] 
+    page. It shows the pairwise similarity between two 
+    submissions. From the table, the submission pairs: 03-02, 
+    04-06, 05-04, 05-06 are having high similarities. Let's 
+    report them as plagiarism. 
+
+11) Click "View" under the "RESULT" column for the pair 03-02.
+
+12) This shows the [Pairwise Comparison Result] page. You can
+    examine how similar a pair of submissions is in this page.
+    To report plagiarism, click "Report Suspicious" at the top
+    left corner.
+
+13) Once a pair of submisisons is reported as suspicious. The
+    "Found Guilty" options appear next to the Student IDs.
+
+14) To return to [Pairwise Comparision Result Listing] page,
+    click "Back to assignment" at the top right corner.
+
+15) Repeat step 10 to 14 for the pairs 04-06, 05-04, 05-06.
+
+
+----------------------------------------------------------------
+Scenario 2: Finding groups of plagiarism
+----------------------------------------------------------------
+
+1) Continue from scenario 1. Click "View Groupings" above the 
+   listing of results at the [Pairwise Comparision Result 
+   Listing] page.
+
+2) You are now at the [Grouping Listing] page. Click "New
+   Grouping".
+
+3) Select "Suspicious or confirmed plagiarism case (xx.xx%) and
+   click "Create".
+
+4) Once you are redirected back to the [Grouping Listing] page,
+   click the newly created grouping.
+
+5) You are now at the [Clusters Summary] page. From the page, 2 
+   clusters are identified: 04-05-06, and 02-03.  
+
+
+----------------------------------------------------------------
+Visuals
+----------------------------------------------------------------
+Including the [Clusters Summary] page, SSID equips with total 6
+visuals. To access the visuals:
+
+1) From the [Module Management] page, click "View Visuals".
+
+2) Select the desired visual type from the types of visual 
+   listing on the left and follow the instructions shown on the 
+   right. 
+
+

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="create_run_jar" name="Create Runnable Jar for Project PlagiarismDetection with libraries in sub-folder">
+    <!--this file was created by Eclipse Runnable JAR Export Wizard-->
+    <!--ANT 1.7 is required                                        -->
+    <target name="create_run_jar">
+        <jar destfile="dist/DBSCAN.jar">
+            <manifest>
+                <attribute name="Main-Class" value="dbscan.Main"/>
+                <attribute name="Class-Path" value="lib/mysql-connector-java-5.1.13-bin.jar"/>
+            </manifest>
+            <fileset dir="bin"/>
+        </jar>
+        <delete dir="dist/lib"/>
+        <mkdir dir="dist/lib"/>
+        <copy file="lib/mysql-connector-java-5.1.13-bin.jar" todir="dist/lib"/>
+	<copy file="dist/DBSCAN.jar" todir="../programs"/>
+    </target>
+</project>

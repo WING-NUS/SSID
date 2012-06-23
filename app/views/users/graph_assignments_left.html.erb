@@ -1,0 +1,186 @@
+<%
+=begin
+This file is part of SSID.
+
+SSID is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+SSID is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with SSID.  If not, see <http://www.gnu.org/licenses/>.
+=end
+%>
+
+<%
+def add_cluster_count(coders, coderId, coc)
+  coc = coc.to_i
+  if (coders.has_key?(coderId))
+    clusterings = coders[coderId]
+    if (clusterings.has_key?(coc))
+      clusterings[coc] += 1
+    else
+      clusterings[coc] = 1
+    end
+  else
+    clusterings = {}
+    clusterings[coc] = 1
+    coders[coderId] = clusterings
+  end
+end
+
+coders = {}
+course = @assignments[0].course
+groupCount = 0
+%>
+<html>
+  <head>
+    <script type="text/javascript" src="../javascripts/graph_assignments_left.js"></script>
+    <script type="text/javascript" src="../javascripts/graph_assignments.js"></script>
+    <%= stylesheet_link_tag 'pds' %>
+    <style type="text/css">
+      table.assignments {
+        border-collapse: collapse;
+        table-layout:fixed;
+      }
+      th.assignments {
+        padding: 3px 10px 3px 10px;
+        margin-right: 3px;
+        text-align: left;
+        font-weight: bold;
+        /*color: #333;*/
+        color: white;
+        background: transparent;
+        background-color: #E7860D;
+        border: 1px solid black;
+        font-size: medium;
+      }
+      td.assignments {
+        padding: 3px 10px 3px 10px;
+        margin-right: 3px;
+        text-align: left;
+        /*color: #333;*/
+        background: transparent;
+        border: 1px solid black;
+        font-size: medium;
+      }
+    </style>
+  </head>
+  <body onload="showRanking(90)" style="margin: 0px; width: 100%;">
+    <script type="text/javascript" src="../javascripts/wz_tooltip.js"></script>
+    <h2><%= course.code  %>: <%= course.name %></h2>
+  <li>Student matric in <label style="color: red;">red</label> denotes the student is found guilty in plagiarism for the assignment</li>
+  <li>To <span style="background-color: #C2DCFC;">mark</span> / unmark a student, click the student matric</li>
+  <li>To show / hide plagiarism cluster, click the show / hide link next to the plagiarism cluster</li>
+  <li>To view student's summary, move mouse cursor to the student matric</li>
+  <p/>
+  <%
+  @assignments.each { |assignment|
+    clusterings = assignment.clusterings.find(:all, :order => "assignment_clusterings.coc DESC")
+  %>
+    <table cellpadding="5" class="assignments">
+      <col width="150"/>
+      <col width="*"/>
+      <tr>
+        <th class="assignments">Assignment</th>
+        <th class="assignments" colspan="<%=clusterings.length%>"><%=assignment.title%></th>
+      </tr>
+
+      <tr>
+        <th class="assignments">Cut off criterion</th>
+        <% clusterings.each { |clustering| %>
+        <td class="assignments" style="margin-right: 5px;"><%= clustering.coc.to_s + "%"%></td>
+        <% } %>
+        <% if clusterings.size == 0 %>
+          <td class="assignments" rowspan="2" style="margin-right: 5px;">No grouping is available</td>
+        <% end %>
+      </tr>
+      <tr>
+        <th class="assignments" style="vertical-align: top;">Plagiarism Clusters</th>
+        <% clusterings.each { |clustering| %>
+          <td class="assignments" style="white-space:nowrap; vertical-align: top;">
+            <%
+            coc = clustering.coc
+            clusters = clustering.assignment_clusters
+            for i in (0...clusters.length)
+              cluster = clusters[i]
+              members = cluster.assignment_codes
+            %>
+              <div id="g<%=groupCount%>" class="groupDiv">
+                <table cellpadding="0" cellspacing="0">
+                  <tr valign="top">
+                    <td class="students" style="margin-right: 5px; white-space: nowrap; width: 100%">
+                      <script type="text/javascript">
+                        gDiv['g<%=groupCount%>'] = "<table cellpadding='0' cellspacing='0'><tr><td style='white-space: nowrap; width: 100%;'><div class='gShow'><%=members.size%> member<%= "s" if members.size > 1%></div></td><td style='white-space: nowrap; vertical-align:top; width: 1px;'><sub><a href=\"\" style='text-decoration: none;' onclick=\"toggleGroup('g<%= groupCount %>'); return false;\" onmouseover=\"Tip('Click to show this plagiarism cluster');\" onmouseout='UnTip();'>[show]</a></sub></td></tr></table>";
+                      </script>
+                      <%
+                      members.each { |member|
+                        coderId = member.student.matric
+                        add_cluster_count(coders, coderId, coc)
+                      %>
+                        <div <%= "style=\"color: red;\"" if member.plagiarism %> class="c<%=h coderId%>" onclick="lockDiv('c<%=coderId%>');parent.frames[1].lockDiv('c<%=coderId%>'); onmouseout(); onmouseover();" onmouseover="Tip(showInfo('<%=coderId%>')); highlightDiv('c<%=coderId%>');parent.frames[1].highlightDiv('c<%=coderId%>');" onmouseout="UnTip();normalDiv('c<%=coderId%>');parent.frames[1].normalDiv('c<%=coderId%>');"><%=coderId%></div>
+                      <%
+                      }
+                    %>
+                    </td>
+                    <td class="hideShow" style="margin-right: 5px; white-space: nowrap; vertical-align:top; width: 1px"><sub><a href="" style="text-decoration: none;" onclick="toggleGroup('g<%= groupCount  %>'); return false;" onmouseover="Tip('Click to hide this plagiarism cluster');" onmouseout="UnTip();">[hide]</a></sub></td>
+                  </tr>
+                </table>
+              </div>
+              <% groupCount += 1 %>
+              <%="<hr />" if (i < clusters.length - 1)%>
+            <%
+            end
+            if (clusters.length == 0)
+            %>
+              &nbsp;
+            <%
+            end
+          %>
+          </td>
+        <% } %>
+      </tr>
+    </table>
+    <p />
+  <%
+  }
+%>
+  <script type="text/javascript">
+<%
+coders.each_pair { |coderId, clusterings|
+%>
+    coder = new Coder('<%=coderId%>');
+    coders['<%=coderId%>'] = coder;
+    codersLength++;
+  <%
+  coc50 = 0
+  coc60 = 0
+  coc70 = 0
+  coc80 = 0
+  coc90 = 0
+
+  clusterings.keys.each { |coc|
+    coc50 += clusterings[coc] if coc >= 50
+    coc60 += clusterings[coc] if coc >= 60
+    coc70 += clusterings[coc] if coc >= 70
+    coc80 += clusterings[coc] if coc >= 80
+    coc90 += clusterings[coc] if coc >= 90
+  }
+
+%>
+    coder.clusterings[50] = <%=h coc50%>;
+    coder.clusterings[60] = <%=h coc60%>;
+    coder.clusterings[70] = <%=h coc70%>;
+    coder.clusterings[80] = <%=h coc80%>;
+    coder.clusterings[90] = <%=h coc90%>;
+<%
+}
+%>
+  </script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<%
+=begin
+This file is part of SSID.
+
+SSID is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+SSID is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with SSID.  If not, see <http://www.gnu.org/licenses/>.
+=end
+%>
+
+<h1>New Announcement</h1>
+
+<% form_for(@announcement, :url => { :action => 'announcement_create' }) do |f| %>
+  <%= f.error_messages %>
+  <p>
+    <%= f.label :content %><br />
+    <%= f.text_area(:content, {:cols => 100, :rows => 20 }) %>
+  </p>
+  <p>
+    <%= f.submit 'Create' %>
+  </p>
+<% end %>
+
+<%= link_to 'Back', :action => 'index' %>

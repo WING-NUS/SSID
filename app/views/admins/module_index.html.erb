@@ -1,0 +1,48 @@
+<%
+=begin
+This file is part of SSID.
+
+SSID is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+SSID is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with SSID.  If not, see <http://www.gnu.org/licenses/>.
+=end
+%>
+
+<h1>Modules</h1>
+
+<table>
+  <tr>
+    <th align="left">Code</th>
+    <th align="left">Name</th>
+    <th align="left">Academic Year</th>
+    <th align="left">Semester</th>
+    <th align="left">Expiry</th>
+    <th colspan="3">&nbsp;</th>
+  </tr>
+
+<% @module.each do |m| %>
+  <tr>
+    <td><%=h m.code %></td>
+    <td><%=h m.name %></td>
+    <td><%=h m.academic_year %></td>
+    <td><%=h m.semester %></td>
+    <td><%=h format_datetime(m.expiry) %></td>
+    <td><%= link_to 'Show', :action => 'module_show', :id => m %></td>
+      <td><%= link_to 'Edit', :action => 'module_edit', :id => m %></td>
+      <td><%= link_to 'Delete', {:action => 'module_delete', :id => m}, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+  
+</table>
+<hr />
+<%= link_to 'New Module', :action => 'module_new' %>
+<br />

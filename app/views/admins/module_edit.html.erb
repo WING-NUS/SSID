@@ -1,0 +1,86 @@
+<%
+=begin
+This file is part of SSID.
+
+SSID is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+SSID is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with SSID.  If not, see <http://www.gnu.org/licenses/>.
+=end
+%>
+
+<h1>Editing Module</h1>
+
+<% form_for(@module, :url => { :action => 'module_update', :id => @module }) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :code %><br />
+    <%= f.text_field :code %>
+  </p>
+  <p>
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </p>
+  <p>
+    <%= f.label :academic_year %><br />
+    <%= select_year(@module.academic_year[0..3].to_i , :id => 'course_academic_year_start', :prefix => 'course[academic_year_start]', :discard_type => true)%>
+  </p>
+  <p>
+    <%= f.label :expiry %><br />
+    <%= f.datetime_select(:expiry, :include_seconds => true, :order => [:day, :month, :year]) %>
+  </p>
+  <p>
+    <%= f.label :semester %><br />
+    <%= f.select(:semester, (1..4).collect {|c| [c, c]}) %>
+  </p>
+  <% if @accounts.size > 0 %>
+    <h2>Account Associated</h2>
+    <table border="1">
+      <tr>
+        <th>&nbsp;</th>
+        <th>ID</th>
+        <th>Matric</th>
+        <th>Name</th>
+        <th>Role</th>
+      </tr>
+      <% for account in @accounts %>
+        <tr>
+          <%  if account.courses.index(@module) %>
+            <td><%= check_box "associated_account", account.id, :checked => true %></td>
+          <% else %>
+            <td><%= check_box "associated_account", account.id %></td>
+          <% end %>
+          <td><%= account.login %></td>
+          <td><%= account.matric %></td>
+          <td><%= account.name %></td>
+          <td>
+            <%
+            teaching = account.teachings.find(:all, :conditions => [ "course_id = " + @module.id.to_s])
+            if (teaching.size == 1)
+              role = teaching.first.role
+            else
+              role = 1
+            end
+          %>
+            <%= select "associated_account_role", account.id, [[get_role(0), 0], [get_role(1), 1]], {:selected => role} %>
+          </td>
+        </tr>
+      <% end %>
+    </table>
+  <% end %>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', :action => 'module_show', :id => @module %> |
+<%= link_to 'Back', :action => 'module_index' %>

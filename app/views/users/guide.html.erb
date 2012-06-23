@@ -1,0 +1,347 @@
+<%
+=begin
+This file is part of SSID.
+
+SSID is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+SSID is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with SSID.  If not, see <http://www.gnu.org/licenses/>.
+=end
+%>
+
+<%
+
+def genBlankLink(text)
+  "<a class='normalLink' href='' onclick='return false;'>#{text}</a>"
+end
+
+def image(file)
+  image_tag(file, :border => 1, :style => "margin-top: 2px; max-width: 1050px;")
+end
+
+def imagefaq(file)
+  image_tag(file, :border => 1, :style => "margin-top: 2px; max-width: 1010px;")
+end
+
+def backToTop()
+  "<a class=\"normalLink\" style='color : blue;' href=\"#top\">Back to top</a>"
+end
+%>
+
+<style type="text/css">
+  ol.step, ul.faq {
+    margin-top: 0px;
+    margin-bottom: 30px;
+  }
+  li.step, li.faq {
+    margin-bottom: 15px;
+  }
+  span.important {
+    font-style: italic;
+    color: red;
+  }
+  span.note {
+    font-style: italic;
+  }
+  div.main {
+    margin: 0px;
+    padding: 0px;
+    max-width: 1024px;
+  }
+</style>
+
+<div class="main">
+  <h2 id="top">User Guide</h2>
+  <h3>Welcome to SSID, a plagiarism detection system built in NUS.</h3>
+  This system provides assistance to teaching teams in detecting plagiarism.
+  Compare to many of the existing systems, this system not only provides the pairwise plagiarism detection in submissions,
+  but also provides clustering analysis and the plagiarism history of students.
+  <p/>
+  To learn how SSID can help you detect and prevent plagiarism, click the following topics:
+  <ul>
+    <li><a class="normalLink" href="#view_assignments">View assignments</a></li>
+    <li><a class="normalLink" href="#create_an_assignment">Create an assignment</a></li>
+    <li><a class="normalLink" href="#view_pairwise_code_comparison">View pairwise submissions comparison</a></li>
+    <li><a class="normalLink" href="#view_log">View student log</a></li>
+    <li><a class="normalLink" href="#report_plagiarism">Report a plagiarism case</a></li>
+    <li><a class="normalLink" href="#confirm_plagiarism">Confirm a plagiarism case </a></li>
+    <li><a class="normalLink" href="#decline_plagiarism">Decline a plagiarism case </a></li>
+    <li><a class="normalLink" href="#create_grouping">Create grouping</a></li>
+    <li><a class="normalLink" href="#view_graphs">View Visuals</a></li>
+    <li><a class="normalLink" href="#faq">FAQ</a></li>
+  </ul>
+  <p/>
+  <table cellpadding="0" cellspacing="0">
+    <tr>
+      <td><h2 id="view_assignments">View assignments</h2></td>
+      <td align="right"><%= backToTop%></td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        <ol class="step">
+          <li class="step">
+            From the menu on the top, click <%=genBlankLink("My Modules")%>.<br/>
+            <%=image("p1.png")%>
+          </li>
+          <li class="step">
+            Click the desired module to view its assignment.<br/>
+            <%=image("p2.png")%>
+          </li>
+        </ol>
+      </td>
+    </tr>
+
+    <tr>
+      <td><h2 id="create_an_assignment">Create an assignment</h2></td>
+      <td align="right"><%=backToTop%></td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        <span class="note">Note: Refer to <a class="normalLink" href="#view_assignments">View assignments</a></span><p/>
+        <ol class="step">
+          <li class="step">
+            From assignments listing, click <%=genBlankLink("New Assignment")%>.<br/>
+            <%=image("p3.png")%>
+          </li>
+          <li class="step">
+            Fill in the information of this assignment and select the zipped submission file (*.zip) to upload.<br/>
+            <%=image("p5.png")%><br/>
+            <i>Tip: You can move your cursor over the [?] for explaination of the term.</i>
+          </li>
+          <li class="step">
+            Click <b>Create</b>.
+          </li>
+        </ol>
+      </td>
+    </tr>
+
+    <tr>
+      <td><h2 id="view_pairwise_code_comparison">View pairwise submissions comparison results</h2></td>
+      <td align="right"><%=backToTop%></td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        <span class="important">Important: You must have at least one assignment to view pairwise submissions comparison. To create an assignment, refer to <a class="normalLink" href="#create_an_assignment">Create an assignment</a>.</span><br/>
+        <span class="note">Note: Refer to <a class="normalLink" href="#view_assignments">View assignments</a></span><p/>
+        <ol class="step">
+          <li class="step">
+            From assignments listing, click the desired assignment.<br/>
+            <%=image("p7.png")%>
+          </li>
+          <li class="step">
+            From the rightmost column, click <%=genBlankLink("View Code")%> of the desired pair of student submissions to view the pairwise submissions comparison result.<br/>
+            <%=image("p8.png")%>
+          </li>
+        </ol>
+      </td>
+    </tr>
+
+    <tr>
+      <td><h2 id="view_log">View student log</h2></td>
+      <td align="right"><%=backToTop%></td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        <span class="note">Note: Refer to <a class='normalLink'  href="#view_pairwise_code_comparison">View pairwise submissions comparison</a></span><br/>
+        <span class="note">Note: If you are assigned with teaching assistant role for a module, you can only access the student's log within the module</span><br/>
+        <span class="note">Note: If you are assigned with teaching staff role for a module, you can access the student's log throughout all modules</span><p/>
+        <ol class="step">
+          <li class="step">
+            From pairwise submissions comparison, click the desired student id listed in the student 1 and student 2 colunms.<br/>
+            <%=image("p13.png")%>
+            <p/>
+            <i>
+              Student log will be displayed.<br/>
+              Cases in <span style="color: red;">red</span> denotes confirmation of plagiarism cases;<br/>
+              Cases in <span style="color: orange">orange</span> denotes reported suspicious cases;<br/>
+              Cases in <span style="color: blue">blue</span> denotes declination of plagiarism cases.
+            </i>
+          </li>
+        </ol>
+      </td>
+    </tr>
+
+    <tr>
+      <td><h2 id="report_plagiarism">Report a suspicious case</h2></td>
+      <td align="right"><%=backToTop%></td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        <span class="note">Note: Refer to <a class="normalLink" href="#view_pairwise_code_comparison">View pairwise submissions comparison</a></span><p/>
+        <ol class="step">
+          <li class="step">
+            From pairwise submissions comparison, click <%=genBlankLink("Report Suspicious")%> on the top.<br/>
+            <%=image("p9.png")%>
+          </li>
+          <li class="step">
+            In the confirmation popup box, click <b>OK</b> to report this pair of students as suspicious.<br/>
+            <%=image("p10.png")%>
+          </li>
+        </ol>
+      </td>
+    </tr>
+
+    <tr>
+      <td><h2 id="confirm_plagiarism">Confirm a plagiarism case</h2></td>
+      <td align="right"><%=backToTop%></td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        <span class="important">Important: You must be assigned with the teaching staff role for the module to confirm plagiarism cases.</span><br/>
+        <span class="important">Important: A pair of submissions can only be comfirmed for plagiarism after it has been reported suspicious. For details on reporting suspicious case, refer to <a class='normalLink'  href="#report_plagiarism">Report a suspicious case</a></span><br/>
+        <span class="note">Note: Refer to <a class='normalLink'  href="#view_pairwise_code_comparison">View pairwise submissions comparison</a></span><p/>
+        <ol class="step">
+          <li class="step">
+            From pairwise submissions comparison, click <%=genBlankLink("Found Guilty")%> next to the student id whom is found guilty.<br/>
+            <%=image("p11.png")%>
+          </li>
+          <li class="step">
+            In the confirmation popup box, click <b>OK</b> to confirm this student is found guilty in the act of plagiarism.<br/>
+            <%=image("p12.png")%><p/>
+            <i>This pair of submissions will be classified as a plagiarism case and the student id will be colored in <span style="color: red;">red</span> for this assignment</i>
+          </li>
+        </ol>
+      </td>
+    </tr>
+
+    <tr>
+      <td><h2 id="decline_plagiarism">Declare a suspicious case innocent</h2></td>
+      <td align="right"><%=backToTop%></td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        <span class="important">Important: You must be assigned with the teaching staff role for the module to declare a suspicious case innocnet.</span><br/>
+        <span class="important">Important: A pair of submissions can only be declared innocent after it has been reported suspicious. For details on reporting suspicious pairs, refer to <a class='normalLink'  href="#report_plagiarism">Report a suspicious case</a></span><br/>
+        <span class="note">Note: Refer to <a class='normalLink'  href="#view_pairwise_code_comparison">View pairwise submissions comparison</a></span><p/>
+        <ol class="step">
+          <li class="step">
+            From pairwise submissions comparison, click <%=genBlankLink("Found innocent")%> on the top.<br/>
+            <%=image("p14.png")%>
+          </li>
+          <li class="step">
+            In the confirmation popup box, click <b>OK</b> to confirm this student is found guilty in the act of plagiarism.<br/>
+            <%=image("p15.png")%><p/>
+            <i>This pair of submissions will be classified as an innocent case.</i>
+          </li>
+        </ol>
+      </td>
+    </tr>
+
+    <tr>
+      <td><h2 id="create_grouping">Create grouping</h2></td>
+      <td align="right"><%=backToTop%></td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        <span class="important">Important: You must have at least one assignment to create grouping. To create an assignment, refer to <a class='normalLink'  href="#create_an_assignment">Create an assignment</a>.</span><br/>
+        <span class="note">Note: Refer to <a class='normalLink'  href="#view_assignments">View Assignments</a></span><p/>
+        <ol class="step">
+          <li class="step">
+            From assignment listing, under the column titled <b>GROUPINGS</b> click view of the desired assignment<br/>
+            <%=image("p16.png")%>
+          </li>
+          <li class="step">
+            Click <%=genBlankLink("New Grouping")%> at the bottom left.<br/>
+            <%=image("p17.png")%>
+          </li>
+          <li class="step">
+            Select the desired cut off criterion.<br/>
+            <%=image("p18.png")%><p/>
+            <span class="note">Note: Option - "Confirmed plagiarism cases" is only available if there exists at least one confirmed plagiarism case.</span><br/>
+            <span class="note">Note: Option - "Suspicious or confirmed plagiarism cases" is only available if there exists at least one confirmed plagiarism case or reported suspicious case.</span><br/>
+            <i>Tip: You can move your cursor over the [?] for explaination of the term.</i>
+          </li>
+          <li class="step">
+            Click <b>Create</b>.
+          </li>
+        </ol>
+      </td>
+    </tr>
+
+    <tr>
+      <td><h2 id="view_graphs">View Visuals</h2></td>
+      <td align="right"><%=backToTop%></td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        <span class="important">Important: You need to have at least two assignments with at least one grouping each to fully utilize all the visuals. To create an assignment, refer to <a class='normalLink'  href="#create_an_assignment">Create an assignment</a>. To create grouping, refer to <a class='normalLink'  href="#create_grouping">Create grouping</a>.</span><br/>
+        <span class="note">Note: Refer to <a class='normalLink'  href="#view_assignments">View Assignments</a></span><p/>
+        <ol class="step">
+          <li class="step">
+            From Assignments Listing, click <%=genBlankLink("View Visuals")%>.<br/>
+            <%=image("p19.png")%><p/>
+            <i>The visual type selection interface will be displayed.</i>
+          </li>
+          <li class="step">
+            From the left of the new window, select the desired graph type.<br/>
+            <%=image("p20.png")%>
+          </li>
+          <li class="step">
+            Select the desired option(s) and/or fill in the required information as instructed in the center frame.
+          </li>
+          <li class="step">
+            Depends on the visual / graph type, Click <b>Show Visual</b> / <b>Show Graph</b>.
+          </li>
+        </ol>
+      </td>
+    </tr>
+
+    <tr>
+      <td><h2 id="faq">FAQ</h2></td>
+      <td align="right"><%=backToTop%></td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        <ul class="faq">
+          <li style="padding-bottom:10px;">
+            <b>What is the recommended percentage value to define a pair of plagiarized submissions?</b><br/>
+            <span class="note">Refer to <a class="normalLink" href="http://wing.comp.nus.edu.sg/publications/theses/2010/Jonathan.pdf">SSID paper</a></span><br/>
+            There exists no static lower-bound percentage of matching. However, based on our experiment, the lowest similarity between a pair of plagiarized submission is 57%, with the minimum-match-length be 2 and size of <i>N</i>-gram be 4.
+          </li>
+
+          <li>
+            <b>How to focus on one matched region in pairwise submissions comparison result?</b><br/>
+            <span class="note">Refer to <a class='normalLink'  href="#view_pairwise_code_comparison">View pairwise submissions comparison</a></span>
+            <ol class="step">
+              <li class="step">
+                From pairwise submissions comparison, click <%=genBlankLink("Show")%> on the top of the Mapping List if the list is hidden.<br/>
+                <%=imagefaq("p21.png")%><p/>
+                <i>
+                  The mapping list will be displayed.
+                </i>
+              </li>
+              <li class="step">
+                The mapping list has 3 columns:<br/>
+                The first column shows the number of statements found in a match, matches are sorted by the number of statements in descending order;<br/>
+                The second column shows the range of lines matched in student 1's submission;<br/>
+                The third column shows the range of lines matched in student 2's submissions.<p/>
+                To highlight a matched region, click the range of lines.<br/>
+                <%=imagefaq("p22.png")%><p/>
+                <i>The respective matched region will be colored in red.</i><br/>
+                <i>Tip: You can move your cursor over the [?] for explaination of the term.</i>
+              </li>
+            </ol>
+          </li>
+        </ul>
+      </td>
+    </tr>
+    <!--
+    <tr>
+      <td><h2 id="create_an_assignment">Create an assignment</h2></td>
+      <td align="right"><%=backToTop%></td>
+    </tr>
+    <tr>
+      <td colspan="2">ddd</td>
+    </tr>
+    -->
+  </table>
+
+</div>

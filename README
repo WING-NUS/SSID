@@ -1,0 +1,43 @@
+-------------------------------------------------
+Installation and Configuration of SSID
+-------------------------------------------------
+
+------------
+Installation
+------------
+
+1) Install MySQL, Apache, Ruby (1.8.7), Rails (2.3) and rake (0.9.2.2) 
+1) Download SSID from the GitHub repository:
+	https://github.com/WING-NUS/SSID
+
+2) Download the following softwares:
+	2.1) MySQL Connector/J version 5.1.13 from
+		http://dev.mysql.com/downloads/connector/
+	     And put the downloaded file into the following directories:
+		java/programs/lib
+		java/PlagiarismDetection/lib    (for recompiling purpose
+						only)
+		java/DBSCAN/lib (for recompiling purpose only)
+
+	2.2) Download "popup-window.js" from 
+		http://www.php-development.ru/java 
+scripts/popup-window.php
+	     And put the file into
+		public/javascripts
+
+
+-------------
+Configuration
+-------------
+
+1) Copy config/database/database.yml.template to
+	config/database/database.yml
+
+2) Modify database.yml with your database settings
+
+3) Execute the following command in the root directory of SSID:
+	rake db:migrate RAILS_ENV="production"
+
+4) Configure Apache to serve web requests to SSID
+
+

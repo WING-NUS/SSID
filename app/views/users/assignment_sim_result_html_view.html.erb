@@ -1,0 +1,276 @@
+<%
+=begin
+This file is part of SSID.
+
+SSID is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+SSID is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with SSID.  If not, see <http://www.gnu.org/licenses/>.
+=end
+%>
+
+<%
+leftLines = @asr.code1.code_line
+rightLines = @asr.code2.code_line
+leftCodes = @asr.code1.code_array.gsub("\\", "\\\\\\").gsub("\\\'", "\'").gsub("\\\"", "\"")
+rightCodes = @asr.code2.code_array.gsub("\\", "\\\\\\").gsub("\\\'", "\'").gsub("\\\"", "\"")
+coder1 = @asr.code1.student.matric
+coder2 = @asr.code2.student.matric
+%>
+<html style="height: 100%; max-height: 100%;">
+  <head>
+    <title>Matches for <%=coder1 + " and " + coder2%> <%= "(Confirmed Plagiarism Case)" if @asr.status == 1%></title>
+    <script type="text/javascript" src="../javascripts/setText.js"></script>
+    <script type="text/javascript" src="../javascripts/support.js"></script>
+    <script type="text/javascript">
+      function getPos(index) {
+        var curLeft = curTop = 0;
+        
+        var obj;
+        if (index == 0) {
+          obj = document.getElementById("leftFrame");
+        }
+        else {
+          obj = document.getElementById("rightFrame");
+        }
+
+        if (obj.offsetParent) {
+          do {
+            curLeft += obj.offsetLeft;
+            curTop += obj.offsetTop;
+          } while ((obj = obj.offsetParent) != null);
+        }
+        return [curLeft, curTop];
+      }
+
+      var leftCodes = [<%=leftCodes%>];
+      var leftRows=<%=leftLines%>;
+      var rightCodes = [<%=rightCodes %>];
+      var rightRows=<%=rightLines %>;
+
+      function Mapping(id, startIndex, endIndex, isPlag, startLine) {
+        this.id = id;
+        this.startIndex = startIndex;
+        this.endIndex = endIndex;
+        this.isPlag = isPlag;
+        this.startLine = startLine;
+      }
+      
+      var leftMappings = new Array(), rightMappings = new Array();
+      var leftE, rightE;
+
+<% baseMappingCount = 0 %>
+<% @asr.mappings.each { |m| -%>
+    <% if !m.isPlagMapping then baseMappingCount = baseMappingCount + 1 end -%>
+    leftMappings.push(new Mapping(<%=m.id%>, <%=m.startIndex1.to_s%>, <%=m.endIndex1.to_s%>, <%=m.isPlagMapping%>, <%=m.startLine1 + 1%>));
+    rightMappings.push(new Mapping(<%=m.id%>, <%=m.startIndex2.to_s%>, <%=m.endIndex2.to_s%>, <%=m.isPlagMapping%>, <%= m.startLine2 + 1%>));
+
+<%  } -%>
+
+    </script>
+    <script type="text/javascript" src="../javascripts/popup-window.js"></script>
+    <link rel="stylesheet" type="text/css" href="../stylesheets/popup.css" />
+    <link rel="stylesheet" type="text/css" href="../stylesheets/pds.css"/>
+    <style type="text/css">
+      td.top {
+        white-space: nowrap;
+      }
+      span.status_reported {
+        color: orange;
+      }
+      span.status_confirmed {
+        color: red;
+      }
+      pre {
+        display:inline;
+        position: relative;
+      }
+      pre.num {
+        display: inline;
+        color: gray;
+        position: relative;
+      }
+      span.start {
+        position: relative;
+        width: 0px;
+        left: 0px;
+        top: 0px;
+      }
+      div.codeField {
+        height: 100%; 
+        overflow: auto;
+        border: solid black 1px;
+      }
+      td.code {
+        color: green;
+        white-space: nowrap;
+      }
+    </style>
+  </head>
+
+  <body onload="popup_show('popup', 'popup_drag', 'popup_exit', 'pop_body'); document.getElementById('popup').style.left = (screen.availWidth / 2 - 400); document.getElementById('popup').style.top = 0;" style="height: 100%; max-height: 100%;  margin: 0px;">
+    <%= javascript_include_tag 'wz_tooltip.js' %>
+    <table width="100%" style="table-layout:fixed; height: 100%; padding: 5px;">
+      <col width=50%/>
+      <col width=50%/>
+      <tr>
+        <td colspan="2">
+          <h2 style="display:inline">Assignment: <%=@asr.assignment.title%></h2>
+        </td>
+      </tr>
+      <tr>
+        <td colspan = 2>
+          <table cellpadding="0" width="100%" cellspacing="0">
+            <tr>
+              <%
+              case @asr.status
+              when 0, 1 then
+              %>
+                <td class="top"><%=  link_to 'Report Suspicious', {:action => "assignment_report_plagiarism", :assignment_sim_result_id => @asr.id, :page => params[:page], :rpp => params[:rpp], :sort => params[:sort], :sortDirection => params[:sortDirection], :fs1 => params[:fs1], :fs2 => params[:fs2]}, :onmouseover => "Tip('Report this pair of submissions as suspicious');", :onmouseout => "UnTip();", :confirm => "Reporting this pair of submission as suspicious. Are you sure?", :class =>"normalLink" %></td>
+              <%
+              when 3 then
+                if @user_account.teachings.find(:all, :conditions => "course_id = " + @asr.assignment.course.id.to_s).first.role == 0 then
+                %>
+                  <td class="top"><span class="status_reported">This pair of submissions is reported as suspicious case:</span>&nbsp;&nbsp;
+                    <%= (link_to 'Found Innocent', {:action => "assignment_decline_plagiarism", :assignment_sim_result_id => @asr.id, :page => params[:page], :rpp => params[:rpp], :sort => params[:sort], :sortDirection => params[:sortDirection], :fs1 => params[:fs1], :fs2 => params[:fs2]}, :onmouseover => "Tip('Investigation has been made and this is not plagiarism case');", :onmouseout => 'UnTip();', :class => "normalLink", :confirm => "Clearing the status. Are you sure?") %>
+                  </td>
+                <%
+                else
+                %>
+                  <td class="top" onmouseover="Tip('This pair of submissions is reported as suspicious');" onmouseout="UnTip();"><span class="status_reported">Reported Suspicious Case</span></td>
+                <%
+                end
+              else
+              %>
+                <td class="top"><span class="status_confirmed">Confirmed Plagiarism Case</span></td>
+              <%
+              end
+            %>
+              <td align="right" width="100%">
+                <a class="normalLink" href="assignment_sim_result_view?assignment_id=<%=@asr.assignment.id%>&page=<%=params[:page]%>&rpp=<%=params[:rpp]%>&sort=<%=params[:sort]%>&sortDirection=<%=params[:sortDirection]%>&fs1=<%=params[:fs1]%>&fs2=<%=params[:fs2]%>">Back to assignment</a>
+              </td>
+            </tr>
+          </table>
+          <hr />
+          <table width="100%" style="height: 100%; table-layout: fixed;">
+            <col width="50%"/>
+            <col width="50%"/>
+            <tr style="vertical-align: top; height:auto;">
+              <td><h3 style="display:inline">Submitted By: <%= "<span class='status_confirmed' onmouseover=\"Tip('This student is found guilty in plagiarism in this assignment');\" onmouseout=\"UnTip();\">" if @asr.code1.plagiarism == true%><%=coder1%><%= "</span>" if @asr.code1.plagiarism == true%></h3>
+                <%=
+                if @asr.status == 3 || @asr.status == 2 then
+                  "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+                    if @asr.code1.plagiarism == false && @user_account.teachings.find(:all, :conditions => "course_id = " + @asr.assignment.course.id.to_s).first.role == 0
+                    link_to 'Found Guilty' , {:action => "assignment_confirm_plagiarism", :assignment_sim_result_id => @asr.id, :assignment_code_id => @asr.code1.id, :page => params[:page], :rpp => params[:rpp], :sort => params[:sort], :sortDirection => params[:sortDirection], :fs1 => params[:fs1], :fs2 => params[:fs2]}, :onmouseover => "Tip('Confirm this as plagiarism case');", :onmouseout => "UnTip();", :class => "normalLink", :confirm => "Confirming this as a plagiarism case. Are you sure?"
+                  else
+                    #link_to 'Clear plagiarism', {:action => "assignment_clear_plagiarism", :assignment_sim_result_id => @asr.id, :assignment_code_id => @asr.code1.id, :page => params[:page], :rpp => params[:rpp], :sort => params[:sort], :sortDirection => params[:sortDirection], :fs1 => params[:fs1], :fs2 => params[:fs2]}, :title => "Clearing this student from all plagiarism cases in this assignment", :confirm => "Clearing this student from all plagiarism cases in this assignment. Are you sure?"
+                    ""
+                  end
+                end
+              %>
+              </td>
+              <td><h3 style="display:inline">Submitted By: <%= "<span class='status_confirmed' onmouseover=\"Tip('This student is found guilty in plagiarism in this assignment');\" onmouseout=\"UnTip();\">" if @asr.code2.plagiarism == true%><%=coder2%><%= "</span>" if @asr.code2.plagiarism == true%></h3>
+                <%=
+                if @asr.status == 2 || @asr.status == 3 then
+                  "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+                    if @asr.code2.plagiarism == false && @user_account.teachings.find(:all, :conditions => "course_id = " + @asr.assignment.course.id.to_s).first.role == 0
+                    link_to 'Found Guilty' , {:action => "assignment_confirm_plagiarism", :assignment_sim_result_id => @asr.id, :assignment_code_id => @asr.code2.id, :page => params[:page], :rpp => params[:rpp], :sort => params[:sort], :sortDirection => params[:sortDirection], :fs1 => params[:fs1], :fs2 => params[:fs2]}, :onmouseover => "Tip('Confirm this as plagiarism case');", :onmouseout => "UnTip();", :class => "normalLink", :confirm => "Confirming this as a plagiarism case. Are you sure?"
+                  else
+                    #link_to 'Clear plagiarism', {:action => "assignment_clear_plagiarism", :assignment_sim_result_id => @asr.id, :assignment_code_id => @asr.code2.id, :page => params[:page], :rpp => params[:rpp], :sort => params[:sort], :sortDirection => params[:sortDirection], :fs1 => params[:fs1], :fs2 => params[:fs2]}, :title => "Clearing this student from all plagiarism cases in this assignment", :confirm => "Clearing this student from all plagiarism cases in this assignment. Are you sure?"
+                    ""
+                  end
+                end
+              %>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+
+      <tr style="height: 100%;">
+        <td style="height: 0px;">
+          <div id="leftFrame" class="codeField">
+          </div>
+        </td>
+        <td style="height: 0px;">
+          <div id="rightFrame" class="codeField">
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" style="border: 1px solid black;">
+          <table cellpadding="0" cellspacing="0" style="width: 100%; padding-top: 3px; padding-bottom: 3px;">
+            <col width="10"/>
+            <col width="1*"/>
+            <col width="10"/>
+            <col width="1*"/>
+            <col width="10"/>
+            <col width="1*"/>
+            <col width="10"/>
+            <col width="1*"/>
+            <tr>
+              <td style="background-color: #FF0000; margin-top: 1px; margin-bottom: 1px;">&nbsp;</td>
+              <td style="padding-left: 5px; padding-right: 5px; color: #FF0000;">Selected matched segment</td>
+              <td style="background-color: #990066;">&nbsp;</td>
+              <td style="padding-left: 5px; padding-right: 5px; color: #990066;">Matched segments</td>
+              <% if baseMappingCount > 0 then -%>
+              <td style="background-color: black;">&nbsp;</td>
+              <td style="padding-left: 5px; padding-right: 5px; color: black;">Baseline code matched segment</td>
+              <% end -%>
+              <td style="background-color: green;">&nbsp;</td>
+              <td style="padding-left: 5px; padding-right: 5px; color: green;">Non-matched segment</td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+    <div class='popup' id='popup' style='display: none;'>
+      <div class='menu_form_header' id='popup_drag' style="display:inline-block; border: 1px solid black;">
+        <span id="popup_exit" style="float: right; cursor: pointer; color: blue; margin-right: 3px;">[Hide]</span>
+        <span style="margin-left: 10px;">Mapping List</span>
+        <%#*<img style="vertical-align: middle;" class='menu_form_exit' id='popup_exit' src='form_exit.png' alt='[Hide]' />&nbsp;&nbsp;&nbsp;Mapping List%>
+      </div>
+      <div class='menu_form_body' style="border-top: 0px solid black;" id="pop_body">
+        <table border='1' style='table-layout:fixed; width: 350px;' align="center">
+          <col width=100 />
+          <col width=100 />
+          <col width=100 />
+          <tr>
+            <th>Statements<br/>Matched&nbsp;<%=genHelp(getExplaination("statement_matched"))%></th>
+            <th><%= "<font color='red' onmouseover=\"Tip('This student is found guilty in plagiarism in this assignment');\" onmouseout=\"UnTip();\">" if @asr.code1.plagiarism %><%= coder1%><%= "</font>" if @asr.code1.plagiarism%><br/>(<%= @asr.sim1To2.to_s + "%" %>)&nbsp;<%=genHelp(getExplaination("sim1To2"))%></th>
+            <th><%= "<font color='red' onmouseover=\"Tip('This student is found guilty in plagiarism in this assignment');\" onmouseout='UnTip();'>" if @asr.code2.plagiarism %><%= coder2%><%= "</font>" if @asr.code2.plagiarism%><br/>(<%= @asr.sim2To1.to_s + "%" %>)&nbsp;<%=genHelp(getExplaination("sim2To1"))%></th>
+          </tr>
+          <% if @asr.mappings.size == 0 %>
+            <tr><td colspan=\"3\">No match found!</td></tr>
+          <% else %>
+            <%
+            @asr.mappings.each { |m|
+              next if !m.isPlagMapping
+
+            %>
+              <tr>
+                <td align="center"><%=m.stmtMappedCount%></td>
+                <% onClick = "parent.highlightTexts(#{m.id}); return false;" %>
+                <td align="center"><a href="" onclick="<%= onClick%>"><%=m.startLine1 + 1%> - <%=m.endLine1 + 1%></a></td>
+                <td align="center"><a href="" onclick="<%= onClick%>"><%=m.startLine2 + 1%> - <%=m.endLine2 + 1%></a></td>
+              </tr>
+            <%  } %>
+          <% end %>
+        </table>
+      </div>
+    </div>
+    <script type="text/javascript">
+      showLeftCode();
+      showRightCode();
+    </script>
+  </body>
+</html>
+

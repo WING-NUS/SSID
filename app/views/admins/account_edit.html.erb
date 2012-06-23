@@ -1,0 +1,59 @@
+<%
+=begin
+This file is part of SSID.
+
+SSID is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+SSID is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with SSID.  If not, see <http://www.gnu.org/licenses/>.
+=end
+%>
+
+<h1>Editing Account</h1>
+
+<% form_for(@account, :url => { :action => 'account_update', :id => @account }) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label 'ID' %><br />
+    <%= f.text_field :login %>
+  </p>
+  <p>
+    <%= f.label :matric %><br />
+    <%= f.text_field :matric %>
+  </p>
+  <p>
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </p>
+  <p>
+    <%=getDefination("min_length")%><%=genHelp("#{getExplaination("min_length")}. Default: 2.")%><br/>
+    <%= f.text_field 'min_length' %>
+  </p>
+  <p>
+    <%=getDefination("ngram")%><%=genHelp("#{getExplaination("ngram")}. Default: 4.")%><br/>
+    <%= f.text_field 'ngram' %>
+  </p>
+  <p>
+    <%= f.label :expiry %><br />
+    <%= f.datetime_select(:expiry, :include_seconds => true, :order => [:day, :month, :year]) %>
+  </p>
+  <p>
+    <%= f.label :role %><br />
+    <%= f.select(:role, [ ['Administrator', 0], ['User', 1] ]) %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', :action => 'account_show', :id => @account %> |
+<%= link_to 'Back', :action => 'account_index' %>

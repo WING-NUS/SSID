@@ -1,0 +1,64 @@
+<%
+=begin
+This file is part of SSID.
+
+SSID is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+SSID is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with SSID.  If not, see <http://www.gnu.org/licenses/>.
+=end
+%>
+
+<script type="text/javascript">
+  function validate() {
+    var selectBox = document.getElementById('sltGroup');
+
+    if (selectBox.selectedIndex < 0) {
+      alert('Please select at least one student');
+      return false;
+    }
+
+    return true;
+  }
+</script>
+  <h3 style="display:inline">This graph provides the plagiarism clusters a student belongs to for all assignments</h3>
+  <p/>
+  To start, select the student from <b>Available Students</b> and click <b>Show Graph</b>
+  <p/>
+<form id="frmGroups" action="graph_groups">
+  <table cellpadding="0" cellspacing="0" style="width: auto;">
+    <tr>
+      <td colspan="2">
+        <div style="margin-bottom: 3px; font-weight: bold;">Available Students</div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <select name="programmer" id="sltGroup" size="10" style="margin-left:0px;height:200px;width:200px;">
+          <% for i in (0...@allCoders.length) %>
+            <option value="<%=@allCoders[i]%>"><%=@allCoders[i]%>&nbsp;&nbsp;</option>
+          <% end %>
+        </select>
+      </td>
+      <td valign="top">
+        <div style="width:208px; margin-bottom: 5px; white-space: nowrap;">
+          <span style="width:60px;">Search : </span>
+          <input id="txtfilter" type="text" style="width:148px;" onkeyup="filter('sltGroup', 'txtfilter');"/>
+        </div>
+      </td>
+    </tr>
+  </table>
+  <input type="hidden" name="courseId" value="<%=@course.id%>"/>
+  <hr/>
+  <input type="submit" value="Show Graph" onclick="if (!validate()) { return false;}" onmouseover="Tip('The graph will be displayed in a new window');" onmouseout="UnTip();" />
+  <p/>
+  <div class="instruction" style="text-align: left;">Note: The graph will be displayed in a new window</div>
+</form>

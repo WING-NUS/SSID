@@ -1,0 +1,394 @@
+<%
+=begin
+This file is part of SSID.
+
+SSID is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+SSID is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with SSID.  If not, see <http://www.gnu.org/licenses/>.
+=end
+%>
+
+<%
+
+@legendTable = ""
+
+def genLegendText(sim)
+  "<tr valign='center'><td><div style='#{genLegendHeight(sim)} vertical-align: middle; overflow: hidden; display:inline-block; position: relative;top: 0px;left: 0px;background-color: #{get_color(sim)};width:100px;'>&nbsp;</div><div style='vertical-align: middle; display: inline-block; position: relative;left: 5px;top: 0px;color: black;'>&ge; #{sim}%</div></td></tr>"
+end
+
+def genLegendHeight(sim)
+  "height: #{get_weight(sim)}px;"
+end
+
+def genLegend()
+
+  @legendTable if @legendTable.length > 0
+  text = "<table cellpadding='1' cellspacing='1' style='border-style:solid; border-width:thin; border-color:black; table-layout:fixed;' width=100" + "%" + "><col width='150'/><tr><th>Similarity</th></tr>"
+
+  [90, 80, 70, 60, 50].each { |i|
+    text << genLegendText(i)
+  }
+
+  text << "<tr valign='center'><td><div style='#{genLegendHeight(49)} vertical-align: middle; overflow: hidden; display:inline-block; position: relative;top: 0px;left: 0px;background-color: #{get_color(49)};width:100px;'>&nbsp;</div><div style='vertical-align: middle; display: inline-block; position: relative;left: 5px;top: 0px;color: black;'>< 50%</div></td></tr>"
+
+  text << "</table>"
+
+  @legendTable = text
+end
+
+def getSim(code1, code2, assignment_id)
+  sql_query = "SELECT asr.* FROM assignment_sim_results as asr, assignment_codes as ac1, assignment_codes as ac2 WHERE (asr.id1 = ? OR asr.id1 = ?) AND (asr.id2 = ? OR asr.id2 = ?) AND asr.assignment_id = ? LIMIT 0, 1"
+  asr = AssignmentSimResult.find_by_sql([sql_query, code1.id, code2.id, code1.id, code2.id, assignment_id])
+  if (asr.length == 0)
+    return nil
+  end
+  return asr.first.sim
+end
+
+def getCode(student, assignment_id)
+  sql_query = "SELECT codes.* FROM assignment_sim_results as asr, assignment_codes as codes, students WHERE students.matric = ? AND codes.student_id = students.id AND asr.assignment_id = ? AND (asr.id1 = codes.id OR asr.id2 = codes.id) LIMIT 0, 1"
+  code = AssignmentCode.find_by_sql([sql_query, student, assignment_id])
+  if (code.length == 0)
+    return nil
+  end
+  return code.first
+end
+
+assignments = @course.assignments
+
+%>
+
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title><%=@course.code%>: <%= @course.name %></title>
+    <script type="text/javascript" src="../javascripts/support.js"></script>
+
+    <!-- CSS Files -->
+    <%= stylesheet_link_tag 'scaffold', 'pds' %>
+
+    <!-- JIT Library File -->
+    <script type="text/javascript" src="../javascripts/excanvas.js"></script>
+    <script type="text/javascript" src="../javascripts/jit.js"></script>
+
+    <script type="text/javascript">
+      var Log = {
+        elem: false,
+        write: function(text){
+          if (!this.elem)
+            this.elem = document.getElementById('log');
+          this.elem.innerHTML = text;
+          this.elem.style.left = (500 - this.elem.offsetWidth / 2) + 'px';
+        }
+      };
+
+      function addEvent(obj, type, fn) {
+        if (obj.addEventListener) obj.addEventListener(type, fn, false);
+        else obj.attachEvent('on' + type, fn);
+      };
+
+
+      function init() {
+        var infovis = document.getElementById('infovis');
+        infovis.style.position = "relative";
+
+        var w = infovis.offsetWidth - 20, h = <%=600 * assignments.length%>;
+        infovis.style.height = h;
+
+        var container, style, rgraph;
+        var adjs;
+<%
+
+@students = @students.uniq.sort!
+
+for i in (0...assignments.length)
+  assignment = assignments[i]
+  aId = "a" + i.to_s
+  aPrefix = aId + "_"
+  chartId = "chart" + i.to_s
+  infovisId = "infovis" + i.to_s
+  canvasId = "canvas" + i.to_s
+
+  codesArray = []
+  @students.each { | student |
+    code = getCode(student, assignment.id)
+    next if code == nil
+    codesArray << code
+  }
+
+%>
+      var <%=chartId%> = [
+        {
+          "id": "<%=aId%>",
+          "name": "",
+          "data": {
+            "$type" : "none",
+            "$width": 0, "$height": 0,
+            "$labelColor": "black"
+          },
+          "adjacencies": [
+  <%
+  for j in (0...codesArray.length)
+    code = codesArray[j]
+  %>
+              {
+                "nodeTo": "<%=aPrefix%><%=code.student.matric%>",
+                "data": {"$color": "white", "weight":0}
+              }<%=(j < codesArray.length - 1)?",":""%>
+    <%
+    # end coders loop
+  end
+%>
+          ]
+        },
+  <% for j in (0...codesArray.length)
+    code1 = codesArray[j]
+    student1 = code1.student.matric
+    student1Id = code1.student_id
+  %>
+          {
+            "id": "<%=aPrefix%><%=student1%>",
+            "name": "<%=student1%>",
+            "data": { //"$width": 80, "$height": 30,
+              "$labelColor": "<%= if code1.plagiarism then "red" else "black" end %>",
+              "log": "sim_log_view?student_id=<%=student1Id%>&course_id=<%=@course.id%>&blank=true"
+            },
+            "adjacencies": [
+              {
+                "nodeTo": "<%=aId%>",
+                "data": {"weight":0}
+              },
+    <%
+    coderCount = 0
+    for k in (0...codesArray.length)
+      code2 = codesArray[k]
+      student2 = code2.student.matric
+      if (student2 != student1)
+        coderCount += 1
+        sim = getSim(code1, code2, assignment.id)
+        sim = 0 if (sim == nil)
+      %>
+                  {
+                    "nodeTo": "<%=aId + "_" %><%=student2%>",
+                    "data": {
+                      //"$color": "#377FC7",
+                      "$color": "white",
+                      "lineColor": "<%=get_color(sim)%>",
+                      "weight": <%=get_weight(sim)%>
+                    }
+                  }<%=(coderCount < codesArray.length - 1)?",":""%>
+        <%
+        # end if (coder2 != coder)
+      end
+      #end coders 2 loop
+    end
+  %>
+            ]
+          }<%=(j < codesArray.length - 1)?",":""%>
+    <%
+    #end coders 1 loop
+  end
+%>
+      ];
+
+      container = document.createElement('div');
+      container.id = "<%=infovisId%>";
+      style = container.style;
+      style.left = "0px";
+      style.top = "0px";
+      style.width = w + "px";
+      style.height = "600px";
+      style.position = 'relative';
+      style.borderStyle = "solid";
+      style.borderWidth = "1px";
+      infovis.appendChild(container);
+
+      var titleLabel = document.createElement('h2');
+      titleLabel.style.marginTop = '0px';
+      titleLabel.style.position = 'absolute';
+      titleLabel.style.top = '5px';
+      titleLabel.style.left = '5px';
+      titleLabel.innerHTML = "Assignment : <%=assignment.title%>";
+      container.appendChild(titleLabel);
+
+      var legendLabel = document.createElement('div');
+      legendLabel.style.position = 'absolute';
+      legendLabel.style.width = '150px';
+      legendLabel.style.height = '200px';
+      legendLabel.style.left = String(w - 160) + "px";
+      legendLabel.style.top = '5px';
+
+      legendLabel.innerHTML = "<%=genLegend%>";
+      container.appendChild(legendLabel);
+
+      var <%=canvasId%> = new Canvas('<%=canvasId%>', {
+        'injectInto': '<%=infovisId%>',
+        'width': w,
+        'height': 600
+      });
+
+      adjs = new Array();
+      adjs[1] = new Array();
+      adjs[3] = new Array();
+      adjs[5] = new Array();
+      adjs[7] = new Array();
+      adjs[9] = new Array();
+      adjs[11] = new Array();
+
+      rgraph = new RGraph(<%=canvasId%>, {
+        Node: {'overridable': true, 'type': 'rectangle', 'color': 'white'},
+        Edge: {'overridable': true, 'color': 'white'},
+        interpolation: 'polar',
+        transition: Trans.Elastic.easeOut,
+        duration:3500,
+        fps: 30,
+        levelDistance: 200,
+
+        onBeforePlotLine: function(adj){
+          if (adj.data.weight)
+            adjs[adj.data.weight].push(adj);
+          //if (!firstTrail) {
+          adj.data.$lineWidth = adj.data.weight;
+          adj.data.$color = adj.data.lineColor;
+          //}
+        },
+
+        onCreateLabel: function(domElement, node){
+          if (node.data.$type != "none") {
+            domElement.innerHTML = node.name;
+            domElement.onclick = function () {
+              document.location.href = node.data.log;
+            };
+            var style = domElement.style;
+            style.cursor = 'pointer';
+            style.fontSize = "1em";
+            style.color = node.data.$labelColor;
+            style.backgroundColor = "white";
+            style.zIndex = 2;
+
+            var text = "";
+            if (style.color == "red") {
+              text = "This student is found guilty in plagiarsim in this assignment. ";
+            }
+            text += "Click to view student log.";
+
+            domElement.onmouseover = function() {
+              Tip(text);
+            }
+
+            domElement.onmouseout = function() {
+              UnTip();
+            }
+          }
+        },
+
+        onPlaceLabel: function(domElement, node){
+          var style = domElement.style;
+
+          style.textAlign='center';
+          style.verticalAlign="middle";
+
+          if (node.data.$type != "none")
+            style.padding="5px 10px 5px";
+
+          var left = parseInt(style.left);
+          var w = domElement.offsetWidth;
+          style.left = (left - w / 2) + 'px';
+          var top = parseInt(style.top);
+          var h = domElement.offsetHeight;
+          style.top = (top - h / 2) + 'px';
+          //style.width;
+          //style.height;
+        }
+      });
+
+      rgraph.loadJSON(<%=chartId%>, 0);
+      rgraph.refresh();
+
+      for (i = 1; i <= 11; i += 2) {
+        for (j = 0; j < adjs[i].length; j++) {
+          rgraph.op.removeEdge([adjs[i][j].nodeFrom.id, adjs[i][j].nodeTo.id]);
+        }
+      }
+
+      rgraph.refresh();
+
+      for (i = 1; i <= 11; i += 2) {
+        for (j = 0; j < adjs[i].length; j++) {
+          rgraph.fx.plotLine(adjs[i][j], <%="canvas#{i.to_s}"%>);
+        }
+      }
+
+      infovis.appendChild(document.createElement('p'));
+
+<% 
+   #end assignments loop 
+end
+%>
+
+
+  }
+    </script>
+  </head>
+  <body onload="init(); //maximize();" style="height: 100%; margin: 0px;" id="body">
+    <script type="text/javascript" src="../javascripts/wz_tooltip.js"></script>
+    <table style="padding: 5px; width: 100%; height: 100%;" cellpadding="0" cellspacing="0">
+      <tr style="height: 90px;">
+        <td style="">
+          <table style="height:100%; width: 100%;" cellpadding="3" cellspacing="0" border="0">
+            <tr class="welcome">
+              <td class="welcome">Student Submissions Integrity Diagnosis (SSID) System</td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td class="topMenu">
+          <table>
+            <tr>
+              <td class="topMenuItem"><%=link_to 'Home', {:action => 'announcement'},  :class => 'topMenuItem' %></td>
+              <td class="topMenuItem"><%=link_to 'My Modules', {:action => 'course_listing'},  :class => 'topMenuItem' %></td>
+              <td class="topMenuItem"><%=link_to 'My Profile', {:action => 'account_edit'},  :class => 'topMenuItem'  %></td>
+              <td class="topMenuItem"><%= link_to 'User Guide', {:action => 'guide'},  :class => 'topMenuItem' %></td>
+              <td class="topMenuItem"><%= link_to 'Log Out', {:controller => 'login', :action => 'logout'},  :class => 'topMenuItem'  %></td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr style="height: 100%;">
+        <td style="padding-left: 10px; vertical-align: top;">
+          <div class="breadcrumb"><%= link_to "My Modules", {:action => "course_listing"}, :class => "breadcrumbItem" %> > <%= link_to @course.code, {:action => "assignment_listing", :course_id => @course.id}, :class => "breadcrumbItem" %> > <%= link_to "Visuals", {:action => "graph_view_ibetween", :course_id => @course.id}, :class => "breadcrumbItem" %> > Between individuals</div>
+    <h2 style="padding-top: 10px;">Students Similarities:
+      <%=
+      if @students.size > 3 then
+        txt = ""
+        for j in (0...3)
+          txt << @students[j] + ", "
+        end
+        txt << "... (Total: " + @students.size.to_s + " students)"
+      else
+        @students.join(", ")
+      end
+    %>
+    </h2>
+  <li>Student matric in <label style="color: red;">red</label> denotes the student is found guilty in plagiarism for the assignment</li>
+  <li>To view student's log, click the student matric</li>
+  <p/>
+  <div id="infovis" style="background-color:white;visibility:visible;"/>
+        </td>
+      </tr>
+    </table>
+
+
+  </body>
+</html>
+

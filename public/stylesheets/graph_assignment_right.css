@@ -1,0 +1,25 @@
+table.assignments {
+    border-collapse: collapse;
+    table-layout:fixed;
+}
+th.assignments {
+    padding: 3px 10px 3px 10px;
+    margin-right: 3px;
+    text-align: left;
+    font-weight: bold;
+    /*color: #333;*/
+    color: white;
+    background: transparent;
+    background-color: #E7860D;
+    border: 1px solid black;
+    font-size: medium;
+}
+td.assignments {
+    padding: 3px 10px 3px 10px;
+    margin-right: 3px;
+    text-align: left;
+    /*color: #333;*/
+    background: transparent;
+    border: 1px solid black;
+    font-size: medium;
+}

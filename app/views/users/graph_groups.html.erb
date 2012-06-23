@@ -1,0 +1,436 @@
+<%
+=begin
+This file is part of SSID.
+
+SSID is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+SSID is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with SSID.  If not, see <http://www.gnu.org/licenses/>.
+=end
+%>
+
+<%
+require 'cgi'
+@legendTable = ""
+
+def genLegendText(sim)
+  "<tr valign='center'><td><div style='#{genLegendHeight(sim)} vertical-align: middle; overflow: hidden; display:inline-block; position: relative;top: 0px;left: 0px;background-color: #{get_color(sim)};width:100px;'>&nbsp;</div><div style='vertical-align: middle; display: inline-block; position: relative;left: 5px;top: 0px;color: black;'>&ge; #{sim}%</div></td></tr>"
+end
+
+def genLegendHeight(sim)
+  "height: #{get_weight(sim)}px;"
+end
+
+def genLegend()
+
+  @legendTable if @legendTable.length > 0
+  text = "<table cellpadding='1' cellspacing='1' style='border-style:solid; border-width:thin; border-color:black; table-layout:fixed;' width=100" + "%" + "><col width='150'/><tr><th>Similarity</th></tr>"
+
+  [90, 80, 70, 60, 50].each { |i|
+    text << genLegendText(i)
+  }
+
+  text << "<tr valign='center'><td><div style='#{genLegendHeight(49)} vertical-align: middle; overflow: hidden; display:inline-block; position: relative;top: 0px;left: 0px;background-color: #{get_color(49)};width:100px;'>&nbsp;</div><div style='vertical-align: middle; display: inline-block; position: relative;left: 5px;top: 0px;color: black;'>< 50%</div></td></tr>"
+
+  text << "</table>"
+
+  @legendTable = text
+end
+
+%>
+
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title><%=  @course.code  %>: <%= @course.name %></title>
+    <script type="text/javascript" src="../javascripts/support.js"></script>
+
+    <!-- CSS Files -->
+    <%= stylesheet_link_tag 'scaffold', 'pds' %>
+
+    <!-- JIT Library File -->
+    <script type="text/javascript" src="../javascripts/excanvas.js"></script>
+    <script type="text/javascript" src="../javascripts/jit.js"></script>
+
+    <script type="text/javascript">
+      var Log = {
+        elem: false,
+        write: function(text){
+          if (!this.elem)
+            this.elem = document.getElementById('log');
+          this.elem.innerHTML = text;
+          this.elem.style.left = (500 - this.elem.offsetWidth / 2) + 'px';
+        }
+      };
+
+      function addEvent(obj, type, fn) {
+        if (obj.addEventListener) obj.addEventListener(type, fn, false);
+        else obj.attachEvent('on' + type, fn);
+      };
+
+      function init() {
+        var adjs, aContainer, gContainer, style, titleLabel, legendLabel, rgraph;
+
+        var infovis = document.getElementById('infovis');
+        var w = infovis.offsetWidth - 20, h = infovis.offsetHeight;
+       
+        //init data
+<%  @course.assignments.each { |assignment| %>
+
+      //Assignment Container
+      aContainer = document.createElement('div');
+      aContainer.id = "<%="aContainer#{assignment.id}"%>"
+      style = aContainer.style;
+      style.left = "0px";
+      style.top = "0px";
+      style.width = "100%";
+      style.position = 'relative';
+      style.borderStyle = 'solid';
+      style.borderWidth = '1px';
+      infovis.appendChild(aContainer);
+
+      titleLabel = document.createElement('h2');
+      titleLabel.style.marginTop = '0px';
+      titleLabel.style.position = 'relative';
+      titleLabel.style.top = '0px';
+      titleLabel.style.left = '5px';
+      titleLabel.innerHTML = "Assignment: <%=assignment.title%>";
+      aContainer.appendChild(titleLabel);
+
+  <%
+  inCluster = false
+  assignment.clusterings.each { |clustering|
+    coc = clustering.coc
+    clusterFound = false
+    clustering.assignment_clusters.each { |cluster|
+
+      cluster.assignment_codes.each { |code|
+        if (code.student == @student)
+          clusterFound = true
+          inCluster = true
+          break
+        end
+        # end of cluster.assignment_codes.each { |code| }
+      }
+
+      if clusterFound
+        cId = "c#{cluster.id}"
+      %>
+            gContainer = document.createElement('div');
+            gContainer.id = "<%="gContainer#{cluster.id}"%>";
+            style = gContainer.style;
+            style.left = "0px";
+            style.top = "0px";
+            style.height = "600px";
+            style.marginLeft = "5px";
+            style.marginRight = "5px";
+            style.position = 'relative';
+            style.borderStyle = "solid";
+            style.borderWidth = "1px";
+            aContainer.appendChild(gContainer);
+            aContainer.appendChild(document.createElement('p'));
+
+            titleLabel = document.createElement('h3');
+            titleLabel.style.marginTop = '0px';
+            titleLabel.style.position = 'absolute';
+            titleLabel.style.top = '0px';
+            titleLabel.style.left = '5px';
+            titleLabel.innerHTML = "Cut off criterion: <%=coc.to_s + "%"%>";
+            gContainer.appendChild(titleLabel);
+
+            legendLabel = document.createElement('div');
+            legendLabel.style.position = 'absolute';
+            legendLabel.style.width = '150px';
+            legendLabel.style.height = '200px';
+            legendLabel.style.left = String(w - 175) + "px";
+            legendLabel.style.top = '5px';
+            legendLabel.innerHTML = "<%=genLegend%>";
+            gContainer.appendChild(legendLabel);
+
+            var <%="graph#{cluster.id}"%> =
+              [
+              // root node
+              {
+                "id": "<%=cId%>",
+                "name": "",
+                "data": {
+                  "$type": "none",
+                  "$width": 0, "$height": 0,
+                  "$labelColor": "black"
+                },
+                "adjacencies":
+                  [
+        <%
+        assignment_codes = cluster.assignment_codes
+        for j in (0...assignment_codes.size)
+          code1 = assignment_codes[j]
+          student = code1.student
+        %>
+                    {
+                      "nodeTo": "<%="#{cId}_#{student.matric}"%>",
+                      "data": {
+                        "$color": "white",
+                        "weight": 0
+                      }
+                    }<%=(j < assignment_codes.length - 1)?",":"" %>
+          <%
+          # end for j in (0...assignment_codes.size)
+        end
+      %>
+                ] // end "adjacencies" of root node
+              },
+        <%
+        for j in (0...assignment_codes.size) # 2nd j loop
+          code1 = assignment_codes[j]
+          student1 = code1.student
+        %>
+                // child nodes
+                {
+                  "id": "<%="#{cId}_#{student1.matric}"%>",
+                  "name": "<%=student1.matric%>",
+                  "data": {
+                    "$labelColor": "<%= if code1.plagiarism then "red" else "black" end %>",
+                    "log": "sim_log_view?student_id=<%=student1.id%>&course_id=<%=@course.id%>&blank=true"
+                  },
+                  "adjacencies":
+                    [
+                    {
+                      "nodeTo": "<%=cId%>",
+                      "data": {
+                        "weight": 0
+                      }
+                    },
+          <%
+          studentCount = 0
+          for k in (0...assignment_codes.length)
+            code2 = assignment_codes[k]
+            student2 = code2.student
+
+            if (student1 != student2)
+              studentCount += 1
+              sql_query = "select asr.* FROM assignment_sim_results as asr WHERE asr.assignment_id = ? AND (asr.id1 = ? OR asr.id1 = ?) AND (asr.id2 = ? OR asr.id2 = ?) LIMIT 1"
+              asr = AssignmentSimResult.find_by_sql([sql_query, assignment.id, code1.id, code2.id, code1.id, code2.id])
+
+              if (asr.length == 0)
+                sim = 0
+              else
+                sim = asr.first.sim
+              end
+
+            %>
+                        {
+                          "nodeTo": "<%="#{cId}_#{student2.matric}"%>",
+                          "data": {
+                            "$color": "white",
+                            "lineColor": "<%=get_color(sim)%>",
+                            "weight": <%=get_weight(sim)%>
+                          }
+                        }<%=(studentCount < assignment_codes.length - 1)?",":""%>
+              <%
+              # end if (student1 != student2)
+            end
+            # end for k in (0...assignment_codes.length)
+          end
+        %>
+                  ] // end "adjacencies" of child nodes
+
+                }<%=(j < assignment_codes.length - 1)?",":""%> // end child nodes
+          <%
+          # end for j in (0... assigment_codes.size) --- 2nd j loop
+        end
+      %>
+            ]; // end var <%="graph#{cluster.id}"%> = ...
+
+            var <%="canvas#{cluster.id}"%> = new Canvas('<%="mycanvas#{cluster.id}"%>', {
+              'injectInto': "gContainer<%=cluster.id%>",
+              'width': gContainer.offsetWidth,
+              'height': gContainer.offsetHeight
+            });
+
+            adjs = new Array();
+            adjs[1] = new Array();
+            adjs[3] = new Array();
+            adjs[5] = new Array();
+            adjs[7] = new Array();
+            adjs[9] = new Array();
+            adjs[11] = new Array();
+
+            rgraph = new RGraph(<%="canvas#{cluster.id}"%>, {
+              Node: { 'overridable': true, 'type': 'rectangle', 'color': 'white' },
+              Edge: { 'overridable': true, 'color': 'white' },
+
+              //Set polar interpolation.
+              //Default's linear.
+              interpolation: 'polar',
+
+              //Change the transition effect from linear
+              //to elastic.
+              transition: Trans.Elastic.easeOut,
+              //Change other animation parameters.
+              duration:3500,
+              fps: 30,
+              //Change father-child distance.
+              levelDistance: 200,
+
+              onBeforePlotLine: function(adj){
+                if (adj.data.weight)
+                  adjs[adj.data.weight].push(adj);
+                //if (!firstTrail) {
+                adj.data.$lineWidth = adj.data.weight;
+                adj.data.$color = adj.data.lineColor;
+                //}
+              },
+
+              //Add node click handler and some styles.
+              //This method is called only once for each node/label crated.
+              onCreateLabel: function(domElement, node){
+                if (node.data.$type != "none") {
+                  domElement.innerHTML = node.name;
+                  var style = domElement.style;
+                  style.cursor = 'pointer';
+                  style.fontSize = "1em";
+                  style.color = node.data.$labelColor;
+                  style.backgroundColor = "white";
+                  style.zIndex = 2;
+
+                  var title = "";
+                  if (style.color == "red") {
+                    title = "This student is found guilty in plagiarsim in this assignment<p/>";
+                  }
+                  title += "Click to view student's log";
+
+                  domElement.onclick = function () {
+                    document.location.href = node.data.log;
+                  };
+
+                  domElement.onmouseover = function() {
+                    Tip(title);
+                  }
+
+                  domElement.onmouseout = function() {
+                    UnTip();
+                  }
+                }
+              },
+              //This method is called when rendering/moving a label.
+              //This is method is useful to make some last minute changes
+              //to node labels like adding some position offset.
+              onPlaceLabel: function(domElement, node){
+                var style = domElement.style;
+
+                style.textAlign='center';
+                style.verticalAlign="middle";
+
+                if (node.data.$type != "none")
+                  style.padding="5px 10px 5px";
+
+                var left = parseInt(style.left);
+                var w = domElement.offsetWidth;
+                style.left = (left - w / 2) + 'px';
+                var top = parseInt(style.top);
+                var h = domElement.offsetHeight;
+                style.top = (top - h / 2) + 'px';
+                //style.width;
+                //style.height;
+              }
+            });
+
+            rgraph.loadJSON(<%="graph#{cluster.id}"%>, 0);
+            rgraph.refresh();
+
+            //rgraph.graph.removeAdjacence(adjs[16][1].nodeTo.id, adjs[16][1].nodeFrom.id);
+            for (i = 1; i <= 11; i += 2) {
+              for (j = 0; j < adjs[i].length; j++) {
+                rgraph.op.removeEdge([adjs[i][j].nodeFrom.id, adjs[i][j].nodeTo.id]);
+              }
+            }
+
+            //rgraph.op.AddEdge([adjs[16][1].nodeFrom.id, adjs[16][1].nodeTo.id]);
+            rgraph.refresh();
+
+            //rgraph.fx.hideLabels(true);
+
+            for (i = 1; i <= 11; i += 2) {
+              for (j = 0; j < adjs[i].length; j++) {
+                rgraph.fx.plotLine(adjs[i][j], <%="canvas#{cluster.id}"%>);
+              }
+            }
+
+        <%
+        # break the loop since cluster is found
+        break
+        # end of if (clusterFound)
+      end
+      # end of clustering.cluster.each { |cluster| }
+    }
+    # end of assignment.clustering.each { |clustering| }
+  }
+
+  # if no plagiarism cluster is found for the student in this assignment...
+  if (!inCluster)
+  %>
+        titleLabel = document.createElement('h3');
+        titleLabel.style.marginTop = '0px';
+        titleLabel.style.position = 'relative';
+        titleLabel.style.left = '5px';
+        titleLabel.innerHTML = "No plagiarism cluster is found for the student";
+        aContainer.appendChild(titleLabel);
+        aContainer.appendChild(document.createElement('p'));
+  <%
+  end
+%>
+      infovis.appendChild(document.createElement('p'));
+
+  <%
+  # end of @course.assignments.each { | assignment| }
+}
+%>
+  }
+    </script>
+  </head>
+  <body onload="init(); //maximize();" style="height: 100%; margin: 0px;" id="body">
+    <script type="text/javascript" src="../javascripts/wz_tooltip.js"></script>
+    <table style="padding: 5px; width: 100%; height: 100%; " cellpadding="0" cellspacing="0">
+      <tr style="height: 90px;">
+        <td style="">
+          <table style="height:100%; width: 100%;" cellpadding="3" cellspacing="0" border="0">
+            <tr class="welcome">
+              <td class="welcome">Student Submissions Integrity Diagnosis (SSID) System</td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td class="topMenu">
+          <table>
+            <tr>
+              <td class="topMenuItem"><%=link_to 'Home', {:action => 'announcement'},  :class => 'topMenuItem' %></td>
+              <td class="topMenuItem"><%=link_to 'My Modules', {:action => 'course_listing'},  :class => 'topMenuItem' %></td>
+              <td class="topMenuItem"><%=link_to 'My Profile', {:action => 'account_edit'},  :class => 'topMenuItem'  %></td>
+              <td class="topMenuItem"><%= link_to 'User Guide', {:action => 'guide'},  :class => 'topMenuItem' %></td>
+              <td class="topMenuItem"><%= link_to 'Log Out', {:controller => 'login', :action => 'logout'},  :class => 'topMenuItem'  %></td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr style="height: 100%;">
+        <td style="padding-left: 10px; vertical-align: top;">
+          <div class="breadcrumb"><%= link_to "My Modules", {:action => "course_listing"}, :class => "breadcrumbItem" %> > <%= link_to @course.code, {:action => "assignment_listing", :course_id => @course.id}, :class => "breadcrumbItem" %> > <%= link_to "Visuals", {:action => "graph_view_igroups", :course_id => @course.id}, :class => "breadcrumbItem" %> > Clusters for a student</div>
+          <h2 style="padding-top: 10px;">Plagiarism Clusters for student: <%= @student.matric %></h2>
+      <li>Student matric in <label style="color: red;">red</label> denotes the student is found guilty in plagiarism for the assignment</li>
+      <li>To view student's log, click the student matric</li>
+      <p/>
+      <div id="infovis" style="background-color:white;visibility:visible;"/>
+    </td>
+  </tr>
+</table>
+</body>
+</html>
