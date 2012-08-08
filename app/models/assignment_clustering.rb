@@ -30,4 +30,14 @@ class AssignmentClustering < ActiveRecord::Base
   def self.human_attribute_name(attribute)
     HUMANIZED_COLUMNS[attribute.to_sym] || super
   end
+
+  # Hack to enable read/write on column "type"
+  def category
+    attr_reader :type
+  end
+
+  # Hack to enable read/write on column "type"
+  def category=(type)
+    @type = type
+  end
 end

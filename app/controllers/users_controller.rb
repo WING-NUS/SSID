@@ -161,8 +161,9 @@ class UsersController < ApplicationController
         directory_path, file_path = localize_upload_file(assignment.id)
         unzip_localized_file(directory_path, file_path, assignment.id) #unzip the client zip file
         remove_localized_file(file_path) #remove the downloaded client zip file
-      rescue Exception => exc
-        logger.error("Message for the log file #{exc.message}")
+      rescue Exception => e
+        logger.error("Error: #{e.message}")
+        logger.error(e.backtrace.join("\n"))
         flash[:notice] = "File Upload Error"
         assignment.destroy
         redirect_to :action => 'assignment_new', :course_id => course.id
@@ -184,9 +185,8 @@ class UsersController < ApplicationController
 
         compute_similarity(directory_path, assignment.id, language, "pds", min, ngram)
       rescue Exception => exc
-        puts exc.message
-        puts exc.backtrace
-        logger.error("Message for the log file #{exc.message}")
+        logger.error "Error: #{exc.message}"
+        logger.error exc.backtrace.join("\n")
         assignment.delete
         flash[:notice] = "Analysis error"
         redirect_to :action => 'assignment_new', :course_id => course.id
@@ -485,13 +485,16 @@ class UsersController < ApplicationController
         params[:assignment_clustering][:remark] = "Based on user defined cut off criterion"
       end
       
+      # Cast type column as category
+      params[:assignment_clustering][:category] = params[:assignment_clustering][:type]
+      params[:assignment_clustering].delete(:type)
       
       @clustering = AssignmentClustering.new(params[:assignment_clustering])
 
     rescue Exception => exc
-      puts exc.message
-      puts exc.backtrace
       logger.error("Message for the log file #{exc.message}")
+      logger.info params[:assignment_clustering].inspect
+      logger.error exc.backtrace.join("\n")
       flash[:notice] = "Clustering creation error"
       redirect_to :action => 'error'
       return
@@ -501,7 +504,7 @@ class UsersController < ApplicationController
       @clustering.created_at = params[:assignment_clustering][:dateTime]
       @assignment.clusterings << @clustering
       
-      jar_path = File.join(JAVA_ROOT, "programs", "DBSCAN.jar")
+      jar_path = File.join(Rails.root, "lib", "java", "programs", "DBSCAN.jar")
 	  config   = Rails.configuration.database_configuration
 	  host     = config[Rails.env]["host"]
 	  database = config[Rails.env]["database"]
@@ -887,7 +890,7 @@ class UsersController < ApplicationController
   end
 
   COMPARE_FOLDER = "_compare"
-  LANGUAGE_FILES = { "c" => "cpp, c, h", "java" => "java" }
+  LANGUAGE_FILES = { "c" => %w{cpp c h}, "java" => %w{java} }
 
   def localize_upload_file(id)
     # Create the upload folder if not exists
@@ -895,7 +898,7 @@ class UsersController < ApplicationController
 
     # Create / Remove contents of the assignment specific upload folder
     directory = "upload/#{id}"
-    directory_path = File.join(RAILS_ROOT, directory)
+    directory_path = File.join(Rails.root, directory)
 
     verify_create_assignment_delicated_folder(directory_path)
 
@@ -906,6 +909,11 @@ class UsersController < ApplicationController
 
     platform = determine_os
 
+    # Copy from temp file path to upload folder
+    logger.info %Q{Moving upload file "#{file_name}" to "#{file_path}"}
+    FileUtils.mv(upload_file.tempfile.path, file_path)
+
+=begin
     case platform
       #if (platform == "windows")
     when "windows"
@@ -914,8 +922,9 @@ class UsersController < ApplicationController
     when "linux"
       File.open(file_path, "w") { |f| f.write(upload_file.read) }
     end
-   
+
     upload_file.rewind
+=end
     
     return directory_path, file_path
   end
@@ -943,7 +952,7 @@ class UsersController < ApplicationController
     return
   end
   def verify_create_upload_folder
-    directory_path = File.join(RAILS_ROOT, "upload")
+    directory_path = File.join(Rails.root, "upload")
     if (!File.directory?(directory_path))
       Dir.mkdir(directory_path)
     end

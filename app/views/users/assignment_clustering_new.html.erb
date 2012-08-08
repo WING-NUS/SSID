@@ -21,13 +21,23 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 <div class="breadcrumb"><%= link_to "My Modules", {:action => "course_listing"}, :class => "breadcrumbItem" %> > <%= link_to course.code, {:action => "assignment_listing", :course_id => course.id}, :class => "breadcrumbItem" %> > <%= link_to "Assignment: #{@assignment.title}", {:action => "assignment_sim_result_view", :assignment_id => @assignment.id}, :class => "breadcrumbItem" %> > <%= link_to "Groupings", {:action => "assignment_clustering_listing", :assignment_id => @assignment.id}, :class => "breadcrumbItem" %> > New Grouping</div>
 <h2>New Grouping</h2>
 
-<% form_for(@clustering, :url => { :action => 'assignment_clustering_create'}) do |f| %>
-  <%= f.error_messages %>
+<%= form_for(@clustering, :url => { :action => 'assignment_clustering_create'}) do |f| %>
+  <%# Handle errors, following http://stackoverflow.com/questions/3873190/f-error-messages-in-rails-3-0 %>
+  <% if @clustering.errors.any? %>
+    <div id="error_explanation">
+      <h3>Found <%= pluralize(@clustering.errors.count, "error") %> in the form:</h3>
+      <ul>
+      <% @clustering.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
   <%= hidden_field('assignment_clustering', 'assignment_id', {:value => @assignment.id}) %>
   <%= hidden_field('assignment_clustering', 'reported', {:value => @clustering.reported}) %>
   <%= hidden_field('assignment_clustering', 'confirmed', {:value => @clustering.confirmed}) %>
   <%= hidden_field('assignment_clustering', 'dateTime', {:value => @clustering.dateTime}) %>
-  <b>Cut off criterion <%=genHelp("A lower boundary which any pairs with a maximum similarity less than this value will not be considered in a plagiarism cluster.")%> :</b> <br/>
+  <b>Cut off criterion <%=genHelp("A lower boundary which any pairs with a maximum similarity less than this value will not be considered in a plagiarism cluster.").html_safe%> :</b> <br/>
 
   <%
   confirmed = @assignment.confirmed_plagiarism.size
@@ -48,11 +58,11 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 
 %>
   <% if confirmed > 0 %>
-    <%= f.radio_button("type", "confirmed", :checked => selected == 1) %>Confirmed plagiarism cases (<%= @clustering.confirmed.to_s + "%" %>) <%=genHelp("Take the least value of the maximum similarity among the confirmed plagiarism cases as the cut off criterion.")%><br />
+    <%= f.radio_button("type", "confirmed", :checked => selected == 1) %>Confirmed plagiarism cases (<%= @clustering.confirmed.to_s + "%" %>) <%=genHelp("Take the least value of the maximum similarity among the confirmed plagiarism cases as the cut off criterion.").html_safe%><br />
   <% end %>
 
   <% if reported > 0 %>
-    <%= f.radio_button("type", "reported", :checked => selected == 2) %>Suspicious or confirmed plagiarism cases (<%= @clustering.reported.to_s + "%" %>) <%=genHelp("Take the least value of the maximum similarity among the suspicious or confirmed plagiarism cases as the cut off criterion.")%><br />
+    <%= f.radio_button("type", "reported", :checked => selected == 2) %>Suspicious or confirmed plagiarism cases (<%= @clustering.reported.to_s + "%" %>) <%=genHelp("Take the least value of the maximum similarity among the suspicious or confirmed plagiarism cases as the cut off criterion.").html_safe%><br />
   <% end %>
 
   <%=f.radio_button("type", "other", :checked => selected == 3) %>User define value (%) <%= f.text_field 'coc' %>

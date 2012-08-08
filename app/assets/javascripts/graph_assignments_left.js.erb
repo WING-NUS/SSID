@@ -51,7 +51,7 @@ function sortByLimit90(a, b) {
 function showRanking(limit) {
     var doc = parent.frames[1].document;
     doc.open();
-    doc.write("<html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"../stylesheets/pds.css\" /><link rel=\"stylesheet\" type=\"text/css\" href=\"../stylesheets/graph_assignment_right.css\" /></head><body onload='cloneArray(parent.frames[0].locked, locked); refreshDiv();'><script type=\"text/javascript\" src=\"../javascripts/wz_tooltip.js\"></script><script type=\"text/javascript\" src=\"../javascripts/graph_assignments.js\"></script>");
+    doc.write("<html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"<%= asset_path "pds.css" %>\" /><link rel=\"stylesheet\" type=\"text/css\" href=\"<%= asset_path "graph_assignment_right.css" %>\" /></head><body onload='cloneArray(parent.frames[0].locked, locked); refreshDiv();'><script type=\"text/javascript\" src=\"<%= asset_path "wz_tooltip.js" %>\"></script><script type=\"text/javascript\" src=\"<%= asset_path "graph_assignments.js" %>\"></script>");
     doc.write("<h1 style='margin-top: 6px;'>Ranking</h1><br/>");
     doc.write("Cut off criterion: ");
     doc.write("<select onchange='parent.frames[0].showRanking(this.options[this.selectedIndex].value);'>");

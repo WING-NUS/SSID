@@ -71,7 +71,7 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
       }
     </style>
 
-    <script type="text/javascript" src="../javascripts/graphSelection.js"></script>
+    <%= javascript_include_tag "graphSelection.js" %>
     <script type="text/javascript">
       var assignments = new Array();
 <% 
@@ -189,7 +189,7 @@ end
                   <dd>
                     <%=
                     if @view != "assignments"
-                      "<a class='graphMenu' href='graph_view_assignments?course_id=#{@course.id}'>Assignments</a>"
+                      "<a class='graphMenu' href='graph_view_assignments?course_id=#{@course.id}'>Assignments</a>".html_safe
                     else
                       "Assignments"
                     end
@@ -200,7 +200,7 @@ end
                   <dd>
                     <%=
                     if @view != "groups"
-                      "<a class='graphMenu' href='graph_view_groups?course_id=#{@course.id}'>Clusters summary</a>"
+                      "<a class='graphMenu' href='graph_view_groups?course_id=#{@course.id}'>Clusters summary</a>".html_safe
                     else
                       "Clusters summary"
                     end
@@ -209,7 +209,7 @@ end
                   <dd>
                     <%=
                     if @view != "movement"
-                      "<a class='graphMenu' href='graph_view_movement?course_id=#{@course.id}'>Member movement</a>"
+                      "<a class='graphMenu' href='graph_view_movement?course_id=#{@course.id}'>Member movement</a>".html_safe
                     else
                       "Member movement"
                     end
@@ -220,7 +220,7 @@ end
                   <dd>
                     <%=
                     if @view != "ibetween"
-                      "<a class='graphMenu' href='graph_view_ibetween?course_id=#{@course.id}'>Between individuals</a>"
+                      "<a class='graphMenu' href='graph_view_ibetween?course_id=#{@course.id}'>Between individuals</a>".html_safe
                     else
                       "Between individuals"
                     end
@@ -229,7 +229,7 @@ end
                   <dd>
                     <%=
                     if @view != "iTopK"
-                      "<a class='graphMenu' href='graph_view_iTopK?course_id=#{@course.id}'>Top similarities</a>"
+                      "<a class='graphMenu' href='graph_view_iTopK?course_id=#{@course.id}'>Top similarities</a>".html_safe
                     else
                       "Top similarities"
                     end
@@ -238,7 +238,7 @@ end
                   <dd>
                     <%=
                     if @view != "igroups"
-                      "<a class='graphMenu' href='graph_view_igroups?course_id=#{@course.id}'>Clusters for a student</a>"
+                      "<a class='graphMenu' href='graph_view_igroups?course_id=#{@course.id}'>Clusters for a student</a>".html_safe
                     else
                       "Clusters for a student"
                     end

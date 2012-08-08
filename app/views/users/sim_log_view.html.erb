@@ -81,11 +81,11 @@ end
 
         %>
           <tr class="listing">
-            <td class="listing" style="cursor: default;"><%= genText(logColor, log.updated_at.strftime("%d/%m/%Y %H:%M:%S")) %></td>
-            <td class="listing" style="cursor: default;"><%= genText(logColor, course.code) %></td>
-            <td class="listing" style="cursor: default;"><%= genText(logColor, log.assignment_sim_result.assignment.title)%></td>
-            <td class="listing" style="cursor: default;"><%= genText(logColor, log.account.name) %></td>
-            <td class="listing" style="cursor: default;"><%= genText(logColor, logRemark)%></td>
+            <td class="listing" style="cursor: default;"><%= genText(logColor, log.updated_at.strftime("%d/%m/%Y %H:%M:%S")).html_safe %></td>
+            <td class="listing" style="cursor: default;"><%= genText(logColor, course.code).html_safe %></td>
+            <td class="listing" style="cursor: default;"><%= genText(logColor, log.assignment_sim_result.assignment.title).html_safe%></td>
+            <td class="listing" style="cursor: default;"><%= genText(logColor, log.account.name).html_safe %></td>
+            <td class="listing" style="cursor: default;"><%= genText(logColor, logRemark).html_safe%></td>
           </tr>
         <%
         rescue

@@ -27,49 +27,6 @@ params = ""
 }
 params = params[0...-1]
 %>
-<html style="height: 100%; margin: 0px;">
-  <head>
-    <title><%= course.code  %>: <%= course.name %></title>
-    <script type="text/javascript" src="../javascripts/support.js"></script>
-    <script type="text/javascript">
-      //maximize();
-      var blank = "";
-    </script>
-    <%= stylesheet_link_tag 'scaffold', 'pds' %>
-    <style type="text/css">
-      iframe.iframe {
-        width: 100%; 
-        height: 100%;
-        border-width: 0px;
-      }
-    </style>
-  </head>
-  <body style="height: 100%; margin: 0px;">
-    <table style="width: 100%; height: 100%; padding: 5px;" cellpadding="0" cellspacing="0" border="0">
-      <tr style="height: 90px;">
-        <td style="">
-          <table style="height:100%; width: 100%;" cellpadding="3" cellspacing="0" border="0">
-            <tr class="welcome">
-              <td class="welcome">Student Submissions Integrity Diagnosis (SSID) System</td>
-            </tr>
-          </table>
-        </td>
-      </tr>
-      <tr>
-        <td class="topMenu">
-          <table>
-            <tr>
-              <td class="topMenuItem"><%=link_to 'Home', {:action => 'announcement'},  :class => 'topMenuItem' %></td>
-              <td class="topMenuItem"><%=link_to 'My Modules', {:action => 'course_listing'},  :class => 'topMenuItem' %></td>
-              <td class="topMenuItem"><%=link_to 'My Profile', {:action => 'account_edit'},  :class => 'topMenuItem'  %></td>
-              <td class="topMenuItem"><%= link_to 'User Guide', {:action => 'guide'},  :class => 'topMenuItem' %></td>
-              <td class="topMenuItem"><%= link_to 'Log Out', {:controller => 'login', :action => 'logout'},  :class => 'topMenuItem'  %></td>
-            </tr>
-          </table>
-        </td>
-      </tr>
-      <tr style="height: 100%;">
-        <td style="padding-left: 10px; vertical-align: top;">
           <div class="breadcrumb"><%= link_to "My Modules", {:action => "course_listing"}, :class => "breadcrumbItem" %> > <%= link_to course.code, {:action => "assignment_listing", :course_id => course.id}, :class => "breadcrumbItem" %> > <%= link_to "Visuals", {:action => "graph_view_assignments", :course_id => course.id}, :class => "breadcrumbItem" %> > Assignments</div>
           <table style="width:100%; height: 100%; padding: 0px;" cellspacing="0px">
             <col width="*"/>
@@ -79,9 +36,3 @@ params = params[0...-1]
               <td><iframe class="iframe" src="javascript:parent.blank"></iframe></td>
             </tr>
           </table>
-        </td>
-      </tr>
-    </table>
-  </body>
-</html>
-

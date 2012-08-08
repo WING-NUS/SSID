@@ -19,8 +19,18 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 
 <div class="breadcrumb"><%= link_to "My Modules", {:action => "course_listing"}, :class => "breadcrumbItem" %> > <%= link_to @course.code, {:action => "assignment_listing", :course_id => @course.id}, :class => "breadcrumbItem" %> > New Assignment </div>
 <h2>New Assignment</h2>
-<% form_for(@assignment, :url => { :action => 'assignment_create' }, :html => {:multipart => true}) do |f| %>
-  <%= f.error_messages %>
+<%= form_for(@assignment, :url => { :action => 'assignment_create' }, :html => {:multipart => true}) do |f| %>
+  <%# Handle errors, following http://stackoverflow.com/questions/3873190/f-error-messages-in-rails-3-0 %>
+  <% if @assignment.errors.any? %>
+    <div id="error_explanation">
+      <h3>Found <%= pluralize(@assignment.errors.count, "error") %> in the form:</h3>
+      <ul>
+      <% @assignment.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
   <%= hidden_field('course', 'course_id', {:value => @course.id})  %>
   <table>
     <tr>
@@ -30,7 +40,7 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
     </tr>
     <tr>
       <td>
-        Language<%=genHelp("Programming language type.<br/>For 'java', only '.java' files will be checked.")%>: <%= f.select(:language, {
+        Language<%=genHelp("Programming language type.<br/>For 'java', only '.java' files will be checked.").html_safe%>: <%= f.select(:language, {
             #"Character Based Code Similarity" => 'char_code_similarity',
             #"Character Based Code Similarity" => 'char_code_similarity_java'
             
@@ -41,17 +51,17 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
     </tr>
     <tr>
       <td>
-        <%=getDefination("min_length")%><%=genHelp("#{getExplaination("min_length")}.<br/>Default: 2.")%>: <%= f.text_field 'min', :value => @user_account.min_length %>
+        <%=getDefination("min_length")%><%=genHelp("#{getExplaination("min_length")}.<br/>Default: 2.").html_safe%>: <%= f.text_field 'min', :value => @user_account.min_length %>
       </td>
     </tr>
     <tr>
       <td>
-        <%=getDefination("ngram")%><%=genHelp("#{getExplaination("ngram")}.<br/>Default: 4.")%>: <%= f.text_field 'ngram', :value => @user_account.ngram %>
+        <%=getDefination("ngram")%><%=genHelp("#{getExplaination("ngram")}.<br/>Default: 4.").html_safe%>: <%= f.text_field 'ngram', :value => @user_account.ngram %>
       </td>
     </tr>
     <tr>
       <td>
-        Assignment File (*.zip)<%=genHelp("A zipped file consists of multiple folders.<br/>The folder name represents student identification and student submitted codes are inside the folder.")%>: <%= file_field 'upload', 'zipfile' %>
+        Assignment File (*.zip)<%=genHelp("A zipped file consists of multiple folders.<br/>The folder name represents student identification and student submitted codes are inside the folder.").html_safe%>: <%= file_field 'upload', 'zipfile' %>
       </td>
     </tr>
   </table>

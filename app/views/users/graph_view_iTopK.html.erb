@@ -74,7 +74,7 @@ To start, select the student from <b>Available Students</b>, enter the desired <
   </table>
   <p/>
   <input type="hidden" name="courseId" value="<%=@course.id%>"/>
-  <span style="font-weight:bold;">K <%= genHelp("Default: 5")  %>  = <input name="k" id="k" value="5" type="text" style="width:171px;"/></span>
+  <span style="font-weight:bold;">K <%= genHelp("Default: 5").html_safe  %>  = <input name="k" id="k" value="5" type="text" style="width:171px;"/></span>
   <hr/>
   <input type="submit" value="Show Visual" onclick="if (!validate()) { return false;}" onmouseover="Tip('The visual will be displayed in a new window');" onmouseout="UnTip();" />
   <p/>

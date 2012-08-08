@@ -1,10 +1,12 @@
-# This file is auto-generated from the current state of the database. Instead of editing this file, 
-# please use the migrations feature of Active Record to incrementally modify your database, and
-# then regenerate this schema definition.
+# encoding: UTF-8
+# This file is auto-generated from the current state of the database. Instead
+# of editing this file, please use the migrations feature of Active Record to
+# incrementally modify your database, and then regenerate this schema definition.
 #
-# Note that this schema.rb definition is the authoritative source for your database schema. If you need
-# to create the application database on another system, you should be using db:schema:load, not running
-# all the migrations from scratch. The latter is a flawed and unsustainable approach (the more migrations
+# Note that this schema.rb definition is the authoritative source for your
+# database schema. If you need to create the application database on another
+# system, you should be using db:schema:load, not running all the migrations
+# from scratch. The latter is a flawed and unsustainable approach (the more migrations
 # you'll amass, the slower it'll run and the greater likelihood for issues).
 #
 # It's strongly recommended to check this file into your version control system.
@@ -21,8 +23,8 @@ ActiveRecord::Schema.define(:version => 20100714071350) do
     t.integer  "role",            :default => 1
     t.integer  "ngram",           :default => 4, :null => false
     t.integer  "min_length",      :default => 2, :null => false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                     :null => false
+    t.datetime "updated_at",                     :null => false
   end
 
   add_index "accounts", ["login"], :name => "index_accounts_on_login"
@@ -32,15 +34,15 @@ ActiveRecord::Schema.define(:version => 20100714071350) do
   create_table "announcements", :force => true do |t|
     t.text     "content"
     t.integer  "account_id", :null => false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "assignment_cluster_members", :force => true do |t|
     t.integer  "assignment_cluster_id", :null => false
     t.integer  "assignment_code_id",    :null => false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",            :null => false
+    t.datetime "updated_at",            :null => false
   end
 
   add_index "assignment_cluster_members", ["assignment_cluster_id", "assignment_code_id"], :name => "members", :unique => true
@@ -49,8 +51,8 @@ ActiveRecord::Schema.define(:version => 20100714071350) do
     t.integer  "assignment_id"
     t.string   "remark"
     t.decimal  "coc",           :precision => 6, :scale => 3
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                  :null => false
+    t.datetime "updated_at",                                  :null => false
   end
 
   add_index "assignment_clusterings", ["assignment_id", "coc"], :name => "index_assignment_clusterings_on_assignment_id_and_coc", :unique => true
@@ -59,8 +61,8 @@ ActiveRecord::Schema.define(:version => 20100714071350) do
 
   create_table "assignment_clusters", :force => true do |t|
     t.integer  "assignment_clustering_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",               :null => false
+    t.datetime "updated_at",               :null => false
   end
 
   add_index "assignment_clusters", ["assignment_clustering_id"], :name => "index_assignment_clusters_on_assignment_clustering_id"
@@ -70,8 +72,8 @@ ActiveRecord::Schema.define(:version => 20100714071350) do
     t.text     "code_array", :limit => 2147483647
     t.integer  "student_id"
     t.boolean  "plagiarism",                       :default => false, :null => false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                          :null => false
+    t.datetime "updated_at",                                          :null => false
   end
 
   add_index "assignment_codes", ["student_id", "plagiarism"], :name => "index_assignment_codes_on_student_id_and_plagiarism"
@@ -85,8 +87,8 @@ ActiveRecord::Schema.define(:version => 20100714071350) do
     t.decimal  "sim2To1",       :precision => 5, :scale => 3
     t.decimal  "sim",           :precision => 5, :scale => 3
     t.integer  "status",                                      :default => 0, :null => false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                                 :null => false
+    t.datetime "updated_at",                                                 :null => false
   end
 
   add_index "assignment_sim_results", ["assignment_id", "id1", "id2"], :name => "index_assignment_sim_results_on_assignment_id_and_id1_and_id2"
@@ -102,8 +104,8 @@ ActiveRecord::Schema.define(:version => 20100714071350) do
     t.string   "language"
     t.integer  "course_id",                  :null => false
     t.integer  "status",     :default => -1
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                 :null => false
+    t.datetime "updated_at",                 :null => false
   end
 
   add_index "assignments", ["course_id"], :name => "index_assignments_on_course_id"
@@ -121,8 +123,8 @@ ActiveRecord::Schema.define(:version => 20100714071350) do
     t.string   "academic_year"
     t.integer  "semester"
     t.datetime "expiry"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
   end
 
   add_index "courses", ["code", "academic_year", "semester"], :name => "index_courses_on_code_and_academic_year_and_semester", :unique => true
@@ -133,8 +135,8 @@ ActiveRecord::Schema.define(:version => 20100714071350) do
     t.integer  "assignment_code_id"
     t.integer  "assignment_sim_result_id"
     t.integer  "log_type",                 :null => false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",               :null => false
+    t.datetime "updated_at",               :null => false
   end
 
   add_index "plag_logs", ["account_id"], :name => "index_plag_logs_on_account_id"
@@ -168,8 +170,8 @@ ActiveRecord::Schema.define(:version => 20100714071350) do
     t.integer  "account_id", :null => false
     t.integer  "course_id",  :null => false
     t.integer  "role",       :null => false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   add_index "teachings", ["account_id", "course_id"], :name => "index_teachings_on_account_id_and_course_id", :unique => true

@@ -19,6 +19,7 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 # Likewise, all the methods added will be available for all controllers.
 
 class ApplicationController < ActionController::Base
+  protect_from_forgery
   before_filter :authorize, :except => [:login, :logout]
   helper :all # include all helpers, all the time
   protect_from_forgery # See ActionController::RequestForgeryProtection for details

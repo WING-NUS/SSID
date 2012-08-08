@@ -23,11 +23,1254 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 <html style="height: 100%;" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
     <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-    <title><%=system%></title>
+    <% if action_name == "graph_sims" or action_name == "graph_movement" or action_name == "graph_top" or action_name == "graph_groups" %>
+      <title><%= @course.code %>: <%= @course.name %></title>
+    <% elsif action_name == "graph_assignments" %>
+      <title><%= @assignments.first.course.code %>: <%= @assignments.first.course.name %></title>
+    <% elsif action_name == "graph_clusters" %>
+      <title><%=  @clusters.first.assignment_clustering.assignment.course.code  %>: <%= @clusters.first.assignment_clustering.assignment.course.name %></title>
+    <% elsif action_name == "assignment_sim_result_html_view" %>
+      <title>Matches for <%= @asr.code1.student.matric + " and " + @asr.code2.student.matric %> <%= "(Confirmed Plagiarism Case)" if @asr.status == 1%></title>
+    <% else %>
+      <title><%=system%></title>
+    <% end %>
     <%= stylesheet_link_tag 'scaffold', 'pds' %>
+
+    <% if action_name == "graph_groups" %>
+      <%= javascript_include_tag "support.js" %>
+      <%= stylesheet_link_tag 'scaffold', 'pds' %>
+      <%= javascript_include_tag "excanvas.js" %>
+      <%= javascript_include_tag "jit.js" %>
+<%
+require 'cgi'
+@legendTable = ""
+
+def genLegendText(sim)
+  "<tr valign='center'><td><div style='#{genLegendHeight(sim)} vertical-align: middle; overflow: hidden; display:inline-block; position: relative;top: 0px;left: 0px;background-color: #{get_color(sim)};width:100px;'>&nbsp;</div><div style='vertical-align: middle; display: inline-block; position: relative;left: 5px;top: 0px;color: black;'>&ge; #{sim}%</div></td></tr>"
+end
+
+def genLegendHeight(sim)
+  "height: #{get_weight(sim)}px;"
+end
+
+def genLegend()
+
+  @legendTable if @legendTable.length > 0
+  text = "<table cellpadding='1' cellspacing='1' style='border-style:solid; border-width:thin; border-color:black; table-layout:fixed;' width=100" + "%" + "><col width='150'/><tr><th>Similarity</th></tr>"
+
+  [90, 80, 70, 60, 50].each { |i|
+    text << genLegendText(i)
+  }
+
+  text << "<tr valign='center'><td><div style='#{genLegendHeight(49)} vertical-align: middle; overflow: hidden; display:inline-block; position: relative;top: 0px;left: 0px;background-color: #{get_color(49)};width:100px;'>&nbsp;</div><div style='vertical-align: middle; display: inline-block; position: relative;left: 5px;top: 0px;color: black;'>< 50%</div></td></tr>"
+
+  text << "</table>"
+
+  @legendTable = text
+end
+
+%>
+
+    <script type="text/javascript">
+      var Log = {
+        elem: false,
+        write: function(text){
+          if (!this.elem)
+            this.elem = document.getElementById('log');
+          this.elem.innerHTML = text;
+          this.elem.style.left = (500 - this.elem.offsetWidth / 2) + 'px';
+        }
+      };
+
+      function addEvent(obj, type, fn) {
+        if (obj.addEventListener) obj.addEventListener(type, fn, false);
+        else obj.attachEvent('on' + type, fn);
+      };
+
+      function init() {
+        var adjs, aContainer, gContainer, style, titleLabel, legendLabel, rgraph;
+
+        var infovis = document.getElementById('infovis');
+        var w = infovis.offsetWidth - 20, h = infovis.offsetHeight;
+       
+        //init data
+<%  @course.assignments.each { |assignment| %>
+
+      //Assignment Container
+      aContainer = document.createElement('div');
+      aContainer.id = "<%="aContainer#{assignment.id}"%>"
+      style = aContainer.style;
+      style.left = "0px";
+      style.top = "0px";
+      style.width = "100%";
+      style.position = 'relative';
+      style.borderStyle = 'solid';
+      style.borderWidth = '1px';
+      infovis.appendChild(aContainer);
+
+      titleLabel = document.createElement('h2');
+      titleLabel.style.marginTop = '0px';
+      titleLabel.style.position = 'relative';
+      titleLabel.style.top = '0px';
+      titleLabel.style.left = '5px';
+      titleLabel.innerHTML = "Assignment: <%=assignment.title%>";
+      aContainer.appendChild(titleLabel);
+
+  <%
+  inCluster = false
+  assignment.clusterings.each { |clustering|
+    coc = clustering.coc
+    clusterFound = false
+    clustering.assignment_clusters.each { |cluster|
+
+      cluster.assignment_codes.each { |code|
+        if (code.student == @student)
+          clusterFound = true
+          inCluster = true
+          break
+        end
+        # end of cluster.assignment_codes.each { |code| }
+      }
+
+      if clusterFound
+        cId = "c#{cluster.id}"
+      %>
+            gContainer = document.createElement('div');
+            gContainer.id = "<%="gContainer#{cluster.id}"%>";
+            style = gContainer.style;
+            style.left = "0px";
+            style.top = "0px";
+            style.height = "600px";
+            style.marginLeft = "5px";
+            style.marginRight = "5px";
+            style.position = 'relative';
+            style.borderStyle = "solid";
+            style.borderWidth = "1px";
+            aContainer.appendChild(gContainer);
+            aContainer.appendChild(document.createElement('p'));
+
+            titleLabel = document.createElement('h3');
+            titleLabel.style.marginTop = '0px';
+            titleLabel.style.position = 'absolute';
+            titleLabel.style.top = '0px';
+            titleLabel.style.left = '5px';
+            titleLabel.innerHTML = "Cut off criterion: <%=coc.to_s + "%"%>";
+            gContainer.appendChild(titleLabel);
+
+            legendLabel = document.createElement('div');
+            legendLabel.style.position = 'absolute';
+            legendLabel.style.width = '150px';
+            legendLabel.style.height = '200px';
+            legendLabel.style.left = String(w - 175) + "px";
+            legendLabel.style.top = '5px';
+            legendLabel.innerHTML = "<%=genLegend.html_safe%>";
+            gContainer.appendChild(legendLabel);
+
+            var <%="graph#{cluster.id}"%> =
+              [
+              // root node
+              {
+                "id": "<%=cId%>",
+                "name": "",
+                "data": {
+                  "$type": "none",
+                  "$width": 0, "$height": 0,
+                  "$labelColor": "black"
+                },
+                "adjacencies":
+                  [
+        <%
+        assignment_codes = cluster.assignment_codes
+        for j in (0...assignment_codes.size)
+          code1 = assignment_codes[j]
+          student = code1.student
+        %>
+                    {
+                      "nodeTo": "<%="#{cId}_#{student.matric}"%>",
+                      "data": {
+                        "$color": "white",
+                        "weight": 0
+                      }
+                    }<%=(j < assignment_codes.length - 1)?",":"" %>
+          <%
+          # end for j in (0...assignment_codes.size)
+        end
+      %>
+                ] // end "adjacencies" of root node
+              },
+        <%
+        for j in (0...assignment_codes.size) # 2nd j loop
+          code1 = assignment_codes[j]
+          student1 = code1.student
+        %>
+                // child nodes
+                {
+                  "id": "<%="#{cId}_#{student1.matric}"%>",
+                  "name": "<%=student1.matric%>",
+                  "data": {
+                    "$labelColor": "<%= if code1.plagiarism then "red" else "black" end %>",
+                    "log": "sim_log_view?student_id=<%=student1.id%>&course_id=<%=@course.id%>&blank=true"
+                  },
+                  "adjacencies":
+                    [
+                    {
+                      "nodeTo": "<%=cId%>",
+                      "data": {
+                        "weight": 0
+                      }
+                    },
+          <%
+          studentCount = 0
+          for k in (0...assignment_codes.length)
+            code2 = assignment_codes[k]
+            student2 = code2.student
+
+            if (student1 != student2)
+              studentCount += 1
+              sql_query = "select asr.* FROM assignment_sim_results as asr WHERE asr.assignment_id = ? AND (asr.id1 = ? OR asr.id1 = ?) AND (asr.id2 = ? OR asr.id2 = ?) LIMIT 1"
+              asr = AssignmentSimResult.find_by_sql([sql_query, assignment.id, code1.id, code2.id, code1.id, code2.id])
+
+              if (asr.length == 0)
+                sim = 0
+              else
+                sim = asr.first.sim
+              end
+
+            %>
+                        {
+                          "nodeTo": "<%="#{cId}_#{student2.matric}"%>",
+                          "data": {
+                            "$color": "white",
+                            "lineColor": "<%=get_color(sim)%>",
+                            "weight": <%=get_weight(sim)%>
+                          }
+                        }<%=(studentCount < assignment_codes.length - 1)?",":""%>
+              <%
+              # end if (student1 != student2)
+            end
+            # end for k in (0...assignment_codes.length)
+          end
+        %>
+                  ] // end "adjacencies" of child nodes
+
+                }<%=(j < assignment_codes.length - 1)?",":""%> // end child nodes
+          <%
+          # end for j in (0... assigment_codes.size) --- 2nd j loop
+        end
+      %>
+            ]; // end var <%="graph#{cluster.id}"%> = ...
+
+            var <%="canvas#{cluster.id}"%> = new Canvas('<%="mycanvas#{cluster.id}"%>', {
+              'injectInto': "gContainer<%=cluster.id%>",
+              'width': gContainer.offsetWidth,
+              'height': gContainer.offsetHeight
+            });
+
+            adjs = new Array();
+            adjs[1] = new Array();
+            adjs[3] = new Array();
+            adjs[5] = new Array();
+            adjs[7] = new Array();
+            adjs[9] = new Array();
+            adjs[11] = new Array();
+
+            rgraph = new RGraph(<%="canvas#{cluster.id}"%>, {
+              Node: { 'overridable': true, 'type': 'rectangle', 'color': 'white' },
+              Edge: { 'overridable': true, 'color': 'white' },
+
+              //Set polar interpolation.
+              //Default's linear.
+              interpolation: 'polar',
+
+              //Change the transition effect from linear
+              //to elastic.
+              transition: Trans.Elastic.easeOut,
+              //Change other animation parameters.
+              duration:3500,
+              fps: 30,
+              //Change father-child distance.
+              levelDistance: 200,
+
+              onBeforePlotLine: function(adj){
+                if (adj.data.weight)
+                  adjs[adj.data.weight].push(adj);
+                //if (!firstTrail) {
+                adj.data.$lineWidth = adj.data.weight;
+                adj.data.$color = adj.data.lineColor;
+                //}
+              },
+
+              //Add node click handler and some styles.
+              //This method is called only once for each node/label crated.
+              onCreateLabel: function(domElement, node){
+                if (node.data.$type != "none") {
+                  domElement.innerHTML = node.name;
+                  var style = domElement.style;
+                  style.cursor = 'pointer';
+                  style.fontSize = "1em";
+                  style.color = node.data.$labelColor;
+                  style.backgroundColor = "white";
+                  style.zIndex = 2;
+
+                  var title = "";
+                  if (style.color == "red") {
+                    title = "This student is found guilty in plagiarsim in this assignment<p/>";
+                  }
+                  title += "Click to view student's log";
+
+                  domElement.onclick = function () {
+                    document.location.href = node.data.log;
+                  };
+
+                  domElement.onmouseover = function() {
+                    Tip(title);
+                  }
+
+                  domElement.onmouseout = function() {
+                    UnTip();
+                  }
+                }
+              },
+              //This method is called when rendering/moving a label.
+              //This is method is useful to make some last minute changes
+              //to node labels like adding some position offset.
+              onPlaceLabel: function(domElement, node){
+                var style = domElement.style;
+
+                style.textAlign='center';
+                style.verticalAlign="middle";
+
+                if (node.data.$type != "none")
+                  style.padding="5px 10px 5px";
+
+                var left = parseInt(style.left);
+                var w = domElement.offsetWidth;
+                style.left = (left - w / 2) + 'px';
+                var top = parseInt(style.top);
+                var h = domElement.offsetHeight;
+                style.top = (top - h / 2) + 'px';
+                //style.width;
+                //style.height;
+              }
+            });
+
+            rgraph.loadJSON(<%="graph#{cluster.id}"%>, 0);
+            rgraph.refresh();
+
+            //rgraph.graph.removeAdjacence(adjs[16][1].nodeTo.id, adjs[16][1].nodeFrom.id);
+            for (i = 1; i <= 11; i += 2) {
+              for (j = 0; j < adjs[i].length; j++) {
+                rgraph.op.removeEdge([adjs[i][j].nodeFrom.id, adjs[i][j].nodeTo.id]);
+              }
+            }
+
+            //rgraph.op.AddEdge([adjs[16][1].nodeFrom.id, adjs[16][1].nodeTo.id]);
+            rgraph.refresh();
+
+            //rgraph.fx.hideLabels(true);
+
+            for (i = 1; i <= 11; i += 2) {
+              for (j = 0; j < adjs[i].length; j++) {
+                rgraph.fx.plotLine(adjs[i][j], <%="canvas#{cluster.id}"%>);
+              }
+            }
+
+        <%
+        # break the loop since cluster is found
+        break
+        # end of if (clusterFound)
+      end
+      # end of clustering.cluster.each { |cluster| }
+    }
+    # end of assignment.clustering.each { |clustering| }
+  }
+
+  # if no plagiarism cluster is found for the student in this assignment...
+  if (!inCluster)
+  %>
+        titleLabel = document.createElement('h3');
+        titleLabel.style.marginTop = '0px';
+        titleLabel.style.position = 'relative';
+        titleLabel.style.left = '5px';
+        titleLabel.innerHTML = "No plagiarism cluster is found for the student";
+        aContainer.appendChild(titleLabel);
+        aContainer.appendChild(document.createElement('p'));
+  <%
+  end
+%>
+      infovis.appendChild(document.createElement('p'));
+
+  <%
+  # end of @course.assignments.each { | assignment| }
+}
+%>
+  }
+</script>
+
+    <% elsif action_name == "graph_top" %>
+    <style type="text/css">
+      table.assignments {
+        border-collapse: collapse;
+        table-layout:fixed;
+      }
+      th.assignments {
+        padding: 3px 10px 3px 10px;
+        margin-right: 3px;
+        text-align: left;
+        font-weight: bold;
+        /*color: #333;*/
+        color: white;
+        background: transparent;
+        background-color: #E7860D;
+        border: 1px solid black;
+        font-size: medium;
+      }
+      td.assignments {
+        padding: 3px 10px 3px 10px;
+        margin-right: 3px;
+        text-align: left;
+        /*color: #333;*/
+        background: transparent;
+        border: 1px solid black;
+        font-size: medium;
+      }
+    </style>
+    <%= javascript_include_tag "support.js" %>
+    <script type="text/javascript">
+      //maximize();
+    </script>
+
+    <% elsif action_name == "graph_sims" %>
+      <%= javascript_include_tag "support.js" %>
+      <%= stylesheet_link_tag 'scaffold', 'pds' %>
+      <%= javascript_include_tag "excanvas.js" %>
+      <%= javascript_include_tag "jit.js" %>
+<%
+
+@legendTable = ""
+
+def genLegendText(sim)
+  "<tr valign='center'><td><div style='#{genLegendHeight(sim)} vertical-align: middle; overflow: hidden; display:inline-block; position: relative;top: 0px;left: 0px;background-color: #{get_color(sim)};width:100px;'>&nbsp;</div><div style='vertical-align: middle; display: inline-block; position: relative;left: 5px;top: 0px;color: black;'>&ge; #{sim}%</div></td></tr>"
+end
+
+def genLegendHeight(sim)
+  "height: #{get_weight(sim)}px;"
+end
+
+def genLegend()
+
+  @legendTable if @legendTable.length > 0
+  text = "<table cellpadding='1' cellspacing='1' style='border-style:solid; border-width:thin; border-color:black; table-layout:fixed;' width=100" + "%" + "><col width='150'/><tr><th>Similarity</th></tr>"
+
+  [90, 80, 70, 60, 50].each { |i|
+    text << genLegendText(i)
+  }
+
+  text << "<tr valign='center'><td><div style='#{genLegendHeight(49)} vertical-align: middle; overflow: hidden; display:inline-block; position: relative;top: 0px;left: 0px;background-color: #{get_color(49)};width:100px;'>&nbsp;</div><div style='vertical-align: middle; display: inline-block; position: relative;left: 5px;top: 0px;color: black;'>< 50%</div></td></tr>"
+
+  text << "</table>"
+
+  @legendTable = text
+end
+
+def getSim(code1, code2, assignment_id)
+  sql_query = "SELECT asr.* FROM assignment_sim_results as asr, assignment_codes as ac1, assignment_codes as ac2 WHERE (asr.id1 = ? OR asr.id1 = ?) AND (asr.id2 = ? OR asr.id2 = ?) AND asr.assignment_id = ? LIMIT 0, 1"
+  asr = AssignmentSimResult.find_by_sql([sql_query, code1.id, code2.id, code1.id, code2.id, assignment_id])
+  if (asr.length == 0)
+    return nil
+  end
+  return asr.first.sim
+end
+
+def getCode(student, assignment_id)
+  sql_query = "SELECT codes.* FROM assignment_sim_results as asr, assignment_codes as codes, students WHERE students.matric = ? AND codes.student_id = students.id AND asr.assignment_id = ? AND (asr.id1 = codes.id OR asr.id2 = codes.id) LIMIT 0, 1"
+  code = AssignmentCode.find_by_sql([sql_query, student, assignment_id])
+  if (code.length == 0)
+    return nil
+  end
+  return code.first
+end
+
+assignments = @course.assignments
+
+%>
+
+    <script type="text/javascript">
+      var Log = {
+        elem: false,
+        write: function(text){
+          if (!this.elem)
+            this.elem = document.getElementById('log');
+          this.elem.innerHTML = text;
+          this.elem.style.left = (500 - this.elem.offsetWidth / 2) + 'px';
+        }
+      };
+
+      function addEvent(obj, type, fn) {
+        if (obj.addEventListener) obj.addEventListener(type, fn, false);
+        else obj.attachEvent('on' + type, fn);
+      };
+
+
+      function init() {
+        var infovis = document.getElementById('infovis');
+        infovis.style.position = "relative";
+
+        var w = infovis.offsetWidth - 20, h = <%=600 * assignments.length%>;
+        infovis.style.height = h;
+
+        var container, style, rgraph;
+        var adjs;
+<%
+
+@students = @students.uniq.sort!
+
+for i in (0...assignments.length)
+  assignment = assignments[i]
+  aId = "a" + i.to_s
+  aPrefix = aId + "_"
+  chartId = "chart" + i.to_s
+  infovisId = "infovis" + i.to_s
+  canvasId = "canvas" + i.to_s
+
+  codesArray = []
+  @students.each { | student |
+    code = getCode(student, assignment.id)
+    next if code == nil
+    codesArray << code
+  }
+
+%>
+      var <%=chartId%> = [
+        {
+          "id": "<%=aId%>",
+          "name": "",
+          "data": {
+            "$type" : "none",
+            "$width": 0, "$height": 0,
+            "$labelColor": "black"
+          },
+          "adjacencies": [
+  <%
+  for j in (0...codesArray.length)
+    code = codesArray[j]
+  %>
+              {
+                "nodeTo": "<%=aPrefix%><%=code.student.matric%>",
+                "data": {"$color": "white", "weight":0}
+              }<%=(j < codesArray.length - 1)?",":""%>
+    <%
+    # end coders loop
+  end
+%>
+          ]
+        },
+  <% for j in (0...codesArray.length)
+    code1 = codesArray[j]
+    student1 = code1.student.matric
+    student1Id = code1.student_id
+  %>
+          {
+            "id": "<%=aPrefix%><%=student1%>",
+            "name": "<%=student1%>",
+            "data": { //"$width": 80, "$height": 30,
+              "$labelColor": "<%= if code1.plagiarism then "red" else "black" end %>",
+              "log": "sim_log_view?student_id=<%=student1Id%>&course_id=<%=@course.id%>&blank=true"
+            },
+            "adjacencies": [
+              {
+                "nodeTo": "<%=aId%>",
+                "data": {"weight":0}
+              },
+    <%
+    coderCount = 0
+    for k in (0...codesArray.length)
+      code2 = codesArray[k]
+      student2 = code2.student.matric
+      if (student2 != student1)
+        coderCount += 1
+        sim = getSim(code1, code2, assignment.id)
+        sim = 0 if (sim == nil)
+      %>
+                  {
+                    "nodeTo": "<%=aId + "_" %><%=student2%>",
+                    "data": {
+                      //"$color": "#377FC7",
+                      "$color": "white",
+                      "lineColor": "<%=get_color(sim)%>",
+                      "weight": <%=get_weight(sim)%>
+                    }
+                  }<%=(coderCount < codesArray.length - 1)?",":""%>
+        <%
+        # end if (coder2 != coder)
+      end
+      #end coders 2 loop
+    end
+  %>
+            ]
+          }<%=(j < codesArray.length - 1)?",":""%>
+    <%
+    #end coders 1 loop
+  end
+%>
+      ];
+
+      container = document.createElement('div');
+      container.id = "<%=infovisId%>";
+      style = container.style;
+      style.left = "0px";
+      style.top = "0px";
+      style.width = w + "px";
+      style.height = "600px";
+      style.position = 'relative';
+      style.borderStyle = "solid";
+      style.borderWidth = "1px";
+      infovis.appendChild(container);
+
+      var titleLabel = document.createElement('h2');
+      titleLabel.style.marginTop = '0px';
+      titleLabel.style.position = 'absolute';
+      titleLabel.style.top = '5px';
+      titleLabel.style.left = '5px';
+      titleLabel.innerHTML = "Assignment : <%=assignment.title%>";
+      container.appendChild(titleLabel);
+
+      var legendLabel = document.createElement('div');
+      legendLabel.style.position = 'absolute';
+      legendLabel.style.width = '150px';
+      legendLabel.style.height = '200px';
+      legendLabel.style.left = String(w - 160) + "px";
+      legendLabel.style.top = '5px';
+
+      legendLabel.innerHTML = "<%=genLegend.html_safe%>";
+      container.appendChild(legendLabel);
+
+      var <%=canvasId%> = new Canvas('<%=canvasId%>', {
+        'injectInto': '<%=infovisId%>',
+        'width': w,
+        'height': 600
+      });
+
+      adjs = new Array();
+      adjs[1] = new Array();
+      adjs[3] = new Array();
+      adjs[5] = new Array();
+      adjs[7] = new Array();
+      adjs[9] = new Array();
+      adjs[11] = new Array();
+
+      rgraph = new RGraph(<%=canvasId%>, {
+        Node: {'overridable': true, 'type': 'rectangle', 'color': 'white'},
+        Edge: {'overridable': true, 'color': 'white'},
+        interpolation: 'polar',
+        transition: Trans.Elastic.easeOut,
+        duration:3500,
+        fps: 30,
+        levelDistance: 200,
+
+        onBeforePlotLine: function(adj){
+          if (adj.data.weight)
+            adjs[adj.data.weight].push(adj);
+          //if (!firstTrail) {
+          adj.data.$lineWidth = adj.data.weight;
+          adj.data.$color = adj.data.lineColor;
+          //}
+        },
+
+        onCreateLabel: function(domElement, node){
+          if (node.data.$type != "none") {
+            domElement.innerHTML = node.name;
+            domElement.onclick = function () {
+              document.location.href = node.data.log;
+            };
+            var style = domElement.style;
+            style.cursor = 'pointer';
+            style.fontSize = "1em";
+            style.color = node.data.$labelColor;
+            style.backgroundColor = "white";
+            style.zIndex = 2;
+
+            var text = "";
+            if (style.color == "red") {
+              text = "This student is found guilty in plagiarsim in this assignment. ";
+            }
+            text += "Click to view student log.";
+
+            domElement.onmouseover = function() {
+              Tip(text);
+            }
+
+            domElement.onmouseout = function() {
+              UnTip();
+            }
+          }
+        },
+
+        onPlaceLabel: function(domElement, node){
+          var style = domElement.style;
+
+          style.textAlign='center';
+          style.verticalAlign="middle";
+
+          if (node.data.$type != "none")
+            style.padding="5px 10px 5px";
+
+          var left = parseInt(style.left);
+          var w = domElement.offsetWidth;
+          style.left = (left - w / 2) + 'px';
+          var top = parseInt(style.top);
+          var h = domElement.offsetHeight;
+          style.top = (top - h / 2) + 'px';
+          //style.width;
+          //style.height;
+        }
+      });
+
+      rgraph.loadJSON(<%=chartId%>, 0);
+      rgraph.refresh();
+
+      for (i = 1; i <= 11; i += 2) {
+        for (j = 0; j < adjs[i].length; j++) {
+          rgraph.op.removeEdge([adjs[i][j].nodeFrom.id, adjs[i][j].nodeTo.id]);
+        }
+      }
+
+      rgraph.refresh();
+
+      for (i = 1; i <= 11; i += 2) {
+        for (j = 0; j < adjs[i].length; j++) {
+          rgraph.fx.plotLine(adjs[i][j], <%="canvas#{i.to_s}"%>);
+        }
+      }
+
+      infovis.appendChild(document.createElement('p'));
+
+<% 
+   #end assignments loop 
+end
+%>
+
+
+  }
+    </script>
+    <% elsif action_name == "graph_movement" %>
+      <%= javascript_include_tag "support.js" %>
+      <%= javascript_include_tag "graph_assignments_left.js" %>
+      <%= javascript_include_tag "graph_assignments.js" %>
+    <%= stylesheet_link_tag 'scaffold', 'pds' %>
+    <style type="text/css">
+      table.assignments {
+        border-collapse: collapse;
+        table-layout:fixed;
+      }
+      th.assignments {
+        padding: 3px 10px 3px 10px;
+        margin-right: 3px;
+        text-align: left;
+        font-weight: bold;
+        /*color: #333;*/
+        color: white;
+        background: transparent;
+        background-color: #E7860D;
+        border: 1px solid black;
+        font-size: medium;
+      }
+      td.assignments {
+        padding: 3px 10px 3px 10px;
+        margin-right: 3px;
+        text-align: left;
+        /*color: #333;*/
+        background: transparent;
+        border: 1px solid black;
+        font-size: medium;
+      }
+    </style>
+    <script type="text/javascript">
+      function showMsg(coderId) {
+
+        if (locked['c'+ coderId] == true) {
+          Tip("Click to unmark this student");
+        }
+        else {
+          Tip("Click to mark this student");
+        }
+      }
+    </script>
+    <% elsif action_name == "graph_assignments_left" %>
+      <%= javascript_include_tag "graph_assignments_left.js" %>
+      <%= javascript_include_tag "graph_assignments.js" %>
+    <style type="text/css">
+      table.assignments {
+        border-collapse: collapse;
+        table-layout:fixed;
+      }
+      th.assignments {
+        padding: 3px 10px 3px 10px;
+        margin-right: 3px;
+        text-align: left;
+        font-weight: bold;
+        /*color: #333;*/
+        color: white;
+        background: transparent;
+        background-color: #E7860D;
+        border: 1px solid black;
+        font-size: medium;
+      }
+      td.assignments {
+        padding: 3px 10px 3px 10px;
+        margin-right: 3px;
+        text-align: left;
+        /*color: #333;*/
+        background: transparent;
+        border: 1px solid black;
+        font-size: medium;
+      }
+    </style>
+
+    <% elsif action_name == "graph_assignments" %>
+      <%= javascript_include_tag "support.js" %>
+
+    <script type="text/javascript">
+      //maximize();
+      var blank = "";
+    </script>
+    <style type="text/css">
+      iframe.iframe {
+        width: 100%; 
+        height: 100%;
+        border-width: 0px;
+      }
+    </style>
+
+    <% elsif action_name == "graph_clusters" %>
+
+<%
+assignment_clustering = @clusters.first.assignment_clustering
+assignment = assignment_clustering.assignment
+course = assignment.course
+
+@legendTable = ""
+%>
+    <%= javascript_include_tag "support.js" %>
+
+    <!-- JIT Library File -->
+    <%= javascript_include_tag "excanvas.js" %>
+    <%= javascript_include_tag "jit.js" %>
+
+    <script type="text/javascript">
+      var Log = {
+        elem: false,
+        write: function(text){
+          if (!this.elem)
+            this.elem = document.getElementById('log');
+          this.elem.innerHTML = text;
+          this.elem.style.left = (500 - this.elem.offsetWidth / 2) + 'px';
+        }
+      };
+
+      function addEvent(obj, type, fn) {
+        if (obj.addEventListener) obj.addEventListener(type, fn, false);
+        else obj.attachEvent('on' + type, fn);
+      };
+
+
+      function init() {
+        var adjs;
+        //init data
+<%
+
+for i in (0...@clusters.length)
+  @clusters = @clusters.sort { |a,b|
+    b.assignment_codes.size <=> a.assignment_codes.size
+  }
+end
+
+for i in (0...@clusters.length)
+  cluster = @clusters[i]
+  studentMatrics = []
+  cId = "c" + i.to_s
+%>
+      var <%="chart" + i.to_s%> =
+        [
+        {
+          "id": "<%=cId%>",
+          "name": "",
+          "data": {
+            "$type": "none",
+            "$width": 0, "$height": 0,
+            "$labelColor": "black"
+          },
+          "adjacencies":
+            [
+  <%
+  assignment_codes = cluster.assignment_codes
+  for j in (0...assignment_codes.length)
+    student1Matric = assignment_codes[j].student.matric
+  %>
+              {
+                "nodeTo": "<%=cId + "_" %><%=student1Matric%>",
+                "data": {
+                  "$color": "white",
+                  "weight": 0
+                }
+              }<%=(j < assignment_codes.length - 1)?",":""%>
+  <% end %>
+          ]
+        },
+  <%  for j in (0...assignment_codes.length)
+
+    code1 = assignment_codes[j]
+    student1Matric = code1.student.matric
+    studentMatrics << student1Matric
+    student1Id = code1.student_id
+  %>
+          {
+            "id": "<%=cId + "_" %><%=student1Matric%>",
+            "name": "<%=student1Matric%>",
+            "data": { //"$width": 80, "$height": 30,
+              "$labelColor": "<%= if code1.plagiarism then "red" else "black" end %>",
+              "log": "sim_log_view?student_id=<%=student1Id%>&course_id=<%=course.id%>&blank=true"
+            },
+            "adjacencies":
+              [
+              {
+                "nodeTo": "<%=cId%>",
+                "data": {
+                  "weight": 0
+                }
+              },
+    <%
+    studentCount = 0
+    for k in (0...assignment_codes.length)
+      code2 = assignment_codes[k]
+      student2Matric = code2.student.matric
+      student2Id = code2.student_id
+      if (student2Matric != student1Matric)
+        sim = 0
+        studentCount += 1
+        sql_query = "select asr.* FROM assignment_sim_results as asr WHERE asr.assignment_id = ? AND (asr.id1 = ? OR asr.id1 = ?) AND (asr.id2 = ? OR asr.id2 = ?) LIMIT 1"
+        asr = AssignmentSimResult.find_by_sql([sql_query, assignment.id, code1.id, code2.id, code1.id, code2.id])
+
+        if (asr.length > 0)
+          sim = asr.first.sim
+        end
+      %>
+                  {
+                    "nodeTo": "<%=cId + "_" %><%=student2Matric%>",
+                    "data": {
+                      //"$color": "#377FC7",
+                      "$color": "white",
+                      "lineColor": "<%=get_color(sim)%>",
+                      "weight": <%=get_weight(sim)%>
+                    }
+                  }<%=(studentCount < assignment_codes.length - 1)?",":""%>
+      <%
+      end
+    end
+  %>
+            ]
+          }<%=(j < assignment_codes.length - 1)?",":""%>
+  <%end%>
+      ];
+  <%
+  txt = "";
+  if studentMatrics.size > 3 then
+    for j in (0...3)
+      txt << studentMatrics[j] + ", "
+    end
+    txt << "... (" + studentMatrics.size.to_s + " members)"
+  else
+    txt = studentMatrics.join(", ")
+  end
+%>
+      var coders_<%=i.to_s%> = "<%=txt%>";
+<% end %>
+
+    var infovis = document.getElementById('infovis');
+    infovis.style.position = "relative";
+
+    var w = infovis.offsetWidth - 20, h = <%= 600 * @clusters.length %> ;
+    infovis.style.height = h;
+
+    //create some containers for the visualizations
+    var container, style;
+    var rgraph;
+<% for i in (0...@clusters.length) %>
+      container = document.createElement('div');
+      container.id = "<%="infovis" + i.to_s%>";
+      style = container.style;
+      style.left = "0px";
+      style.top = "0px";
+      style.width = w + "px";
+      style.height = "600px";
+      style.position = 'relative';
+      style.borderStyle = "solid";
+      style.borderWidth = "1px";
+      infovis.appendChild(container);
+
+      var titleLabel = document.createElement('h2');
+      titleLabel.style.marginTop = '0px';
+      titleLabel.style.position = 'absolute';
+      titleLabel.style.top = '5px';
+      titleLabel.style.left = '5px';
+      titleLabel.innerHTML = "Plagiarism cluster consists of: " + coders_<%=i.to_s%>;
+      container.appendChild(titleLabel);
+
+      var legendLabel = document.createElement('div');
+      legendLabel.style.position = 'absolute';
+      legendLabel.style.width = '150px';
+      legendLabel.style.height = '200px';
+      legendLabel.style.left = String(w - 160) + "px";
+      legendLabel.style.top = '5px';
+
+      legendLabel.innerHTML = "<%=genLegend.html_safe%>";
+      container.appendChild(legendLabel);
+
+      var <%="canvas#{i.to_s}"%> = new Canvas('<%="mycanvas" + i.to_s%>', {
+        'injectInto': '<%="infovis#{i.to_s}"%>',
+        'width': w,
+        'height': 600
+      });
+
+      adjs = new Array();
+      adjs[1] = new Array();
+      adjs[3] = new Array();
+      adjs[5] = new Array();
+      adjs[7] = new Array();
+      adjs[9] = new Array();
+      adjs[11] = new Array();
+
+      
+      rgraph = new RGraph(<%="canvas#{i.to_s}"%>, {
+        Node: { 'overridable': true, 'type': 'rectangle', 'color': 'white' },
+        Edge: { 'overridable': true, 'color': 'white' },
+
+        //Set polar interpolation.
+        //Default's linear.
+        interpolation: 'polar',
+
+        //Change the transition effect from linear
+        //to elastic.
+        transition: Trans.Elastic.easeOut,
+        //Change other animation parameters.
+        duration:3500,
+        fps: 30,
+        //Change father-child distance.
+        levelDistance: 200,
+
+        onBeforePlotLine: function(adj){
+          if (adj.data.weight)
+            adjs[adj.data.weight].push(adj);
+          //if (!firstTrail) {
+          adj.data.$lineWidth = adj.data.weight;
+          adj.data.$color = adj.data.lineColor;
+          //}
+        },
+
+        //Add node click handler and some styles.
+        //This method is called only once for each node/label crated.
+        onCreateLabel: function(domElement, node){
+          if (node.data.$type != "none") {
+            domElement.innerHTML = node.name;
+            
+            var style = domElement.style;
+            style.cursor = 'pointer';
+            style.fontSize = "1em";
+            style.color = node.data.$labelColor;
+            style.backgroundColor = "white";
+            style.zIndex = 2;
+            var title = "";
+
+            if (style.color == "red") {
+              title = "This student is found guilty in plagiarsim in this assignment<p/>";
+            }
+            title += "Click to view student's log";
+
+            domElement.onclick = function () {
+              document.location.href = node.data.log;
+            };
+
+            domElement.onmouseover = function() {
+              Tip(title);
+            }
+
+            domElement.onmouseout = function() {
+              UnTip();
+            }
+            
+          }
+        },
+        //This method is called when rendering/moving a label.
+        //This is method is useful to make some last minute changes
+        //to node labels like adding some position offset.
+        onPlaceLabel: function(domElement, node){
+          var style = domElement.style;
+
+          style.textAlign='center';
+          style.verticalAlign="middle";
+
+          if (node.data.$type != "none")
+            style.padding="5px 10px 5px";
+
+          var left = parseInt(style.left);
+          var w = domElement.offsetWidth;
+          style.left = (left - w / 2) + 'px';
+          var top = parseInt(style.top);
+          var h = domElement.offsetHeight;
+          style.top = (top - h / 2) + 'px';
+          //style.width;
+          //style.height;
+        }
+      });
+
+      rgraph.loadJSON(<%="chart#{i.to_s}"%>, 0);
+      rgraph.refresh();
+
+      //rgraph.graph.removeAdjacence(adjs[16][1].nodeTo.id, adjs[16][1].nodeFrom.id);
+      for (i = 1; i <= 11; i += 2) {
+        for (j = 0; j < adjs[i].length; j++) {
+          rgraph.op.removeEdge([adjs[i][j].nodeFrom.id, adjs[i][j].nodeTo.id]);
+        }
+      }
+      
+      //rgraph.op.AddEdge([adjs[16][1].nodeFrom.id, adjs[16][1].nodeTo.id]);
+      rgraph.refresh();
+
+      //rgraph.fx.hideLabels(true);
+
+      for (i = 1; i <= 11; i += 2) {
+        for (j = 0; j < adjs[i].length; j++) {
+          rgraph.fx.plotLine(adjs[i][j], <%="canvas#{i.to_s}"%>);
+        }
+      }
+      
+      //rgraph.fx.hideLabels(false);
+
+      var lineBreak = document.createElement("p");
+      infovis.appendChild(lineBreak);
+<%end%>
+
+  }
+    </script>
+
+    <% elsif action_name == "assignment_sim_result_html_view" %>
+<%
+leftLines = @asr.code1.code_line
+rightLines = @asr.code2.code_line
+leftCodes = @asr.code1.code_array.gsub("\\", "\\\\\\").gsub("\\\'", "\'").gsub("\\\"", "\"")
+rightCodes = @asr.code2.code_array.gsub("\\", "\\\\\\").gsub("\\\'", "\'").gsub("\\\"", "\"")
+coder1 = @asr.code1.student.matric
+coder2 = @asr.code2.student.matric
+%>
+<%= javascript_include_tag "jquery" %>
+<%= javascript_include_tag "setText.js" %>
+<%= javascript_include_tag "support.js" %>
+    <script type="text/javascript">
+      function getPos(index) {
+        var curLeft = curTop = 0;
+        
+        var obj;
+        if (index == 0) {
+          obj = document.getElementById("leftFrame");
+        }
+        else {
+          obj = document.getElementById("rightFrame");
+        }
+
+        if (obj.offsetParent) {
+          do {
+            curLeft += obj.offsetLeft;
+            curTop += obj.offsetTop;
+          } while ((obj = obj.offsetParent) != null);
+        }
+        return [curLeft, curTop];
+      }
+
+      var leftCodes = [<%=leftCodes.html_safe%>];
+      var leftRows=<%=leftLines%>;
+      var rightCodes = [<%=rightCodes.html_safe %>];
+      var rightRows=<%=rightLines %>;
+
+      function Mapping(id, startIndex, endIndex, isPlag, startLine) {
+        this.id = id;
+        this.startIndex = startIndex;
+        this.endIndex = endIndex;
+        this.isPlag = isPlag;
+        this.startLine = startLine;
+      }
+      
+      var leftMappings = new Array(), rightMappings = new Array();
+      var leftE, rightE;
+
+<% baseMappingCount = 0 %>
+<% @asr.mappings.each { |m| -%>
+    <% if !m.isPlagMapping then baseMappingCount = baseMappingCount + 1 end -%>
+    leftMappings.push(new Mapping(<%=m.id%>, <%=m.startIndex1.to_s%>, <%=m.endIndex1.to_s%>, <%=m.isPlagMapping%>, <%=m.startLine1 + 1%>));
+    rightMappings.push(new Mapping(<%=m.id%>, <%=m.startIndex2.to_s%>, <%=m.endIndex2.to_s%>, <%=m.isPlagMapping%>, <%= m.startLine2 + 1%>));
+
+<%  } -%>
+
+    </script>
+    <%= javascript_include_tag "popup-window.js" %>
+    <%= stylesheet_link_tag "popup-window.css" %>
+    <%# stylesheet_link_tag "popup.css" %>
+    <%= stylesheet_link_tag "pds.css" %>
+    <style type="text/css">
+      td.top {
+        white-space: nowrap;
+      }
+      span.status_reported {
+        color: orange;
+      }
+      span.status_confirmed {
+        color: red;
+      }
+      pre {
+        display:inline;
+        position: relative;
+      }
+      pre.num {
+        display: inline;
+        color: gray;
+        position: relative;
+      }
+      span.start {
+        position: relative;
+        width: 0px;
+        left: 0px;
+        top: 0px;
+      }
+      div.codeField {
+        height: 100%; 
+        overflow: auto;
+        border: solid black 1px;
+      }
+      td.code {
+        color: green;
+        white-space: nowrap;
+      }
+    </style>
+
+    <% end %>
   </head>
+
+  <% if action_name == "graph_groups" %>
+  <body onload="init(); //maximize();" style="height: 100%; margin: 0px;" id="body">
+  <% elsif action_name == "graph_sims" %>
+  <body onload="init(); //maximize();" style="height: 100%; margin: 0px;" id="body">
+  <% elsif action_name == "graph_assignments_left" %>
+  <body onload="showRanking(90)" style="margin: 0px; width: 100%;">
+  <% elsif action_name == "graph_clusters" %>
+  <body style="height: 100%; margin: 0px;" onload="init(); //maximize(); " id="body">
+  <% elsif action_name == "assignment_sim_result_html_view" %>
+  <body onload="popup_window_show('#popup', { pos: 'window-center', parent: this, width: 'auto' }); document.getElementById('popup').style.left = (screen.availWidth / 2 - 400); document.getElementById('popup').style.top = 0;" style="height: 100%; max-height: 100%;  margin: 0px;">
+  <% else %>
   <body style="height: 100%; margin: 0px;">
+  <% end %>
     <%= javascript_include_tag 'wz_tooltip.js' %>
+    <% if action_name == "graph_assignments_left" %>
+      <%= yield -%>
+    <% else %>
     <table style="padding: 5px; width: 100%; height: 100%; " cellpadding="0" cellspacing="0">
       <tr style="height: 90px;">
         <td style="">
@@ -66,6 +1309,7 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
       </tr>
     </table>
 
+  <% end %>
 
   </body>
 </html>

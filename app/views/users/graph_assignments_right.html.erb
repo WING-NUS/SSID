@@ -29,7 +29,7 @@ params = params[0...-1]
 %>
 <html>
   <body>
-    <script type="text/javascript" src="../javascripts/wz_tooltip.js"></script>
+    <%= javascript_include_tag "wz_tooltip.js" %>
     <h2><%= course.code  %>: <%= course.name %></h2>
     <%
     @assignments.each { |assignment|

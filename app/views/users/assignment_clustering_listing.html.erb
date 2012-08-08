@@ -67,9 +67,9 @@ end
       @acs.each { |assignment_clustering|
       %>
         <tr class="listing" onmouseover="this.style.backgroundColor ='<%=highlightColor_row%>';" onmouseout="this.style.backgroundColor ='white';">
-          <td class="listing" <%=genTD(assignment_clustering)%>><%= assignment_clustering.coc %></td>
-          <td class="listing" <%=genTD(assignment_clustering)%>><%= assignment_clustering.assignment_clusters.size %></td>
-          <td class="listing" <%=genTD(assignment_clustering)%>><%=assignment_clustering.remark %> (<%=assignment_clustering.created_at.strftime("%d/%m/%Y %H:%M:%S")%>)</td>
+          <td class="listing" <%=genTD(assignment_clustering).html_safe%>><%= assignment_clustering.coc %></td>
+          <td class="listing" <%=genTD(assignment_clustering).html_safe%>><%= assignment_clustering.assignment_clusters.size %></td>
+          <td class="listing" <%=genTD(assignment_clustering).html_safe%>><%=assignment_clustering.remark %> (<%=assignment_clustering.created_at.strftime("%d/%m/%Y %H:%M:%S")%>)</td>
           <td class="listing" style="cursor: default;"><%= link_to 'Delete', {:action => 'assignment_clustering_delete', :assignment_id => assignment_clustering.assignment.id, :clustering_id => assignment_clustering.id}, :confirm => 'Are you sure?', :class => 'listingItem', :onmouseover => "Tip('Click to delete this grouping');", :onmouseout => "UnTip();",  :method => :delete %></td>
         </tr>
       <%

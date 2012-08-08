@@ -38,41 +38,6 @@ coders = {}
 course = @assignments[0].course
 groupCount = 0
 %>
-<html>
-  <head>
-    <script type="text/javascript" src="../javascripts/graph_assignments_left.js"></script>
-    <script type="text/javascript" src="../javascripts/graph_assignments.js"></script>
-    <%= stylesheet_link_tag 'pds' %>
-    <style type="text/css">
-      table.assignments {
-        border-collapse: collapse;
-        table-layout:fixed;
-      }
-      th.assignments {
-        padding: 3px 10px 3px 10px;
-        margin-right: 3px;
-        text-align: left;
-        font-weight: bold;
-        /*color: #333;*/
-        color: white;
-        background: transparent;
-        background-color: #E7860D;
-        border: 1px solid black;
-        font-size: medium;
-      }
-      td.assignments {
-        padding: 3px 10px 3px 10px;
-        margin-right: 3px;
-        text-align: left;
-        /*color: #333;*/
-        background: transparent;
-        border: 1px solid black;
-        font-size: medium;
-      }
-    </style>
-  </head>
-  <body onload="showRanking(90)" style="margin: 0px; width: 100%;">
-    <script type="text/javascript" src="../javascripts/wz_tooltip.js"></script>
     <h2><%= course.code  %>: <%= course.name %></h2>
   <li>Student matric in <label style="color: red;">red</label> denotes the student is found guilty in plagiarism for the assignment</li>
   <li>To <span style="background-color: #C2DCFC;">mark</span> / unmark a student, click the student matric</li>
@@ -133,7 +98,7 @@ groupCount = 0
                 </table>
               </div>
               <% groupCount += 1 %>
-              <%="<hr />" if (i < clusters.length - 1)%>
+              <%="<hr />".html_safe if (i < clusters.length - 1)%>
             <%
             end
             if (clusters.length == 0)
@@ -182,5 +147,3 @@ coders.each_pair { |coderId, clusterings|
 }
 %>
   </script>
-</body>
-</html>

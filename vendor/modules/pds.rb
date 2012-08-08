@@ -18,7 +18,7 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
 def CompareMethods.pds(assignment_id, compare_folder_path, language, min, ngram, host, db, user, pwd)
-  jar_path = File.join(JAVA_ROOT, "programs", "PlagiarismDetection.jar")
+  jar_path = File.join(Rails.root, "lib", "java", "programs", "PlagiarismDetection.jar")
   #assignment_id, compare_folder_path, language, min_matching_criteria_(statement), n-gram_size
 
   command = "rake JAR_PATH=#{jar_path} ASSIGNMENT_ID=#{assignment_id} COMPARE_FOLDER_PATH=#{compare_folder_path} LANGUAGE=#{language} MIN=#{min} NGRAM=#{ngram} HOST=#{host} DB=#{db} USER=#{user} PWD=#{pwd} check_plag &"

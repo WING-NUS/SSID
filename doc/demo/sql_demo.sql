@@ -11,8 +11,8 @@ CREATE TABLE `accounts` (
   `role` int(11) default '1',
   `ngram` int(11) NOT NULL default '4',
   `min_length` int(11) NOT NULL default '2',
-  `created_at` datetime default NULL,
-  `updated_at` datetime default NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `index_accounts_on_matric` (`matric`),
   KEY `index_accounts_on_name` (`name`),
@@ -26,8 +26,8 @@ CREATE TABLE `announcements` (
   `id` int(11) NOT NULL auto_increment,
   `content` text,
   `account_id` int(11) NOT NULL,
-  `created_at` datetime default NULL,
-  `updated_at` datetime default NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -38,8 +38,8 @@ CREATE TABLE `assignment_cluster_members` (
   `id` int(11) NOT NULL auto_increment,
   `assignment_cluster_id` int(11) NOT NULL,
   `assignment_code_id` int(11) NOT NULL,
-  `created_at` datetime default NULL,
-  `updated_at` datetime default NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `members` (`assignment_cluster_id`,`assignment_code_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -51,8 +51,8 @@ CREATE TABLE `assignment_clusterings` (
   `assignment_id` int(11) default NULL,
   `remark` varchar(255) default NULL,
   `coc` decimal(6,3) default NULL,
-  `created_at` datetime default NULL,
-  `updated_at` datetime default NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `index_assignment_clusterings_on_assignment_id_and_coc` (`assignment_id`,`coc`),
   KEY `index_assignment_clusterings_on_assignment_id` (`assignment_id`),
@@ -64,8 +64,8 @@ CREATE TABLE `assignment_clusterings` (
 CREATE TABLE `assignment_clusters` (
   `id` int(11) NOT NULL auto_increment,
   `assignment_clustering_id` int(11) default NULL,
-  `created_at` datetime default NULL,
-  `updated_at` datetime default NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `index_assignment_clusters_on_assignment_clustering_id` (`assignment_clustering_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -78,8 +78,8 @@ CREATE TABLE `assignment_codes` (
   `code_array` longtext,
   `student_id` int(11) default NULL,
   `plagiarism` tinyint(1) NOT NULL default '0',
-  `created_at` datetime default NULL,
-  `updated_at` datetime default NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `index_assignment_codes_on_student_id` (`student_id`),
   KEY `index_assignment_codes_on_student_id_and_plagiarism` (`student_id`,`plagiarism`)
@@ -97,8 +97,8 @@ CREATE TABLE `assignment_sim_results` (
   `sim2To1` decimal(5,3) default NULL,
   `sim` decimal(5,3) default NULL,
   `status` int(11) NOT NULL default '0',
-  `created_at` datetime default NULL,
-  `updated_at` datetime default NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `index_assignment_sim_results_on_assignment_id_and_id1_and_id2` (`assignment_id`,`id1`,`id2`),
   KEY `index_assignment_sim_results_on_assignment_id_and_sim` (`assignment_id`,`sim`),
@@ -118,8 +118,8 @@ CREATE TABLE `assignments` (
   `language` varchar(255) default NULL,
   `course_id` int(11) NOT NULL,
   `status` int(11) default '-1',
-  `created_at` datetime default NULL,
-  `updated_at` datetime default NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `index_assignments_on_course_id` (`course_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
@@ -144,8 +144,8 @@ CREATE TABLE `courses` (
   `academic_year` varchar(255) default NULL,
   `semester` int(11) default NULL,
   `expiry` datetime default NULL,
-  `created_at` datetime default NULL,
-  `updated_at` datetime default NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `index_courses_on_code_and_academic_year_and_semester` (`code`,`academic_year`,`semester`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
@@ -160,8 +160,8 @@ CREATE TABLE `plag_logs` (
   `assignment_code_id` int(11) default NULL,
   `assignment_sim_result_id` int(11) default NULL,
   `log_type` int(11) NOT NULL,
-  `created_at` datetime default NULL,
-  `updated_at` datetime default NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `index_plag_logs_on_student_id` (`student_id`),
   KEY `index_plag_logs_on_account_id` (`account_id`),
@@ -172,6 +172,7 @@ CREATE TABLE `plag_logs` (
 INSERT INTO `plag_logs` VALUES (1,7,3,7,32,0,'2012-06-18 10:35:27','2012-06-18 10:35:27'),(2,5,3,5,32,0,'2012-06-18 10:35:27','2012-06-18 10:35:27'),(3,7,3,7,32,2,'2012-06-18 10:35:32','2012-06-18 10:35:32'),(4,5,3,5,32,2,'2012-06-18 10:35:32','2012-06-18 10:35:32'),(5,5,3,5,32,3,'2012-06-18 10:35:32','2012-06-18 10:35:32');
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
+DROP TABLE IF EXISTS `schema_migrations`;
 CREATE TABLE `schema_migrations` (
   `version` varchar(255) NOT NULL,
   UNIQUE KEY `unique_schema_migrations` (`version`)
@@ -215,8 +216,8 @@ CREATE TABLE `teachings` (
   `account_id` int(11) NOT NULL,
   `course_id` int(11) NOT NULL,
   `role` int(11) NOT NULL,
-  `created_at` datetime default NULL,
-  `updated_at` datetime default NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `index_teachings_on_account_id_and_course_id` (`account_id`,`course_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;

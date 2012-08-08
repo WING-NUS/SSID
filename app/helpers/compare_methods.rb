@@ -19,5 +19,5 @@ module CompareMethods
     #naming: (char|token)_name of comparision
     #char = character based
     #token = token based
-    load(File.join(RAILS_ROOT, "vendor", "modules", "pds.rb"))
+    load(File.join(Rails.root, "vendor", "modules", "pds.rb"))
 end

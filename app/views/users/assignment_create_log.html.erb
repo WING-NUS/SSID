@@ -25,13 +25,5 @@ course = @assignment.course
 <div class="breadcrumb"><%= link_to "My Modules", {:action => "course_listing"}, :class => "breadcrumbItem" %> > <%= link_to course.code, {:action => "assignment_listing", :course_id => course.id}, :class => "breadcrumbItem" %> > Assignment: <%=@assignment.title%></div>
 <div style="width: 100%; margin: 0px; padding: 0px;">
   <h2>Assignment Upload Log</h2>
-  <%
-  File.open("upload_log/#{@assignment.id}", "r") do |infile|
-    while (line = infile.gets)
-    %>
-      <%=line + "<br/>"%>
-    <%
-    end
-  end
-%>
+  <%= File.open("upload_log/#{@assignment.id}").readlines.collect { |line| line.strip + "<br/>" }.join("\n").html_safe %>
 </div>

@@ -19,8 +19,18 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 
 <h2>Editing Account</h2>
 
-<% form_for(@account, :url => { :action => 'account_update', :id => @account }) do |f| %>
-  <%= f.error_messages %>
+<%= form_for(@account, :url => { :action => 'account_update', :id => @account }) do |f| %>
+  <%# Handle errors, following http://stackoverflow.com/questions/3873190/f-error-messages-in-rails-3-0 %>
+  <% if @account.errors.any? %>
+    <div id="error_explanation">
+      <h3>Found <%= pluralize(@account.errors.count, "error") %> in the form:</h3>
+      <ul>
+      <% @account.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
   <table>
     <tr>
       <td>
@@ -35,12 +45,12 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
   </tr>
   <tr>
     <td>
-      <b><%=getDefination("min_length")%><%=genHelp("#{getExplaination("min_length")}. Default: 2.")%></b>: <%= f.text_field 'min_length' %>
+      <b><%=getDefination("min_length")%><%=genHelp("#{getExplaination("min_length")}. Default: 2.").html_safe%></b>: <%= f.text_field 'min_length' %>
     </td>
   </tr>
   <tr>
     <td>
-      <b><%=getDefination("ngram")%><%=genHelp("#{getExplaination("ngram")}. Default: 4.")%></b>: <%= f.text_field 'ngram' %>
+      <b><%=getDefination("ngram")%><%=genHelp("#{getExplaination("ngram")}. Default: 4.").html_safe%></b>: <%= f.text_field 'ngram' %>
     </td>
   </tr>
   </table>

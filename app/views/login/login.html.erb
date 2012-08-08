@@ -17,10 +17,12 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 %>
 
-<% form_tag({}, {:style => ""}) do %>
+<%= form_tag({}, {:style => ""}) do %>
 <center>
   <h1>Welcome to SSID</h1>
-  <%= "<div style='color:red'>#{flash[:notice]}</div>" if flash[:notice] %>
+  <% if flash[:notice] %>
+    <div style='color:red'><%= flash[:notice] %></div>
+  <% end %>
   <fieldset style="width: 500px; border: 0px;">
     <table style="width: auto;">
       <tr>

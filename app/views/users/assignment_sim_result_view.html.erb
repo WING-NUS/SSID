@@ -61,9 +61,9 @@ filteredStudent = 2
 def getSortImage(sort)
   if @sortType == sort
     if @sortDirection == "desc"
-      " <img style='background-color: transparent;' src=\"../images/sort_desc.png\" border=\"0\" />"
+      image_tag("sort_desc.png", style:'background-color: transparent;', border:'0')
     else
-      " <img src=\"../images/sort_asc.png\" border=\"0\" />"
+      image_tag("sort_asc.png", border:'0')
     end
   else
     ""
@@ -153,12 +153,12 @@ if (results.size > 0)
     <col width="1*"/>
     <thead class="listing">
       <tr class="listing">
-        <th class="listing" style="cursor: default;">Student 1<%=genHelp("Student matric in <span style='color: red;'>red</span> denotes the student is found guilty in plagiarism in this assignment.<br/><span style='color:red'>*</span> denotes log is avaliable for the student.<br/><br/>To show student's log, click the student matric.")%></th>
-        <th class="listing" style="cursor: default;">Student 2<%=genHelp("Student matric in <span style='color: red;'>red</span> denotes the student is found guilty in plagiarism in this assignment.<br/><span style='color:red'>*</span> denotes log is avaliable for the student.<br/><br/>To show student's log, click the student matric.")%></th>
-        <th class="listing" style="cursor: pointer;" <%=getHref("sim1To2", "similarity from student 1 to student 2")%>>Similarity<br/>(1 to 2)<%=getSortImage("sim1To2")%></th>
-        <th class="listing" style="cursor: pointer;" <%=getHref("sim2To1", "similarity from student 2 to student 1")%>>Similarity<br/>(2 to 1)<%=getSortImage("sim2To1")%></th>
-        <th class="listing" style="cursor: pointer;" <%=getHref("max", "the maximum similarity between the asymmetric similarities")%>>Max<%=getSortImage("max")%></th>
-        <th class="listing" style="cursor: pointer;" <%=getHref("avg", "the average similarity of the asymmetric similarities")%>>Avg<%=getSortImage("avg")%></th>
+        <th class="listing" style="cursor: default;">Student 1<%=genHelp("Student matric in <span style='color: red;'>red</span> denotes the student is found guilty in plagiarism in this assignment.<br/><span style='color:red'>*</span> denotes log is avaliable for the student.<br/><br/>To show student's log, click the student matric.").html_safe%></th>
+        <th class="listing" style="cursor: default;">Student 2<%=genHelp("Student matric in <span style='color: red;'>red</span> denotes the student is found guilty in plagiarism in this assignment.<br/><span style='color:red'>*</span> denotes log is avaliable for the student.<br/><br/>To show student's log, click the student matric.").html_safe%></th>
+        <th class="listing" style="cursor: pointer;" <%=getHref("sim1To2", "similarity from student 1 to student 2").html_safe%>>Similarity<br/>(1 to 2)<%=getSortImage("sim1To2")%></th>
+        <th class="listing" style="cursor: pointer;" <%=getHref("sim2To1", "similarity from student 2 to student 1").html_safe%>>Similarity<br/>(2 to 1)<%=getSortImage("sim2To1")%></th>
+        <th class="listing" style="cursor: pointer;" <%=getHref("max", "the maximum similarity between the asymmetric similarities").html_safe%>>Max <%=getSortImage("max").html_safe%></th>
+        <th class="listing" style="cursor: pointer;" <%=getHref("avg", "the average similarity of the asymmetric similarities").html_safe%>>Avg<%=getSortImage("avg")%></th>
         <th class="listing" style="cursor: pointer;" <%=getHref("status", "remark")%>>Remark<%=getSortImage("status")%></th>
         <th class="listing" style="cursor: default;">Result</th>
       </tr>
@@ -208,8 +208,8 @@ if (results.size > 0)
           student2_logs = PlagLog.find_by_sql([sql_query, result.code2.student.id, course.id])
         end
       %>
-        <td class="listing" style="cursor: default;"><%= link_to result.code1.student.matric, getLogURL(result.code1.student.id, course.id), :style => "text-decoration: none; color: #{student1Color}; background-color: transparent;", :onmouseover => "Tip('#{student1Title}');this.style.color='#{highlightColor_link}';", :onmouseout => "UnTip();this.style.color='#{student1Color}'" if student1_logs.size > 0 %><%="<span style='color:red'>*</span>" if student1_logs.size > 0-%><%=result.code1.student.matric if student1_logs.size == 0%></td>
-        <td class="listing" style="cursor: default;"><%= link_to result.code2.student.matric, getLogURL(result.code2.student.id, course.id), :style => "text-decoration: none; color: #{student2Color}; background-color: transparent;", :onmouseover => "Tip('#{student2Title}');this.style.color='#{highlightColor_link}';", :onmouseout => "UnTip();this.style.color='#{student2Color}'" if student2_logs.size > 0 %><%="<span style='color:red'>*</span>" if student2_logs.size > 0-%><%=result.code2.student.matric if student2_logs.size == 0%></td>
+        <td class="listing" style="cursor: default;"><%= link_to result.code1.student.matric, getLogURL(result.code1.student.id, course.id), :style => "text-decoration: none; color: #{student1Color}; background-color: transparent;", :onmouseover => "Tip('#{student1Title}');this.style.color='#{highlightColor_link}';", :onmouseout => "UnTip();this.style.color='#{student1Color}'" if student1_logs.size > 0 %><%="<span style='color:red'>*</span>".html_safe if student1_logs.size > 0-%><%=result.code1.student.matric if student1_logs.size == 0%></td>
+        <td class="listing" style="cursor: default;"><%= link_to result.code2.student.matric, getLogURL(result.code2.student.id, course.id), :style => "text-decoration: none; color: #{student2Color}; background-color: transparent;", :onmouseover => "Tip('#{student2Title}');this.style.color='#{highlightColor_link}';", :onmouseout => "UnTip();this.style.color='#{student2Color}'" if student2_logs.size > 0 %><%="<span style='color:red'>*</span>".html_safe if student2_logs.size > 0-%><%=result.code2.student.matric if student2_logs.size == 0%></td>
         <td class="listing" onclick="document.location='<%=url%>';" onmouseover="Tip('Click to view pairwise comparison result');" onmouseout="UnTip();"><%= sim1To2 + "\%" %></td>
         <td class="listing" onclick="document.location='<%=url%>';" onmouseover="Tip('Click to view pairwise comparison result');" onmouseout="UnTip();"><%= sim2To1 + "\%" %></td>
         <td class="listing" onclick="document.location='<%=url%>';" onmouseover="Tip('Click to view pairwise comparison result');" onmouseout="UnTip();"><%= max + "\%"%></td>
@@ -217,13 +217,13 @@ if (results.size > 0)
         <%=
         case result.status
         when 3
-          "<td class=\"listing\" onclick=\"document.location = '#{url}';\" align=\"center\" onmouseover=\"Tip('This pair is reported as suspicious and is pending for investigation<br/><br/>Click to view pairwise comparison result');\" onmouseout=\"UnTip();\"><font color='orange'>Reported Suspicious</font></td>"
+          "<td class=\"listing\" onclick=\"document.location = '#{url}';\" align=\"center\" onmouseover=\"Tip('This pair is reported as suspicious and is pending for investigation<br/><br/>Click to view pairwise comparison result');\" onmouseout=\"UnTip();\"><font color='orange'>Reported Suspicious</font></td>".html_safe
         when 2
-          "<td class=\"listing\" onclick=\"document.location='#{url}';\" align=\"center\" onmouseover=\"Tip('This pair is confirmed as plagiarism<br/><br/>Click to view pairwise comparison result');\" onmouseout=\"UnTip();\"><font color='red'>Confirmed Plagiarism</font></td>"
+          "<td class=\"listing\" onclick=\"document.location='#{url}';\" align=\"center\" onmouseover=\"Tip('This pair is confirmed as plagiarism<br/><br/>Click to view pairwise comparison result');\" onmouseout=\"UnTip();\"><font color='red'>Confirmed Plagiarism</font></td>".html_safe
         when 1
-          "<td class=\"listing\" onclick=\"document.location='#{url}';\" align=\"center\" onmouseover=\"Tip('This pair was reported as suspicious but the students are found innocent in further investigation<br/><br/>Click to view pairwise comparison result');\" onmouseout=\"UnTip();\"><font color='blue'>Found Innocent</font></td>"
+          "<td class=\"listing\" onclick=\"document.location='#{url}';\" align=\"center\" onmouseover=\"Tip('This pair was reported as suspicious but the students are found innocent in further investigation<br/><br/>Click to view pairwise comparison result');\" onmouseout=\"UnTip();\"><font color='blue'>Found Innocent</font></td>".html_safe
         else
-          "<td class='listing' onclick=\"document.location='#{url}';\" onmouseover=\"Tip('Click to view pairwise comparison result');\" onmouseout=\"UnTip();\" />"
+          "<td class='listing' onclick=\"document.location='#{url}';\" onmouseover=\"Tip('Click to view pairwise comparison result');\" onmouseout=\"UnTip();\" />".html_safe
         end
       %>
         <td class="listing" style="text-decoration: underline;" onmouseover="Tip('Click to view pairwise comparison result'); this.style.color='<%=highlightColor_link%>';" onmouseout="UnTip(); this.style.color='#333';" onclick="document.location = '<%=url%>'">View</td>

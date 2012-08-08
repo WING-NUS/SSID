@@ -63,7 +63,7 @@ div.instruction {
 
 tr.welcome {
     /*background-color: #FF6C00;*/
-    background-image: url('../images/orangeE.jpg');
+    background-image: url('../assets/orangeE.jpg');
     background-repeat: repeat-x;
     vertical-align: bottom;
     -moz-user-select: none;
