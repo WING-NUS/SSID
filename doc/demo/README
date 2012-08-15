@@ -5,59 +5,60 @@ different scenarios.
 Configuration
 ----------------------------------------------------------------
 Note:
-	1) This demonstration assumes SSID is configured.
-	2) All contents in SSID database will be deleted.
-	3) Upload records will be deleted.
+    1) This demonstration assumes SSID is configured.
+    2) All contents in SSID database will be deleted.
+    3) Upload records will be deleted.
 
-1) Reinitialize SSID database by the SQL commands:
-	drop database <database name>
-	cretae database <database name>
+ 1) Reinitialize SSID database by the SQL commands:
+    drop database <database name>
+    create database <database name>
 
-2) Execute the following command:
-	mysql <database name> < sql_demo.sql
+ 2) Execute the following command:
+	  mysql <database name> < sql_demo.sql
 
-3) Copy the directories "upload" "upload_log" to the root
-   directory of SSID.
+ 3) Create directories "upload" and "upload_log" in the root
+    directory of SSID.
 
 ----------------------------------------------------------------
-Scenario 1: Submitting an Assignment and report for plagiarism
+Scenario 1: Submitting an Assignment and reporting for plagiarism
 ----------------------------------------------------------------
-1) Log in to SSID through the web interface with the following
-   account and password:
-	A/C: instructor1
-	Password: instructor1
+ 1) Log in to SSID through the web interface with the following
+    account and password:
+    Account: instructor1
+	  Password: instructor1
 
-2) Click "My Modules" on the top toolbar.
+ 2) Click "My Modules" on the top toolbar.
 
-3) You are now at the [Module Management] page. 
-   Select the module "Programming Methodolgy" with the code 
-   "CS1101".
+ 3) You are now at the [Module Management] page. 
+    Select the module "Programming Methodolgy" with the code 
+    "CS1101".
 
-4) Click "New Assignment" at the bottom toolbar.
+ 4) Click "New Assignment" at the bottom toolbar.
 
-5) Fill in the following informations:
-	Title: A1
-	Language: Java
-	Minimum Match Length: 2
-	The size of N-Gram: 4
-	Assignment File: CS1101_A1.zip (available in the same 
-					folder of this README)
+ 5) Fill in the following information:
+    Title: A1
+    Language: Java
+    Minimum Match Length: 2
+    The size of N-Gram: 4
+    Assignment File: CS1101_A1.zip (available in the same 
+      folder of this README)
 
-6) Click "Create"
+ 6) Click "Create"
 
-7) Once the web page has refresh with "A1" shown in the 
-   [Progressing Assignments] table, allow SSID to do the 
-   checking and take a break (=
+ 7) You are not at the Module's Assignment page with "A1" shown 
+    in the [Processing Assignments] table. Allow SSID to process 
+    the assignment file and take a short break (=
 
-8) Refresh the web page, once the checking is done, "A1" will
-   be shown in the [Submitted Assignments] table.
+ 8) Refresh the web page. When the processing has completed, the
+    assignment name, "A1", will be shown in the [Submitted Assignments] 
+    table.
 
-9) Click "A1" from the [Submitted Assignments] table.
+ 9) Click "A1" from the [Submitted Assignments] table.
 
-10) You are now in the [Pairwise Comparison Results Listing] 
+10) You are now in the [Results for pairwise comparison of submissions] 
     page. It shows the pairwise similarity between two 
     submissions. From the table, the submission pairs: 03-02, 
-    04-06, 05-04, 05-06 are having high similarities. Let's 
+    04-06, 05-04, 05-06 have high similarities. Let's 
     report them as plagiarism. 
 
 11) Click "View" under the "RESULT" column for the pair 03-02.
@@ -88,7 +89,8 @@ Scenario 2: Finding groups of plagiarism
    Grouping".
 
 3) Select "Suspicious or confirmed plagiarism case (xx.xx%) and
-   click "Create".
+   click "Create". Note that the cut off criterion has been 
+   automatically calculated.
 
 4) Once you are redirected back to the [Grouping Listing] page,
    click the newly created grouping.
@@ -100,13 +102,16 @@ Scenario 2: Finding groups of plagiarism
 ----------------------------------------------------------------
 Visuals
 ----------------------------------------------------------------
-Including the [Clusters Summary] page, SSID equips with total 6
-visuals. To access the visuals:
+Including the [Clusters Summary] page, SSID is equipped with a 
+total of six different visuals. To access the visuals:
 
-1) From the [Module Management] page, click "View Visuals".
+1) Go to the [Module Management] page by clicking "My Modules" from 
+   the top menu.
+   
+2) Click "View" under the Visuals column on the right of the table with
+   all your modules.
 
-2) Select the desired visual type from the types of visual 
+3) Select the desired visual type from the types of visual 
    listing on the left and follow the instructions shown on the 
    right. 
-
 

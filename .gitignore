@@ -16,10 +16,6 @@
 # Ignore mysqldb connector
 /lib/java/programs/lib/*
 
-# Ignore popup-window
-/app/assets/javascripts/popup-window.js
-/app/assets/stylesheets/popup-window.css
-
 # Ignore upload and upload_log directories
 /upload
 /upload_log
@@ -33,3 +29,8 @@
 # Ignore all logfiles and tempfiles.
 /log/*.log
 /tmp
+
+# Ignore mysql-connector-java-5.1.13-bin.jar
+/lib/java/programs/lib/
+/lib/java/DBSCAN/lib/
+/lib/java/PlagiarismDetection/lib/

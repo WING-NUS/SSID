@@ -6,38 +6,36 @@ Installation and Configuration of SSID
 Installation
 ------------
 
-1) Install MySQL, Apache, Ruby (1.8.7), Rails (2.3) and rake (0.9.2.2) 
-1) Download SSID from the GitHub repository:
-	https://github.com/WING-NUS/SSID
+1) Install MySQL, Apache, Ruby (1.9.2), and bundler (a ruby gem; 1.1.2) 
 
-2) Download the following softwares:
-	2.1) MySQL Connector/J version 5.1.13 from
-		http://dev.mysql.com/downloads/connector/
-	     And put the downloaded file into the following directories:
-		java/programs/lib
-		java/PlagiarismDetection/lib    (for recompiling purpose
-						only)
-		java/DBSCAN/lib (for recompiling purpose only)
+2) Download SSID from the GitHub repository:
+	 https://github.com/WING-NUS/SSID
 
-	2.2) Download "popup-window.js" from 
-		http://www.php-development.ru/java 
-scripts/popup-window.php
-	     And put the file into
-		public/javascripts
-
+3) Download MySQL Connector/J version 5.1.13 from
+	 http://dev.mysql.com/downloads/connector/
+   - Put the downloaded file "mysql-connector-java-5.1.13-bin.jar"
+     into the directory: 
+       - lib/java/programs/lib
+   - If you wish to recompile any of SSID's jar files, you will also
+     need to copy "mysql-connector-java-5.1.13-bin.jar" to the following
+     directories:
+	     - lib/java/PlagiarismDetection/lib
+	     - lib/java/DBSCAN/lib
 
 -------------
 Configuration
 -------------
 
-1) Copy config/database/database.yml.template to
-	config/database/database.yml
+1) Copy config/database.yml.mysql-template to
+	 config/database/database.yml. Alternatively, use the sqlite3 template.
 
 2) Modify database.yml with your database settings
 
+3) Run bundler to install the necessary gems (including rails) from the root
+   directory of SSID:
+     bundle install 
+
 3) Execute the following command in the root directory of SSID:
-	rake db:migrate RAILS_ENV="production"
+	 rake db:migrate RAILS_ENV="production"
 
 4) Configure Apache to serve web requests to SSID
-
-
