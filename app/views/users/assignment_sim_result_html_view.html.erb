@@ -78,25 +78,23 @@ coder2 = @asr.code2.student.matric
             <col width="50%"/>
             <col width="50%"/>
             <tr style="vertical-align: top; height:auto;">
-              <td><h3 style="display:inline">Submitted By: <%= "<span class='status_confirmed' onmouseover=\"Tip('This student is found guilty in plagiarism in this assignment');\" onmouseout=\"UnTip();\">" if @asr.code1.plagiarism == true%><%=coder1%><%= "</span>" if @asr.code1.plagiarism == true%></h3>
+              <td><h3 style="display:inline">Submitted By: <%= "<span class='status_confirmed' onmouseover=\"Tip('This student is found guilty in plagiarism in this assignment');\" onmouseout=\"UnTip();\">".html_safe if @asr.code1.plagiarism == true%><%=coder1%><%= "</span>".html_safe if @asr.code1.plagiarism == true%></h3>
               <% if @asr.status == 3 || @asr.status == 2 %>
                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                   <% if @asr.code1.plagiarism == false && @user_account.teachings.find(:all, :conditions => "course_id = " + @asr.assignment.course.id.to_s).first.role == 0 %>
                     <%= link_to 'Found Guilty' , {:action => "assignment_confirm_plagiarism", :assignment_sim_result_id => @asr.id, :assignment_code_id => @asr.code1.id, :page => params[:page], :rpp => params[:rpp], :sort => params[:sort], :sortDirection => params[:sortDirection], :fs1 => params[:fs1], :fs2 => params[:fs2]}, :onmouseover => "Tip('Confirm this as plagiarism case');", :onmouseout => "UnTip();", :class => "normalLink", :confirm => "Confirming this as a plagiarism case. Are you sure?" %>
                   <% else %>
                     <%#link_to 'Clear plagiarism', {:action => "assignment_clear_plagiarism", :assignment_sim_result_id => @asr.id, :assignment_code_id => @asr.code1.id, :page => params[:page], :rpp => params[:rpp], :sort => params[:sort], :sortDirection => params[:sortDirection], :fs1 => params[:fs1], :fs2 => params[:fs2]}, :title => "Clearing this student from all plagiarism cases in this assignment", :confirm => "Clearing this student from all plagiarism cases in this assignment. Are you sure?" %>
-                    ""
                   <% end %>
                 <% end %>
               </td>
-              <td><h3 style="display:inline">Submitted By: <%= "<span class='status_confirmed' onmouseover=\"Tip('This student is found guilty in plagiarism in this assignment');\" onmouseout=\"UnTip();\">" if @asr.code2.plagiarism == true%><%=coder2%><%= "</span>" if @asr.code2.plagiarism == true%></h3>
+              <td><h3 style="display:inline">Submitted By: <%= "<span class='status_confirmed' onmouseover=\"Tip('This student is found guilty in plagiarism in this assignment');\" onmouseout=\"UnTip();\">".html_safe if @asr.code2.plagiarism == true%><%=coder2%><%= "</span>".html_safe if @asr.code2.plagiarism == true%></h3>
               <% if @asr.status == 2 || @asr.status == 3 %>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <% if @asr.code2.plagiarism == false && @user_account.teachings.find(:all, :conditions => "course_id = " + @asr.assignment.course.id.to_s).first.role == 0 %>
                    <%= link_to 'Found Guilty' , {:action => "assignment_confirm_plagiarism", :assignment_sim_result_id => @asr.id, :assignment_code_id => @asr.code2.id, :page => params[:page], :rpp => params[:rpp], :sort => params[:sort], :sortDirection => params[:sortDirection], :fs1 => params[:fs1], :fs2 => params[:fs2]}, :onmouseover => "Tip('Confirm this as plagiarism case');", :onmouseout => "UnTip();", :class => "normalLink", :confirm => "Confirming this as a plagiarism case. Are you sure?" %>
                 <% else %>
                   <%# link_to 'Clear plagiarism', {:action => "assignment_clear_plagiarism", :assignment_sim_result_id => @asr.id, :assignment_code_id => @asr.code2.id, :page => params[:page], :rpp => params[:rpp], :sort => params[:sort], :sortDirection => params[:sortDirection], :fs1 => params[:fs1], :fs2 => params[:fs2]}, :title => "Clearing this student from all plagiarism cases in this assignment", :confirm => "Clearing this student from all plagiarism cases in this assignment. Are you sure?" %>
-                    ""
                 <% end %>
               <% end %>
               </td>
@@ -156,8 +154,8 @@ coder2 = @asr.code2.student.matric
               <col width=100 />
               <tr>
                 <th>Statements<br/>Matched&nbsp;<%=genHelp(getExplaination("statement_matched")).html_safe%></th>
-                <th><%= "<font color='red' onmouseover=\"Tip('This student is found guilty in plagiarism in this assignment');\" onmouseout=\"UnTip();\">" if @asr.code1.plagiarism %><%= coder1%><%= "</font>" if @asr.code1.plagiarism%><br/>(<%= @asr.sim1To2.to_s + "%" %>)&nbsp;<%=genHelp(getExplaination("sim1To2")).html_safe%></th>
-                <th><%= "<font color='red' onmouseover=\"Tip('This student is found guilty in plagiarism in this assignment');\" onmouseout='UnTip();'>" if @asr.code2.plagiarism %><%= coder2%><%= "</font>" if @asr.code2.plagiarism%><br/>(<%= @asr.sim2To1.to_s + "%" %>)&nbsp;<%=genHelp(getExplaination("sim2To1")).html_safe%></th>
+                <th><%= "<font color='red' onmouseover=\"Tip('This student is found guilty in plagiarism in this assignment');\" onmouseout=\"UnTip();\">".html_safe if @asr.code1.plagiarism %><%= coder1%><%= "</font>".html_safe if @asr.code1.plagiarism%><br/>(<%= @asr.sim1To2.to_s + "%" %>)&nbsp;<%=genHelp(getExplaination("sim1To2")).html_safe%></th>
+                <th><%= "<font color='red' onmouseover=\"Tip('This student is found guilty in plagiarism in this assignment');\" onmouseout='UnTip();'>".html_safe if @asr.code2.plagiarism %><%= coder2%><%= "</font>".html_safe if @asr.code2.plagiarism%><br/>(<%= @asr.sim2To1.to_s + "%" %>)&nbsp;<%=genHelp(getExplaination("sim2To1")).html_safe%></th>
               </tr>
               <% if @asr.mappings.size == 0 %>
                 <tr><td colspan=\"3\">No match found!</td></tr>
