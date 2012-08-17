@@ -28,8 +28,9 @@ coder2 = @asr.code2.student.matric
 <html style="height: 100%; max-height: 100%;">
   <head>
     <title>Matches for <%=coder1 + " and " + coder2%> <%= "(Confirmed Plagiarism Case)" if @asr.status == 1%></title>
-    <script type="text/javascript" src="../javascripts/setText.js"></script>
-    <script type="text/javascript" src="../javascripts/support.js"></script>
+    <%= javascript_include_tag "jquery" %>
+    <%= javascript_include_tag "setText.js" %>
+    <%= javascript_include_tag "support.js" %>
     <script type="text/javascript">
       function getPos(index) {
         var curLeft = curTop = 0;
@@ -74,9 +75,10 @@ coder2 = @asr.code2.student.matric
 <%  } -%>
 
     </script>
-    <script type="text/javascript" src="../javascripts/popup-window.js"></script>
-    <link rel="stylesheet" type="text/css" href="../stylesheets/popup.css" />
-    <link rel="stylesheet" type="text/css" href="../stylesheets/pds.css"/>
+    <%= javascript_include_tag "popup-window.js" %>
+    <%= stylesheet_link_tag "popup-window.css" %>
+    <%# stylesheet_link_tag "popup.css" %>
+    <%= stylesheet_link_tag "pds.css" %>
     <style type="text/css">
       td.top {
         white-space: nowrap;
@@ -114,7 +116,7 @@ coder2 = @asr.code2.student.matric
     </style>
   </head>
 
-  <body onload="popup_show('popup', 'popup_drag', 'popup_exit', 'pop_body'); document.getElementById('popup').style.left = (screen.availWidth / 2 - 400); document.getElementById('popup').style.top = 0;" style="height: 100%; max-height: 100%;  margin: 0px;">
+  <body onload="popup_window_show('#popup', { pos: 'window-center', parent: this, width: 'auto' }); document.getElementById('popup').style.left = (screen.availWidth / 2 - 400); document.getElementById('popup').style.top = 0;" style="height: 100%; max-height: 100%;  margin: 0px;">
     <%= javascript_include_tag 'wz_tooltip.js' %>
     <table width="100%" style="table-layout:fixed; height: 100%; padding: 5px;">
       <col width=50%/>
@@ -162,12 +164,12 @@ coder2 = @asr.code2.student.matric
             <col width="50%"/>
             <col width="50%"/>
             <tr style="vertical-align: top; height: auto;">
-              <td><h3 style="display:inline">Submitted By: <%= "<span class='status_confirmed' onmouseover=\"Tip('This student is found guilty in plagiarism in this assignment');\" onmouseout=\"UnTip();\">" if @asr.code1.plagiarism == true%><%=coder1%><%= "</span>" if @asr.code1.plagiarism == true%></h3>
+              <td><h3 style="display:inline">Submitted By: <%= "<span class='status_confirmed' onmouseover=\"Tip('This student is found guilty in plagiarism in this assignment');\" onmouseout=\"UnTip();\">".html_safe if @asr.code1.plagiarism == true%><%=coder1%><%= "</span>".html_safe if @asr.code1.plagiarism == true%></h3>
                 <%=
                 if @asr.status == 3 || @asr.status == 2 then
-                  "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+                  "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".html_safe +
                     if @asr.code1.plagiarism == false || @asr.status == 3
-                    link_to 'Found Guilty' , {:action => "graph_confirm_plagiarism", :assignment_sim_result_id => @asr.id, :assignment_code_id => @asr.code1.id, :k => @k, :matric => @matric}, :onmouseover => "Tip('Confirm this as plagiarism case');", :onmouseout => "UnTip();", :class => "normalLink", :confirm => "Confirming this as a plagiarism case. Are you sure?"
+                    link_to('Found Guilty' , {:action => "graph_confirm_plagiarism", :assignment_sim_result_id => @asr.id, :assignment_code_id => @asr.code1.id, :k => @k, :matric => @matric}, :onmouseover => "Tip('Confirm this as plagiarism case');", :onmouseout => "UnTip();", :class => "normalLink", :confirm => "Confirming this as a plagiarism case. Are you sure?").html_safe
                   else
                     #link_to 'Clear plagiarism', {:action => "assignment_clear_plagiarism", :assignment_sim_result_id => @asr.id, :assignment_code_id => @asr.code1.id, :page => params[:page], :rpp => params[:rpp], :sort => params[:sort], :sortDirection => params[:sortDirection], :fs1 => params[:fs1], :fs2 => params[:fs2]}, :title => "Clearing this student from all plagiarism cases in this assignment", :confirm => "Clearing this student from all plagiarism cases in this assignment. Are you sure?"
                     ""
@@ -175,12 +177,12 @@ coder2 = @asr.code2.student.matric
                 end
               %>
               </td>
-              <td><h3 style="display:inline">Submitted By: <%= "<span class='status_confirmed' onmouseover=\"Tip('This student is found guilty in plagiarism in this assignment');\" onmouseout=\"UnTip();\">" if @asr.code2.plagiarism == true%><%=coder2%><%= "</span>" if @asr.code2.plagiarism == true%></h3>
+              <td><h3 style="display:inline">Submitted By: <%= "<span class='status_confirmed' onmouseover=\"Tip('This student is found guilty in plagiarism in this assignment');\" onmouseout=\"UnTip();\">".html_safe if @asr.code2.plagiarism == true%><%=coder2%><%= "</span>".html_safe if @asr.code2.plagiarism == true%></h3>
                 <%=
                 if @asr.status == 2 || @asr.status == 3 then
-                  "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+                  "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".html_safe +
                     if @asr.code2.plagiarism == false || @asr.status == 3
-                    link_to 'Found Guilty' , {:action => "graph_confirm_plagiarism", :assignment_sim_result_id => @asr.id, :assignment_code_id => @asr.code2.id, :k => @k, :matric => @matric}, :onmouseover => "Tip('Confirm this as plagiarism case');", :onmouseout => "UnTip();", :class => "normalLink", :confirm => "Confirming this as a plagiarism case. Are you sure?"
+                    link_to('Found Guilty' , {:action => "graph_confirm_plagiarism", :assignment_sim_result_id => @asr.id, :assignment_code_id => @asr.code2.id, :k => @k, :matric => @matric}, :onmouseover => "Tip('Confirm this as plagiarism case');", :onmouseout => "UnTip();", :class => "normalLink", :confirm => "Confirming this as a plagiarism case. Are you sure?").html_safe
                   else
                     #link_to 'Clear plagiarism', {:action => "assignment_clear_plagiarism", :assignment_sim_result_id => @asr.id, :assignment_code_id => @asr.code2.id, :page => params[:page], :rpp => params[:rpp], :sort => params[:sort], :sortDirection => params[:sortDirection], :fs1 => params[:fs1], :fs2 => params[:fs2]}, :title => "Clearing this student from all plagiarism cases in this assignment", :confirm => "Clearing this student from all plagiarism cases in this assignment. Are you sure?"
                     ""
@@ -228,21 +230,23 @@ coder2 = @asr.code2.student.matric
         </td>
       </tr>
     </table>
-    <div class='popup' id='popup' style='display: none;'>
-      <div class='menu_form_header' id='popup_drag' style="display:inline-block; border: 1px solid black;">
-        <span id="popup_exit" style="float: right; cursor: pointer; color: blue; margin-right: 3px;">[Hide]</span>
-        <span style="margin-left: 10px;">Mapping List</span>
-<%#*<img style="vertical-align: middle;" class='menu_form_exit' id='popup_exit' src='form_exit.png' alt='[Hide]' />&nbsp;&nbsp;&nbsp;Mapping List%>
-      </div>
-      <div class='menu_form_body' style="border-top: 0px solid black;" id="pop_body">
+
+    <div class='popup_window_css' id='popup'>
+      <table class="popup_window_css">
+      <tr><td class="popup_window_css">
+        <div class="popup_window_css_head">
+          Mapping List
+          <span style="float: right; cursor: pointer; color: blue; margin-right: 3px;">[Hide]</span>
+        </div>
+      <div class="popup_window_css_body">
         <table border='1' style='table-layout:fixed; width: 350px;' align="center">
           <col width=100 />
           <col width=100 />
           <col width=100 />
           <tr>
-            <th>Statements<br/>Matched&nbsp;<%=genHelp(getExplaination("statement_matched"))%></th>
-            <th><%= "<font color='red' onmouseover=\"Tip('This student is found guilty in plagiarism in this assignment');\" onmouseout=\"UnTip();\">" if @asr.code1.plagiarism %><%= coder1%><%= "</font>" if @asr.code1.plagiarism%><br/>(<%= @asr.sim1To2.to_s + "%" %>)&nbsp;<%=genHelp(getExplaination("sim1To2"))%></th>
-            <th><%= "<font color='red' onmouseover=\"Tip('This student is found guilty in plagiarism in this assignment');\" onmouseout='UnTip();'>" if @asr.code2.plagiarism %><%= coder2%><%= "</font>" if @asr.code2.plagiarism%><br/>(<%= @asr.sim2To1.to_s + "%" %>)&nbsp;<%=genHelp(getExplaination("sim2To1"))%></th>
+            <th>Statements<br/>Matched&nbsp;<%=genHelp(getExplaination("statement_matched")).html_safe%></th>
+            <th><%= "<font color='red' onmouseover=\"Tip('This student is found guilty in plagiarism in this assignment');\" onmouseout=\"UnTip();\">".html_safe if @asr.code1.plagiarism %><%= coder1%><%= "</font>".html_safe if @asr.code1.plagiarism%><br/>(<%= @asr.sim1To2.to_s + "%" %>)&nbsp;<%=genHelp(getExplaination("sim1To2")).html_safe%></th>
+            <th><%= "<font color='red' onmouseover=\"Tip('This student is found guilty in plagiarism in this assignment');\" onmouseout='UnTip();'>".html_safe if @asr.code2.plagiarism %><%= coder2%><%= "</font>".html_safe if @asr.code2.plagiarism%><br/>(<%= @asr.sim2To1.to_s + "%" %>)&nbsp;<%=genHelp(getExplaination("sim2To1")).html_safe%></th>
           </tr>
           <% if @asr.mappings.size == 0 %>
             <tr><td colspan=\"3\">No match found!</td></tr>
@@ -259,8 +263,11 @@ coder2 = @asr.code2.student.matric
             <%  } %>
           <% end %>
         </table>
-      </div>
+        </div>
+      </td></tr>
+    </table>
     </div>
+
     <script type="text/javascript">
       showLeftCode();
       showRightCode();

@@ -36,6 +36,8 @@ SSID::Application.routes.draw do
   get "users/graph_sims"
   get "users/graph_view_iTopK"
   get "users/graph_top"
+  get "users/graph_sim_result_html_view"
+  get "users/graph_confirm_plagiarism"
   get "users/graph_view_igroups"
   get "users/graph_groups"
   get "users/course_view"
@@ -43,6 +45,8 @@ SSID::Application.routes.draw do
   get "users/account_update"
 
   get "login/logout"
+
+  get "admins/index"
 
   resources :accounts
   resources :announcements
