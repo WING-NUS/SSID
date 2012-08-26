@@ -1,4 +1,8 @@
 SSID::Application.routes.draw do
+  resources :submission_cluster_groups
+  resources :submission_similarity_processes
+  resources :submission_similarity_logs
+
   root to: "login#login"
 
   get "users/index"

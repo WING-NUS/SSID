@@ -1,0 +1,21 @@
+<h1>Listing submission_similarity_logs</h1>
+
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @submission_similarity_logs.each do |submission_similarity_log| %>
+  <tr>
+    <td><%= link_to 'Show', submission_similarity_log %></td>
+    <td><%= link_to 'Edit', edit_submission_similarity_log_path(submission_similarity_log) %></td>
+    <td><%= link_to 'Destroy', submission_similarity_log, confirm: 'Are you sure?', method: :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Submission similarity log', new_submission_similarity_log_path %>

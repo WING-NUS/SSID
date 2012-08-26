@@ -1,0 +1,2 @@
+module SubmissionSimilarityLogsHelper
+end

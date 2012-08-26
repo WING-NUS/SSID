@@ -1,0 +1,35 @@
+=begin
+This file is part of SSID.
+
+SSID is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+SSID is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with SSID.  If not, see <http://www.gnu.org/licenses/>.
+=end
+
+class CreateSubmissionSimilarityLogs < ActiveRecord::Migration
+  def change
+    create_table :submission_similarity_logs do |t|
+      t.integer :marker_id
+      t.integer :submission_similarity_id
+      t.integer :student_id
+      t.integer :submission_id
+      t.integer :log_type, null: false # See model for type constants
+
+      t.timestamps
+    end
+
+    add_index :submission_similarity_logs, :student_id
+    add_index :submission_similarity_logs, :marker_id
+    add_index :submission_similarity_logs, :submission_id
+    add_index :submission_similarity_logs, :submission_similarity_id
+  end
+end
