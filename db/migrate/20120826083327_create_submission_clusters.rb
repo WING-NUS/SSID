@@ -18,7 +18,7 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 class CreateSubmissionClusters < ActiveRecord::Migration
   def change
     create_table :submission_clusters do |t|
-      t.integer :submission_cluster_group
+      t.integer :submission_cluster_group_id
 
       t.timestamps
     end

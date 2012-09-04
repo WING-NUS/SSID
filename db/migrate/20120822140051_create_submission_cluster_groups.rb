@@ -26,7 +26,7 @@ class CreateSubmissionClusterGroups < ActiveRecord::Migration
     end
 
     add_index :submission_cluster_groups, :assignment_id
-    add_index :submission_cluster_groups, [:assignment_id, :cut_off_criterion], unique: true
+    add_index :submission_cluster_groups, [:assignment_id, :cut_off_criterion], unique: true, name: "on_assignment_id_and_cut_off_criterion"
     add_index :submission_cluster_groups, [:assignment_id, :description]
   end
 end

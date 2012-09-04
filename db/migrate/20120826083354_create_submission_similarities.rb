@@ -29,11 +29,11 @@ class CreateSubmissionSimilarities < ActiveRecord::Migration
       t.timestamps
     end
 
-    add_index :submission_similarities, [:assignment_id, :submission1_id, :submission2_id]
-    add_index :submission_similarities, [:assignment_id, :similarity]
-    add_index :submission_similarities, [:assignment_id, :similarity_1_to_2]
-    add_index :submission_similarities, [:assignment_id, :similarity_2_to_1]
-    add_index :submission_similarities, [:assignment_id, :similarity_1_to_2, :similarity_2_to_1]
+    add_index :submission_similarities, [:assignment_id, :submission1_id, :submission2_id], name: "on_assignment_id_and_submission1_id_and_submission2_id"
+    add_index :submission_similarities, [:assignment_id, :similarity], name: "on_assignment_id_and_similarity"
+    add_index :submission_similarities, [:assignment_id, :similarity_1_to_2], name: "on_assignment_id_and_similarity_1_to_2"
+    add_index :submission_similarities, [:assignment_id, :similarity_2_to_1], name: "on_assignment_id_and_similarity_2_to_1"
+    add_index :submission_similarities, [:assignment_id, :similarity_1_to_2, :similarity_2_to_1], name: "on_assignment_id_and_similarity_1_to_2_and_similarity_2_to_1"
     add_index :submission_similarities, :assignment_id
     add_index :submission_similarities, [:assignment_id, :status]
   end

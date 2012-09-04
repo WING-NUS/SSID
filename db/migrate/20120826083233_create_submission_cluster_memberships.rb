@@ -24,6 +24,6 @@ class CreateSubmissionClusterMemberships < ActiveRecord::Migration
       t.timestamps
     end
 
-    add_index :submission_cluster_members, [:submission_cluster_id, :submission_id], unique: true, name: 'members'
+    add_index :submission_cluster_memberships, [:submission_cluster_id, :submission_id], unique: true, name: 'members'
   end
 end
