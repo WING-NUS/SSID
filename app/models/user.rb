@@ -18,7 +18,8 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 class User < ActiveRecord::Base
   has_many :user_course_memberships, :dependent => :delete_all
   has_many :courses, :through => :user_course_memberships, :uniq => true
-  has_many :assignments, :through => :courses, :unique => true
+  has_many :assignments, :through => :courses, :uniq => true
+  has_many :submissions, foreign_key: "student_id"
 
   validates :name, :password_digest, presence: true
   validates :name, uniqueness: true

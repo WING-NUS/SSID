@@ -1,15 +1,4 @@
 SSID::Application.routes.draw do
-  resources :users
-  resources :user_course_memberships
-  resources :submissions
-  resources :submission_similarities
-  resources :submission_similarity_mappings
-  resources :submission_clusters
-  resources :submission_cluster_memberships
-  resources :submission_cluster_groups
-  resources :submission_similarity_processes
-  resources :submission_similarity_logs
-
   root to: "login#login"
 
   get "users/index"
@@ -73,6 +62,17 @@ SSID::Application.routes.draw do
   resources :sim_mappings
   resources :students
   resources :teachings
+
+  resources :users
+  resources :user_course_memberships
+  resources :submissions
+  resources :submission_similarities
+  resources :submission_similarity_mappings
+  resources :submission_clusters
+  resources :submission_cluster_memberships
+  resources :submission_cluster_groups
+  resources :submission_similarity_processes
+  resources :submission_similarity_logs
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
