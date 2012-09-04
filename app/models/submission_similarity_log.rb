@@ -17,7 +17,7 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 
 class SubmissionSimilarityLog < ActiveRecord::Base
   # SubmissionSimilarityLog#log_type Constants
-  TYPE_PAIR_SUSPECT_AS_PLAGIARISM == 0
+  TYPE_PAIR_SUSPECT_AS_PLAGIARISM = 0
   TYPE_PAIR_UNMARK_AS_PLAGIARISM = 1
   TYPE_PAIR_MARK_AS_PLAGIARISM = 2
   TYPE_STUDENT_MARK_AS_PLAGIARISM = 3

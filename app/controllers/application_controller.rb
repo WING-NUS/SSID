@@ -21,6 +21,7 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 class ApplicationController < ActionController::Base
   protect_from_forgery
   before_filter :authorize, :except => [:login, :logout]
+  before_filter :sanitize_id, only: [:show, :edit, :create, :update, :destroy]
   helper :all # include all helpers, all the time
   protect_from_forgery # See ActionController::RequestForgeryProtection for details
 
@@ -39,8 +40,8 @@ class ApplicationController < ActionController::Base
     unless @user_account
       flash[:notice] = 'Please log in'
       redirect_to :controller => 'login', :action => 'login'
-    else
-      checkrole
+#   else
+#     checkrole
     end
     
   end
@@ -68,4 +69,17 @@ class ApplicationController < ActionController::Base
   #    'admins' => ['index']
   #  ]
 
+  private
+
+  def sanitize_id
+    begin
+      @obj = controller_name.classify.constantize.find_by_id(params[:id])
+      unless @obj
+        flash[:notice] = "Could not find any #{controller_name.classify.tableize.humanize.pluralize.titleize} with id #{params[:id]}"
+        redirect_to controller: controller_name, action: "index"
+      end
+    rescue
+      # controller_name did not correspond to any known models
+    end
+  end
 end
