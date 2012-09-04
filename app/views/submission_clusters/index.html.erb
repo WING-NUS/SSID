@@ -1,0 +1,21 @@
+<h1>Listing submission_clusters</h1>
+
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @submission_clusters.each do |submission_cluster| %>
+  <tr>
+    <td><%= link_to 'Show', submission_cluster %></td>
+    <td><%= link_to 'Edit', edit_submission_cluster_path(submission_cluster) %></td>
+    <td><%= link_to 'Destroy', submission_cluster, confirm: 'Are you sure?', method: :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Submission cluster', new_submission_cluster_path %>

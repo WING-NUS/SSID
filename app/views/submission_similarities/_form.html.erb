@@ -1,0 +1,17 @@
+<%= form_for(@submission_similarity) do |f| %>
+  <% if @submission_similarity.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@submission_similarity.errors.count, "error") %> prohibited this submission_similarity from being saved:</h2>
+
+      <ul>
+      <% @submission_similarity.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

@@ -16,6 +16,11 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
 class SubmissionClusterGroup < ActiveRecord::Base
+  # SubmissionClusterGroup#cut_off_criterion_type Constants
+  TYPE_MARKED_AND_SUSPECTED_PLAGIARISM_CRITERION = 0
+  TYPE_MARKED_PLAGIARISM_CRITERION = 1
+  TYPE_USER_DEFINED_CRITERION = 2
+
   has_many :submission_clusters, :dependent => :delete_all
   belongs_to :assignment
 

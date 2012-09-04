@@ -1,0 +1,2 @@
+module SubmissionSimilarityMappingsHelper
+end

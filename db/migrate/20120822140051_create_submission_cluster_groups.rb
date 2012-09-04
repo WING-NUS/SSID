@@ -21,7 +21,7 @@ class CreateSubmissionClusterGroups < ActiveRecord::Migration
       t.integer :assignment_id
       t.string :description
       t.decimal :cut_off_criterion, precision: 6, scale: 3
-      t.string :cut_off_criterion_type
+      t.integer :cut_off_criterion_type # See model for type constants
       t.timestamps
     end
 

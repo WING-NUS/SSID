@@ -1,8 +1,7 @@
 require 'test_helper'
 
-class AssignmentTest < ActiveSupport::TestCase
-  # Replace this with your real tests.
-  def test_truth
-    assert true
-  end
+class SubmissionTest < ActiveSupport::TestCase
+  # test "the truth" do
+  #   assert true
+  # end
 end
