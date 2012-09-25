@@ -18,8 +18,8 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 class CreateCourses < ActiveRecord::Migration
   def change
     create_table :courses do |t|
-      t.string  :code
-      t.string  :name
+      t.string  :code, null: false
+      t.string  :name, null: false
       t.string  :academic_year
       t.integer :semester
       t.datetime  :expiry

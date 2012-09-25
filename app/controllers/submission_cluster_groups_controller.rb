@@ -40,7 +40,14 @@ class SubmissionClusterGroupsController < ApplicationController
   # POST /submission_cluster_groups
   # POST /submission_cluster_groups.json
   def create
+    # Assign description based on cut_off_criterion_type
+    params[:submission_cluster_group]["description"] = SubmissionClusterGroup::DESCRIPTIONS[params[:submission_cluster_group]["cut_off_criterion_type"]]
+
+    # Create
     @submission_cluster_group = SubmissionClusterGroup.new(params[:submission_cluster_group])
+
+    # If save, we need to run DBSCAN. DBSCAN currently writes directly into the database via MySQL
+    # We should change this to a rake task
 
     respond_to do |format|
       if @submission_cluster_group.save

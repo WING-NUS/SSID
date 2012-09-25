@@ -17,6 +17,6 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 
 class SubmissionCluster < ActiveRecord::Base
   belongs_to :submission_cluster_group
-  has_many :submission_cluster_memberships, :dependent => :delete_all
-  has_many :submissions, :through => :submission_cluster_memberships, :uniq => true
+  has_many :memberships, class_name: "SubmissionClusterMembership", :dependent => :delete_all
+  has_many :submissions, :through => :memberships, :uniq => true
 end

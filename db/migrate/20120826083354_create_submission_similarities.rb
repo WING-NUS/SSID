@@ -18,9 +18,9 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 class CreateSubmissionSimilarities < ActiveRecord::Migration
   def change
     create_table :submission_similarities do |t|
-      t.integer :assignment_id
-      t.integer :submission1_id
-      t.integer :submission2_id
+      t.integer :assignment_id, null: false
+      t.integer :submission1_id, null: false
+      t.integer :submission2_id, null: false
       t.decimal :similarity_1_to_2, precision: 5, scale: 3
       t.decimal :similarity_2_to_1, precision: 5, scale: 3
       t.decimal :similarity, precision: 5, scale: 3

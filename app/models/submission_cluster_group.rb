@@ -21,7 +21,14 @@ class SubmissionClusterGroup < ActiveRecord::Base
   TYPE_MARKED_PLAGIARISM_CRITERION = 1
   TYPE_USER_DEFINED_CRITERION = 2
 
-  has_many :submission_clusters, :dependent => :delete_all
+  # SubmissionClusterGroup#description Constants
+  DESCRIPTIONS = {
+    TYPE_MARKED_AND_SUSPECTED_PLAGIARISM_CRITERION => "Based on cases marked and suspected as plagiarism",
+    TYPE_MARKED_PLAGIARISM_CRITERION => "Based on cases marked as plagiarism",
+    TYPE_USER_DEFINED_CRITERION => "Based on user defined cut-off criterion"
+  }
+
+  has_many :clusters, class_name: "SubmissionCluster", :dependent => :delete_all
   belongs_to :assignment
 
   validates_presence_of :assignment_id

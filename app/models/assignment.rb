@@ -16,33 +16,14 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
 class Assignment < ActiveRecord::Base
-    has_many :sim_results, :dependent => :delete_all, :class_name => "AssignmentSimResult"
-    has_many :clusterings, :dependent => :delete_all, :class_name => "AssignmentClustering", :order => "coc DESC"
-    has_many :reported_plagiarism, :class_name => "AssignmentSimResult", :conditions => "status = 3"
-    has_many :confirmed_plagiarism, :class_name => "AssignmentSimResult", :conditions => "status = 2"
-    has_many :plagiarism, :class_name => "AssignmentSimResult", :conditions => "status = 2 OR status = 3"
-    belongs_to :course
+  has_many :submission_similarities, :dependent => :delete_all
+  has_many :submission_cluster_groups, :dependent => :delete_all, order: "cut_off_criterion DESC"
+  has_many :submission_similarity_processes
+  has_many :suspicious_submission_similarities, class_name: "SubmissionSimilarities", conditions: "status = #{SubmissionSimilarity::STATUS_SUSPECTED_AS_PLAGIARISM}"
+  has_many :plagiarism_marked_submission_similarities, class_name: "SubmissionSimilarities", conditions: "status = #{SubmissionSimilarity::STATUS_MARKED_AS_PLAGIARISM}"
+  belongs_to :course
 
-    validates_presence_of :title
-
-    attr_accessor :min, :ngram
-    validate :verification
-
-    def language
-        @lanugage
-    end
-
-    private
-    def verification
-      begin
-        raise if Integer(min) <= 0
-      rescue
-        errors.add("Minimum matching criterion must be an integer and greater than 0")
-      end
-      begin
-        raise if Integer(ngram) <= 0
-      rescue
-        errors.add("N-Gram index size must be an integer and greater than 0")
-      end
-    end
+  validates_presence_of :title
+  validates_numericality_of :min_match_length, only_integer: true, greater_than: 0
+  validates_numericality_of :ngram_size, only_integer: true, greater_than: 0
 end

@@ -18,10 +18,10 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 class CreateSubmissionSimilarityLogs < ActiveRecord::Migration
   def change
     create_table :submission_similarity_logs do |t|
-      t.integer :marker_id
-      t.integer :submission_similarity_id
-      t.integer :student_id
-      t.integer :submission_id
+      t.integer :submission_id, null: false
+      t.integer :submission_similarity_id, null: false
+      t.integer :marker_id, null: false
+      t.integer :student_id, null: false
       t.integer :log_type, null: false # See model for type constants
 
       t.timestamps

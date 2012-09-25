@@ -19,8 +19,8 @@ class CreateSubmissions < ActiveRecord::Migration
   def change
     create_table :submissions do |t|
       t.text :lines, limit: 4294967295
-      t.integer :student_id
-      t.boolean :plagiarised, default: false, null: false
+      t.integer :student_id, null: false
+      t.boolean :is_plagiarised, default: false, null: false
 
       t.timestamps
     end

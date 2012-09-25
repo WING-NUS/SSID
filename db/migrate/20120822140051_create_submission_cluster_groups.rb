@@ -18,10 +18,11 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 class CreateSubmissionClusterGroups < ActiveRecord::Migration
   def change
     create_table :submission_cluster_groups do |t|
-      t.integer :assignment_id
+      t.integer :assignment_id, null: false
       t.string :description
       t.decimal :cut_off_criterion, precision: 6, scale: 3
       t.integer :cut_off_criterion_type # See model for type constants
+
       t.timestamps
     end
 

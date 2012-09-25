@@ -15,59 +15,19 @@ You should have received a copy of the GNU Lesser General Public License
 along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
-# Filters added to this controller apply to all controllers in the application.
-# Likewise, all the methods added will be available for all controllers.
-
 class ApplicationController < ActionController::Base
   protect_from_forgery
-  before_filter :authorize, :except => [:login, :logout]
+  before_filter :authorize
   before_filter :sanitize_id, only: [:show, :edit, :create, :update, :destroy]
-  helper :all # include all helpers, all the time
-  protect_from_forgery # See ActionController::RequestForgeryProtection for details
-
-  # Scrub sensitive parameters from your log
-  # filter_parameter_logging :password
 
   protected
-  #  Get the current controller and action name
-  #  def set
-  #    flash[:controller_name] = controller_name
-  #    flash[:action_name] = action_name
-  #  end
 
   def authorize
-    @user_account = Account.find_by_login(session[:login])
-    unless @user_account
-      flash[:notice] = 'Please log in'
-      redirect_to :controller => 'login', :action => 'login'
-#   else
-#     checkrole
-    end
-    
-  end
-
-  def checkrole
-    case @user_account.role
-    when 0 then redirect_to :controller => 'admins', :action => 'index' if controller_name != 'admins'
-    when 1 then redirect_to :controller => 'users', :action => 'index' if controller_name != 'users'
+    @user = User.find_by_id(session[:user_id]) 
+    unless @user
+      redirect_to login_url, notice: "Please log in"
     end
   end
-  
-  #  def checkrole
-  #    unless @user_account.role == 0
-  #    unless USER_ACCESSIBLE[controller_name] && USER_ACCESSIBLE[controller_name].rindex(action_name)
-  #      flash[:notice] = 'Invalid access'
-  #      redirect_to :controller => 'admins', :action => 'index'
-  #    end
-  #    end
-  #  end
-  #
-  #  private
-  #  MYNUM = 1
-  #  USER_ACCESSIBLE = Hash[
-  #    'announcements' => ['new', 'show', 'index'],
-  #    'admins' => ['index']
-  #  ]
 
   private
 

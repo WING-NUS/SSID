@@ -16,12 +16,13 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
 class User < ActiveRecord::Base
-  has_many :user_course_memberships, :dependent => :delete_all
-  has_many :courses, :through => :user_course_memberships, :uniq => true
+  has_many :memberships , class_name: "UserCourseMembership", :dependent => :delete_all
+  has_many :courses, :through => :memberships, :uniq => true
   has_many :assignments, :through => :courses, :uniq => true
   has_many :submissions, foreign_key: "student_id"
 
-  validates :name, :password_digest, presence: true
-  validates :name, uniqueness: true
+  validates :name, :full_name, :id_string, :password_digest, presence: true
+  validates :name, :id_string, uniqueness: true
+
   has_secure_password
 end

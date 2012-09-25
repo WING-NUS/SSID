@@ -16,5 +16,5 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
 class Announcement < ActiveRecord::Base
-  belongs_to :account
+  belongs_to :announceable, polymorphic: true
 end

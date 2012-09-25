@@ -19,6 +19,7 @@ class UserCourseMembership < ActiveRecord::Base
   # UserCourseMembership#role Constants
   ROLE_TEACHING_STAFF = 0
   ROLE_TEACHING_ASSISTANT = 1
+  ROLE_STUDENT = 2
 
   belongs_to :user
   belongs_to :course

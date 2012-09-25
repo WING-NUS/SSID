@@ -16,7 +16,7 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
 class Submission < ActiveRecord::Base
-  has_many :submission_similarities
-  has_many :submission_cluster_memberships
+  has_many :similarities, class_name: "SubmissionSimilarity"
+  has_many :cluster_memberships , class_name: "SubmissionClusterMembership"
   belongs_to :student, class_name: "User"
 end

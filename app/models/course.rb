@@ -16,38 +16,29 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
 class Course < ActiveRecord::Base
-  has_many :teachings, :dependent => :delete_all
-  has_many :accounts, :through => :teachings, :uniq => true
+  has_many :announcements, :as => :announceable
   has_many :assignments, :dependent => :delete_all
-  
+  has_many :memberships, class_name: "UserCourseMembership", :dependent => :delete_all
+  has_many :student_memberships, class_name: "UserCourseMembership", conditions: { role: UserCourseMembership::ROLE_STUDENT }
+  has_many :students, :through => :student_memberships, class_name: "User", :source => UserCourseMembership, uniq: true
+  has_many :staff_memberships, class_name: "UserCourseMembership", conditions: { role: UserCourseMembership::ROLE_TEACHING_STAFF }
+  has_many :staff, :through => :staff_memberships, class_name: "User", :source => UserCourseMembership, uniq: true
+  has_many :teaching_assistant_memberships, class_name: "UserCourseMembership", conditions: { role: UserCourseMembership::ROLE_TEACHING_ASSISTANT }
+  has_many :teaching_assistants, :through => :teaching_assistant_memberships, class_name: "User", :source => UserCourseMembership, uniq: true
+
   validates_presence_of :code
   before_save :upcase_code
 
-  def academic_year_start
-    @academic_year_start
-  end
-  def academic_year_start=(ays)
-    @academic_year_start = ays
-    return if @academic_year_start.blank?
-    create_academic_year
-  end
-
-  #return the number of clusters in this course
-  def clusters
-    count = 0
-    self.assignments.each { |assignment|
-      assignment.clusterings.each { |clustering|
-        count += clustering.assignment_clusters.size
+  def submission_cluster_groups
+    self.assignments.collect { |assignment|
+      assignment.submission_cluster_groups.collect { |group|
+        group.submission_clusters
       }
-    }
-    count
+    }.flatten
   end
 
   private
-  def create_academic_year
-    self.academic_year = self.academic_year_start + '/' + (Integer(self.academic_year_start) + 1).to_s
-  end
-  
+
   def upcase_code
     self.code = self.code.upcase
   end

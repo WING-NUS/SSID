@@ -18,7 +18,7 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 class CreateSubmissionSimilarityMappings < ActiveRecord::Migration
   def change
     create_table :submission_similarity_mappings do |t|
-      t.integer :submission_similarity_id
+      t.integer :submission_similarity_id, null: false
       t.integer :start_index1
       t.integer :end_index1
       t.integer :start_index2
@@ -28,7 +28,7 @@ class CreateSubmissionSimilarityMappings < ActiveRecord::Migration
       t.integer :start_line2
       t.integer :end_line2
       t.integer :statement_count
-      t.boolean :is_plagiarism
+      t.boolean :is_plagiarism, null: false, default: false
 
       t.timestamps
     end
