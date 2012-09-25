@@ -1,0 +1,43 @@
+body {
+  margin: 0;
+  padding: 0;
+  min-width: 800px;
+}
+
+#top_banner {
+  display: block;
+  margin: 0;
+  height: 40px;
+  padding: 50px 15px 0;
+  font-size: 24px;
+  background-image: url('orangeE.jpg');
+  background-repeat: repeat-x;
+}
+
+#menu {
+  margin: 0;
+  background-color: rgb(255, 108, 0);
+  display: block;
+  height: 22px;
+  overflow: auto;
+  padding: 3px 0 0;
+
+  li {
+    list-style: none;
+    float: left;
+    width: 20%;
+    text-align: center;
+
+    a {
+      &, &:visited, &:hover {
+        color: rgb(255, 255, 255);
+        text-decoration: none;
+        background-color: rgb(255,108,0);
+      }
+    }
+  }
+}
+
+#content {
+  margin: 0 15px 15px;
+}

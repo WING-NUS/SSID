@@ -23,12 +23,19 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
   <%= csrf_meta_tags %>
 </head>
 <body class="<%= controller_name %> <%= controller_name %>_<%= action_name %>">
-
-<% if flash[:notice] %>
-  <div id="notice"><%= flash[:notice] %></div>
+  <h1 id="top_banner">Student Submissions Integrity Diagnosis (SSID) System</h1>
+  <ul id="menu">
+<% if @user %>
+    <li><%= link_to "Home", announcements_url %></li>
+    <li><%= link_to "My Courses", courses_url %></li>
+    <li><%= link_to "My Profile", user_path(@user) %></li>
+    <li><%= link_to "User Guide", guide_url %></li>
+    <li><%= link_to "Log Out", logout_url %></li>
 <% end %>
+  </ul>
 
+  <div id="content">
 <%= yield %>
-
+  </div>
 </body>
 </html>

@@ -21,19 +21,23 @@ SSID::Application.routes.draw do
   post "login" => "sessions#create"
   delete "logout" => "sessions#destroy"
 
+  get "guide" => "users#guide"
+
   root to: "announcements#index"
 
   resources :announcements
- #resources :users
- #resources :user_course_memberships
- #resources :submissions
- #resources :submission_similarities
- #resources :submission_similarity_mappings
- #resources :submission_clusters
- #resources :submission_cluster_memberships
- #resources :submission_cluster_groups
- #resources :submission_similarity_processes
- #resources :submission_similarity_logs
+  resources :assignments
+  resources :courses
+  resources :submission_cluster_groups
+  resources :submission_cluster_memberships
+  resources :submission_clusters
+  resources :submissions
+  resources :submission_similarity_logs
+  resources :submission_similarity_mappings
+  resources :submission_similarity_processes
+  resources :submission_similarities
+  resources :user_course_memberships
+  resources :users
 
   # Old routes:
   # -----------

@@ -26,6 +26,6 @@ class CreateSubmissions < ActiveRecord::Migration
     end
 
     add_index :submissions, :student_id
-    add_index :submissions, [:student_id, :plagiarised]
+    add_index :submissions, [:student_id, :is_plagiarised]
   end
 end

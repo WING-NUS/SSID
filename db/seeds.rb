@@ -1,4 +1,7 @@
 # Create default admin user
-admin = User.new(name: "ssid_admin")
-admin.password_digest = BCrypt::Password.create('$$SSIDPassword$$')
+admin = User.new { |user|
+  user.name = "admin"
+  user.full_name = "SSID Administrator"
+  user.password_digest = BCrypt::Password.create('$$SSIDPassword$$')
+}
 admin.save

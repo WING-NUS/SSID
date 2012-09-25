@@ -1,2 +1,22 @@
-<h1>Sessions#new</h1>
-<p>Find me in app/views/sessions/new.html.erb</p>
+<h2>Welcome to SSID</h2>
+<%= form_tag do %>
+  <fieldset>
+    <div>
+      <%= label_tag :name, "Name:" %>
+      <%= text_field_tag :name, params[:name] %>
+    </div>
+    <div>
+      <%= label_tag :password, "Password:" %>
+      <%= password_field_tag :password, params[:password] %>
+    </div>
+    <span>
+      <%= submit_tag "Login" %>
+    </span>
+  </fieldset>
+  <% if flash[:alert] %>
+    <div class="alert"><%= flash[:alert] %></div>
+  <% end %>
+  <% if flash[:notice] %>
+    <div class="notice"><%= flash[:notice] %></div>
+  <% end %>
+<% end %>

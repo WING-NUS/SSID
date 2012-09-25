@@ -1,3 +1,42 @@
-// Place all the styles related to the sessions controller here.
-// They will automatically be included in application.css.
-// You can use Sass (SCSS) here: http://sass-lang.com/
+body.sessions_new {
+  position: relative;
+
+  h2 {
+    font-size: 24px;
+    margin-top: 50px;
+    display: block;
+    text-align: center;
+  }
+
+  fieldset {
+    display: block;
+    width: 210px;
+    position: relative;
+    left: 50%;
+    margin-left: -115px;
+    margin-top: 10px;
+
+    label {
+      display: inline-block;
+      width: 70px;
+    }
+
+    span {
+      margin-top: 10px;
+      display: block;
+      text-align: center;
+    }
+  }
+
+  div.alert {
+    text-align: center;
+    color: rgb(255, 0, 0);
+    margin-top: 20px;
+  }
+
+  div.notice {
+    text-align: center;
+    color: rgb(0, 255, 0);
+    margin-top: 20px;
+  }
+}
