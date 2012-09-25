@@ -21,7 +21,7 @@ SSID::Application.routes.draw do
   post "login" => "sessions#create"
   delete "logout" => "sessions#destroy"
 
-  root to: "login#login"
+  root to: "announcements#index"
 
   resources :announcements
  #resources :users
