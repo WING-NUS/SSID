@@ -17,7 +17,7 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 <!DOCTYPE html>
 <html>
 <head>
-  <title>SSID</title>
+  <title>Student Submissions Integrity Diagnosis (SSID) System</title>
   <%= stylesheet_link_tag    "application", :media => "all" %>
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
@@ -27,14 +27,18 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
   <ul id="menu">
 <% if @user %>
     <li><%= link_to "Home", announcements_url %></li>
-    <li><%= link_to "My Courses", courses_url %></li>
-    <li><%= link_to "My Profile", user_path(@user) %></li>
+    <li><%= link_to "Courses", courses_url %></li>
+    <% if @user.is_admin %>
+      <li><%= link_to "Users", users_url %></li>
+    <% end %>
+    <li><%= link_to "Settings", user_path(@user) %></li>
     <li><%= link_to "User Guide", guide_url %></li>
-    <li><%= link_to "Log Out", logout_url %></li>
+    <li><%= link_to "Log Out", logout_url, :method => :delete %></li>
 <% end %>
   </ul>
 
   <div id="content">
+    <%= render partial: "site/breadcrumb", locals: { object: @course } if controller_name == "assignments" %>
 <%= yield %>
   </div>
 </body>

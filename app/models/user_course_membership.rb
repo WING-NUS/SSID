@@ -20,7 +20,16 @@ class UserCourseMembership < ActiveRecord::Base
   ROLE_TEACHING_STAFF = 0
   ROLE_TEACHING_ASSISTANT = 1
   ROLE_STUDENT = 2
+  ROLE_STRINGS = [
+    "Teaching Staff",
+    "Teaching Assistant",
+    "Student"
+  ]
 
   belongs_to :user
   belongs_to :course
+
+  def role_string
+    ROLE_STRINGS[self.role]
+  end
 end

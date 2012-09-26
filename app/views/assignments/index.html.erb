@@ -1,0 +1,13 @@
+<h2>Assignments</h2>
+
+<% if @assignments.empty? %>
+No Assignment is available yet.
+<% else %>
+
+<% end %>
+
+<hr />
+<div class="actions">
+  <%= link_to "New Assignment", new_course_assignment_url(@course) %>
+  <%= link_to "View Visuals", nil %>
+</div>

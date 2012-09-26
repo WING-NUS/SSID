@@ -1,0 +1,25 @@
+<%= form_for([@course, @assignment]) do |f| %>
+  <div>
+    <%= f.label :title %>
+    <%= f.text_field :title %>
+  </div>
+  <div>
+    <%= f.label :language %>
+    <%= f.select :language, ["Java", ["C (Experimental)", "C"]] %>
+  </div>
+  <div>
+    <%= f.label :min_match_length, "Minimum Match Length [?]" , title: "For Java, only '.java' files will be processed." %>
+    <%= f.text_field :min_match_length %>
+  </div>
+  <div>
+    <%= f.label :ngram_size, "Size of n-gram [?]", title: "An n-gram is a contiguous subsequence of n tokens of a given sequence." %>
+    <%= f.text_field :ngram_size %>
+  </div>
+  <div>
+    <%= f.label :file, "Assignment file (zip) [?]", title: "The zip file should contain one folder for each student's code files; folders are named according to student ID." %>
+    <%= f.file_field :file %>
+  </div>
+  <div>
+    <%= f.submit class: "submit" %>
+  </div>
+<% end %>

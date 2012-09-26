@@ -16,7 +16,7 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
 class Course < ActiveRecord::Base
-  has_many :announcements, :as => :announceable
+  has_many :announcements, :as => :announceable, order: "updated_at DESC"
   has_many :assignments, :dependent => :delete_all
   has_many :memberships, class_name: "UserCourseMembership", :dependent => :delete_all
   has_many :student_memberships, class_name: "UserCourseMembership", conditions: { role: UserCourseMembership::ROLE_STUDENT }
@@ -27,6 +27,7 @@ class Course < ActiveRecord::Base
   has_many :teaching_assistants, :through => :teaching_assistant_memberships, class_name: "User", :source => UserCourseMembership, uniq: true
 
   validates_presence_of :code
+  validates :code, uniqueness: { :scope => [ :academic_year, :semester ] }
   before_save :upcase_code
 
   def submission_cluster_groups
@@ -35,6 +36,11 @@ class Course < ActiveRecord::Base
         group.submission_clusters
       }
     }.flatten
+  end
+
+  def role_for_user(user)
+    UserCourseMembership.where( course_id: self.id, 
+                               user_id: user.id).first.role_string
   end
 
   private

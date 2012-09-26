@@ -18,7 +18,7 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 class AnnouncementsController < ApplicationController
   # GET /announcements
   def index
-    @announcements = Announcement.order("updated_at DESC")
+    @announcements = @user.courses.collect { |c| c.announcements }.flatten
   end
 
   # GET /announcements/1

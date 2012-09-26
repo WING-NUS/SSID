@@ -1,0 +1,27 @@
+body.assignments_index {
+  div.actions {
+    a {
+      &, &:hover, &:visited {
+        background-color: rgb(255, 255, 255);
+        margin-right: 20px;
+      }
+      &:hover {
+        color: rgb(255, 108, 0);
+      }
+    }
+  }
+}
+
+body.assignments_new {
+  label {
+    width: 200px;
+    margin-top: 5px;
+    display: inline-block;
+  }
+  input.submit {
+    margin-top: 15px;
+  }
+  div.note {
+    font-size: 11px;
+  }
+}

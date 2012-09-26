@@ -1,0 +1,14 @@
+<div class="breadcrumb">
+<% if object.class == Course %>
+  <%= link_to "Courses", courses_path %> 
+
+  <% if controller_name == "assignments" %>
+    <% if action_name == "index" %>
+        &gt; <%= object.code %>
+     <% elsif action_name == "new" %>
+        &gt; <%= link_to object.code, course_assignments_url(object) %>
+        &gt; New Assignment
+    <% end %>
+  <% end %>
+<% end %>
+</div>

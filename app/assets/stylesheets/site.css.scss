@@ -4,6 +4,10 @@ body {
   min-width: 800px;
 }
 
+h2 {
+  color: rgb(0, 0, 128);
+}
+
 #top_banner {
   display: block;
   margin: 0;
@@ -12,6 +16,7 @@ body {
   font-size: 24px;
   background-image: url('orangeE.jpg');
   background-repeat: repeat-x;
+  color: rgb(0, 0, 128);
 }
 
 #menu {
@@ -40,4 +45,21 @@ body {
 
 #content {
   margin: 0 15px 15px;
+}
+
+div.breadcrumb {
+  padding-top: 10px;
+  font-size: 11px;
+  color: rgb(51, 51, 51);
+
+  a {
+    &, &:hover, &:visited {
+      background-color: rgb(255, 255, 255);
+      color: rgb(51, 51, 51);
+      text-decoration: none;
+    }
+    &:hover {
+      color: rgb(255, 108, 0);
+    }
+  }
 }

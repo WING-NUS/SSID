@@ -26,18 +26,23 @@ SSID::Application.routes.draw do
   root to: "announcements#index"
 
   resources :announcements
-  resources :assignments
-  resources :courses
-  resources :submission_cluster_groups
-  resources :submission_cluster_memberships
-  resources :submission_clusters
-  resources :submissions
-  resources :submission_similarity_logs
-  resources :submission_similarity_mappings
-  resources :submission_similarity_processes
-  resources :submission_similarities
-  resources :user_course_memberships
+  resources :courses do
+    resources :assignments
+    resources :users
+  end
+  resources :assignments do 
+    resources :submissions
+  end
+  resources :submission_cluster_groups do 
+    resources :submission_clusters
+  end
   resources :users
+ #resources :submission_similarity_logs
+ #resources :submission_similarity_mappings
+ #resources :submission_similarity_processes
+ #resources :submission_similarities
+ #resources :submission_cluster_memberships
+ #resources :user_course_memberships
 
   # Old routes:
   # -----------
