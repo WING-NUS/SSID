@@ -1,0 +1,2 @@
+The build.xml file can be used by Apache Ant to build the jar file
+To do so, simply run "ant"

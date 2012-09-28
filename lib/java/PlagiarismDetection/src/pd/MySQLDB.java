@@ -29,11 +29,14 @@ public final class MySQLDB {
 	private static String USER_PASSWORD;
 	private static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
 	private static String MYSQL_URL;
-	private static final String STUDENT_INSERT = "INSERT IGNORE INTO students(matric) VALUES (?)";
-	private static final String STUDENT_SELECT = "SELECT id FROM students WHERE matric = ?";
-	private static final String RESULT_INSERT = "INSERT INTO assignment_sim_results(assignment_id, id1, id2, sim1To2, sim2To1, sim, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-	private static final String CODE_INSERT = "INSERT INTO assignment_codes(student_id, code_line, code_array, created_at, updated_at) VALUES (?, ?, ?, ?, ?)";
-	private static final String MAPPING_INSERT = "INSERT INTO sim_mappings(result_id, startIndex1, endIndex1, startIndex2, endIndex2, startLine1, endLine1, startLine2, endLine2, stmtMappedCount, isPlagMapping) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	private static final String STUDENT_INSERT = "INSERT IGNORE INTO users(name, id_string, created_at, updated_at) VALUES (?, ?, ?, ?)";
+  private static final String STUDENT_MEMBERSHIP_INSERT = "INSERT INTO user_course_memberships(user_id, course_id, role, created_at, updated_at) VALUES (?, ?, ?, ?, ?)";
+  private static final String STUDENT_MEMBERSHIP_SELECT = "SELECT id FROM user_course_memberships WHERE user_id = ? AND course_id = ? AND role = ?";
+  private static final String COURSE_ID_SELECT = "SELECT course_id FROM assignments WHERE id = ?";
+	private static final String STUDENT_SELECT = "SELECT id FROM users WHERE id_string = ?";
+	private static final String RESULT_INSERT = "INSERT INTO submission_similarities(assignment_id, submission1_id, submission2_id, similarity_1_to_2, similarity_2_to_1, similarity, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+	private static final String CODE_INSERT = "INSERT INTO submissions(lines, student_id, created_at, updated_at) VALUES (?, ?, ?, ?)";
+	private static final String MAPPING_INSERT = "INSERT INTO submission_similarity_mappings(submission_similarity_id, start_index1, end_index1, start_index2, end_index2, start_line1, end_line1, start_line2, end_line2, statement_count, is_plagiarism, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	private static MySQLDB instance = new MySQLDB();
 	private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	private Connection con;
@@ -60,7 +63,7 @@ public final class MySQLDB {
 
 		connectionDB();
 		try {
-			insertHTMLs(submissions);
+			insertHTMLs(aId, submissions);
 			insertResults(aId, results);
 		} catch (Exception ex) {
 			con.rollback();
@@ -69,35 +72,43 @@ public final class MySQLDB {
 		disconnectionDB();
 	}
 
-	private void insertHTMLs(ArrayList<Submission> submissions)
+	private void insertHTMLs(String aIdString, ArrayList<Submission> submissions)
 			throws Exception {
 		String dateTime = dateFormat.format(new java.util.Date());
 
 		HashMap<String, Integer> students = new HashMap<String, Integer>();
 
+    // Find course id
+		PreparedStatement stmt = con.prepareStatement(COURSE_ID_SELECT);
+		stmt.setString(1, aIdString);
+		ResultSet rs = stmt.executeQuery();
+		rs.first();
+		int courseId = rs.getInt(1);
+		rs.close();
+		stmt.close();
+
 		for (Submission s : submissions) {
 			if (s.isBaseline()) {
 				continue;
 			}
-			students.put(s.getID(), insertStudent(s.getID()));
+			students.put(s.getID(), insertStudent(s.getID(), courseId));
 		}
 
-		PreparedStatement stmt = con.prepareStatement(CODE_INSERT,
+		stmt = con.prepareStatement(CODE_INSERT,
 				Statement.RETURN_GENERATED_KEYS);
 		for (Submission s : submissions) {
 			if (s.isBaseline()) {
 				continue;
 			}
-			stmt.setInt(1, students.get(s.getID()));
-			stmt.setInt(2, s.getCodeTotalLine());
-			stmt.setString(3, HTMLCreator.genSubmissionHtmlView(s));
+			stmt.setString(1, HTMLCreator.genSubmissionInYAML(s));
+			stmt.setInt(2, students.get(s.getID()));
+			stmt.setString(3, dateTime);
 			stmt.setString(4, dateTime);
-			stmt.setString(5, dateTime);
 			stmt.addBatch();
 		}
 
 		stmt.executeBatch();
-		ResultSet rs = stmt.getGeneratedKeys();
+		rs = stmt.getGeneratedKeys();
 
 		int dbId;
 
@@ -113,25 +124,49 @@ public final class MySQLDB {
 		stmt.close();
 	}
 
-	private int insertStudent(String matric) throws Exception {
+	private int insertStudent(String matric, int courseId) throws Exception {
+		String dateTime = dateFormat.format(new java.util.Date());
 
+    // Insert student into db
 		PreparedStatement stmt = con.prepareStatement(STUDENT_INSERT);
 		stmt.setString(1, matric);
-
+		stmt.setString(2, matric);
+    stmt.setString(3, dateTime);
+    stmt.setString(4, dateTime);
 		stmt.execute();
 		stmt.close();
 
+    // Find id of inserted row
 		stmt = con.prepareStatement(STUDENT_SELECT);
 		stmt.setString(1, matric);
-
 		ResultSet rs = stmt.executeQuery();
-
 		rs.next();
-		int reply = rs.getInt(1);
+		int userId = rs.getInt(1);
 		rs.close();
 		stmt.close();
 
-		return reply;
+    // Find course membership
+    stmt = con.prepareStatement(STUDENT_MEMBERSHIP_SELECT);
+    stmt.setInt(1, userId);
+    stmt.setInt(2, courseId);
+    stmt.setInt(3, 2); // 2 = ROLE_STUDENT; See UserCourseMembership model file for details
+    rs = stmt.executeQuery();
+
+    // If no results, we need to create a membership row
+    if (rs.first() == false) {
+      stmt.close();
+      stmt = con.prepareStatement(STUDENT_MEMBERSHIP_INSERT);
+      stmt.setInt(1, userId);
+      stmt.setInt(2, courseId);
+      stmt.setInt(3, 2); // 2 = ROLE_STUDENT; See UserCourseMembership model file for details
+      stmt.setString(4, dateTime);
+      stmt.setString(5, dateTime);
+      stmt.execute();
+    }
+    rs.close();
+    stmt.close();
+
+		return userId;
 	}
 
 	private void insertResults(String aIdString, ArrayList<Result> results)
@@ -177,6 +212,7 @@ public final class MySQLDB {
 
 	private void insertMappings(LinkedList<Integer> genIds,
 			ArrayList<Result> results) throws Exception {
+		String dateTime = dateFormat.format(new java.util.Date());
 		PreparedStatement stmt = con.prepareStatement(MAPPING_INSERT);
 
 		Iterator<Integer> idIterator = genIds.iterator();
@@ -201,6 +237,8 @@ public final class MySQLDB {
 				stmt.setInt(9, m.getEndLine2());
 				stmt.setInt(10, m.getMappedCountableStmtCount());
 				stmt.setBoolean(11, m.isPlagMapping());
+        stmt.setString(12, dateTime);
+        stmt.setString(13, dateTime);
 				stmt.addBatch();
 			}
 		}

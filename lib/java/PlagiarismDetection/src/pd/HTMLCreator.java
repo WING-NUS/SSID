@@ -57,6 +57,22 @@ final class HTMLCreator {
 		return sb.toString();
 	}
 
+	public static String genSubmissionInYAML(Submission s) {
+		StringBuilder sb = new StringBuilder(s.getCodeLength() << 1);
+
+		ArrayList<String> lines = s.getCombinedCode();
+
+    // Add array declaration
+    sb.append("---\n");
+
+    for (String line : lines) {
+      sb.append(line);
+      sb.append("\n");
+    }
+
+		return sb.toString();
+	}
+
 	// public static String genMappingView(DBResult dbr) {
 	public static String genMappingView(Result result) {
 		StringBuilder sb = new StringBuilder();
