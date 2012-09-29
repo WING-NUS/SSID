@@ -15,12 +15,7 @@ Installation
 	 http://dev.mysql.com/downloads/connector/
    - Put the downloaded file "mysql-connector-java-5.1.13-bin.jar"
      into the directory: 
-       - lib/java/programs/lib
-   - If you wish to recompile any of SSID's jar files, you will also
-     need to copy "mysql-connector-java-5.1.13-bin.jar" to the following
-     directories:
-	     - lib/java/PlagiarismDetection/lib
-	     - lib/java/DBSCAN/lib
+       - lib/java/jar
 
 -------------
 Configuration
