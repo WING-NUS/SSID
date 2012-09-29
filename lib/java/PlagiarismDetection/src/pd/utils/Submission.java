@@ -48,7 +48,7 @@ public final class Submission {
 		return codeTokens;
 	}
 
-	public boolean isBaseline() {
+	public boolean isSkeleton() {
 		return baseLine;
 	}
 

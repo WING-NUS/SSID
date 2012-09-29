@@ -26,7 +26,7 @@ import pd.utils.Tokens.*;
 public final class SimComparer {
 
 	private static SimComparer instance = new SimComparer();
-	private static final String BASELINE = "baseline";
+	private static final String SKELETON = "skeleton";
 
 	@SuppressWarnings("unused")
 	private boolean debugMode = false;
@@ -38,33 +38,33 @@ public final class SimComparer {
 	public ArrayList<Result> compareSubmissions(
 			ArrayList<Submission> submissions, int nGramSize, int minMatch) {
 
-		Submission baseline = getBaseLine(submissions);
+		Submission skeleton = getBaseLine(submissions);
 		ArrayList<Result> results = new ArrayList<Result>();
 
 		int noOfSub = submissions.size();
 		Submission s1, s2;
-		TokenList s1Tokens, s2Tokens, bTokens = baseline.getCodeTokens();
+		TokenList s1Tokens, s2Tokens, bTokens = skeleton.getCodeTokens();
 		Result result;
 
 		for (int i = 0; i < noOfSub; i++) {
 			s1 = submissions.get(i);
-			if (s1.isBaseline()) {
+			if (s1.isSkeleton()) {
 				continue;
 			}
 			for (int j = i + 1; j < noOfSub; j++) {
 				s2 = submissions.get(j);
-				if (s2.isBaseline()) {
+				if (s2.isSkeleton()) {
 					continue;
 				}
 
 				s1Tokens = s1.getCodeTokens();
 				s2Tokens = s2.getCodeTokens();
 				if (s1Tokens.size() < s2Tokens.size()) {
-					result = compareSubmissions(s1, s2, baseline, nGramSize,
+					result = compareSubmissions(s1, s2, skeleton, nGramSize,
 							minMatch);
 					computeSims(s1Tokens, s2Tokens, result);
 				} else {
-					result = compareSubmissions(s2, s1, baseline, nGramSize,
+					result = compareSubmissions(s2, s1, skeleton, nGramSize,
 							minMatch);
 					computeSims(s2Tokens, s1Tokens, result);
 				}
@@ -95,7 +95,7 @@ public final class SimComparer {
 	private Submission getBaseLine(ArrayList<Submission> submissions) {
 		Submission reply = null;
 		for (Submission s : submissions) {
-			if (s.getID().equals(BASELINE)) {
+			if (s.getID().equals(SKELETON)) {
 				reply = s;
 				s.setBaseLine(true);
 			}
@@ -110,7 +110,7 @@ public final class SimComparer {
 	}
 
 	private Result compareSubmissions(Submission s1, Submission s2,
-			Submission baseline, int nGramSize, int minMatch) {
+			Submission skeleton, int nGramSize, int minMatch) {
 
 		NGramList s1NGrams = s1.getNGramList(), s2NGrams = s2.getNGramList();
 
@@ -118,8 +118,8 @@ public final class SimComparer {
 			Result result = new Result(s1, s2);
 
 			gst(s1NGrams, s2.getNGramIndexingTable(),
-					baseline.getNGramIndexingTable(), s1.getCodeTokens(),
-					s2.getCodeTokens(), baseline.getCodeTokens(), minMatch,
+					skeleton.getNGramIndexingTable(), s1.getCodeTokens(),
+					s2.getCodeTokens(), skeleton.getCodeTokens(), minMatch,
 					result.getTokenIndexMappings());
 
 			getCodeMapping(s1.getCodeTokens(), s2.getCodeTokens(), result);

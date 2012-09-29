@@ -23,7 +23,7 @@ import pd.*;
 
 public class Main {
 
-	public static final String BASELINE = "baseline";
+	public static final String SKELETON = "skeleton";
 
 	// static final int KGRAM_SIZE = 3;
 

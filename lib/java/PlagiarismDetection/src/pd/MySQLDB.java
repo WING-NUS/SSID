@@ -88,7 +88,7 @@ public final class MySQLDB {
 		stmt.close();
 
 		for (Submission s : submissions) {
-			if (s.isBaseline()) {
+			if (s.isSkeleton()) {
 				continue;
 			}
 			students.put(s.getID(), insertStudent(s.getID(), courseId));
@@ -97,7 +97,7 @@ public final class MySQLDB {
 		stmt = con.prepareStatement(CODE_INSERT,
 				Statement.RETURN_GENERATED_KEYS);
 		for (Submission s : submissions) {
-			if (s.isBaseline()) {
+			if (s.isSkeleton()) {
 				continue;
 			}
 			stmt.setString(1, HTMLCreator.genSubmissionInYAML(s));
@@ -113,7 +113,7 @@ public final class MySQLDB {
 		int dbId;
 
 		for (Submission s : submissions) {
-			if (s.isBaseline()) {
+			if (s.isSkeleton()) {
 				continue;
 			}
 			rs.next();
