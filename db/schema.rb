@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120826083559) do
+ActiveRecord::Schema.define(:version => 20120927140257) do
 
   create_table "announcements", :force => true do |t|
     t.string   "title"
@@ -31,6 +31,7 @@ ActiveRecord::Schema.define(:version => 20120826083559) do
     t.integer  "ngram_size",       :default => 4, :null => false
     t.datetime "created_at",                      :null => false
     t.datetime "updated_at",                      :null => false
+    t.text     "upload_log"
   end
 
   add_index "assignments", ["course_id"], :name => "index_assignments_on_course_id"
@@ -48,12 +49,12 @@ ActiveRecord::Schema.define(:version => 20120826083559) do
   add_index "courses", ["code", "academic_year", "semester"], :name => "index_courses_on_code_and_academic_year_and_semester", :unique => true
 
   create_table "submission_cluster_groups", :force => true do |t|
-    t.integer  "assignment_id",                                        :null => false
+    t.integer  "assignment_id",                                                       :null => false
     t.string   "description"
     t.decimal  "cut_off_criterion",      :precision => 6, :scale => 3
-    t.integer  "cut_off_criterion_type"
-    t.datetime "created_at",                                           :null => false
-    t.datetime "updated_at",                                           :null => false
+    t.integer  "cut_off_criterion_type",                               :default => 2
+    t.datetime "created_at",                                                          :null => false
+    t.datetime "updated_at",                                                          :null => false
   end
 
   add_index "submission_cluster_groups", ["assignment_id", "cut_off_criterion"], :name => "on_assignment_id_and_cut_off_criterion", :unique => true
@@ -131,24 +132,25 @@ ActiveRecord::Schema.define(:version => 20120826083559) do
   add_index "submission_similarity_mappings", ["submission_similarity_id"], :name => "index_submission_similarity_mappings_on_submission_similarity_id"
 
   create_table "submission_similarity_processes", :force => true do |t|
-    t.integer  "assignment_id",                 :null => false
-    t.integer  "pid",                           :null => false
-    t.integer  "status",        :default => -1, :null => false
-    t.datetime "created_at",                    :null => false
-    t.datetime "updated_at",                    :null => false
+    t.integer  "assignment_id",                :null => false
+    t.integer  "pid"
+    t.integer  "status",        :default => 1, :null => false
+    t.datetime "created_at",                   :null => false
+    t.datetime "updated_at",                   :null => false
   end
 
   add_index "submission_similarity_processes", ["assignment_id"], :name => "index_submission_similarity_processes_on_assignment_id"
 
   create_table "submissions", :force => true do |t|
-    t.text     "lines",          :limit => 2147483647
-    t.integer  "student_id",                                              :null => false
-    t.boolean  "is_plagiarised",                       :default => false, :null => false
-    t.datetime "created_at",                                              :null => false
-    t.datetime "updated_at",                                              :null => false
+    t.text     "lines",         :limit => 2147483647
+    t.integer  "assignment_id",                                          :null => false
+    t.integer  "student_id",                                             :null => false
+    t.boolean  "is_plagiarism",                       :default => false, :null => false
+    t.datetime "created_at",                                             :null => false
+    t.datetime "updated_at",                                             :null => false
   end
 
-  add_index "submissions", ["student_id", "is_plagiarised"], :name => "index_submissions_on_student_id_and_is_plagiarised"
+  add_index "submissions", ["student_id", "is_plagiarism"], :name => "index_submissions_on_student_id_and_is_plagiarism"
   add_index "submissions", ["student_id"], :name => "index_submissions_on_student_id"
 
   create_table "user_course_memberships", :force => true do |t|
@@ -164,11 +166,11 @@ ActiveRecord::Schema.define(:version => 20120826083559) do
   create_table "users", :force => true do |t|
     t.string   "name"
     t.string   "full_name"
-    t.string   "password_digest"
-    t.boolean  "is_admin",        :default => false, :null => false
+    t.string   "password_digest", :default => "$2a$10$wiISV1qyWgtvEqtgmsHkaOPoq3qqXQG1xS7CZYuWrHTvp1fCw.HdG"
+    t.boolean  "is_admin",        :default => false,                                                          :null => false
     t.string   "id_string"
-    t.datetime "created_at",                         :null => false
-    t.datetime "updated_at",                         :null => false
+    t.datetime "created_at",                                                                                  :null => false
+    t.datetime "updated_at",                                                                                  :null => false
   end
 
 end

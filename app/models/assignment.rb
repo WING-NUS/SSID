@@ -18,12 +18,14 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 class Assignment < ActiveRecord::Base
   has_many :submission_similarities, :dependent => :delete_all
   has_many :submission_cluster_groups, :dependent => :delete_all, order: "cut_off_criterion DESC"
-  has_many :submission_similarity_processes
-  has_many :suspicious_submission_similarities, class_name: "SubmissionSimilarities", conditions: "status = #{SubmissionSimilarity::STATUS_SUSPECTED_AS_PLAGIARISM}"
-  has_many :plagiarism_marked_submission_similarities, class_name: "SubmissionSimilarities", conditions: "status = #{SubmissionSimilarity::STATUS_MARKED_AS_PLAGIARISM}"
+  has_one :submission_similarity_process, :dependent => :delete
+  has_many :suspected_plagiarism_cases, class_name: "SubmissionSimilarity", conditions: "status = #{SubmissionSimilarity::STATUS_SUSPECTED_AS_PLAGIARISM}"
+  has_many :confirmed_or_suspected_plagiarism_cases, class_name: "SubmissionSimilarity", conditions: "status = #{SubmissionSimilarity::STATUS_CONFIRMED_AS_PLAGIARISM} OR status = #{SubmissionSimilarity::STATUS_SUSPECTED_AS_PLAGIARISM}"
+  has_many :confirmed_plagiarism_cases, class_name: "SubmissionSimilarity", conditions: "status = #{SubmissionSimilarity::STATUS_CONFIRMED_AS_PLAGIARISM}"
+  has_many :submissions
   belongs_to :course
 
-  validates_presence_of :title
+  validates :title, :language, :min_match_length, :ngram_size, presence: true
   validates_numericality_of :min_match_length, only_integer: true, greater_than: 0
   validates_numericality_of :ngram_size, only_integer: true, greater_than: 0
 end

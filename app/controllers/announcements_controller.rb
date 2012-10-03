@@ -22,47 +22,47 @@ class AnnouncementsController < ApplicationController
   end
 
   # GET /announcements/1
-  def show
-    @announcement = Announcement.find(params[:id])
-  end
+# def show
+#   @announcement = Announcement.find(params[:id])
+# end
 
-  # GET /announcements/new
-  def new
-    @announcement = Announcement.new
-  end
+# # GET /announcements/new
+# def new
+#   @announcement = Announcement.new
+# end
 
-  # GET /announcements/1/edit
-  def edit
-    @announcement = Announcement.find(params[:id])
-  end
+# # GET /announcements/1/edit
+# def edit
+#   @announcement = Announcement.find(params[:id])
+# end
 
-  # POST /announcements
-  def create
-    @announcement = Announcement.new(params[:announcement])
+# # POST /announcements
+# def create
+#   @announcement = Announcement.new(params[:announcement])
 
-    if @announcement.save
-      format.html { redirect_to @announcement, notice: 'Announcement was successfully created.' }
-    else
-      format.html { render action: "new" }
-    end
-  end
+#   if @announcement.save
+#     redirect_to @announcement, notice: 'Announcement was successfully created.'
+#   else
+#     render action: "new"
+#   end
+# end
 
-  # PUT /announcements/1
-  def update
-    @announcement = Announcement.find(params[:id])
+# # PUT /announcements/1
+# def update
+#   @announcement = Announcement.find(params[:id])
 
-    if @announcement.update_attributes(params[:announcement])
-      format.html { redirect_to @announcement, notice: 'Announcement was successfully updated.' }
-    else
-      format.html { render action: "edit" }
-    end
-  end
+#   if @announcement.update_attributes(params[:announcement])
+#     redirect_to @announcement, notice: 'Announcement was successfully updated.'
+#   else
+#     render action: "edit"
+#   end
+# end
 
-  # DELETE /announcements/1
-  def destroy
-    @announcement = Announcement.find(params[:id])
-    @announcement.destroy
-  
-    redirect_to announcements_url
-  end
+# # DELETE /announcements/1
+# def destroy
+#   @announcement = Announcement.find(params[:id])
+#   @announcement.destroy
+# 
+#   redirect_to announcements_url
+# end
 end

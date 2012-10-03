@@ -1,0 +1,72 @@
+body.submission_clusters_index {
+  ul {
+    span.red {
+      color: rgb(255, 0, 0);
+    }
+  }
+
+  div.cluster {
+    border: 1px solid #000;
+    margin-bottom: 20px;
+    position: relative;
+    height: 600px;
+
+    h3 {
+      margin: 10px;
+    }
+
+    div.legend {
+      border: 1px solid #000;
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: rgb(255, 255, 255);
+
+      h3 {
+        text-align: center;
+        margin: 3px;
+      }
+
+      div {
+        margin: 0 5px;
+
+        span {
+          vertical-align: middle;
+          display: inline-block;
+          width: 100px;
+        }
+      }
+      
+      <% SubmissionClustersHelper::LEGEND_SIMILARITY_VALUES.each { |val| %>
+        div.legend_<%= val %> span { 
+          height: <%= SubmissionClustersHelper::LEGEND_WEIGHTS_FOR_SIMILARITY_VALUES[val]%>px;
+          background-color: <%= SubmissionClustersHelper::LEGEND_COLORS_FOR_SIMILARITY_VALUES[val]%>;
+        }
+      <% } %>
+    }
+
+    div.canvas_wrapper {
+      position: absolute;
+      top: 40px;
+      left: 50%;
+      margin-left: -350px;
+      width: 700px;
+      height: 540px;
+
+      div.node a {
+        &, &:hover, &:visited {
+          font-weight: bold;
+          background-color: rgb(255, 255, 255);
+          margin-right: 20px;
+        }
+        &:hover, &.is_plagiarism:hover {
+          color: rgb(255, 108, 0);
+        }
+
+        &.is_plagiarism {
+          color: rgb(255, 0, 0);
+        }
+      }
+    }
+  }
+}

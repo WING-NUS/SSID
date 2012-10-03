@@ -17,15 +17,20 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 
 class SubmissionClusterGroup < ActiveRecord::Base
   # SubmissionClusterGroup#cut_off_criterion_type Constants
-  TYPE_MARKED_AND_SUSPECTED_PLAGIARISM_CRITERION = 0
-  TYPE_MARKED_PLAGIARISM_CRITERION = 1
+  TYPE_CONFIRMED_OR_SUSPECTED_PLAGIARISM_CRITERION = 0
+  TYPE_CONFIRMED_PLAGIARISM_CRITERION = 1
   TYPE_USER_DEFINED_CRITERION = 2
+  TYPE_STRINGS = [
+    "Confirmed or Suspected Plagiarism Cases",
+    "Confirmed Plagiarism Cases",
+    "User-Defined Value"
+  ]
 
   # SubmissionClusterGroup#description Constants
   DESCRIPTIONS = {
-    TYPE_MARKED_AND_SUSPECTED_PLAGIARISM_CRITERION => "Based on cases marked and suspected as plagiarism",
-    TYPE_MARKED_PLAGIARISM_CRITERION => "Based on cases marked as plagiarism",
-    TYPE_USER_DEFINED_CRITERION => "Based on user defined cut-off criterion"
+    TYPE_CONFIRMED_OR_SUSPECTED_PLAGIARISM_CRITERION => "Based on cases confirmed or suspected as plagiarism",
+    TYPE_CONFIRMED_PLAGIARISM_CRITERION => "Based on cases confirmed as plagiarism",
+    TYPE_USER_DEFINED_CRITERION => "Based on user-defined cut-off criterion"
   }
 
   has_many :clusters, class_name: "SubmissionCluster", :dependent => :delete_all

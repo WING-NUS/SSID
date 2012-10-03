@@ -1,90 +1,90 @@
 class SubmissionClusterGroupsController < ApplicationController
-  # GET /submission_cluster_groups
-  # GET /submission_cluster_groups.json
+  # GET /assignments/1/cluster_groups
   def index
-    @submission_cluster_groups = SubmissionClusterGroup.all
-
-    respond_to do |format|
-      format.html # index.html.erb
-      format.json { render json: @submission_cluster_groups }
-    end
+    @assignment = Assignment.find(params[:assignment_id])
+    @course = @assignment.course
+    @cluster_groups = @assignment.submission_cluster_groups
   end
 
-  # GET /submission_cluster_groups/1
-  # GET /submission_cluster_groups/1.json
-  def show
-    @submission_cluster_group = SubmissionClusterGroup.find(params[:id])
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.json { render json: @submission_cluster_group }
-    end
-  end
-
-  # GET /submission_cluster_groups/new
-  # GET /submission_cluster_groups/new.json
+  # GET /assignments/1/cluster_groups/new
   def new
+    @assignment = Assignment.find(params[:assignment_id])
+    @course = @assignment.course
+    @assignment_plagiarism_cases = []
+    @assignment_plagiarism_cases[SubmissionClusterGroup::TYPE_CONFIRMED_OR_SUSPECTED_PLAGIARISM_CRITERION] =
+      @assignment.suspected_plagiarism_cases + @assignment.confirmed_plagiarism_cases
+    @assignment_plagiarism_cases[SubmissionClusterGroup::TYPE_CONFIRMED_PLAGIARISM_CRITERION] =
+      @assignment.confirmed_plagiarism_cases
     @submission_cluster_group = SubmissionClusterGroup.new
-
-    respond_to do |format|
-      format.html # new.html.erb
-      format.json { render json: @submission_cluster_group }
-    end
   end
 
-  # GET /submission_cluster_groups/1/edit
-  def edit
-    @submission_cluster_group = SubmissionClusterGroup.find(params[:id])
-  end
-
-  # POST /submission_cluster_groups
-  # POST /submission_cluster_groups.json
+  # POST /assignments/1/cluster_groups
   def create
-    # Assign description based on cut_off_criterion_type
-    params[:submission_cluster_group]["description"] = SubmissionClusterGroup::DESCRIPTIONS[params[:submission_cluster_group]["cut_off_criterion_type"]]
+    @assignment = Assignment.find(params[:assignment_id])
+    @course = @assignment.course
 
-    # Create
-    @submission_cluster_group = SubmissionClusterGroup.new(params[:submission_cluster_group])
+    # Determine cut-off criterion if type requires
+    if params[:submission_cluster_group]["cut_off_criterion_type"] == SubmissionClusterGroup::TYPE_CONFIRMED_OR_SUSPECTED_PLAGIARISM_CRITERION.to_s
+      params[:submission_cluster_group]["cut_off_criterion"] = @assignment.confirmed_or_suspected_plagiarism_cases.collect { |submission_similarity|
+        submission_similarity.similarity
+      }.min
+    elsif params[:submission_cluster_group]["cut_off_criterion_type"] == SubmissionClusterGroup::TYPE_CONFIRMED_PLAGIARISM_CRITERION.to_s
+      params[:submission_cluster_group]["cut_off_criterion"] = @assignment.confirmed_plagiarism_cases.collect { |submission_similarity|
+        submission_similarity.similarity
+      }.min
+    end
 
-    # If save, we need to run DBSCAN. DBSCAN currently writes directly into the database via MySQL
-    # We should change this to a rake task
-
-    respond_to do |format|
-      if @submission_cluster_group.save
-        format.html { redirect_to @submission_cluster_group, notice: 'Submission cluster group was successfully created.' }
-        format.json { render json: @submission_cluster_group, status: :created, location: @submission_cluster_group }
-      else
-        format.html { render action: "new" }
-        format.json { render json: @submission_cluster_group.errors, status: :unprocessable_entity }
+    @submission_cluster_group = SubmissionClusterGroup.new { |scg|
+      scg.cut_off_criterion_type = params[:submission_cluster_group]["cut_off_criterion_type"]
+      scg.cut_off_criterion = params[:submission_cluster_group]["cut_off_criterion"]
+      scg.description = SubmissionClusterGroup::DESCRIPTIONS[params[:submission_cluster_group]["cut_off_criterion_type"].to_i]
+      scg.assignment_id = @assignment.id
+    }
+    
+    # Run java program if @submission_cluster_group is valid
+    if @submission_cluster_group.valid?
+      require 'submissions_handler'
+      
+      # Rollback if clustering error
+      error_message = ""
+      @submission_cluster_group.transaction do
+        @submission_cluster_group.save
+        begin
+          SubmissionsHandler.process_cluster_group(@submission_cluster_group)
+          redirect_to assignment_cluster_groups_url(@assignment), notice: 'Submission cluster group was successfully created.'
+        rescue Exception => e
+          error_message = e.message
+          raise ActiveRecord::Rollback
+        end
       end
+
+      # Render #new and display errors
+      unless @submission_cluster_group.id
+        @assignment_plagiarism_cases = []
+        @assignment_plagiarism_cases[SubmissionClusterGroup::TYPE_CONFIRMED_OR_SUSPECTED_PLAGIARISM_CRITERION] =
+          @assignment.suspected_plagiarism_cases + @assignment.confirmed_plagiarism_cases
+        @assignment_plagiarism_cases[SubmissionClusterGroup::TYPE_CONFIRMED_PLAGIARISM_CRITERION] =
+          @assignment.confirmed_plagiarism_cases
+        @submission_cluster_group.errors.add :base, error_message
+        render action: "new" 
+      end
+    else
+      @assignment_plagiarism_cases = []
+      @assignment_plagiarism_cases[SubmissionClusterGroup::TYPE_CONFIRMED_OR_SUSPECTED_PLAGIARISM_CRITERION] =
+        @assignment.suspected_plagiarism_cases + @assignment.confirmed_plagiarism_cases
+      @assignment_plagiarism_cases[SubmissionClusterGroup::TYPE_CONFIRMED_PLAGIARISM_CRITERION] =
+        @assignment.confirmed_plagiarism_cases
+      render action: "new"
     end
   end
 
-  # PUT /submission_cluster_groups/1
-  # PUT /submission_cluster_groups/1.json
-  def update
-    @submission_cluster_group = SubmissionClusterGroup.find(params[:id])
-
-    respond_to do |format|
-      if @submission_cluster_group.update_attributes(params[:submission_cluster_group])
-        format.html { redirect_to @submission_cluster_group, notice: 'Submission cluster group was successfully updated.' }
-        format.json { head :no_content }
-      else
-        format.html { render action: "edit" }
-        format.json { render json: @submission_cluster_group.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  # DELETE /submission_cluster_groups/1
-  # DELETE /submission_cluster_groups/1.json
+  # DELETE /assignments/1/cluster_groups/1
   def destroy
+    @assignment = Assignment.find(params[:assignment_id])
+    @course = @assignment.course
     @submission_cluster_group = SubmissionClusterGroup.find(params[:id])
     @submission_cluster_group.destroy
 
-    respond_to do |format|
-      format.html { redirect_to submission_cluster_groups_url }
-      format.json { head :no_content }
-    end
+    redirect_to assignment_cluster_groups_url(@assignment), notice: 'Submission cluster group was successfully deleted.'
   end
 end

@@ -28,7 +28,7 @@ Models
   - *deprecated* (code_line) - which is number of lines in code_array
   - lines (code_array)
   - student_id (student_id)
-  - is_plagiarised (plagiarism)
+  - is_plagiarism (plagiarism)
 
 ## SubmissionCluster (AssignmentCluster)
   - submission_cluster_group_id (assignment_clustering_id)

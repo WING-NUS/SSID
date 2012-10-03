@@ -19,7 +19,7 @@ class CreateSubmissionSimilarityProcesses < ActiveRecord::Migration
   def change
     create_table :submission_similarity_processes do |t|
       t.integer :assignment_id, null: false
-      t.integer :pid, null: false
+      t.integer :pid
       t.integer :status, default: SubmissionSimilarityProcess::STATUS_RUNNING, null: false # See model for status constants
 
       t.timestamps

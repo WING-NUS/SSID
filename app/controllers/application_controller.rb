@@ -18,7 +18,7 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 class ApplicationController < ActionController::Base
   protect_from_forgery
   before_filter :authorize
-  before_filter :sanitize_id, only: [:show, :edit, :create, :update, :destroy]
+  before_filter :sanitize_id, only: [:show, :edit, :update, :destroy]
 
   protected
 

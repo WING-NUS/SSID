@@ -14,9 +14,8 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with SSID.  If not, see <http://www.gnu.org/licenses/>.
  */
-package dbscan;
-
 import dbscan.util.*;
+import dbscan.*;
 
 public class Main {
 
@@ -31,7 +30,7 @@ public class Main {
 		// TODO code application logic here
 		if (args.length != 7) {
 			throw new Exception(
-					"Usage: DBSCAN <assignment id> <clustering id> <limit> <database host> <database name> <database username> <database password>");
+					"Usage: SubmissionsClustering <assignment id> <clustering id> <limit> <database host> <database name> <database username> <database password>");
 		}
 
 		try {

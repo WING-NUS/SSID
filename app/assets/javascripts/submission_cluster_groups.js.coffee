@@ -1,3 +1,9 @@
-# Place all the behaviors and hooks related to the matching controller here.
-# All this logic will automatically be available in application.js.
-# You can use CoffeeScript in this file: http://jashkenas.github.com/coffee-script/
+window.SubmissionClusterGroup ||= {}
+
+SubmissionClusterGroup.disableUserDefinedTextField = ->
+  $('#submission_cluster_group_cut_off_criterion').attr("disabled", "disabled")
+  $('#submission_cluster_group_cut_off_criterion').addClass("disabled")
+
+SubmissionClusterGroup.enableUserDefinedTextField = ->
+  $('#submission_cluster_group_cut_off_criterion').removeAttr("disabled")
+  $('#submission_cluster_group_cut_off_criterion').removeClass("disabled")

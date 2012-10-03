@@ -21,18 +21,14 @@ import java.sql.*;
 import java.util.*;
 import java.text.*;
 
-final class MySQLDB {
+public final class MySQLDB {
 
 	static String USER_ID;
 	static String USER_PASSWORD;
 	static String JDBC_DRIVER = "com.mysql.jdbc.Driver";
 	static String MYSQL_URL;
-	private static final String INSERT_CLUSTERS_QUERY = "INSERT INTO assignment_clusters(assignment_clustering_id, created_at, updated_at) VALUES (?, ?, ?)";
-	private static final String INSERT_CLUSTER_MEMBERS_QUERY = "INSERT INTO assignment_cluster_members(assignment_cluster_id, assignment_code_id, created_at, updated_at) VALUES ";
-	private static final String COMMA = ",";
-	private static final String OPEN_BRACKET = "(";
-	private static final String CLOSE_BRACKET = ")";
-	private static final String QUOT = "'";
+	private static final String INSERT_CLUSTERS_QUERY = "INSERT INTO submission_clusters(submission_cluster_group_id, created_at, updated_at) VALUES (?, ?, ?)";
+	private static final String INSERT_CLUSTER_MEMBERS_QUERY = "INSERT INTO submission_cluster_memberships(submission_cluster_id, submission_id, created_at, updated_at) VALUES (?, ?, ?, ?)";
 
 	public static void setProperties(String dbAddr, String dbName, String user,
 			String pwd) {
@@ -53,63 +49,26 @@ final class MySQLDB {
 	private static void insertClusters(Connection con, int clusteringId,
 			SetOfPoints sop, String dateTime) throws Exception {
 		Hashtable<Integer, ArrayList<Integer>> clusters = buildDBClusters(sop);
-
-		int clusterId;
-		ArrayList<Integer> codeIds;
 		Set<Map.Entry<Integer, ArrayList<Integer>>> clusterSet = clusters
 				.entrySet();
 
-		Statement stmt;
-		ArrayList<String> values = new ArrayList<String>();
+    if (clusterSet.size() > 0) {
+      PreparedStatement stmt = con.prepareStatement(INSERT_CLUSTER_MEMBERS_QUERY);
+      for (Map.Entry<Integer, ArrayList<Integer>> entry : clusterSet) {
+        ArrayList<Integer> codeIds = entry.getValue();
+        int clusterId = insertCluster(con, clusteringId, dateTime);
 
-		for (Map.Entry<Integer, ArrayList<Integer>> entry : clusterSet) {
-			codeIds = entry.getValue();
-			clusterId = insertCluster(con, clusteringId, dateTime);
-			values.add(prepareQuery(clusterId, codeIds, dateTime));
-		}
-
-		if (values.size() > 0) {
-			StringBuilder sb = new StringBuilder(INSERT_CLUSTER_MEMBERS_QUERY);
-			boolean start = true;
-			for (String value : values) {
-				if (start) {
-					start = false;
-				} else {
-					sb.append(COMMA);
-				}
-				sb.append(value);
-			}
-			stmt = con.createStatement();
-			stmt.execute(sb.toString());
-		}
-	}
-
-	private static String prepareQuery(int clusterId,
-			ArrayList<Integer> codeIds, String dateTime) throws Exception {
-		StringBuilder sb = new StringBuilder();
-
-		boolean start = true;
-		for (Integer i : codeIds) {
-			if (start) {
-				start = false;
-			} else {
-				sb.append(COMMA);
-			}
-			sb.append(OPEN_BRACKET);
-			sb.append(clusterId);
-			sb.append(COMMA);
-			sb.append(i);
-			sb.append(COMMA);
-			sb.append(QUOT);
-			sb.append(dateTime);
-			sb.append(QUOT);
-			sb.append(COMMA);
-			sb.append(QUOT);
-			sb.append(dateTime);
-			sb.append(QUOT);
-			sb.append(CLOSE_BRACKET);
-		}
-		return sb.toString();
+        for (Integer codeId : codeIds) {
+          stmt.setInt(1, clusterId);
+          stmt.setInt(2, codeId.intValue());
+          stmt.setString(3, dateTime);
+          stmt.setString(4, dateTime);
+          stmt.addBatch();
+        }
+      }
+      stmt.executeBatch();
+      stmt.close();
+    }
 	}
 
 	private static Hashtable<Integer, ArrayList<Integer>> buildDBClusters(

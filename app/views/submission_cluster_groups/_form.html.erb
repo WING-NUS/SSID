@@ -1,8 +1,7 @@
-<%= form_for(@submission_cluster_group) do |f| %>
+<%= form_for([@assignment, @submission_cluster_group], url: assignment_cluster_groups_path) do |f| %>
   <% if @submission_cluster_group.errors.any? %>
     <div id="error_explanation">
-      <h2><%= pluralize(@submission_cluster_group.errors.count, "error") %> prohibited this submission_cluster_group from being saved:</h2>
-
+      <h3><%= pluralize(@submission_cluster_group.errors.count, "error") %> prohibited this submission cluster group from being saved:</h3>
       <ul>
       <% @submission_cluster_group.errors.full_messages.each do |msg| %>
         <li><%= msg %></li>
@@ -10,8 +9,32 @@
       </ul>
     </div>
   <% end %>
-
-  <div class="actions">
-    <%= f.submit %>
+  <div>
+    Create the cluster group with a cut-off criterion...
+    <% SubmissionClusterGroup::TYPE_STRINGS.each_with_index { |type, type_idx| %>
+      <% if type_idx == SubmissionClusterGroup::TYPE_CONFIRMED_OR_SUSPECTED_PLAGIARISM_CRITERION or 
+           type_idx == SubmissionClusterGroup::TYPE_CONFIRMED_PLAGIARISM_CRITERION %>
+        <% disabled = "disabled" if @assignment_plagiarism_cases[type_idx].empty? %>
+        <div><label<%= %Q{ class="disabled"}.html_safe if disabled %>>
+        <%= f.radio_button :cut_off_criterion_type, type_idx, 
+                            checked: @submission_cluster_group.cut_off_criterion_type == type_idx,
+                            onclick: "SubmissionClusterGroup.disableUserDefinedTextField();", 
+                            disabled: disabled %>
+        To include all currently <%= type %>
+      <% elsif type_idx == SubmissionClusterGroup::TYPE_USER_DEFINED_CRITERION %>
+        <div><label>
+        <%= f.radio_button :cut_off_criterion_type, type_idx, 
+                          checked: @submission_cluster_group.cut_off_criterion_type == type_idx,
+                          onclick: "SubmissionClusterGroup.enableUserDefinedTextField();"%>
+        With a <%= type %> of: <%= f.text_field :cut_off_criterion %> %
+      <% end %>
+      </label></div>
+    <% } %>
+  </div>
+  <div class="notes">
+    The cut-off criterion provides a threshold value for the cluster group. Any submission cluster with a maximum similarity value lower than the threshold will not be included in the cluster group. Cut-off criterion values to include all currently confirmed or suspected plagiarism cases are computed automatically once submission similarities have been marked as confirmed or suspected for plagiarism.
+  </div>
+  <div>
+    <%= f.submit class: "submit" %>
   </div>
 <% end %>

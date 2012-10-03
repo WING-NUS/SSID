@@ -19,7 +19,7 @@ package dbscan;
 
 import dbscan.util.*;
 
-final class DBSCAN {
+public final class DBSCAN {
 
 	public void buildClusters(SetOfPoints setOfPoints, int minPts) {
 		int clusterId = nextId(Point.NOISE);

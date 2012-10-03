@@ -17,9 +17,10 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 
 class SubmissionSimilarityProcess < ActiveRecord::Base
   # SubmissionSimilarityProcess#status Constants
-  STATUS_RUNNING = -1
-  STATUS_COMPLETED = 0
-  STATUS_ERROR = -2
+  STATUS_ERRONEOUS = 0
+  STATUS_RUNNING = 1
+  STATUS_COMPLETED = 2
+  STATUS_STRINGS = %w{erroneous running completed}
 
   belongs_to :assignment
 end

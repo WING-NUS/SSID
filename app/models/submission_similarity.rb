@@ -17,10 +17,9 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 
 class SubmissionSimilarity < ActiveRecord::Base
   # SubmissionSimilarity#status Constants
-  STATUS_NO_PLAGIARISM = 0
-  STATUS_UNMARKED_AS_PLAGIARISM = 1
-  STATUS_MARKED_AS_PLAGIARISM = 2
-  STATUS_SUSPECTED_AS_PLAGIARISM = 3
+  STATUS_NOT_PLAGIARISM = 0
+  STATUS_CONFIRMED_AS_PLAGIARISM = 1
+  STATUS_SUSPECTED_AS_PLAGIARISM = 2
 
   belongs_to :assignment
   belongs_to :submission1, class_name: "Submission"

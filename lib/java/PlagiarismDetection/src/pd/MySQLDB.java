@@ -35,7 +35,7 @@ public final class MySQLDB {
   private static final String COURSE_ID_SELECT = "SELECT course_id FROM assignments WHERE id = ?";
 	private static final String STUDENT_SELECT = "SELECT id FROM users WHERE id_string = ?";
 	private static final String RESULT_INSERT = "INSERT INTO submission_similarities(assignment_id, submission1_id, submission2_id, similarity_1_to_2, similarity_2_to_1, similarity, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-	private static final String CODE_INSERT = "INSERT INTO submissions(lines, student_id, created_at, updated_at) VALUES (?, ?, ?, ?)";
+	private static final String CODE_INSERT = "INSERT INTO submissions(`lines`, assignment_id, student_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?)";
 	private static final String MAPPING_INSERT = "INSERT INTO submission_similarity_mappings(submission_similarity_id, start_index1, end_index1, start_index2, end_index2, start_line1, end_line1, start_line2, end_line2, statement_count, is_plagiarism, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	private static MySQLDB instance = new MySQLDB();
 	private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -101,9 +101,10 @@ public final class MySQLDB {
 				continue;
 			}
 			stmt.setString(1, HTMLCreator.genSubmissionInYAML(s));
-			stmt.setInt(2, students.get(s.getID()));
-			stmt.setString(3, dateTime);
+			stmt.setString(2, aIdString);
+			stmt.setInt(3, students.get(s.getID()));
 			stmt.setString(4, dateTime);
+			stmt.setString(5, dateTime);
 			stmt.addBatch();
 		}
 

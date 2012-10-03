@@ -20,9 +20,9 @@ import dbscan.util.*;
 import java.util.*;
 import java.sql.*;
 
-final class PointManager {
+public final class PointManager {
 
-	private static final String SQL_QUERY = "select id1, id2 from assignment_sim_results WHERE assignment_id = ? AND sim >= ?";
+	private static final String SQL_QUERY = "SELECT submission1_id, submission2_id FROM submission_similarities WHERE assignment_id = ? AND similarity >= ?";
 	private Connection con;
 
 	public PointManager() {

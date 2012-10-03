@@ -38,6 +38,27 @@ class Course < ActiveRecord::Base
     }.flatten
   end
 
+  def processing_assignments
+    self.assignments.reject { |a|
+      a.submission_similarity_process.nil? or 
+        a.submission_similarity_process.status != SubmissionSimilarityProcess::STATUS_RUNNING
+    }
+  end
+
+  def processed_assignments
+    self.assignments.reject { |a|
+      a.submission_similarity_process.nil? or 
+        a.submission_similarity_process.status != SubmissionSimilarityProcess::STATUS_COMPLETED
+    }
+  end
+
+  def erroneous_assignments
+    self.assignments.reject { |a|
+      a.submission_similarity_process.nil? or 
+        a.submission_similarity_process.status != SubmissionSimilarityProcess::STATUS_ERRONEOUS
+    }
+  end
+
   def role_for_user(user)
     UserCourseMembership.where( course_id: self.id, 
                                user_id: user.id).first.role_string

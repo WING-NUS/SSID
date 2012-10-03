@@ -1,0 +1,5 @@
+<% content_for :head do %>
+  <!--[if IE]><%= javascript_include_tag "explorer_canvas/excanvas.compiled.js" %><![endif]-->
+  <%= javascript_include_tag "jit/jit-yc.js" %>
+<% end %>
+<%= render :template => 'layouts/application' %>

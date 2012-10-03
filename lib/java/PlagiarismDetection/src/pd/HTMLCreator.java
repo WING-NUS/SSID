@@ -21,6 +21,7 @@ import pd.utils.Mappings.Mapping;
 import pd.utils.*;
 import java.util.*;
 import java.text.DecimalFormat;
+import org.yaml.snakeyaml.*;
 
 final class HTMLCreator {
 
@@ -58,19 +59,10 @@ final class HTMLCreator {
 	}
 
 	public static String genSubmissionInYAML(Submission s) {
-		StringBuilder sb = new StringBuilder(s.getCodeLength() << 1);
-
 		ArrayList<String> lines = s.getCombinedCode();
+    Yaml yaml = new Yaml();
 
-    // Add array declaration
-    sb.append("---\n");
-
-    for (String line : lines) {
-      sb.append(line);
-      sb.append("\n");
-    }
-
-		return sb.toString();
+		return yaml.dump(lines);
 	}
 
 	// public static String genMappingView(DBResult dbr) {

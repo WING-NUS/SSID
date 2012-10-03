@@ -17,6 +17,7 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 
 import Tokenizer.*;
 import java.util.*;
+import java.text.*;
 
 import pd.utils.*;
 import pd.*;
@@ -77,7 +78,9 @@ public class Main {
 			ArrayList<Result> simResults = SimComparer.getComparer()
 					.compareSubmissions(submissions, nGramSize, minMatch);
 
-			System.out.println("Checking Duration = "
+      DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z");
+			System.out.println("[" + dateFormat.format(new java.util.Date()) 
+          + "] Plagarism detection completed with duration = "
 					+ new java.text.DecimalFormat("0.000").format((System
 							.nanoTime() - start) / Math.pow(10, 9)) + "s");
 

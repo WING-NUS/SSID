@@ -1,4 +1,8 @@
 body.assignments_index {
+  h3 {
+    margin-bottom: 5px;
+  }
+
   div.actions {
     a {
       &, &:hover, &:visited {
@@ -10,9 +14,77 @@ body.assignments_index {
       }
     }
   }
+
+  table {
+    border-spacing: 0;
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 20px;
+
+    th {
+      border: 1px solid rgb(0, 0, 0);
+      background-color: rgb(231, 134, 13);
+      color: rgb(255, 255, 255);
+      font-weight: bold;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      text-align: left;
+    }
+
+    th.submitted_on_col {
+      width: 200px;
+    }
+    
+    td {
+      border: 1px dotted #bbb;
+      padding: 3px 10px;
+
+      a {
+        &, &:hover, &:visited {
+          background-color: rgb(255, 255, 255);
+          margin-right: 20px;
+        }
+        &:hover {
+          color: rgb(255, 108, 0);
+        }
+      }
+
+      a.last {
+          margin-right: 0;
+      }
+    }
+  }
+
+  table.erroneous_assignments, table.processing_assignments {
+    th.action_col {
+      width: 250px;
+    }
+
+    td.processing {
+      color: rgb(51, 51, 51);
+    }
+  }
+
+  table.processed_assignments {
+    th.suspected_cases_col {
+      width: 150px;
+    }
+    th.marked_cases_col {
+      width: 150px;
+    }
+
+    th.action_col {
+      width: 375px;
+    }
+  }
+
+  div.notice {
+    margin-bottom: 15px;
+    color: rgb(0, 160, 0);
+  }
 }
 
-body.assignments_new {
+body.assignments {
   label {
     width: 200px;
     margin-top: 5px;
@@ -21,7 +93,20 @@ body.assignments_new {
   input.submit {
     margin-top: 15px;
   }
+  div.field_with_errors {
+    display: inline-table;
+  }
   div.note {
     font-size: 11px;
+  }
+}
+
+body.assignments_show_log {
+  pre {
+    white-space: pre-wrap;       /* css-3 */
+    white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+    white-space: -pre-wrap;      /* Opera 4-6 */
+    white-space: -o-pre-wrap;    /* Opera 7 */
+    word-wrap: break-word;       /* Internet Explorer 5.5+ */
   }
 }

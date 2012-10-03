@@ -27,20 +27,28 @@ SSID::Application.routes.draw do
 
   resources :announcements
   resources :courses do
-    resources :assignments
+    resources :assignments do
+      get "log" => "assignments#show_log"
+    end
     resources :users
   end
   resources :assignments do 
-    resources :submissions
+    resources :submissions do
+      get "log" => "submissions#show_log"
+    end
   end
-  resources :submission_cluster_groups do 
-    resources :submission_clusters
+  resources :assignments do
+    resources :cluster_groups, controller: "submission_cluster_groups"
   end
+  resources :cluster_groups, controller: "submission_cluster_groups" do
+    resources :clusters, controller: "submission_clusters"
+  end
+  get "clusters/:id" => "submission_clusters#show", defaults: { format: 'json' }
   resources :users
+  resources :submission_similarities
  #resources :submission_similarity_logs
  #resources :submission_similarity_mappings
  #resources :submission_similarity_processes
- #resources :submission_similarities
  #resources :submission_cluster_memberships
  #resources :user_course_memberships
 

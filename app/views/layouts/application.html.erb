@@ -20,25 +20,27 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
   <title>Student Submissions Integrity Diagnosis (SSID) System</title>
   <%= stylesheet_link_tag    "application", :media => "all" %>
   <%= javascript_include_tag "application" %>
+  <%= yield :head %>
   <%= csrf_meta_tags %>
 </head>
 <body class="<%= controller_name %> <%= controller_name %>_<%= action_name %>">
+  <%= javascript_tag "#{controller_name.singularize.camelize}.onLoad();" %>
   <h1 id="top_banner">Student Submissions Integrity Diagnosis (SSID) System</h1>
   <ul id="menu">
 <% if @user %>
-    <li><%= link_to "Home", announcements_url %></li>
-    <li><%= link_to "Courses", courses_url %></li>
+    <li<%= highlight_if_current root_url %>><%= link_to "Home", root_url %></li>
+    <li<%= highlight_if_current courses_url %>><%= link_to "Courses", courses_url %></li>
     <% if @user.is_admin %>
-      <li><%= link_to "Users", users_url %></li>
+      <li<%= highlight_if_current users_url %>><%= link_to "Users", users_url %></li>
     <% end %>
-    <li><%= link_to "Settings", user_path(@user) %></li>
-    <li><%= link_to "User Guide", guide_url %></li>
-    <li><%= link_to "Log Out", logout_url, :method => :delete %></li>
+    <li<%= highlight_if_current users_path(@user) %>><%= link_to "Settings", user_path(@user) %></li>
+    <li<%= highlight_if_current guide_url %>><%= link_to "User Guide", guide_url %></li>
+    <li<%= highlight_if_current logout_url %>><%= link_to "Log Out", logout_url, :method => :delete %></li>
 <% end %>
   </ul>
 
   <div id="content">
-    <%= render partial: "site/breadcrumb", locals: { object: @course } if controller_name == "assignments" %>
+    <%= render partial: "site/breadcrumb", locals: { course: @course, assignment: @assignment } unless @course.nil? %>
 <%= yield %>
   </div>
 </body>

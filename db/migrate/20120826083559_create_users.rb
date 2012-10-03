@@ -15,12 +15,14 @@ You should have received a copy of the GNU Lesser General Public License
 along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
+require 'bcrypt'
+
 class CreateUsers < ActiveRecord::Migration
   def change
     create_table :users do |t|
       t.string :name
       t.string :full_name
-      t.string :password_digest
+      t.string :password_digest, default: BCrypt::Password.create('$$default_user_password$$')
       t.boolean :is_admin, default: false, null: false
       t.string :id_string
 

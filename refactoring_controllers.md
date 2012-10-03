@@ -60,7 +60,7 @@ Controllers
   - create
   - update
   - destroy
-  - mark_as_plagiarism (users#assignment_confirm_plagiarism, users#graph_confirm_plagiarism)
+  - confirm_as_plagiarism (users#assignment_confirm_plagiarism, users#graph_confirm_plagiarism)
   - unmark_as_plagiarism (users#assignment_decline_plagiarism, users#graph_decline_plagiarism)
   - suspect_as_plagiarism (users#assignment_report_plagiarism, users#graph_report_plagiarism)
 

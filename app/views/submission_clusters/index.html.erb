@@ -1,21 +1,25 @@
-<h1>Listing submission_clusters</h1>
+<h2>Assignment: <%= @assignment.title %> Submission Cluster Group (Cut-Off Criterion = <%= @submission_cluster_group.cut_off_criterion %>%)</h2>
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
+<ul>
+  <li>Student IDs shown in <span class="red">red</span> represent submissions that have been confirmed as plagiarisms</li>
+  <li>Click any student ID to view the log for the corresponding submission</li>
+</ul>
 
-<% @submission_clusters.each do |submission_cluster| %>
-  <tr>
-    <td><%= link_to 'Show', submission_cluster %></td>
-    <td><%= link_to 'Edit', edit_submission_cluster_path(submission_cluster) %></td>
-    <td><%= link_to 'Destroy', submission_cluster, confirm: 'Are you sure?', method: :delete %></td>
-  </tr>
-<% end %>
-</table>
-
-<br />
-
-<%= link_to 'New Submission cluster', new_submission_cluster_path %>
+<div id="clusters">
+  <% @submission_clusters.each { |cluster| %>
+    <div id="cluster_<%= cluster.id %>" class="cluster">
+      <h3>Submission Similarity Cluster from Students: <%= cluster.submission_student_ids.join(", ") %></h3>
+      <div class="legend">
+        <h3>Similarity</h3>
+        <% SubmissionClustersHelper::LEGEND_SIMILARITY_VALUES.each { |val| %>
+          <% if val >= 50 %>
+            <div class="legend_<%= val %>"><span>&nbsp;</span> &#8805; <%= val %>%</div>
+          <% else %>
+            <div class="legend_<%= val %>"><span>&nbsp;</span> &lt; 50%</div>
+          <% end %>
+        <% } %>
+      </div>
+      <div id="canvas_wrapper_<%= cluster.id %>" class="canvas_wrapper"></div>
+    </div>
+  <% } %>
+</div>

@@ -16,55 +16,73 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
 class AssignmentsController < ApplicationController
-  # GET /assignments
+  # GET /courses/1/assignments
   def index
     @course = Course.find(params[:course_id])
     @assignments = @course.assignments
+    @processing_assignments = @course.processing_assignments
+    @processed_assignments = @course.processed_assignments
+    @erroneous_assignments = @course.erroneous_assignments
   end
 
-  # GET /assignments/1
-  def show
-    @assignment = Assignment.find(params[:id])
+  # GET /courses/1/assignments/1
+# def show
+#   @assignment = Assignment.find(params[:id])
+# end
+
+  # GET /courses/1/assignments/1/upload_log
+  def show_log
+    @course = Course.find(params[:course_id])
+    @assignment = Assignment.find(params[:assignment_id])
   end
 
-  # GET /assignments/new
+  # GET /courses/1/assignments/new
   def new
     @course = Course.find(params[:course_id])
     @assignment = Assignment.new
   end
 
-  # GET /assignments/1/edit
-  def edit
-    @assignment = Assignment.find(params[:id])
-  end
-
-  # POST /assignments
+  # POST /courses/1/assignments
   def create
-    @assignment = Assignment.new(params[:assignment])
+    @course = Course.find(params[:course_id])
+    @assignment = Assignment.new { |a|
+      a.title = params[:assignment]["title"]
+      a.language = params[:assignment]["language"]
+      a.min_match_length = params[:assignment]["min_match_length"]
+      a.ngram_size = params[:assignment]["ngram_size"]
+      a.course_id = @course.id
+    }
 
-    if @assignment.save
-      format.html { redirect_to @assignment, notice: 'Assignment was successfully created.' }
+    # Process file if @assignment is valid and file was uploaded
+    if @assignment.valid? and not (params[:assignment]["file"].nil? or params[:assignment]["file"].content_type != "application/zip")
+      require 'submissions_handler'
+
+      # Save assignment to obtain id
+      return render action: "new" unless @assignment.save
+
+      # Process upload file
+      submissions_path = SubmissionsHandler.process_upload(params[:assignment]["file"], @assignment)
+
+      # Launch java program to process submissions
+      SubmissionsHandler.process_submissions(submissions_path, @assignment)
+
+      redirect_to course_assignments_url(@course), notice: 'Assignment was successfully created.'
     else
-      format.html { render action: "new" }
+      if params[:assignment]["file"].nil?
+        @assignment.errors.add :file, "is not selected for upload"
+      elsif params[:assignment]["file"].content_type != "application/zip"
+        @assignment.errors.add :file, "for upload must be a zip file"
+      end
+      render action: "new"
     end
   end
 
-  # PUT /assignments/1
-  def update
-    @assignment = Assignment.find(params[:id])
-
-    if @assignment.update_attributes(params[:assignment])
-      format.html { redirect_to @assignment, notice: 'Assignment was successfully updated.' }
-    else
-      format.html { render action: "edit" }
-    end
-  end
-
-  # DELETE /assignments/1
+  # DELETE /courses/1/assignments/1
   def destroy
+    @course = Course.find(params[:course_id])
     @assignment = Assignment.find(params[:id])
     @assignment.destroy
   
-    redirect_to assignments_url
+    redirect_to course_assignments_url(@course), notice: 'Assignment was successfully deleted.'
   end
 end

@@ -21,7 +21,7 @@ class CreateSubmissionClusterGroups < ActiveRecord::Migration
       t.integer :assignment_id, null: false
       t.string :description
       t.decimal :cut_off_criterion, precision: 6, scale: 3
-      t.integer :cut_off_criterion_type # See model for type constants
+      t.integer :cut_off_criterion_type, default: SubmissionClusterGroup::TYPE_USER_DEFINED_CRITERION # See model for type constants
 
       t.timestamps
     end

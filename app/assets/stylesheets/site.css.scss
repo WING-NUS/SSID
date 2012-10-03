@@ -4,7 +4,7 @@ body {
   min-width: 800px;
 }
 
-h2 {
+h2, h3 {
   color: rgb(0, 0, 128);
 }
 
@@ -25,12 +25,13 @@ h2 {
   display: block;
   height: 22px;
   overflow: auto;
-  padding: 3px 0 0;
+  padding: 0;
 
   li {
     list-style: none;
     float: left;
     width: 20%;
+    height: 25px;
     text-align: center;
 
     a {
@@ -40,6 +41,11 @@ h2 {
         background-color: rgb(255,108,0);
       }
     }
+
+    &.highlight, &.highlight a {
+      background-color: rgb(255, 75, 15);
+    }
+
   }
 }
 

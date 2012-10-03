@@ -17,6 +17,7 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 
 class UserCourseMembership < ActiveRecord::Base
   # UserCourseMembership#role Constants
+  # Changes to these constants affect the java library files
   ROLE_TEACHING_STAFF = 0
   ROLE_TEACHING_ASSISTANT = 1
   ROLE_STUDENT = 2

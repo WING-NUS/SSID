@@ -1,4 +1,14 @@
 <%= form_for([@course, @assignment]) do |f| %>
+  <% if @assignment.errors.any? %>
+    <div id="error_explanation">
+      <h3><%= pluralize(@assignment.errors.count, "error") %> prohibited this assignment from being saved:</h3>
+      <ul>
+      <% @assignment.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
   <div>
     <%= f.label :title %>
     <%= f.text_field :title %>
@@ -16,7 +26,7 @@
     <%= f.text_field :ngram_size %>
   </div>
   <div>
-    <%= f.label :file, "Assignment file (zip) [?]", title: "The zip file should contain one folder for each student's code files; folders are named according to student ID." %>
+    <%= f.label :file, "Student submissions (zip) [?]", title: "The zip file should contain one folder for each student's code files; folders are named according to student ID." %>
     <%= f.file_field :file %>
   </div>
   <div>

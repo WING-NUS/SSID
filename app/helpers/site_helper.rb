@@ -15,14 +15,16 @@ You should have received a copy of the GNU Lesser General Public License
 along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
-class SubmissionCluster < ActiveRecord::Base
-  belongs_to :submission_cluster_group
-  has_many :memberships, class_name: "SubmissionClusterMembership", :dependent => :delete_all
-  has_many :submissions, :through => :memberships, :uniq => true
+module SiteHelper
+  private
 
-  def submission_student_ids
-    self.submissions.collect { |s|
-      s.student.id_string
-    }
+  def highlight_if_current(url)
+    current_url = %Q{http://#{request.env['SERVER_NAME']}#{request.env['REQUEST_URI']}}
+
+    if current_url == url
+      %Q{ class="highlight"}.html_safe
+    else
+      ""
+    end
   end
 end

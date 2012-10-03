@@ -18,14 +18,15 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 class CreateSubmissions < ActiveRecord::Migration
   def change
     create_table :submissions do |t|
-      t.text :lines, limit: 4294967295
+      t.text    :lines, limit: 4294967295
+      t.integer :assignment_id, null: false
       t.integer :student_id, null: false
-      t.boolean :is_plagiarised, default: false, null: false
+      t.boolean :is_plagiarism, default: false, null: false
 
       t.timestamps
     end
 
     add_index :submissions, :student_id
-    add_index :submissions, [:student_id, :is_plagiarised]
+    add_index :submissions, [:student_id, :is_plagiarism]
   end
 end
