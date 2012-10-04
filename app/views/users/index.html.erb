@@ -1,21 +1,20 @@
-<h1>Listing users</h1>
+<h2><%= @course.code %> Users</h2>
 
 <table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
-
-<% @users.each do |user| %>
-  <tr>
-    <td><%= link_to 'Show', user %></td>
-    <td><%= link_to 'Edit', edit_user_path(user) %></td>
-    <td><%= link_to 'Destroy', user, confirm: 'Are you sure?', method: :delete %></td>
-  </tr>
-<% end %>
+  <thead>
+    <tr>
+      <th>Full Name</th>
+      <th class="id_col">ID</th>
+      <th class="role_col">Role</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% (@staff + @teaching_assistants + @students).each { |user| %>
+      <tr>
+        <td><%= user.full_name || "--" %></td>
+        <td><%= user.id_string %></td>
+        <td><%= @course.role_for_user(user) %></td>
+      </tr>
+    <% } %>
+  </tbody>
 </table>
-
-<br />
-
-<%= link_to 'New User', new_user_path %>

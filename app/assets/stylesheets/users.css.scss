@@ -1,3 +1,30 @@
-// Place all the styles related to the Users controller here.
-// They will automatically be included in application.css.
-// You can use Sass (SCSS) here: http://sass-lang.com/
+body.users_index {
+  table {
+    border-spacing: 0;
+    border-collapse: collapse;
+    width: 100%;
+
+    th {
+      border: 1px solid rgb(0, 0, 0);
+      background-color: rgb(231, 134, 13);
+      color: rgb(255, 255, 255);
+      font-weight: bold;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      text-align: left;
+
+      &.role_col {
+        width: 125px;
+      }
+
+      &.id_col {
+        width: 125px;
+      }
+    }
+    
+    td {
+      border: 1px dotted #bbb;
+      padding: 3px 10px;
+    }
+  }
+}

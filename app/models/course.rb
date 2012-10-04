@@ -19,16 +19,26 @@ class Course < ActiveRecord::Base
   has_many :announcements, :as => :announceable, order: "updated_at DESC"
   has_many :assignments, :dependent => :delete_all
   has_many :memberships, class_name: "UserCourseMembership", :dependent => :delete_all
+  has_many :users, :through => :memberships
   has_many :student_memberships, class_name: "UserCourseMembership", conditions: { role: UserCourseMembership::ROLE_STUDENT }
-  has_many :students, :through => :student_memberships, class_name: "User", :source => UserCourseMembership, uniq: true
   has_many :staff_memberships, class_name: "UserCourseMembership", conditions: { role: UserCourseMembership::ROLE_TEACHING_STAFF }
-  has_many :staff, :through => :staff_memberships, class_name: "User", :source => UserCourseMembership, uniq: true
   has_many :teaching_assistant_memberships, class_name: "UserCourseMembership", conditions: { role: UserCourseMembership::ROLE_TEACHING_ASSISTANT }
-  has_many :teaching_assistants, :through => :teaching_assistant_memberships, class_name: "User", :source => UserCourseMembership, uniq: true
 
   validates_presence_of :code
   validates :code, uniqueness: { :scope => [ :academic_year, :semester ] }
   before_save :upcase_code
+
+  def students
+    self.student_memberships.collect { |m| m.user }
+  end
+
+  def staff
+    self.staff_memberships.collect { |m| m.user }
+  end
+
+  def teaching_assistants
+    self.teaching_assistant_memberships.collect { |m| m.user }
+  end
 
   def submission_cluster_groups
     self.assignments.collect { |assignment|

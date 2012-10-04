@@ -1,7 +1,9 @@
 <div class="breadcrumb">
   <%= link_to "Courses", courses_path %> 
 
-  <% if course  %>
+  <% if controller_name == "users" and action_name == "index" %>
+    &gt; <%= course.code %> Users
+  <% elsif course  %>
     &gt; <%= link_to "#{course.code} Assignments", course_assignments_url(course) %>
   <% end %>
   <% if assignment %>
