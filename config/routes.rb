@@ -22,7 +22,6 @@ SSID::Application.routes.draw do
   delete "logout" => "sessions#destroy"
 
   get "guide" => "users#guide"
-
   root to: "announcements#index"
 
   resources :announcements
@@ -31,19 +30,25 @@ SSID::Application.routes.draw do
       get "log" => "assignments#show_log"
     end
     resources :users
+    get "visualize/" => "visualize#index"
+    get "visualize/similarity_cluster_graph" => "visualize#similarity_cluster_graph"
+    get "visualize/similarity_cluster_table" => "visualize#similarity_cluster_table"
+    get "visualize/top_similar_submissions" => "visualize#top_similar_submissions"
   end
   resources :assignments do 
+    resources :submission_similarities
+    resources :cluster_groups, controller: "submission_cluster_groups"
     resources :submissions do
       get "log" => "submissions#show_log"
     end
   end
-  resources :assignments do
-    resources :cluster_groups, controller: "submission_cluster_groups"
-  end
   resources :cluster_groups, controller: "submission_cluster_groups" do
     resources :clusters, controller: "submission_clusters"
   end
+  get "clusters/show_graph_partial" => "submission_clusters#show_graph_partial"
+  get "clusters/show_for_submission_ids" => "submission_clusters#show_for_submission_ids", defaults: { format: 'json' }
   get "clusters/:id" => "submission_clusters#show", defaults: { format: 'json' }
+  get "clusters/:id/show_graph_partial" => "submission_clusters#show_graph_partial"
   resources :users
   resources :submission_similarities
  #resources :submission_similarity_logs

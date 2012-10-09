@@ -24,7 +24,7 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
   <%= csrf_meta_tags %>
 </head>
 <body class="<%= controller_name %> <%= controller_name %>_<%= action_name %>">
-  <%= javascript_tag "#{controller_name.singularize.camelize}.onLoad();" %>
+  <%= javascript_tag "if (window.#{controller_name.singularize.camelize} && #{controller_name.singularize.camelize}.onLoad) { #{controller_name.singularize.camelize}.onLoad(); };" %>
   <h1 id="top_banner">Student Submissions Integrity Diagnosis (SSID) System</h1>
   <ul id="menu">
 <% if @user %>
@@ -41,6 +41,7 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 
   <div id="content">
     <%= render partial: "site/breadcrumb", locals: { course: @course, assignment: @assignment } unless @course.nil? %>
+<%= yield :pre_content %>
 <%= yield %>
   </div>
 </body>

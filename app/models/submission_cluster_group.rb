@@ -39,4 +39,8 @@ class SubmissionClusterGroup < ActiveRecord::Base
   validates_presence_of :assignment_id
   validates_numericality_of :cut_off_criterion, allow_nil: false, allow_blank: false, greater_than: 0, less_than_or_equal_to: 100
   validates_uniqueness_of :cut_off_criterion, scope: [:assignment_id, :cut_off_criterion], :message => "has already been created"
+
+  def cluster_ids
+    self.clusters.collect { |c| c.id }
+  end
 end

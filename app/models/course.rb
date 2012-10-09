@@ -74,6 +74,12 @@ class Course < ActiveRecord::Base
                                user_id: user.id).first.role_string
   end
 
+  def all_submission_similarity_cluster_groups
+    self.assignments.collect { |a|
+      a.submission_cluster_groups
+    }.flatten
+  end
+
   private
 
   def upcase_code

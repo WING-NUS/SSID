@@ -2,7 +2,12 @@
   <%= link_to "Courses", courses_path %> 
 
   <% if controller_name == "users" and action_name == "index" %>
-    &gt; <%= course.code %> Users
+    &gt; <%= link_to "#{course.code} Users", course_users_url(course) %>
+  <% elsif controller_name == "visualize" %>
+    &gt; <%= link_to "#{course.code} Visualizations", course_visualize_url(course) %>
+    <% if action_name != "index" %>
+      &gt; <%= action_name.humanize.titleize %>
+    <% end %>
   <% elsif course  %>
     &gt; <%= link_to "#{course.code} Assignments", course_assignments_url(course) %>
   <% end %>

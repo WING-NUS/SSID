@@ -1,0 +1,53 @@
+<div id="visualize_content">
+  <h2><%= @course.code %> Visualization: Similarity Cluster Graph</h2>
+  <div>This visualization presents a graphical view of submission similarity clusters.</div>
+  <div id="options">
+    <p>Visualize a cluster comprising of submissions from assignment <%= select_tag "submissions_assignment_selector", options_from_collection_for_select(@course.assignments, "id", "title"), onchange: "VisualizeSimilarityClusterGraph.selectAssignmentForSubmissions(this);" %>:
+    <%= select_tag "submissions", options_from_collection_for_select(@course.assignments.first.submissions, "id", "student_id_string"), multiple: true, include_blank: true %>
+    <span>(selected 0 of <%= @course.assignments.first.submissions.size %>)</span>
+    </p>
+
+    <p>
+    And also visualize existing submission cluster groups:
+      <div id="similarity_clusters">
+        <% if @course.all_submission_similarity_cluster_groups.empty? %>
+          <p>No cluster group has been created.</p>
+          <p>Cluster groups allow you to identify clusters of students with submission similarity values above a defined threshold.</p>
+        <% else %>
+          <table>
+            <thead>
+              <tr>
+                <th></th>
+                <th>Assignment</th>
+                <th class="cut_off_criterion_col">Cut-Off Criterion</th>
+                <th class="num_of_clusters_col">Number of Clusters</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @course.all_submission_similarity_cluster_groups.each { |cluster_group| %>
+                <tr>
+                  <td><%= check_box_tag "submission_cluster_groups", cluster_group.cluster_ids.join(","), false, id: "cluster_group_#{cluster_group.id}" %></td>
+                  <td><%= cluster_group.assignment.title %></td>
+                  <td><%= cluster_group.cut_off_criterion %></td>
+                  <td><%= cluster_group.clusters.size %></td>
+                  <td>[Created on <%= cluster_group.created_at.in_time_zone %>] <%= cluster_group.description %></td>
+                </tr>
+              <% } %>
+            </tbody>
+          </table>
+        <% end %>
+        <div class="actions">
+          <%= form_tag(new_assignment_cluster_group_url(@course.assignments.first), :method => :get) do %>
+            New Cluster Group for Assignment <%= select_tag "assignment", options_for_select(@course.assignments.collect { |a| [a.title, new_assignment_cluster_group_url(a) ] }), onchange: "VisualizeSimilarityClusterGraph.selectAssignmentForNewClusterGroup(this);" %>: <%= submit_tag "Go" %>
+          <% end %>
+        </div>
+      </div>
+    </p>
+    <hr />
+    <%= submit_tag "Show Graph", onclick: "VisualizeSimilarityClusterGraph.showGraph(this);" %>
+    <span></span>
+  </div>
+  <div id="clusters">
+  </div>
+</div>

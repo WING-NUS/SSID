@@ -65,7 +65,8 @@ No Assignment has been created.
           <th>Title</th>
           <th class="suspected_cases_col">Suspected Plagiarism Cases</th>
           <th class="marked_cases_col">Confirmed Plagiarism Cases</th>
-          <th class="action_col">Action</th>
+          <th class="action_col">View</th>
+          <th class="delete_col"></th>
         </tr>
       </thead>
       <tbody>
@@ -75,8 +76,11 @@ No Assignment has been created.
         <td><%= a.suspected_plagiarism_cases.size %></td>
         <td><%= a.confirmed_plagiarism_cases.size %></td>
         <td>
-          <%= link_to "View similarity groups", assignment_cluster_groups_url(a) %>
-          <%= link_to "View upload log", course_assignment_log_url(@course, a) %>
+          <%= link_to "Submission similarities", assignment_submission_similarities_url(a) %>
+          <%= link_to "Similarity groups", assignment_cluster_groups_url(a) %>
+          <%= link_to "Upload log", course_assignment_log_url(@course, a), class: "last" %>
+        </td>
+        <td>
           <%= link_to "Delete", course_assignment_url(@course, a), method: "delete", class: "last", confirm: "Delete assignment?" %>
         </td>
       </tr>
@@ -89,5 +93,5 @@ No Assignment has been created.
 <hr />
 <div class="actions">
   <%= link_to "New Assignment", new_course_assignment_url(@course) %>
-  <%= link_to "View Visuals", nil %>
+  <%= link_to "View Visuals", course_visualize_url(@course) %>
 </div>

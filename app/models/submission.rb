@@ -44,4 +44,8 @@ class Submission < ActiveRecord::Base
       log.created_at
     }.uniq
   end
+
+  def student_id_string
+    self.student.id_string
+  end
 end

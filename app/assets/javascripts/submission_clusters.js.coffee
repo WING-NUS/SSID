@@ -2,16 +2,16 @@ window.SubmissionCluster ||= {}
 
 SubmissionCluster.drawClusters = ->
   $("div.cluster").each ->
-    cluster_id = $(this).attr("id").replace(/^cluster_/, "")
-    $.getJSON "/SSID/clusters/"+cluster_id, (data) ->
-      SubmissionCluster.drawCluster(cluster_id, data)
+    clusterId = $(this).attr("id").replace(/^cluster_/, "")
+    $.getJSON "/SSID/clusters/"+clusterId, (data) ->
+      SubmissionCluster.drawCluster(clusterId, data)
       return
     return
   return
 
-SubmissionCluster.drawCluster = (cluster_id, data) ->
+SubmissionCluster.drawCluster = (clusterId, data) ->
   rgraph = new $jit.RGraph(
-    'injectInto': 'canvas_wrapper_' + cluster_id
+    'injectInto': 'canvas_wrapper_' + clusterId
     Node        : 'overridable': true, 'type': 'rectangle', 'color': 'white'
     Edge        : 'overridable': true, 'color': 'white'
 

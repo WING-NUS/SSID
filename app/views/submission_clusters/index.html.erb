@@ -8,18 +8,7 @@
 <div id="clusters">
   <% @submission_clusters.each { |cluster| %>
     <div id="cluster_<%= cluster.id %>" class="cluster">
-      <h3>Submission Similarity Cluster from Students: <%= cluster.submission_student_ids.join(", ") %></h3>
-      <div class="legend">
-        <h3>Similarity</h3>
-        <% SubmissionClustersHelper::LEGEND_SIMILARITY_VALUES.each { |val| %>
-          <% if val >= 50 %>
-            <div class="legend_<%= val %>"><span>&nbsp;</span> &#8805; <%= val %>%</div>
-          <% else %>
-            <div class="legend_<%= val %>"><span>&nbsp;</span> &lt; 50%</div>
-          <% end %>
-        <% } %>
-      </div>
-      <div id="canvas_wrapper_<%= cluster.id %>" class="canvas_wrapper"></div>
+    <%= render partial: "submission_cluster_graph", locals: { cluster_id: cluster.id, submission_student_ids: cluster.submission_student_ids } %>
     </div>
   <% } %>
 </div>

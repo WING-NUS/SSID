@@ -27,4 +27,10 @@ module SiteHelper
       ""
     end
   end
+
+  def link_to_unless_current(name, url)
+    current_url = %Q{http://#{request.env['SERVER_NAME']}#{request.env['REQUEST_URI']}}
+
+    ((current_url == url) ? "<span>#{name}</span>" : link_to(name, url)).html_safe
+  end
 end

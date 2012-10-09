@@ -45,7 +45,7 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
     <td>
       <%= link_to "Assignments", course_assignments_url(course) %>
       <%= link_to "Users", course_users_url(course) %>
-      <%= link_to "Visuals", nil, class: "last" %>
+      <%= link_to "Visuals", course_visualize_url(course), class: "last" %>
     </td>
   </tr>
   <% } %>
