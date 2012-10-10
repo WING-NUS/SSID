@@ -79,15 +79,17 @@ ActiveRecord::Schema.define(:version => 20121010131232) do
   add_index "submission_clusters", ["submission_cluster_group_id"], :name => "index_submission_clusters_on_submission_cluster_group_id"
 
   create_table "submission_logs", :force => true do |t|
-    t.integer  "submission_id", :null => false
-    t.integer  "marker_id",     :null => false
-    t.integer  "log_type",      :null => false
-    t.datetime "created_at",    :null => false
-    t.datetime "updated_at",    :null => false
+    t.integer  "submission_id",            :null => false
+    t.integer  "submission_similarity_id", :null => false
+    t.integer  "marker_id",                :null => false
+    t.integer  "log_type",                 :null => false
+    t.datetime "created_at",               :null => false
+    t.datetime "updated_at",               :null => false
   end
 
   add_index "submission_logs", ["marker_id"], :name => "index_submission_logs_on_marker_id"
   add_index "submission_logs", ["submission_id"], :name => "index_submission_logs_on_submission_id"
+  add_index "submission_logs", ["submission_similarity_id"], :name => "index_submission_logs_on_submission_similarity_id"
 
   create_table "submission_similarities", :force => true do |t|
     t.integer  "assignment_id",                                                  :null => false
@@ -162,7 +164,7 @@ ActiveRecord::Schema.define(:version => 20121010131232) do
   create_table "users", :force => true do |t|
     t.string   "name"
     t.string   "full_name"
-    t.string   "password_digest", :default => "$2a$10$XDUIdQW601YnU2BpFyrAPuO0PzxOtrP1byJGOO9hFLRdj6/JK0E5a"
+    t.string   "password_digest", :default => "$2a$10$e0TfsmQ06ugXhRKmvt6gd.BHhrcnHu3hGjk4lDO/uyDRfIKB4xp.e"
     t.boolean  "is_admin",        :default => false,                                                          :null => false
     t.string   "id_string"
     t.datetime "created_at",                                                                                  :null => false

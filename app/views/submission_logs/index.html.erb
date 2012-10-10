@@ -1,21 +1,26 @@
-<h1>Listing submission_logs</h1>
+<h2><%= @course.code %> Assignment: <%= @assignment.title %> Submission Log for Student: <%= @submission.student_id_string %></h2>
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
-
-<% @submission_logs.each do |submission_log| %>
-  <tr>
-    <td><%= link_to 'Show', submission_log %></td>
-    <td><%= link_to 'Edit', edit_submission_log_path(submission_log) %></td>
-    <td><%= link_to 'Destroy', submission_log, confirm: 'Are you sure?', method: :delete %></td>
-  </tr>
+<% if @submission_logs.empty? %>
+  Log is currently empty. This log will be populated whenever the submission is marked / unmarked as suspicious / plagiarism and when the student is found guilty of plagiarism.
+<% else %>
+  <table>
+    <thead>
+      <tr>
+        <th class="date_time_col">Date / Time</th>
+        <th class="marker_col">Marker</th>
+        <th>Remarks</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @submission_logs.each { |log| %>
+      <tr>
+        <td><%= log.created_at.in_time_zone %></td>
+        <td><%= log.marker.id_string %></td>
+        <td><%= log.log_string %></td>
+      </tr>
+      <% } %>
+    </tbody>
+  </table>
 <% end %>
-</table>
-
-<br />
-
-<%= link_to 'New Submission log', new_submission_log_path %>
+<div>
+</div>

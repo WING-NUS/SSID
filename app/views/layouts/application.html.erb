@@ -40,7 +40,7 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
   </ul>
 
   <div id="content">
-    <%= render partial: "site/breadcrumb", locals: { course: @course, assignment: @assignment } unless @course.nil? %>
+    <%= render partial: "site/breadcrumb", locals: { course: @course, assignment: @assignment, submission: @submission } unless @course.nil? %>
 <%= yield :pre_content %>
 <%= yield %>
   </div>

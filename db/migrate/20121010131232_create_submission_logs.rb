@@ -19,6 +19,7 @@ class CreateSubmissionLogs < ActiveRecord::Migration
   def change
     create_table :submission_logs do |t|
       t.integer :submission_id, null: false
+      t.integer :submission_similarity_id, null: false
       t.integer :marker_id, null: false
       t.integer :log_type, null: false # See model for type constants
 
@@ -27,5 +28,6 @@ class CreateSubmissionLogs < ActiveRecord::Migration
 
     add_index :submission_logs, :marker_id
     add_index :submission_logs, :submission_id
+    add_index :submission_logs, :submission_similarity_id
   end
 end
