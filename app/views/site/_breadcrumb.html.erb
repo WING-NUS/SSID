@@ -20,6 +20,8 @@
       <% elsif action_name == "show_log" %>
         &gt; <%= %Q{Assignment: #{assignment.title} Upload Log} %>
       <% end %>
+    <% elsif controller_name == "submission_similarities" %>
+      &gt; <%= %Q{Assignment: #{assignment.title} Submission Similarities} %>
     <% elsif controller_name == "submission_logs" %>
       &gt; <%= %Q{Assignment: #{assignment.title} Submission Log for Student #{submission.student_id_string}} %>
     <% end %>

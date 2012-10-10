@@ -20,12 +20,29 @@ class SubmissionSimilarity < ActiveRecord::Base
   STATUS_NOT_PLAGIARISM = 0
   STATUS_CONFIRMED_AS_PLAGIARISM = 1
   STATUS_SUSPECTED_AS_PLAGIARISM = 2
+  STATUS_STRINGS = [
+    "",
+    "Confirmed Plagiarism",
+    "Suspected of Plagiarism"
+  ]
 
   belongs_to :assignment
   belongs_to :submission1, class_name: "Submission"
   belongs_to :submission2, class_name: "Submission"
   has_one :course, :through => :assignment
   has_many :mappings, :dependent => :delete_all, :class_name => "SubmissionSimilarityMapping"
+
+  def status_string
+    STATUS_STRINGS[self.status]
+  end
+
+  def student1
+    self.submission1.student
+  end
+
+  def student2
+    self.submission2.student
+  end
 
   def other_student(student)
     (student == submission1.student) ? submission2.student : submission1.student

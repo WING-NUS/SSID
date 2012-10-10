@@ -1,3 +1,44 @@
-// Place all the styles related to the SubmissionSimilarities controller here.
-// They will automatically be included in application.css.
-// You can use Sass (SCSS) here: http://sass-lang.com/
+body.submission_similarities_index {
+  table {
+    border-spacing: 0;
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 20px;
+
+    th {
+      border: 1px solid rgb(0, 0, 0);
+      background-color: rgb(231, 134, 13);
+      color: rgb(255, 255, 255);
+      font-weight: bold;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      text-align: left;
+    }
+
+    th.student_col, th.similarity_col {
+      width: 90px;
+    }
+
+    th.action_col {
+      width: 120px;
+    }
+    
+    td {
+      border: 1px dotted #bbb;
+      padding: 3px 10px;
+
+      a {
+        &, &:hover, &:visited {
+          background-color: rgb(255, 255, 255);
+        }
+        &:hover {
+          color: rgb(255, 108, 0);
+        }
+      }
+    }
+  }
+
+  div.pagination {
+    text-align: center;
+  }
+}

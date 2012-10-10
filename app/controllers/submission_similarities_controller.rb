@@ -1,4 +1,15 @@
 class SubmissionSimilaritiesController < ApplicationController
+  # GET /assignments/1/submission_similarities
+  def index
+    @assignment = Assignment.find(params["assignment_id"])
+    @course = @assignment.course
+    @submission_similarities = SubmissionSimilarity.where(
+      assignment_id: @assignment.id 
+    ).paginate  page: params[:page], 
+                order: 'similarity desc', 
+                per_page: 20
+  end
+
   # GET /students/1/submission_similarities/show_table_partial
   def show_table_partial
     locals = {}

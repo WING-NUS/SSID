@@ -48,3 +48,6 @@ gem 'bcrypt-ruby', '~> 3.0.0'
 
 # To handle zip files
 gem 'rubyzip'
+
+# pagination
+gem "will_paginate"
