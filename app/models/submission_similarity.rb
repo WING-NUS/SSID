@@ -26,17 +26,6 @@ class SubmissionSimilarity < ActiveRecord::Base
   belongs_to :submission2, class_name: "Submission"
   has_one :course, :through => :assignment
   has_many :mappings, :dependent => :delete_all, :class_name => "SubmissionSimilarityMapping"
-  has_many :logs, :dependent => :delete_all, class_name: "SubmissionSimilarityLog"
-
-  def log1
-    SubmissionSimilarityLog.where(["submission_id = :s AND submission_similarity_id = :ss", 
-                                   { s: self.submission1.id, ss: self.id }])  
-  end
-
-  def log2
-    SubmissionSimilarityLog.where(["submission_id = :s AND submission_similarity_id = :ss", 
-                                   { s: self.submission2.id, ss: self.id }])  
-  end
 
   def other_student(student)
     (student == submission1.student) ? submission2.student : submission1.student

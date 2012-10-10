@@ -55,11 +55,11 @@ Models
   - similarity (sim)
   - status (status)
 
-## SubmissionSimilarityLog (PlagLog)
+## SubmissionLog (PlagLog)
   - submission_id (assignment_code_id)
-  - submission_similarity_id (assignment_sim_result_id)
+  - *deprecated* (assignment_sim_result_id) - not needed
   - marker_id (account_id)
-  - student_id (student_id)
+  - *deprecated* (student_id) - not needed
   - log_type (log_type)
 
 ## SubmissionSimilarityMapping (SimMapping)

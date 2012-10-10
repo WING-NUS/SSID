@@ -13,12 +13,8 @@
 # Ignore swap files
 *.swp
 
-# Ignore mysqldb connector
-/lib/java/programs/lib/*
-
-# Ignore upload and upload_log directories
+# Ignore upload directory
 /upload
-/upload_log
 
 # Ignore bundler config
 /.bundle

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120927140257) do
+ActiveRecord::Schema.define(:version => 20121010131232) do
 
   create_table "announcements", :force => true do |t|
     t.string   "title"
@@ -78,6 +78,17 @@ ActiveRecord::Schema.define(:version => 20120927140257) do
 
   add_index "submission_clusters", ["submission_cluster_group_id"], :name => "index_submission_clusters_on_submission_cluster_group_id"
 
+  create_table "submission_logs", :force => true do |t|
+    t.integer  "submission_id", :null => false
+    t.integer  "marker_id",     :null => false
+    t.integer  "log_type",      :null => false
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
+
+  add_index "submission_logs", ["marker_id"], :name => "index_submission_logs_on_marker_id"
+  add_index "submission_logs", ["submission_id"], :name => "index_submission_logs_on_submission_id"
+
   create_table "submission_similarities", :force => true do |t|
     t.integer  "assignment_id",                                                  :null => false
     t.integer  "submission1_id",                                                 :null => false
@@ -97,21 +108,6 @@ ActiveRecord::Schema.define(:version => 20120927140257) do
   add_index "submission_similarities", ["assignment_id", "status"], :name => "index_submission_similarities_on_assignment_id_and_status"
   add_index "submission_similarities", ["assignment_id", "submission1_id", "submission2_id"], :name => "on_assignment_id_and_submission1_id_and_submission2_id"
   add_index "submission_similarities", ["assignment_id"], :name => "index_submission_similarities_on_assignment_id"
-
-  create_table "submission_similarity_logs", :force => true do |t|
-    t.integer  "submission_id",            :null => false
-    t.integer  "submission_similarity_id", :null => false
-    t.integer  "marker_id",                :null => false
-    t.integer  "student_id",               :null => false
-    t.integer  "log_type",                 :null => false
-    t.datetime "created_at",               :null => false
-    t.datetime "updated_at",               :null => false
-  end
-
-  add_index "submission_similarity_logs", ["marker_id"], :name => "index_submission_similarity_logs_on_marker_id"
-  add_index "submission_similarity_logs", ["student_id"], :name => "index_submission_similarity_logs_on_student_id"
-  add_index "submission_similarity_logs", ["submission_id"], :name => "index_submission_similarity_logs_on_submission_id"
-  add_index "submission_similarity_logs", ["submission_similarity_id"], :name => "index_submission_similarity_logs_on_submission_similarity_id"
 
   create_table "submission_similarity_mappings", :force => true do |t|
     t.integer  "submission_similarity_id",                    :null => false
@@ -166,7 +162,7 @@ ActiveRecord::Schema.define(:version => 20120927140257) do
   create_table "users", :force => true do |t|
     t.string   "name"
     t.string   "full_name"
-    t.string   "password_digest", :default => "$2a$10$wiISV1qyWgtvEqtgmsHkaOPoq3qqXQG1xS7CZYuWrHTvp1fCw.HdG"
+    t.string   "password_digest", :default => "$2a$10$XDUIdQW601YnU2BpFyrAPuO0PzxOtrP1byJGOO9hFLRdj6/JK0E5a"
     t.boolean  "is_admin",        :default => false,                                                          :null => false
     t.string   "id_string"
     t.datetime "created_at",                                                                                  :null => false

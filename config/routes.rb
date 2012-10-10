@@ -16,6 +16,8 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
 SSID::Application.routes.draw do
+  resources :submission_logs
+
   # Login/Logout routes
   get "login" => "sessions#new"
   post "login" => "sessions#create"

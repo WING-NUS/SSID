@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class SubmissionSimilarityLogTest < ActiveSupport::TestCase
+class SubmissionLogTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end

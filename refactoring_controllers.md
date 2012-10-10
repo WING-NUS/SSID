@@ -64,7 +64,7 @@ Controllers
   - unmark_as_plagiarism (users#assignment_decline_plagiarism, users#graph_decline_plagiarism)
   - suspect_as_plagiarism (users#assignment_report_plagiarism, users#graph_report_plagiarism)
 
-## SubmissionSimilarityLogsController
+## SubmissionLogsController
   - index
   - show (users#sim_log_view)
   - new

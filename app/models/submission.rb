@@ -18,6 +18,7 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 class Submission < ActiveRecord::Base
   has_many :similarities, class_name: "SubmissionSimilarity"
   has_many :cluster_memberships , class_name: "SubmissionClusterMembership"
+  has_many :logs, :dependent => :delete_all, class_name: "SubmissionLog"
   belongs_to :student, class_name: "User"
   belongs_to :assignment
 
@@ -35,14 +36,6 @@ class Submission < ActiveRecord::Base
     else
       raise TypeError, "can't convert String into Array"
     end
-  end
-
-  def logs
-    self.similarities.collect { |s|
-      s.logs
-    }.flatten.sort_by { |log|
-      log.created_at
-    }.uniq
   end
 
   def student_id_string

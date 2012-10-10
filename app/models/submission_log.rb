@@ -15,21 +15,13 @@ You should have received a copy of the GNU Lesser General Public License
 along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
-class CreateSubmissionSimilarityLogs < ActiveRecord::Migration
-  def change
-    create_table :submission_similarity_logs do |t|
-      t.integer :submission_id, null: false
-      t.integer :submission_similarity_id, null: false
-      t.integer :marker_id, null: false
-      t.integer :student_id, null: false
-      t.integer :log_type, null: false # See model for type constants
+class SubmissionLog < ActiveRecord::Base
+  # SubmissionLog#log_type Constants
+  TYPE_PAIR_SUSPECT_AS_PLAGIARISM = 0
+  TYPE_PAIR_UNSUSPECT_AS_PLAGIARISM = 1
+  TYPE_STUDENT_CONFIRM_AS_PLAGIARISM = 2
+  TYPE_STUDENT_UNCONFIRM_AS_PLAGIARISM = 3
 
-      t.timestamps
-    end
-
-    add_index :submission_similarity_logs, :student_id
-    add_index :submission_similarity_logs, :marker_id
-    add_index :submission_similarity_logs, :submission_id
-    add_index :submission_similarity_logs, :submission_similarity_id
-  end
+  belongs_to :marker, class_name: "User"
+  belongs_to :submission
 end
