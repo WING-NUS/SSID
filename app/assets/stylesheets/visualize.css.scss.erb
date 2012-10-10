@@ -287,3 +287,86 @@ body.visualize_similarity_cluster_table {
     }
   }
 }
+
+body.visualize_top_similar_submissions {
+  #num_most_similar_submissions {
+    width: 30px;
+  }
+
+  table.top_similar_submissions {
+    border-spacing: 0;
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 15px;
+    margin-bottom: 15px;
+
+    th {
+      border: 1px solid rgb(0, 0, 0);
+      background-color: rgb(231, 134, 13);
+      color: rgb(255, 255, 255);
+      font-weight: bold;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      text-align: left;
+    }
+
+    th.assignment_col {
+      width: 90px;
+    }
+
+    td {
+      border: 1px dotted #bbb;
+      padding: 3px 10px;
+
+      a {
+        &, &:hover, &:visited {
+          margin-right: 20px;
+        }
+        &:hover, &.is_plagiarism:hover {
+          color: rgb(255, 108, 0);
+        }
+        &.is_plagiarism {
+          color: rgb(255, 0, 0);
+        }
+      }
+
+      a.last {
+          margin-right: 0;
+      }
+    }
+
+    td.assignment_cell {
+      text-align: center;
+    }
+
+    tr.highlight td.not_assignment_cell {
+      background-color: yellow;
+    }
+
+    td.check_box_cell {
+      width: 15px;
+    }
+
+    td.student_id_cell {
+      width: 100px;
+    }
+
+    td.submission_similarity {
+    }
+
+    span.similarity_bar {
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    span.similarity_value {
+      padding-left: 5px;
+    }
+
+    <% SubmissionClustersHelper::LEGEND_SIMILARITY_VALUES.each { |val| %>
+      span.legend_<%= val %> { 
+        background-color: <%= SubmissionClustersHelper::LEGEND_COLORS_FOR_SIMILARITY_VALUES[val]%>;
+      }
+    <% } %>
+  }
+}

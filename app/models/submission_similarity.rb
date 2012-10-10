@@ -37,4 +37,12 @@ class SubmissionSimilarity < ActiveRecord::Base
     SubmissionSimilarityLog.where(["submission_id = :s AND submission_similarity_id = :ss", 
                                    { s: self.submission2.id, ss: self.id }])  
   end
+
+  def other_student(student)
+    (student == submission1.student) ? submission2.student : submission1.student
+  end
+
+  def other_submission(student)
+    (student == submission1.student) ? submission2 : submission1
+  end
 end

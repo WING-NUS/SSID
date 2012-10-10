@@ -44,4 +44,10 @@ class Assignment < ActiveRecord::Base
       g.clusters
     }.flatten
   end
+
+  def submission_similarities_for_student(student)
+    self.submission_similarities.select { |ss|
+      ss.submission1.student == student or ss.submission2.student == student
+    }
+  end
 end

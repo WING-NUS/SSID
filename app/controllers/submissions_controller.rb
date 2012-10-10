@@ -6,7 +6,7 @@ class SubmissionsController < ApplicationController
     respond_to do |format|
       format.json { 
         render json: @submissions.collect { |s| 
-          { id: s.id, student_id_string: s.student_id_string } 
+          { id: s.id, student_id: s.student.id, student_id_string: s.student_id_string } 
         } 
       }
     end

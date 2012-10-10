@@ -55,6 +55,9 @@ SSID::Application.routes.draw do
   get "clusters/:id/show_graph_partial" => "submission_clusters#show_graph_partial"
   get "clusters/:id/show_table_partial" => "submission_clusters#show_table_partial"
   resources :users
+  resources :students, controller: "users" do
+    get "submission_similarities/show_table_partial" => "submission_similarities#show_table_partial"
+  end
   resources :submission_similarities
  #resources :submission_similarity_logs
  #resources :submission_similarity_mappings

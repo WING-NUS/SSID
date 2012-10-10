@@ -1,5 +1,35 @@
 window.VisualizeSimilarityClusterGraph ||= {}
 window.VisualizeSimilarityClusterTable ||= {}
+window.VisualizeTopSimilarSubmissions  ||= {}
+window.Visualize ||= {}
+
+Visualize.registerSubmissionsOptionEvent = ->
+  $("#submissions option").click ->
+    status_text = $(this).parent().next().html()
+    options = $(this).parent().find(":selected")
+    empty_option = null
+    for i in [0..(options.length-1)]
+      if $(options[i]).val() == ""
+        empty_option = i
+    if empty_option != null
+      options.splice(empty_option, 1)
+    $(this).parent().next().html(status_text.replace(/selected\s\d+/, "selected "+options.length))
+    return
+  return
+
+Visualize.registerExistingClusterSubmissionsOptionEvent = ->
+  $("#existing_cluster_submissions option").click ->
+    status_text = $(this).parent().next().html()
+    options = $(this).parent().find(":selected")
+    empty_option = null
+    for i in [0..(options.length-1)]
+      if $(options[i]).val() == ""
+        empty_option = i
+    if empty_option != null
+      options.splice(empty_option, 1)
+    $(this).parent().next().html(status_text.replace(/selected\s\d+/, "selected "+options.length))
+    return
+  return
 
 VisualizeSimilarityClusterTable.registerRankingTableEvents = ->
   $("table.ranking td.rank_check_box_cell").click ->
@@ -16,6 +46,26 @@ VisualizeSimilarityClusterTable.registerRankingTableEvents = ->
   )
 
   $("table.ranking input").click (event) ->
+    VisualizeSimilarityClusterTable.selectStudentIds(this)
+    return
+
+  return
+
+VisualizeTopSimilarSubmissions.registerClusterTableEvents = (table) ->
+  $("td.check_box_cell", table).click ->
+    VisualizeSimilarityClusterTable.selectStudentIds($("input", this))
+    return
+
+  $("td.check_box_cell", table).hover(
+    ->
+      VisualizeSimilarityClusterTable.highlightStudentIds($("input", this))
+      return
+    ->
+      VisualizeSimilarityClusterTable.unhighlightStudentIds($("input", this))
+      return
+  )
+
+  $("input", table).click (event) ->
     VisualizeSimilarityClusterTable.selectStudentIds(this)
     return
 
@@ -64,15 +114,7 @@ VisualizeSimilarityClusterTable.toggleStudentIds = (el) ->
 VisualizeSimilarityClusterTable.selectStudentIds = (el) ->
   className = $(el).val()
   isChecked = $(el).attr("checked")
-  $("table.cluster input[value="+className+"]").each (inputIdx, inputEl) ->
-    if isChecked
-      $(inputEl).closest("tr").removeClass("highlight")
-      $(inputEl).removeAttr("checked")
-    else
-      $(inputEl).closest("tr").addClass("highlight")
-      $(inputEl).attr("checked", "checked")
-    return
-  $("table.ranking input[value="+className+"]").each (inputIdx, inputEl) ->
+  $("table input[value="+className+"]").each (inputIdx, inputEl) ->
     if isChecked
       $(inputEl).closest("tr").removeClass("highlight")
       $(inputEl).removeAttr("checked")
@@ -84,10 +126,7 @@ VisualizeSimilarityClusterTable.selectStudentIds = (el) ->
 
 VisualizeSimilarityClusterTable.highlightStudentIds = (el) ->
   className = $(el).val()
-  $("table.cluster input[value="+className+"]").each (inputIdx, inputEl) ->
-    $(inputEl).closest("tr").addClass("highlight")
-    return
-  $("table.ranking input[value="+className+"]").each (inputIdx, inputEl) ->
+  $("table input[value="+className+"]").each (inputIdx, inputEl) ->
     $(inputEl).closest("tr").addClass("highlight")
     return
   return
@@ -96,12 +135,71 @@ VisualizeSimilarityClusterTable.unhighlightStudentIds = (el) ->
   className = $(el).val()
   isChecked = $(el).attr("checked")
   if !isChecked
-    $("table.cluster input[value="+className+"]").each (inputIdx, inputEl) ->
+    $("table input[value="+className+"]").each (inputIdx, inputEl) ->
       $(inputEl).closest("tr").removeClass("highlight")
       return
-    $("table.ranking input[value="+className+"]").each (inputIdx, inputEl) ->
-      $(inputEl).closest("tr").removeClass("highlight")
-      return
+  return
+
+VisualizeTopSimilarSubmissions.showTable = (el) ->
+  $(el).attr("disabled", "disabled")
+  $(el).attr("value", "Loading...")
+  $("#tables").html("")
+
+  # Fetch selected students
+  options = $("#submissions option:selected")
+  empty_option = null
+  for i in [0..(options.length-1)]
+    if $(options[i]).val() == ""
+      empty_option = i
+  if empty_option != null
+    options.splice(empty_option, 1)
+  studentIds = (options.map ->
+    return $(this).val()
+  ).get()
+
+  # Init GET data
+  data = {}
+
+  # Fetch assignment_id / course_id
+  if $("#submissions_assignment_selector option:selected").html() == "All"
+    data["course_id"] = $("#submissions_assignment_selector").val()
+  else
+    data["assignment_id"] = $("#submissions_assignment_selector").val()
+
+  # Fetch num to display
+  data["num_display"] = $("#num_most_similar_submissions").val()
+
+  # Create containers
+  for studentId in studentIds
+    $("#tables").append("<table id=\"table_student_"+studentId+"\"></table>")
+
+  # Fill each container
+  for studentId in studentIds
+    do (studentId) ->
+      data["studentId"] = studentId
+      $.get("/SSID/students/"+studentId+"/submission_similarities/show_table_partial", data,
+        (html) ->
+          $("#table_student_"+studentId).replaceWith html
+          VisualizeTopSimilarSubmissions.registerClusterTableEvents($("#table_student_"+studentId))
+          VisualizeTopSimilarSubmissions.drawBars($("#table_student_"+studentId))
+          return
+        "html"
+      )
+
+  $(el).attr("value", "Show Tables")
+  $(el).removeAttr("disabled")
+  return
+
+VisualizeTopSimilarSubmissions.drawBars = (table) ->
+  $("span.similarity_value", table).each ->
+    similarity = parseFloat $(this).html().replace(/%$/, "")
+    similarity_class = Math.floor(similarity/10) * 10
+    if similarity_class < 50
+      similarity_class = 40
+    bar = $(this).prev()
+    bar.addClass("legend_"+similarity_class)
+    bar.css("width", (0.8 * similarity).toString() + "%")
+    return
   return
 
 VisualizeSimilarityClusterTable.showTable = (el) ->
@@ -318,22 +416,38 @@ VisualizeSimilarityClusterGraph.selectAssignmentForNewClusterGroup = (el) ->
   return
 
 VisualizeSimilarityClusterGraph.selectAssignmentForSubmissions = (el) ->
-  $(el).nextAll("span").html("Loading...")
-  $(el).nextAll("select").attr("disabled", "disabled")
+  $(el).nextAll("span").first().html("Loading...")
+  $(el).nextAll("select").first().attr("disabled", "disabled")
   assignment_id = $(el).val()
   $.getJSON "/SSID/assignments/"+assignment_id+"/submissions", (data) ->
     options = ["<option value=\"\"></option>"]
     for submission in data
       options.push "<option value=\""+submission["id"]+"\">"+submission["student_id_string"]+"</option>"
     $("#submissions").html(options.join(""))
-    $(el).nextAll("span").html("(selected 0 of "+(options.length-1)+")")
-    $(el).nextAll("select").removeAttr("disabled")
+    $(el).nextAll("span").first().html("(selected 0 of "+(options.length-1)+")")
+    $(el).nextAll("select").first().removeAttr("disabled")
+    Visualize.registerSubmissionsOptionEvent()
+    return
+  return
+
+VisualizeTopSimilarSubmissions.selectAssignmentForSubmissions = (el) ->
+  $(el).nextAll("span").first().html("Loading...")
+  $(el).nextAll("select").first().attr("disabled", "disabled")
+  assignment_id = $(el).val()
+  $.getJSON "/SSID/assignments/"+assignment_id+"/submissions", (data) ->
+    options = ["<option value=\"\"></option>"]
+    for submission in data
+      options.push "<option value=\""+submission["student_id"]+"\">"+submission["student_id_string"]+"</option>"
+    $("#submissions").html(options.join(""))
+    $(el).nextAll("span").first().html("(selected 0 of "+(options.length-1)+")")
+    $(el).nextAll("select").first().removeAttr("disabled")
+    Visualize.registerSubmissionsOptionEvent()
     return
   return
 
 VisualizeSimilarityClusterGraph.selectAssignmentForExistingClusters = (el) ->
-  $(el).nextAll("span").html("Loading...")
-  $(el).nextAll("select").attr("disabled", "disabled")
+  $(el).nextAll("span").first().html("Loading...")
+  $(el).nextAll("select").first().attr("disabled", "disabled")
   # Get assignment_id / course_id
   selected_id = $(el).val()
   if $("option:selected", el).html() == "All"
@@ -346,8 +460,9 @@ VisualizeSimilarityClusterGraph.selectAssignmentForExistingClusters = (el) ->
     for student in data
       options.push "<option value=\""+student["id"]+"\">"+student["id_string"]+"</option>"
     $("#existing_cluster_submissions").html(options.join(""))
-    $(el).nextAll("span").html("(selected 0 of "+(options.length-1)+")")
-    $(el).nextAll("select").removeAttr("disabled")
+    $(el).nextAll("span").first().html("(selected 0 of "+(options.length-1)+")")
+    $(el).nextAll("select").first().removeAttr("disabled")
+    Visualize.registerExistingClusterSubmissionsOptionEvent()
     return
   return
 
@@ -355,29 +470,8 @@ window.Visualize ||= {}
 
 Visualize.onLoad = ->
   $ ->
-    $("#submissions option").click ->
-      status_text = $(this).parent().next().html()
-      options = $(this).parent().find(":selected")
-      empty_option = null
-      for i in [0..(options.length-1)]
-        if $(options[i]).val() == ""
-          empty_option = i
-      if empty_option != null
-        options.splice(empty_option, 1)
-      $(this).parent().next().html(status_text.replace(/selected\s\d+/, "selected "+options.length))
-      return
-
-    $("#existing_cluster_submissions option").click ->
-      status_text = $(this).parent().next().html()
-      options = $(this).parent().find(":selected")
-      empty_option = null
-      for i in [0..(options.length-1)]
-        if $(options[i]).val() == ""
-          empty_option = i
-      if empty_option != null
-        options.splice(empty_option, 1)
-      $(this).parent().next().html(status_text.replace(/selected\s\d+/, "selected "+options.length))
-      return
+    Visualize.registerSubmissionsOptionEvent()
+    Visualize.registerExistingClusterSubmissionsOptionEvent()
 
     $("#similarity_clusters td").click ->
       if $(this).parent().find("input").attr("checked")
