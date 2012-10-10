@@ -1,6 +1,10 @@
 body.visualize {
   position: relative;
   
+  span.red {
+    color: red;
+  }
+
   #visualize_menu {
     position: absolute;
     width: 210px;
@@ -99,13 +103,19 @@ body.visualize {
       }
     }
   }
-}
 
-body.visualize_similarity_cluster_graph {
   #options {
     margin-bottom: 20px;
 
-    #submissions {
+    ol {
+      padding-left: 20px;
+
+      li {
+        margin-bottom: 15px;
+      }
+    }
+
+    select.submissions {
       height: 100px;
       vertical-align: top;
     }
@@ -123,6 +133,7 @@ body.visualize_similarity_cluster_graph {
       border-spacing: 0;
       border-collapse: collapse;
       width: 100%;
+      margin-top: 15px;
       margin-bottom: 15px;
 
       th {
@@ -157,6 +168,122 @@ body.visualize_similarity_cluster_graph {
             margin-right: 0;
         }
       }
+    }
+  }
+}
+
+body.visualize_similarity_cluster_table {
+  #clusters {
+    overflow: auto;
+  }
+
+  table.ranking {
+    margin: 15px 20px 15px 0;
+    border-spacing: 0;
+    border-collapse: collapse;
+    width: 100%;
+
+    th {
+      border: 1px solid rgb(0, 0, 0);
+      background-color: rgb(231, 134, 13);
+      color: rgb(255, 255, 255);
+      font-weight: bold;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      text-align: left;
+    }
+
+    th.rank_col {
+      width: 40px;
+    }
+
+    td.rank_col {
+      text-align: center;
+    }
+
+    td.rank_check_box_cell {
+      width: 15px;
+    }
+
+    th.num_assignments_col {
+      width: 100px;
+    }
+
+    th.num_clusters_col {
+      width: 100px;
+    }
+
+    tr.highlight td {
+      background-color: yellow;
+    }
+
+    td {
+      border: 1px dotted #bbb;
+      padding: 3px 10px;
+
+      a {
+        &, &:hover, &:visited {
+          background-color: rgb(255, 255, 255);
+        }
+        &:hover {
+          color: rgb(255, 108, 0);
+        }
+      }
+    }
+  }
+
+  table.cluster {
+    float: left;
+    margin: 0 20px 15px 0;
+    border-spacing: 0;
+    border-collapse: collapse;
+
+    th {
+      border: 1px solid rgb(0, 0, 0);
+      background-color: rgb(231, 134, 13);
+      color: rgb(255, 255, 255);
+      font-weight: bold;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      text-align: center;
+    }
+
+    td {
+      border: 1px dotted #bbb;
+      padding: 3px 10px;
+
+      a {
+        &, &:hover, &:visited {
+        }
+        &:hover, &.is_plagiarism:hover {
+          color: rgb(255, 108, 0);
+        }
+
+        &.is_plagiarism {
+          color: rgb(255, 0, 0);
+        }
+      }
+
+      &.hide_link_cell {
+        font-size: 11px;
+        text-align: center;
+      }
+
+      &.hide_link_cell:before {
+        content: "[ "
+      }
+
+      &.hide_link_cell:after {
+        content: " ]"
+      }
+
+      &.check_box_cell {
+        width: 15px;
+      }
+    }
+
+    tr.highlight td {
+      background-color: yellow;
     }
   }
 }

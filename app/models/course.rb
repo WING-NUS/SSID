@@ -42,9 +42,13 @@ class Course < ActiveRecord::Base
 
   def submission_cluster_groups
     self.assignments.collect { |assignment|
-      assignment.submission_cluster_groups.collect { |group|
-        group.submission_clusters
-      }
+      assignment.submission_cluster_groups
+    }.flatten
+  end
+
+  def submission_clusters
+    self.assignments.collect { |assignment|
+      assignment.submission_clusters
     }.flatten
   end
 
@@ -78,6 +82,12 @@ class Course < ActiveRecord::Base
     self.assignments.collect { |a|
       a.submission_cluster_groups
     }.flatten
+  end
+
+  def cluster_students
+    self.assignments.collect { |a|
+      a.cluster_students
+    }.flatten.uniq.sort
   end
 
   private

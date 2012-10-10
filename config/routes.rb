@@ -34,8 +34,10 @@ SSID::Application.routes.draw do
     get "visualize/similarity_cluster_graph" => "visualize#similarity_cluster_graph"
     get "visualize/similarity_cluster_table" => "visualize#similarity_cluster_table"
     get "visualize/top_similar_submissions" => "visualize#top_similar_submissions"
+    get "cluster_students"
   end
   resources :assignments do 
+    get "cluster_students"
     resources :submission_similarities
     resources :cluster_groups, controller: "submission_cluster_groups"
     resources :submissions do
@@ -45,10 +47,13 @@ SSID::Application.routes.draw do
   resources :cluster_groups, controller: "submission_cluster_groups" do
     resources :clusters, controller: "submission_clusters"
   end
+  get "clusters/ids_and_group_ids_for_student_ids" => "submission_clusters#ids_and_group_ids_for_student_ids", defaults: { format: 'json' }
   get "clusters/show_graph_partial" => "submission_clusters#show_graph_partial"
+  get "clusters/show_ranking_partial" => "submission_clusters#show_ranking_partial"
   get "clusters/show_for_submission_ids" => "submission_clusters#show_for_submission_ids", defaults: { format: 'json' }
   get "clusters/:id" => "submission_clusters#show", defaults: { format: 'json' }
   get "clusters/:id/show_graph_partial" => "submission_clusters#show_graph_partial"
+  get "clusters/:id/show_table_partial" => "submission_clusters#show_table_partial"
   resources :users
   resources :submission_similarities
  #resources :submission_similarity_logs

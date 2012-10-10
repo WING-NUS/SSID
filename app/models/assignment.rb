@@ -28,4 +28,20 @@ class Assignment < ActiveRecord::Base
   validates :title, :language, :min_match_length, :ngram_size, presence: true
   validates_numericality_of :min_match_length, only_integer: true, greater_than: 0
   validates_numericality_of :ngram_size, only_integer: true, greater_than: 0
+
+  def cluster_students
+    self.submission_cluster_groups.collect { |g|
+      g.clusters.collect { |c|
+        c.submissions.collect { |s|
+          s.student
+        }
+      }
+    }.flatten.uniq.sort
+  end
+
+  def submission_clusters
+    self.submission_cluster_groups.collect { |g|
+      g.clusters
+    }.flatten
+  end
 end

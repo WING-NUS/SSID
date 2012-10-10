@@ -25,4 +25,8 @@ class SubmissionCluster < ActiveRecord::Base
       s.student.id_string
     }
   end
+
+  def assignment
+    self.submission_cluster_group.assignment
+  end
 end

@@ -25,6 +25,17 @@ class AssignmentsController < ApplicationController
     @erroneous_assignments = @course.erroneous_assignments
   end
 
+  def cluster_students
+    @assignment = Assignment.find(params["assignment_id"])
+    respond_to do |format|
+      format.json { 
+        render json: @assignment.cluster_students.collect { |s| 
+          { id: s.id, id_string: s.id_string } 
+        } 
+      }
+    end
+  end
+
   # GET /courses/1/assignments/1
 # def show
 #   @assignment = Assignment.find(params[:id])

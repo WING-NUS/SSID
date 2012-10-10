@@ -11,6 +11,7 @@ class VisualizeController < ApplicationController
 
   # GET /courses/1/visualize/similarity_cluster_table
   def similarity_cluster_table
+    @clusters = SubmissionCluster.all
   end
 
   # GET /courses/1/visualize/top_similar_submissions

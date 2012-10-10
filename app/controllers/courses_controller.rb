@@ -21,6 +21,17 @@ class CoursesController < ApplicationController
     @courses = @user.courses
   end
 
+  def cluster_students
+    @course = Course.find(params["course_id"])
+    respond_to do |format|
+      format.json { 
+        render json: @course.cluster_students.collect { |s| 
+          { id: s.id, id_string: s.id_string } 
+        } 
+      }
+    end
+  end
+
 # # GET /courses/1
 # def show
 #   @course = Course.find(params[:id])
