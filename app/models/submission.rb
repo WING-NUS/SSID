@@ -24,18 +24,27 @@ class Submission < ActiveRecord::Base
 
   serialize :lines, Array
 
+  before_save :check_lines
+
+  # Make sure that lines is an array
+  def check_lines
+    attr = self.read_attribute("lines")
+    unless attr.class == Array
+      attr = YAML::load(attr)
+      raise unless attr.class == Array
+      write_attribute("lines", attr)
+    end
+  end
+
   # Auto-(de)serialization does not work with the format written by snakeyaml java library,
   # So we force (de)serialize by overriding accessor methods
   def lines
-    YAML::load(self.read_attribute_before_type_cast("lines"))
-  end
-
-  def lines=(obj)
-    if obj.class == Array
-      write_attribute(:lines, YAML::dump(obj))
-    else
-      raise TypeError, "can't convert String into Array"
+    attr = self.read_attribute("lines")
+    unless attr.class == Array
+      attr = YAML::load(attr)
+      raise unless attr.class == Array
     end
+    attr
   end
 
   def student_id_string

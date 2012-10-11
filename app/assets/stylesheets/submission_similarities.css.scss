@@ -42,3 +42,106 @@ body.submission_similarities_index {
     text-align: center;
   }
 }
+
+body.submission_similarities_show {
+  div.submissions {
+    overflow-y: auto;
+    width: 100%;
+
+    pre {
+      margin-top: 0px;
+      border: 1px solid grey;
+
+      ol.linenums li.highlight {
+        background-color: rgb(255, 255, 140);
+      }
+    }
+
+    h3 {
+      text-align: center;
+      margin-bottom: 5px;
+    }
+
+    div {
+      overflow-x: scroll;
+    }
+
+    div.submission1 {
+      float: left;
+      width: 50%;
+    }
+
+    div.submission2 {
+      float: right;
+      width: 50%;
+    }
+  }
+
+  div.options {
+    text-align: center;
+
+    div {
+      margin-bottom: 15px;
+
+      p {
+        margin: 0;
+
+        label {
+          margin: 0 20px 0;
+        }
+      }
+
+      p.check_boxes {
+        margin-top: 2px;
+      }
+    }
+
+    table {
+      border-spacing: 0;
+      border-collapse: collapse;
+      width: 490px;
+      margin: 10px auto 20px;
+      text-align: left;
+
+      th {
+        border: 1px solid rgb(0, 0, 0);
+        background-color: rgb(231, 134, 13);
+        color: rgb(255, 255, 255);
+        font-weight: bold;
+        text-transform: uppercase;
+        padding: 3px 10px;
+        text-align: left;
+      }
+
+      th.check_box_col {
+        width: 15px;
+      }
+
+      th.lines_col {
+        width: 120px;
+      }
+
+      tr.highlight td {
+        background-color: rgb(255, 255, 140);
+      }
+      
+      td {
+        border: 1px dotted #bbb;
+        padding: 3px 10px;
+
+        a {
+          &, &:hover, &:visited {
+            background-color: rgb(255, 255, 255);
+          }
+          &:hover {
+            color: rgb(255, 108, 0);
+          }
+        }
+      }
+
+      td.num_statements_cell {
+        text-align: center;
+      }
+    }
+  }
+}

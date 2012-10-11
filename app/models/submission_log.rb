@@ -18,16 +18,14 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 class SubmissionLog < ActiveRecord::Base
   # SubmissionLog#log_type Constants
   TYPE_PAIR_SUSPECT_AS_PLAGIARISM = 0
-  TYPE_PAIR_UNSUSPECT_AS_PLAGIARISM = 1
-  TYPE_PAIR_CONFIRM_AS_PLAGIARISM = 2
-  TYPE_PAIR_UNCONFIRM_AS_PLAGIARISM = 3
-  TYPE_STUDENT_MARK_AS_GUILTY = 4
-  TYPE_STUDENT_MARK_AS_NOT_GUILTY = 5
+  TYPE_PAIR_CONFIRM_AS_PLAGIARISM = 1
+  TYPE_PAIR_UNMARK_AS_PLAGIARISM = 2
+  TYPE_STUDENT_MARK_AS_GUILTY = 3
+  TYPE_STUDENT_MARK_AS_NOT_GUILTY = 4
   TYPE_TEMPLATE_STRINGS = [
-    "Suspect as plagiarism with submission by ",
-    "Remove suspicion of plagiarism with submission by ",
-    "Confirmed plagiarism with submission by ",
-    "Remove confirmation of plagiarism with submission by ",
+    "Suspected as plagiarism with submission by ",
+    "Confirmed as plagiarism with submission by ",
+    "Unmarked as plagiarism with submission by ",
     "Marked as guilty of plagiarism of submission by ",
     "Unmarked as guilty of plagiarism of submission by "
   ]

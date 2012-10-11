@@ -17,4 +17,24 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 
 class SubmissionSimilarityMapping < ActiveRecord::Base
   belongs_to :submission_similarity
+
+  def line_range1
+    (self.start_line1)..(self.end_line1)
+  end
+
+  def line_range2
+    (self.start_line2)..(self.end_line2)
+  end
+
+  def line_range1_string
+    "#{self.start_line1 + 1} &mdash; #{self.end_line1 + 1}".html_safe
+  end
+
+  def line_range2_string
+    "#{self.start_line2 + 1} &mdash; #{self.end_line2 + 1}".html_safe
+  end
+
+  def line_ranges_html_value
+    "#{self.start_line1}_#{self.end_line1}_#{self.start_line2}_#{self.end_line2}"
+  end
 end

@@ -21,7 +21,10 @@
         &gt; <%= %Q{Assignment: #{assignment.title} Upload Log} %>
       <% end %>
     <% elsif controller_name == "submission_similarities" %>
-      &gt; <%= %Q{Assignment: #{assignment.title} Submission Similarities} %>
+      &gt; <%= link_to %Q{Assignment: #{assignment.title} Submission Similarities}, assignment_submission_similarities_url(assignment) %>
+      <% if action_name == "show" %>
+        &gt; Submissions from Student <%= submission_similarity.student1.id_string %> and <%= submission_similarity.student2.id_string %>
+      <% end %>
     <% elsif controller_name == "submission_logs" %>
       &gt; <%= %Q{Assignment: #{assignment.title} Submission Log for Student #{submission.student_id_string}} %>
     <% end %>

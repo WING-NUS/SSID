@@ -38,9 +38,19 @@ SSID::Application.routes.draw do
     get "visualize/top_similar_submissions" => "visualize#top_similar_submissions"
     get "cluster_students"
   end
+  resources :submission_similarities do
+    resources :submissions do
+      put "mark_as_guilty" => "submissions#mark_as_guilty"
+      put "mark_as_not_guilty" => "submissions#mark_as_not_guilty"
+    end
+  end
   resources :assignments do 
     get "cluster_students"
-    resources :submission_similarities
+    resources :submission_similarities do
+      put "confirm_as_plagiarism" => "submission_similarities#confirm_as_plagiarism"
+      put "suspect_as_plagiarism" => "submission_similarities#suspect_as_plagiarism"
+      put "unmark_as_plagiarism" => "submission_similarities#unmark_as_plagiarism"
+    end
     resources :cluster_groups, controller: "submission_cluster_groups"
     resources :submissions do
       get "log" => "submission_logs#index"
