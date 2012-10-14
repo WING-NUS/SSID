@@ -275,9 +275,19 @@ void paraphrase_pop()
      unsigned int startPosition = 0, tokenLength;  // position and length of token in original code
      while (currToken->getType(currToken) != eofToken.getType(&eofToken)) 
      {
-       char* tokenString = (char *) currToken->getText(currToken)->chars;
-       tokenLength = strlen(tokenString);
-       printf("%u,%u,%u,%u\n", currToken->getLine(currToken), startPosition, tokenLength, currToken->getType(currToken));
+       string tokenString = (char *) currToken->getText(currToken)->chars;
+       tokenLength = tokenString.length();
+
+       // Replace newline characters with \n
+       size_t start_pos = 0;
+       string from = "\n";
+       string to = "\\n";
+       while ((start_pos = tokenString.find(from, start_pos)) != std::string::npos) {
+           tokenString.replace(start_pos, from.length(), to);
+           start_pos += to.length();
+       }
+
+       printf("%u,%u,%u,%u,%s\n", currToken->getLine(currToken), startPosition, tokenLength, currToken->getType(currToken), tokenString.c_str());
        startPosition += tokenLength;
        currToken = tokSource->nextToken(tokSource);
      }

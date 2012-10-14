@@ -57,6 +57,10 @@ public class Main {
 		String dbUser = args[7];
 		String dbPwd = args[8];
 
+    // Setup ANTLRDynamicTokenizer
+		String antlrGrammarsBinDir = args[1] + "/../../../lib/antlr/grammars/bin/";
+    ANTLRDynamicTokenizer.setGrammarsBinDir(antlrGrammarsBinDir);
+
 		MySQLDB.setProperties(dbAddr, dbName, dbUser, dbPwd);
 
 		ArrayList<Submission> submissions = SubmissionRetriever
@@ -66,8 +70,10 @@ public class Main {
 			CTokenizer.getTokenizer().TokenizeSubmissions(submissions);
 		} else if (language.equals(JavaTokenizer.language)) {
 			JavaTokenizer.getTokenizer().TokenizeSubmissions(submissions);
+		} else if (ANTLRDynamicTokenizer.understandsLanguage(language)) {
+			ANTLRDynamicTokenizer.getTokenizer(language).TokenizeSubmissions(submissions);
 		} else {
-			throw new Exception("Invalid Keyword Selection");
+			throw new Exception("Grammar for language \""+ language + "\" not found");
 		}
 
 		try {

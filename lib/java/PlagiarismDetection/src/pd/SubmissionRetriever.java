@@ -43,7 +43,7 @@ public final class SubmissionRetriever {
 		for (File f : files) {
 			lines = new ArrayList<String>();
 			codeLength = getFileContents(f, lines);
-			reply.add(new Submission(f.getName(), lines, codeLength));
+			reply.add(new Submission(f.getName(), f.getPath(), lines, codeLength));
 		}
 		return reply;
 	}

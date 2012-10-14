@@ -77,8 +77,11 @@ public final class JavaTokenizer extends Tokenizer {
 		ArrayList<String> lines = s.getCombinedCode();
 		int linesNo = lines.size();
 
+    // commentTypes[0] is for single line comments
+    // commentTypes[1] is for multi line comments
 		boolean[] commentTypes = { false, false };
 
+    // gPos is a global position indicator?
 		int gPos = 0;
 		LineReader lr; // Line Reader
 		String line;
@@ -319,6 +322,7 @@ public final class JavaTokenizer extends Tokenizer {
 				nextTokenIsStartOfStatement = true;
 			}
 
+      // Update global position indicator
 			gPos = lr.getGPos() + 1; // + 1 for the line breaker character
 		}
 

@@ -1,10 +1,58 @@
-To make use of the grammars found in this directory, you will need to install
-the appropriate runtime libraries.
+This directory is organized into two subdirectories
 
-ANTLR C RUNTIME LIBRARY
-=======================
+bin - contains separate directories for each recognizable grammar by
+      PlagiarismDetection.jar Each grammar directory contains a README,
+      the _lexer binary file, the _tokens file, a list of keywords in
+      the language, and a mapping between the _tokens file and the tokens
+      understood by PlagiarismDetection.jar
 
-This runtime library is used by the C++ grammar lexer. To install the library,
+src - contains the source files with an SSID_README file explaining how
+      to modify and/or recompile the grammar binary and token file in the
+      bin directory
+
+ADDING A NEW ANTLR GRAMMAR
+==========================
+
+To add a new language grammar for PlagiarismDetection.jar to recognize:
+
+1. Assuming the new language is called "lang", create a new directory
+   under SSID/lib/antlr/grammars/bin/ called "lang"
+
+2. Inside the "lang" directory you will need to have the following files:
+   
+   a. lang_lexer
+      This is the lexer binary that given an absolute path as its first
+      and only argument, will print a csv to stdout with the following
+      columns: <line number starting at 1>,<starting character position
+      of token>,<character length of token>,<token type number>,<token string>
+      See cpp_full_prog.cpp under SSID/lib/antlr/grammars/src/cpp/ for an example
+      Note that newline characters should be printed in escape format "\\n".
+      Otherwise, the lexer's output will not have one line per token
+
+   b. lang_tokens
+      This is the tokens file produced by ANTLR. It provides a mapping
+      from the token type number provided by the ANTLR runtime library to
+      the token names defined in the .g ANTLR grammar file
+
+   c. lang_token_mappings
+      This file is a csv that needs to be written manually to map
+      the tokens defined in lang_tokens to the tokens understood by
+      PlagiarismDetection.jar. The tokens in lang_tokens must be mapped
+      to either Symbol, Constant, Variable, or Keyword. Token names found
+      in _tokens file but not in the _token_mappings file will be ignored.
+      For example, comment-type tokens should be ignored. Alternatively,
+      assign these tokens with the label "Ignore"
+
+RUNTIME LIBRARIES
+=================
+
+To make use of the grammars found in the bin directory, you will need to install
+the appropriate ANTLR runtime libraries.
+
+ANTLR C Runtime Library
+-----------------------
+
+This runtime library is used by the C++ grammar lexer (cpp). To install the library,
 do the following steps (a more complete description can be found at 
 http://www.antlr.org/wiki/display/ANTLR3/Using+the+ANTLR3+C+Target)
 

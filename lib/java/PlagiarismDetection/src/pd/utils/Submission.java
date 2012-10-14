@@ -24,6 +24,7 @@ import pd.utils.Tokens.*;
 public final class Submission {
 
 	private String id = "";
+  private String path = null;
 	private ArrayList<String> combinedCode = new ArrayList<String>();
 	private int codeLength = 0;
 	private TokenList codeTokens = new TokenList();
@@ -33,6 +34,11 @@ public final class Submission {
 
 	public Submission() {
 	}
+
+	public Submission(String id, String path, ArrayList<String> combinedCode, int codeLength) {
+    this(id, combinedCode, codeLength);
+    this.path = path;
+  }
 
 	public Submission(String id, ArrayList<String> combinedCode, int codeLength) {
 		this.id = id;
@@ -59,6 +65,10 @@ public final class Submission {
 	public String getID() {
 		return id;
 	}
+  
+  public String getPath() {
+    return path;
+  }
 
 	public ArrayList<String> getCombinedCode() {
 		return combinedCode;

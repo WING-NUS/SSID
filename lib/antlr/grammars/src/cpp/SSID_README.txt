@@ -27,8 +27,8 @@ as necessary.
 
 2. Unzip
 
-3. Deduce the instructions in compile.bat to produce CPP_grammar_Lexer.cpp
-   and CPP_grammar_Parser.cpp. Essentially, they are:
+3. Deduce the instructions in compile.bat to produce CPP_grammar_Lexer.cpp,
+   CPP_grammar_Parser.cpp and CPP_grammar_.tokens. Essentially, they are:
 
    a. Run: java -jar PATH_TO_ANTLR_JAR CPP_grammar_.g > build.txt 2>&1
       where PATH_TO_ANTLR_JAR should be SSID/lib/java/jar/antlr-3.4-complete.jar
@@ -36,6 +36,10 @@ as necessary.
    b. Rename resulting c files to cpp:
       mv CPP_grammar_Lexer.c CPP_grammar_Lexer.cpp
       mv CPP_grammar_Parser.c CPP_grammar_Parser.cpp
+
+4. Copy the tokens file to the assumed location and name by
+   PlagiarismDetection.jar: cp CPP_grammar_.tokens
+   SSID/lib/antlr/grammars/bin/cpp/cpp_tokens
 
 Modifying How The Lexer Is Used
 ===============================
