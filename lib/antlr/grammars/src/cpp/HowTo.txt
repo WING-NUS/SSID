@@ -1,0 +1,153 @@
+How To Use antlr3_cpp_parser
+----------------------------
+
+Contents
+
+1. How to run the parser
+
+2. How to extract data with the parser
+
+
+(Best viewed with tabs set to 4)
+
+Introduction
+
+	The information herein refers to parser version 4.1. 
+
+	The program is used to parse C/C++ programs and may be instrumented to
+	provide additional output for projects based on the analysis of source code
+	in C/C++ such as for "pretty printing", complexity analysis, and generally 
+	for any program understanding requirement.
+
+	The parser is generated from a language definition file called CPP_parser_.g
+	using the open source ANTLR parser generation system obtainable from 
+	http://www.antlr2.org . ANTLR version used is 3.2. 
+
+
+1.  How to run the parser
+
+	This description is for the use of Java in an MSDOS window for parser 
+	generation and Visual Studio 2008 for compiling and running the parser and 
+	analysis programs.
+
+	This is because ANTLR is written in Java but we optionally request the parser
+	to be written in C++ so as to be able to include data extraction modules
+	previously written in C.
+
+	See the next section on how to organise your files to be able to run the 
+	system as described below.
+
+1a. Generate the parser
+
+	Download the ANTLR 3.2 Java archive from http://www.antlr.org/download.  
+	Edit compile.bat and set ANTLR3HOME and CLASSPATH accordingly.
+
+	A log of the resulting output is included with this archive at 
+	Reference\4.1\grammar4.1.0antlr3.2.txt. 
+
+
+1b. Compile and build the parser
+
+	Open antlr3_cpp_parser.sln with Visual Studio 2008.
+	From the menu run Build => Build Solution. 
+	The result is a file named antlr3_cpp_parser.exe. 
+
+
+1c. Run the parser
+
+	Open an MSDOS command window. Enter the following command to parse 
+	a pre-processed file (*.i) in the TestIfiles\ directory as follows:
+
+		.../MyProject>debug\antlr3_cpp_parser.exe TestIfiles\Quadratic.i
+
+	To place the DOS output in another file for later examination use,
+
+		.../MyProject>debug\antlr3_cpp_parser TestIfiles\Quadratic.i > Quadratic.trace
+
+
+	This run should normally produce something like this,
+
+
+		Parse TestIfiles\Quadratic.i Wed Dec 12 13:26:03 2010
+		...
+		Support exitExternalScope, scope now 0 as required
+
+
+    
+	If scope does not end as 0 a slightly different warning will be produced. 
+	This could occur if there is some error in the parsing process in which
+	case some other error warning(s) should also have been displayed by the 
+	parser.
+		
+	The files Quadratic.dat, Quadratic.lis and Quadratic.log are "optional" 
+	files produced by version 3.2 and included for reference.  See the next 
+	section for details. 
+
+
+
+
+2. How to extract data with the parser
+
+   One of the main reasons for processing source code with the ANTLR parser
+   is to extract specific data from program source code for processing by a 
+   user's (ie. your) program.
+
+   To do this the user needs to: 
+      - to include in the Visual Studio project the MyCode.cpp and MyCode.hpp
+        found under Reference\3.2 
+      - adapt these files
+      - include action statements in the parser definition, CPP_parser_.g 
+        as follows below.
+
+
+
+2a.	In order to adapt the use of MyCode examine the following
+
+	Find in CPP_parser_.g
+
+	// myCode functions ready for overriding in MyCode subclass
+	// Include application code functions here
+	virtual void myCode_pre_processing(int, char *[]);
+	virtual void myCode_post_processing();
+	virtual void myCode_end_of_stmt();
+	virtual void myCode_function_direct_declarator(const char *);
+
+	and
+
+		{		
+#ifdef MYCODE
+		if (definition)
+			myCode_function_direct_declarator(q);
+#endif MYCODE
+		}
+
+	and in Support.cpp
+
+	//	Functions which may be overridden by MyCode subclass
+
+	void CPPParser::
+	myCode_pre_processing(int argc,char *argv[])
+		{
+		}
+
+2b. This is what they are for,
+
+    myCode_pre_processing(int, char *[]) is defined in MyCode.cpp and
+	initialises the user's (ie. your) MyCode application.
+
+    myCode_post_processing() is defined in MyCode.cpp and finalises and
+	closes down the user's application.
+
+	myCode_end_of_stmt() is defined in MyCode.cpp and is used to clear 
+	any unwanted settings at the end of processing each statement.
+
+    myCode_function_direct_declarator(const char *) is defined in MyCode.cpp
+	and is an example of how data can be extracted from the ANTLR parser. By 
+	placing the statement "if (definition) myCode_function_direct_declarator(q);"
+	within the #ifdef/#endif in the production function_direct_declarator in 
+	CPP_parser.g the required data (in this case represented by the variable 
+	"q") is extracted and can be processed or stored appropriately by the user.
+
+2c. The user (ie. yourself) can take over the use of MyCode.cpp and introduce 
+    whatever functions are required in the same way as shown above to extract 
+	whatever data is required from (pre-processed) C++ source code.

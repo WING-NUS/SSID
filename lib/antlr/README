@@ -1,0 +1,27 @@
+To make use of the grammars found in this directory, you will need to install
+the appropriate runtime libraries.
+
+ANTLR C RUNTIME LIBRARY
+=======================
+
+This runtime library is used by the C++ grammar lexer. To install the library,
+do the following steps (a more complete description can be found at 
+http://www.antlr.org/wiki/display/ANTLR3/Using+the+ANTLR3+C+Target)
+
+1. Download the C runtime library from
+   http://www.antlr.org/download/C/libantlr3c-3.4.tar.gz
+
+2. Untar
+
+3. Run: ./configure --enable-64bit (You need to enable 64bit if your machine
+   is capable, otherwise the library won't be usable)
+
+4. Run: make
+
+5. Fix any compilation errors. For example, if you encountered the error "/usr/include/gnu/stubs.h:7:27: error: gnu/stubs-32.h: No such file or directory", then a quick Google search leads to http://stackoverflow.com/questions/7412548/gnu-stubs-32-h-no-such-file-or-directory, which will suggest installing glibc-devel.i386 via yum if your machine is running CentOS 5.8
+
+6. Repeat steps 3-5 until there are no errors in compilation
+
+7. Run: sudo make install
+
+8. Export the library path: export LD_LIBRARY_PATH=/usr/local/lib/:$LD_LIBRARY_PATH

@@ -1,0 +1,32 @@
+warning(200): CPP_grammar_.g:896:3: Decision can match input such as "LESSTHAN" using multiple alternatives: 1, 2
+As a result, alternative(s) 2 were disabled for that input
+Semantic predicates were present but were hidden by actions.
+warning(200): CPP_grammar_.g:1268:23: Decision can match input such as "'const'" using multiple alternatives: 1, 2
+As a result, alternative(s) 2 were disabled for that input
+Semantic predicates were present but were hidden by actions.
+warning(200): CPP_grammar_.g:1268:23: Decision can match input such as "'volatile'" using multiple alternatives: 1, 2
+As a result, alternative(s) 2 were disabled for that input
+Semantic predicates were present but were hidden by actions.
+warning(200): CPP_grammar_.g:1515:3: Decision can match input such as "'class'" using multiple alternatives: 1, 2, 3
+As a result, alternative(s) 2,3 were disabled for that input
+Semantic predicates were present but were hidden by actions.
+warning(200): CPP_grammar_.g:1515:3: Decision can match input such as "'typename'" using multiple alternatives: 1, 2, 3
+As a result, alternative(s) 2,3 were disabled for that input
+Semantic predicates were present but were hidden by actions.
+warning(200): CPP_grammar_.g:1729:3: Decision can match input such as "'else'" using multiple alternatives: 1, 2
+As a result, alternative(s) 2 were disabled for that input
+Semantic predicates were present but were hidden by actions.
+warning(200): CPP_grammar_.g:2207:3: Decision can match input such as "AMPERSAND" using multiple alternatives: 1, 2
+As a result, alternative(s) 2 were disabled for that input
+warning(200): CPP_grammar_.g:2207:3: Decision can match input such as "STAR" using multiple alternatives: 1, 2
+As a result, alternative(s) 2 were disabled for that input
+warning(200): CPP_grammar_.g:2216:3: Decision can match input such as "STAR" using multiple alternatives: 1, 2
+As a result, alternative(s) 2 were disabled for that input
+warning(200): CPP_grammar_.g:2216:3: Decision can match input such as "AMPERSAND" using multiple alternatives: 1, 2
+As a result, alternative(s) 2 were disabled for that input
+warning(200): CPP_grammar_.g:2344:4: Decision can match input such as "LSQUARE RSQUARE" using multiple alternatives: 1, 2
+As a result, alternative(s) 2 were disabled for that input
+Semantic predicates were present but were hidden by actions.
+warning(200): CPP_grammar_.g:2348:4: Decision can match input such as "LSQUARE RSQUARE" using multiple alternatives: 1, 2
+As a result, alternative(s) 2 were disabled for that input
+Semantic predicates were present but were hidden by actions.

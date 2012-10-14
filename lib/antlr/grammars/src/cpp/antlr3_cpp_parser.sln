@@ -1,0 +1,17 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "antlr3_cpp_parser", "antlr3_cpp_parser.vcproj", "{7B81F507-59D9-414C-B087-93DF371E63D2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7B81F507-59D9-414C-B087-93DF371E63D2}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7B81F507-59D9-414C-B087-93DF371E63D2}.Debug|Win32.Build.0 = Debug|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

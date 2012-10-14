@@ -1,0 +1,6 @@
+For build instructions, please refer to SSID/lib/antlr/grammars/src/cpp/
+
+For runtime library instructions, please refer to SSID/lib/antlr/README
+
+If you run the binary and receive the following error: ./cpp_lexer: error while loading shared libraries: libantlr3c.so: cannot open shared object file: No such file or directory
+Please make sure that you have defined the LD_LIBRARY_PATH environment variable correctly, e.g.: export LD_LIBRARY_PATH=/usr/local/lib/:$LD_LIBRARY_PATH
