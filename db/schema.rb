@@ -95,9 +95,9 @@ ActiveRecord::Schema.define(:version => 20121010131232) do
     t.integer  "assignment_id",                                                  :null => false
     t.integer  "submission1_id",                                                 :null => false
     t.integer  "submission2_id",                                                 :null => false
-    t.decimal  "similarity_1_to_2", :precision => 5, :scale => 3
-    t.decimal  "similarity_2_to_1", :precision => 5, :scale => 3
-    t.decimal  "similarity",        :precision => 5, :scale => 3
+    t.decimal  "similarity_1_to_2", :precision => 6, :scale => 3
+    t.decimal  "similarity_2_to_1", :precision => 6, :scale => 3
+    t.decimal  "similarity",        :precision => 6, :scale => 3
     t.integer  "status",                                          :default => 0, :null => false
     t.datetime "created_at",                                                     :null => false
     t.datetime "updated_at",                                                     :null => false
@@ -164,7 +164,7 @@ ActiveRecord::Schema.define(:version => 20121010131232) do
   create_table "users", :force => true do |t|
     t.string   "name"
     t.string   "full_name"
-    t.string   "password_digest", :default => "$2a$10$w34Pb./CTEx4KQAhwaKaBOY955BXkf/tCZOWhkVq1diY9D40BPecW"
+    t.string   "password_digest", :default => "$2a$10$7PVWaJGKLVmn4ATsmMrVNeFmPP3THRnJ.Z85zSl3cUwSmmfuBJc0i"
     t.boolean  "is_admin",        :default => false,                                                          :null => false
     t.string   "id_string"
     t.datetime "created_at",                                                                                  :null => false

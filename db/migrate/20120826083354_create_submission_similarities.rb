@@ -21,9 +21,9 @@ class CreateSubmissionSimilarities < ActiveRecord::Migration
       t.integer :assignment_id, null: false
       t.integer :submission1_id, null: false
       t.integer :submission2_id, null: false
-      t.decimal :similarity_1_to_2, precision: 5, scale: 3
-      t.decimal :similarity_2_to_1, precision: 5, scale: 3
-      t.decimal :similarity, precision: 5, scale: 3
+      t.decimal :similarity_1_to_2, precision: 6, scale: 3
+      t.decimal :similarity_2_to_1, precision: 6, scale: 3
+      t.decimal :similarity, precision: 6, scale: 3
       t.integer :status, null: false, default: 0 # See model for status constants
 
       t.timestamps

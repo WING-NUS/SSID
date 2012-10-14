@@ -1,4 +1,5 @@
 require 'zip/zip'
+require 'open3'
 
 module SubmissionsHandler
   def self.process_upload(file, assignment)
@@ -73,8 +74,8 @@ module SubmissionsHandler
     # Fork to run java program in background
     ruby_pid = Process.fork do
       java_log = ""
-      IO.popen(command) { |pipe|
-        java_log << pipe.gets until pipe.eof?
+      Open3.popen3({ "LD_LIBRARY_PATH" => Rails.application.config.ld_library_path }, command) { |i,o,e,t|
+        java_log << o.gets until o.eof?
       }
       java_status = $?
 
