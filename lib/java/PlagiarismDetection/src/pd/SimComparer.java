@@ -38,7 +38,8 @@ public final class SimComparer {
 	public ArrayList<Result> compareSubmissions(
 			ArrayList<Submission> submissions, int nGramSize, int minMatch) {
 
-		Submission skeleton = getBaseLine(submissions);
+		Submission skeleton = getSkeletonCode(submissions);
+    assert(skeleton != null);
 		ArrayList<Result> results = new ArrayList<Result>();
 
 		int noOfSub = submissions.size();
@@ -48,12 +49,12 @@ public final class SimComparer {
 
 		for (int i = 0; i < noOfSub; i++) {
 			s1 = submissions.get(i);
-			if (s1.isSkeleton()) {
+			if (s1.isSkeletonCode()) {
 				continue;
 			}
 			for (int j = i + 1; j < noOfSub; j++) {
 				s2 = submissions.get(j);
-				if (s2.isSkeleton()) {
+				if (s2.isSkeletonCode()) {
 					continue;
 				}
 
@@ -92,18 +93,18 @@ public final class SimComparer {
 		result.setSim1To2((float) s1Tokens.getMarkCount() / s1Tokens.size());
 	}
 
-	private Submission getBaseLine(ArrayList<Submission> submissions) {
+	private Submission getSkeletonCode(ArrayList<Submission> submissions) {
 		Submission reply = null;
 		for (Submission s : submissions) {
 			if (s.getID().equals(SKELETON)) {
 				reply = s;
-				s.setBaseLine(true);
+				s.setIsSkeletonCode(true);
 			}
 		}
 
 		if (reply == null) {
 			reply = new Submission();
-			reply.setBaseLine(true);
+			reply.setIsSkeletonCode(true);
 		}
 
 		return reply;

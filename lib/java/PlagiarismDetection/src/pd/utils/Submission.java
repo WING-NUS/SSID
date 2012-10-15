@@ -30,7 +30,7 @@ public final class Submission {
 	private TokenList codeTokens = new TokenList();
 	private NGramList nGramList = new NGramList();
 	private HashMap<NGram, ArrayList<Integer>> nGramIndexingTable = new HashMap<NGram, ArrayList<Integer>>();
-	private boolean baseLine = false;
+	private boolean isSkeletonCode = false;
 
 	public Submission() {
 	}
@@ -54,12 +54,12 @@ public final class Submission {
 		return codeTokens;
 	}
 
-	public boolean isSkeleton() {
-		return baseLine;
+	public boolean isSkeletonCode() {
+		return isSkeletonCode;
 	}
 
-	public void setBaseLine(boolean value) {
-		baseLine = value;
+	public void setIsSkeletonCode(boolean value) {
+		isSkeletonCode = value;
 	}
 
 	public String getID() {
