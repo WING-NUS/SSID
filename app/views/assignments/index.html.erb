@@ -6,7 +6,7 @@
 <% end %>
 
 <% if @assignments.empty? %>
-No Assignment has been created.
+  <p class="none_created">No Assignment has been created.</p>
 <% else %>
   <% unless @erroneous_assignments.empty? %>
     <h3>Erroneous:</h3>
