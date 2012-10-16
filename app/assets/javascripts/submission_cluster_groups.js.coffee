@@ -7,3 +7,10 @@ SubmissionClusterGroup.disableUserDefinedTextField = ->
 SubmissionClusterGroup.enableUserDefinedTextField = ->
   $('#submission_cluster_group_cut_off_criterion').removeAttr("disabled")
   $('#submission_cluster_group_cut_off_criterion').removeClass("disabled")
+
+SubmissionClusterGroup.onLoad = ->
+  $ ->
+    $("table a").each ->
+      Site.registerHighlightRowMethodsForLink(this)
+      return
+    return
