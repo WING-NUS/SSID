@@ -1,11 +1,14 @@
 <h2><%= @course.code %> Assignment: <%= @assignment.title %> Submission Similarities</h2>
 
+<p>Similarity values are not symmetric so we display both the maximum and average values in the table:</p>
+
 <table>
   <thead>
     <tr>
       <th class="student_col">Student 1</th>
       <th class="student_col">Student 2</th>
-      <th class="similarity_col">Similarity</th>
+      <th class="similarity_col">Maximum Similarity</th>
+      <th class="similarity_col">Average Similarity</th>
       <th>Remarks</th>
       <th class="action_col"></th>
     </tr>
@@ -16,6 +19,7 @@
     <td><%= ss.student1.id_string %></td>
     <td><%= ss.student2.id_string %></td>
     <td><%= ss.similarity %>%</td>
+    <td><%= ss.average_similarity %>%</td>
     <td><%= ss.status_string.html_safe %></td>
     <td><%= link_to "View Submissions", assignment_submission_similarity_url(@assignment, ss) %></td>
   </tr>

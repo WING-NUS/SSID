@@ -36,6 +36,10 @@ class SubmissionSimilarity < ActiveRecord::Base
     STATUS_STRINGS[self.status]
   end
 
+  def average_similarity
+    0.5 * (self.similarity_1_to_2 + self.similarity_2_to_1)
+  end
+
   def student1
     self.submission1.student
   end
