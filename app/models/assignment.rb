@@ -36,8 +36,19 @@ class Assignment < ActiveRecord::Base
     python3: "Python 3"
   }
 
+  PRETTIFY_LANGUAGES = {
+    java: "java",
+    c: "c",
+    cpp: "cpp",
+    python3: "py"
+  }
+
   def self.options_for_languages
     LANGUAGES.to_a.collect { |pair| pair.reverse }
+  end
+
+  def prettify_js_lang
+    "lang-#{PRETTIFY_LANGUAGES[self.language]}"
   end
 
   def language_string

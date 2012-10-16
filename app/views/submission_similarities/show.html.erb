@@ -43,7 +43,7 @@
 <div class="submissions">
   <div class="submission1">
     <h3>Submission by <%= @student1.id_string %> (<%= link_to "Log", assignment_submission_log_url(@assignment, @submission1) %>)</h3>
-    <pre class="prettyprint linenums lang-java">
+    <pre class="prettyprint linenums <%= @assignment.prettify_js_lang %>">
     <% @submission1.lines.each { |line| %>
       <%= line %>
     <% } %>
@@ -51,7 +51,7 @@
   </div>
   <div class="submission2">
     <h3>Submission by <%= @student2.id_string %> (<%= link_to "Log", assignment_submission_log_url(@assignment, @submission2) %>)</h3>
-    <pre class="prettyprint linenums lang-java">
+    <pre class="prettyprint linenums <%= @assignment.prettify_js_lang %>">
     <% @submission2.lines.each { |line| %>
       <%= line %>
     <% } %>
