@@ -3,6 +3,12 @@ window.VisualizeSimilarityClusterTable ||= {}
 window.VisualizeTopSimilarSubmissions  ||= {}
 window.Visualize ||= {}
 
+Visualize.clearResults = ->
+  $("#clusters").html("")
+  $("#ranking").html("")
+  $("#tables").html("")
+  return
+
 Visualize.registerSubmissionsOptionEvent = ->
   $("#submissions option").click ->
     status_text = $(this).parent().next().html()
@@ -484,5 +490,9 @@ Visualize.onLoad = ->
       event.stopPropagation()
       return
     
+    $("#clear_results").click ->
+      Visualize.clearResults()
+      return
+
     return
   return

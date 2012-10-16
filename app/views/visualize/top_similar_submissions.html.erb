@@ -16,6 +16,7 @@
     <p>Display up to <%= text_field_tag "num_most_similar_submissions", 5 %> most similar submissions for each student ID for each assignment</p>
     <hr />
     <%= submit_tag "Show Tables", onclick: "VisualizeTopSimilarSubmissions.showTable(this);" %>
+    <%= submit_tag "Clear Tables", id: "clear_results" %>
     <span></span>
   </div>
   <div id="tables">
