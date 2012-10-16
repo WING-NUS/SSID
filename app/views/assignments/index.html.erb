@@ -14,6 +14,7 @@ No Assignment has been created.
       <thead>
         <tr>
           <th>Title</th>
+          <th class="lang_col">Language</th>
           <th class="submitted_on_col">Submitted On</th>
           <th class="action_col">Action</th>
         </tr>
@@ -22,6 +23,7 @@ No Assignment has been created.
       <% @erroneous_assignments.each { |a| %>
       <tr>
         <td><%= a.title %></td>
+        <td><%= a.language_string %></td>
         <td><%= a.submission_similarity_process.created_at.in_time_zone %></td>
         <td>
           <%= link_to "View upload log", course_assignment_log_url(@course, a) %>
@@ -39,6 +41,7 @@ No Assignment has been created.
       <thead>
         <tr>
           <th>Title</th>
+          <th class="lang_col">Language</th>
           <th class="submitted_on_col">Submitted On</th>
           <th class="action_col">Action</th>
         </tr>
@@ -47,6 +50,7 @@ No Assignment has been created.
       <% @processing_assignments.each { |a| %>
       <tr>
         <td><%= a.title %></td>
+        <td><%= a.language_string %></td>
         <td><%= a.submission_similarity_process.created_at.in_time_zone %></td>
         <td class="processing"><em>Processing...</em></td>
       </tr>
@@ -63,6 +67,7 @@ No Assignment has been created.
       <thead>
         <tr>
           <th>Title</th>
+          <th class="lang_col">Language</th>
           <th class="suspected_cases_col">Suspected Plagiarism Cases</th>
           <th class="marked_cases_col">Confirmed Plagiarism Cases</th>
           <th class="action_col">View</th>
@@ -73,6 +78,7 @@ No Assignment has been created.
       <% @processed_assignments.each { |a| %>
       <tr>
         <td><%= a.title %></td>
+        <td><%= a.language_string %></td>
         <td><%= a.suspected_plagiarism_cases.size %></td>
         <td><%= a.confirmed_plagiarism_cases.size %></td>
         <td>

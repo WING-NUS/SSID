@@ -29,6 +29,21 @@ class Assignment < ActiveRecord::Base
   validates_numericality_of :min_match_length, only_integer: true, greater_than: 0
   validates_numericality_of :ngram_size, only_integer: true, greater_than: 0
 
+  LANGUAGES = {
+    java: "Java",
+    c: "C (Experimental)",
+    cpp: "C++",
+    python3: "Python 3"
+  }
+
+  def self.options_for_languages
+    LANGUAGES.to_a.collect { |pair| pair.reverse }
+  end
+
+  def language_string
+    LANGUAGES[language.intern]
+  end
+
   def cluster_students
     self.submission_cluster_groups.collect { |g|
       g.clusters.collect { |c|
