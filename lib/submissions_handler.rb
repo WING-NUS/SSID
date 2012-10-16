@@ -69,15 +69,16 @@ module SubmissionsHandler
     command = %Q{java -Xmx1024M -jar "#{Rails.application.config.plagiarism_detection_path}" } + 
               %Q{#{assignment.id} #{compare_dir} #{assignment.language.downcase} } +
               %Q{#{assignment.min_match_length} #{assignment.ngram_size} } +
-              %Q{#{host} #{database} #{username} #{password} 2>&1}
+              %Q{#{host} #{database} #{username} #{password}}
 
     # Fork to run java program in background
     ruby_pid = Process.fork do
       java_log = ""
-      Open3.popen3({ "LD_LIBRARY_PATH" => Rails.application.config.ld_library_path }, command) { |i,o,e,t|
+      java_status = nil
+      Open3.popen2e({ "LD_LIBRARY_PATH" => Rails.application.config.ld_library_path }, command) { |i,o,t|
         java_log << o.gets until o.eof?
+        java_status = t.value
       }
-      java_status = $?
 
       # Update log
       upload_log = []

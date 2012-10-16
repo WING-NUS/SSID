@@ -127,24 +127,36 @@ public final class MySQLDB {
 
 	private int insertStudent(String matric, int courseId) throws Exception {
 		String dateTime = dateFormat.format(new java.util.Date());
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
 
-    // Insert student into db
-		PreparedStatement stmt = con.prepareStatement(STUDENT_INSERT);
-		stmt.setString(1, matric);
-		stmt.setString(2, matric);
-    stmt.setString(3, dateTime);
-    stmt.setString(4, dateTime);
-		stmt.execute();
-		stmt.close();
-
-    // Find id of inserted row
+    // Find student in db
 		stmt = con.prepareStatement(STUDENT_SELECT);
 		stmt.setString(1, matric);
-		ResultSet rs = stmt.executeQuery();
-		rs.next();
+    rs = stmt.executeQuery();
+    
+    // If no results, we need to insert student into the db
+    if (rs.first() == false) {
+      rs.close();
+      stmt.close();
+      try {
+        stmt = con.prepareStatement(STUDENT_INSERT, Statement.RETURN_GENERATED_KEYS);
+        stmt.setString(1, matric);
+        stmt.setString(2, matric);
+        stmt.setString(3, dateTime);
+        stmt.setString(4, dateTime);
+        stmt.execute();
+        rs = stmt.getGeneratedKeys();
+        rs.first();
+      } catch (Exception ex) {
+        System.err.println(ex);
+      }
+    }
+
+    // Get new or existing student id
 		int userId = rs.getInt(1);
-		rs.close();
-		stmt.close();
+    rs.close();
+    stmt.close();
 
     // Find course membership
     stmt = con.prepareStatement(STUDENT_MEMBERSHIP_SELECT);
@@ -155,14 +167,19 @@ public final class MySQLDB {
 
     // If no results, we need to create a membership row
     if (rs.first() == false) {
-      stmt.close();
-      stmt = con.prepareStatement(STUDENT_MEMBERSHIP_INSERT);
-      stmt.setInt(1, userId);
-      stmt.setInt(2, courseId);
-      stmt.setInt(3, 2); // 2 = ROLE_STUDENT; See UserCourseMembership model file for details
-      stmt.setString(4, dateTime);
-      stmt.setString(5, dateTime);
-      stmt.execute();
+      try {
+        rs.close();
+        stmt.close();
+        stmt = con.prepareStatement(STUDENT_MEMBERSHIP_INSERT);
+        stmt.setInt(1, userId);
+        stmt.setInt(2, courseId);
+        stmt.setInt(3, 2); // 2 = ROLE_STUDENT; See UserCourseMembership model file for details
+        stmt.setString(4, dateTime);
+        stmt.setString(5, dateTime);
+        stmt.execute();
+      } catch (Exception ex) {
+        System.err.println(ex);
+      }
     }
     rs.close();
     stmt.close();
