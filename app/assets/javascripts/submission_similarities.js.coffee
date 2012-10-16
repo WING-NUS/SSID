@@ -69,7 +69,12 @@ SubmissionSimilarity.toggleGuilty = (el) ->
 
 SubmissionSimilarity.onLoad = ->
   $ ->
+    $("body.submission_similarities_index table a").each ->
+      Site.registerHighlightRowMethodsForLink(this)
+      return
+
     prettyPrint()
+
     $("table.lines td").hover(
       ->
         SubmissionSimilarity.highlightLines($(this).parent().find("input"))
@@ -96,6 +101,23 @@ SubmissionSimilarity.onLoad = ->
       SubmissionSimilarity.toggleAllRowHighlights(inputNode)
       return
 
+    $("table.lines th.check_box_col").hover(
+      ->
+        $("table.lines tbody tr").each ->
+          inputNode = $(this).find("input")
+          if !inputNode.attr("checked")
+            SubmissionSimilarity.highlightLines(inputNode)
+          return
+        return
+      ->
+        $("table.lines tbody tr").each ->
+          inputNode = $(this).find("input")
+          if !inputNode.attr("checked")
+            SubmissionSimilarity.unhighlightLines(inputNode)
+          return
+        return
+    )
+
     $("table.lines th.check_box_col input").click (event) ->
       SubmissionSimilarity.toggleAllRowHighlights(this)
       event.stopPropagation()
@@ -104,8 +126,5 @@ SubmissionSimilarity.onLoad = ->
     $("input.guilty_check_box").change ->
       SubmissionSimilarity.toggleGuilty(this)
       return
-
-#   $("table.lines th input").attr("checked", "checked")
-#   SubmissionSimilarity.toggleAllRowHighlights($("table.lines th input"))
 
     return

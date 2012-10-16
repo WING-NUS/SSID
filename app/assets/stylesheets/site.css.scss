@@ -15,6 +15,12 @@ p.none_created {
   font-style: italic;
 }
 
+table {
+  tr.highlight td {
+    background-color: yellow;
+  }
+}
+
 #top_banner {
   display: block;
   margin: 0;

@@ -27,13 +27,8 @@ body.submission_similarities_index {
       border: 1px dotted #bbb;
       padding: 3px 10px;
 
-      a {
-        &, &:hover, &:visited {
-          background-color: rgb(255, 255, 255);
-        }
-        &:hover {
-          color: rgb(255, 108, 0);
-        }
+      a:hover {
+        color: rgb(255, 108, 0);
       }
     }
   }
@@ -123,6 +118,7 @@ body.submission_similarities_show {
 
       tr.highlight td {
         background-color: rgb(255, 255, 140);
+        cursor: default;
       }
       
       td {
