@@ -51,3 +51,6 @@ gem 'rubyzip'
 
 # pagination
 gem "will_paginate"
+
+# pretty print
+gem "awesome_print"
