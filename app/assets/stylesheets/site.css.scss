@@ -35,15 +35,23 @@ h2, h3 {
     text-align: center;
 
     a {
-      &, &:visited, &:hover {
+      &, &:visited {
+        display: inline-block;
+        width: 100%;
         color: rgb(255, 255, 255);
         text-decoration: none;
         background-color: rgb(255,108,0);
+        height: 25px;
+      }
+      &:hover {
+        color: rgb(255, 108,0);
+        background-color: rgb(252, 228, 77);
       }
     }
 
     &.highlight, &.highlight a {
-      background-color: rgb(255, 75, 15);
+      color: rgb(255, 108,0);
+      background-color: rgb(252, 228, 77);
     }
 
   }
