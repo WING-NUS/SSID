@@ -1,6 +1,9 @@
 <h2><%= @course.code %> Assignment: <%= @assignment.title %> Submission Similarities</h2>
 
-<p>Similarity values are not symmetric so we display both the maximum and average values in the table:</p>
+<ul>
+  <li>Similarity values are not symmetric so we display both the maximum and average values in the table</li>
+  <li>To analyze these similarities, <%= link_to "view", assignment_cluster_groups_url(@assignment) %> / <%= link_to "create", new_assignment_cluster_group_url(@assignment) %> submission cluster groups or <%= link_to "use the course visualizations", course_visualize_url(@course) %></li>
+</ul>
 
 <table>
   <thead>
