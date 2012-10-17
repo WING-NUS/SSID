@@ -1,6 +1,22 @@
 class SubmissionsController < ApplicationController
+  before_filter { |controller|
+    @course = nil
+    if params[:assignment_id]
+      @assignment = Assignment.find(params[:assignment_id])
+      @course = @assignment.course
+    elsif params["submission_id"]
+      @submission = Submission.find(params["submission_id"])
+      @course = @submission.course
+    end
+
+    if @course
+      controller.send :authenticate_actions_for_role, UserCourseMembership::ROLE_STUDENT,
+                                                      course: @course,
+                                                      only: [ ]
+    end
+  }
+
   def index
-    @assignment = Assignment.find(params[:assignment_id])
     @submissions = @assignment.submissions
 
     respond_to do |format|
@@ -16,7 +32,6 @@ class SubmissionsController < ApplicationController
   end
 
   def mark_as_guilty
-    @submission = Submission.find(params["submission_id"])
     @submission_similarity = SubmissionSimilarity.find(params["submission_similarity_id"])
     @submission.is_plagiarism = true
     if @submission.save
@@ -31,7 +46,6 @@ class SubmissionsController < ApplicationController
   end
 
   def mark_as_not_guilty
-    @submission = Submission.find(params["submission_id"])
     @submission_similarity = SubmissionSimilarity.find(params["submission_similarity_id"])
     @submission.is_plagiarism = false
     if @submission.save

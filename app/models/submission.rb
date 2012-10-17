@@ -26,6 +26,10 @@ class Submission < ActiveRecord::Base
 
   before_save :check_lines
 
+  def course
+    self.assignment.course
+  end
+
   # Make sure that lines is an array
   def check_lines
     attr = self.read_attribute("lines")
