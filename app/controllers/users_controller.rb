@@ -24,4 +24,32 @@ class UsersController < ApplicationController
     @teaching_assistants = @course.teaching_assistants
     @students = @course.students
   end
+
+  # GET /users/1/edit
+  def edit
+    @user = User.find(params[:id])
+  end
+
+  # PUT /users/1
+  def update
+    @user = User.find(params[:id])
+
+    # Check for new password
+    @user.errors.add :new_password, "cannot be blank" if params[:user]["new_password"].empty?
+    @user.errors.add :new_password, "must be at least #{User::MIN_PASSWORD_LENGTH} characters long" if params[:user]["new_password"].length < User::MIN_PASSWORD_LENGTH
+    @user.errors.add :confirm_new_password, "does not match new password" if params[:user]["new_password"] != params[:user]["confirm_new_password"]
+
+    # Check for old password
+    @user.errors.add :old_password, "is incorrect" unless @user.authenticate(params[:user]["old_password"])
+    @user.errors.add :new_password, "must be different from the old password" if params[:user]["new_password"] == params[:user]["old_password"] 
+
+    # Update user
+    @user.password_digest = BCrypt::Password.create(params[:user]["new_password"]) if @user.errors.empty?
+      
+    if @user.errors.empty? and @user.save
+      redirect_to edit_user_url(@user), notice: 'User settings were successfully updated.'
+    else
+      render action: "edit"
+    end
+  end
 end

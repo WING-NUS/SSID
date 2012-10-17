@@ -16,6 +16,8 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
 class User < ActiveRecord::Base
+  MIN_PASSWORD_LENGTH = 6
+
   has_many :memberships , class_name: "UserCourseMembership", :dependent => :delete_all
   has_many :courses, :through => :memberships, :uniq => true
   has_many :assignments, :through => :courses, :uniq => true

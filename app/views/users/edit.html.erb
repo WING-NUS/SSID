@@ -1,6 +1,9 @@
-<h1>Editing user</h1>
+<h2>User Settings</h2>
+
+<% if flash[:notice] %>
+  <div class="notice">
+    <%= flash[:notice] %>
+  </div>
+<% end %>
 
 <%= render 'form' %>
-
-<%= link_to 'Show', @user %> |
-<%= link_to 'Back', users_path %>

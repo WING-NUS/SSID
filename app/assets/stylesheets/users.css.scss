@@ -1,3 +1,27 @@
+body.users {
+  form {
+    label {
+      width: 200px;
+      margin-top: 5px;
+      display: inline-block;
+    }
+
+    input.submit {
+      margin-top: 15px;
+    }
+  }
+
+  div.notice {
+    margin-bottom: 15px;
+    color: rgb(0, 160, 0);
+  }
+
+  div.field_with_errors {
+    padding: 0px;
+    display: inline-table;
+  }
+}
+
 body.users_index {
   table {
     border-spacing: 0;
