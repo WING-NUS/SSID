@@ -29,4 +29,8 @@ class SubmissionCluster < ActiveRecord::Base
   def assignment
     self.submission_cluster_group.assignment
   end
+
+  def course
+    self.assignment.course
+  end
 end
