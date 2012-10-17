@@ -56,7 +56,7 @@ body.submission_clusters_index {
       div.node a {
         &, &:hover, &:visited {
           font-weight: bold;
-          background-color: rgb(255, 255, 255);
+          background-color: rgba(255, 255, 255, 0.75);
           margin-right: 20px;
         }
         &:hover, &.is_plagiarism:hover {
@@ -65,6 +65,14 @@ body.submission_clusters_index {
 
         &.is_plagiarism {
           color: rgb(255, 0, 0);
+        }
+      }
+
+      div.edgeLabel {
+        background: rgba(255, 255, 255, 0.75);
+        a {
+          &, &:hover, &:visited {
+          }
         }
       }
     }

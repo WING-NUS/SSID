@@ -41,6 +41,22 @@ SubmissionCluster.drawCluster = (clusterId, data) ->
       top = parseInt(style.top)
       height = domElement.offsetHeight
       style.top = (top - height / 2) + 'px'
+      graph = this
+      $jit.Graph.Util.eachAdjacency node, (adj) ->
+        if adj.data.$alpha != 0
+          # Check that all nodes have been positioned
+          nodeFromLeft = $("#"+adj.nodeFrom.id).css("left")
+          nodeToLeft = $("#"+adj.nodeTo.id).css("left")
+          nodeFromTop = $("#"+adj.nodeFrom.id).css("top")
+          nodeToTop = $("#"+adj.nodeTo.id).css("top")
+          return unless nodeFromLeft && nodeToLeft && nodeFromTop && nodeToTop
+
+          # Compute position of edge label from nodes
+          left = 0.5 * (parseFloat(nodeFromLeft) + parseFloat(nodeToLeft)) - 5
+          top = 0.5 * (parseFloat(nodeFromTop) + parseFloat(nodeToTop)) - 8
+          style = "position: absolute; left: "+left+"px; top: "+top+"px;"
+          $("#canvas_wrapper_"+clusterId+"-label").append("<div class=\"edgeLabel\" style=\""+style+"\"><a href=\""+adj.data.submissionSimilarityUrl+"\">view</div>")
+        return
       return
   )
 

@@ -46,7 +46,8 @@
               "nodeTo": "<%= "#{@submission_cluster_id}_#{submission2.student.id_string}" %>",
               "data"  : {
                 "$color"    : "<%= SubmissionClustersHelper.color_for_similarity(submission_similarity.similarity) %>",
-                "$lineWidth"    : "<%= SubmissionClustersHelper.weight_for_similarity(submission_similarity.similarity) %>"
+                "$lineWidth"    : "<%= SubmissionClustersHelper.weight_for_similarity(submission_similarity.similarity) %>",
+                "submissionSimilarityUrl"    : "<%= assignment_submission_similarity_url(@assignment, submission_similarity) %>"
               }
             }
             <%= "," unless (submission2 == @submissions.last || (submission2 == @submissions[-2] && !was_skipped)) %>
