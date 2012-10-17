@@ -1,5 +1,12 @@
 class VisualizeController < ApplicationController
-  before_filter :find_course
+  before_filter { |controller|
+    if params[:course_id]
+      @course = Course.find(params[:course_id])
+      controller.send :authenticate_actions_for_role, UserCourseMembership::ROLE_STUDENT,
+                                                      course: @course,
+                                                      only: [ ]
+    end
+  }
 
   # GET /courses/1/visualize
   def index
@@ -16,11 +23,5 @@ class VisualizeController < ApplicationController
 
   # GET /courses/1/visualize/top_similar_submissions
   def top_similar_submissions
-  end
-
-  private
-
-  def find_course
-    @course = Course.find(params[:course_id])
   end
 end
