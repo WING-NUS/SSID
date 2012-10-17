@@ -18,7 +18,7 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 class ApplicationController < ActionController::Base
   protect_from_forgery
   before_filter :authorize
-  before_filter :sanitize_id, only: [:show, :edit, :update, :destroy]
+  before_filter :sanitize_id, only: [:index, :show, :edit, :update, :destroy]
 
   protected
 
@@ -33,11 +33,20 @@ class ApplicationController < ActionController::Base
 
   def sanitize_id
     begin
-      @obj = controller_name.classify.constantize.find_by_id(params[:id])
-      unless @obj
-        flash[:notice] = "Could not find any #{controller_name.classify.tableize.humanize.pluralize.titleize} with id #{params[:id]}"
-        redirect_to controller: controller_name, action: "index"
-      end
+      # Since we have nested controllers, we need to check for every "_id" params
+      params.each { |key, value|
+        next unless key.to_s.match(/_id$/)
+        controller_for_key = key.to_s.scan(/^(.+)_id$/).first.first
+        @obj = controller_for_key.classify.constantize.find_by_id(value)
+        unless @obj
+          message = "Could not find any #{controller_for_key.classify.tableize.humanize.pluralize.titleize} with id #{value}"
+          if action_name != "index"
+            redirect_to({ controller: controller_name, action: "index" }, alert: message)
+          else
+            redirect_to({ controller: "announcements", action: "index" }, alert: message)
+          end
+        end
+      }
     rescue
       # controller_name did not correspond to any known models
     end

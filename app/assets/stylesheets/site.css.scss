@@ -2,6 +2,10 @@ body {
   margin: 0;
   padding: 0;
   min-width: 800px;
+
+  div.alert {
+    color: rgb(255, 0, 0);
+  }
 }
 
 h2, h3 {
