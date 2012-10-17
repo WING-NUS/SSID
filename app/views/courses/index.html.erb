@@ -40,7 +40,7 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
     <td><%= course.name %></td>
     <td><%= course.academic_year %></td>
     <td><%= course.semester %></td>
-    <td><%= course.role_for_user(@user) %></td>
+    <td><%= course.role_string_for_user(@user) %></td>
     <td><%= course.assignments.size %></td>
     <td>
       <%= link_to "Assignments", course_assignments_url(course) %>

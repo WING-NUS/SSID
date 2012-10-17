@@ -51,4 +51,35 @@ class ApplicationController < ActionController::Base
       # controller_name did not correspond to any known models
     end
   end
+
+  # This method should be called by each controller for every role in UserCourseMembership to whitelist
+  # actions allowed for each role. The method delegates how to find the course object to the controller
+  # Example usage:
+  #
+  # before_filter { |controller|
+  #   @course = get_course_from_params
+  #   if params[:course_id]
+  #     controller.send :authenticate_actions_for_role, UserCourseMembership::ROLE_TEACHING_STAFF,
+  #                                                     course: @course,
+  #                                                     only: [ :edit ]
+  #   end
+  # }
+  def authenticate_actions_for_role(role, opts={})
+    # Sanitize
+    raise unless opts[:course]
+    raise unless opts[:only]
+
+    # Get course
+    course = opts[:course]
+
+    # Get current user's role
+    current_role = course.membership_for_user(@user).role
+
+    # Check if we need to authenticate
+    if current_role == role
+      unless opts[:only].include? action_name.intern
+        redirect_to( { controller: "announcements", action: "index" }, alert: "You do not have access to the url \"#{request.env['REQUEST_URI']}\". Please contact the administrator for more information.")
+      end
+    end
+  end
 end

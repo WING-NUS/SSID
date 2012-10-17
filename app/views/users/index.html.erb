@@ -13,7 +13,7 @@
       <tr>
         <td><%= user.full_name || "--" %></td>
         <td><%= user.id_string %></td>
-        <td><%= @course.role_for_user(user) %></td>
+        <td><%= @course.role_string_for_user(user) %></td>
       </tr>
     <% } %>
   </tbody>

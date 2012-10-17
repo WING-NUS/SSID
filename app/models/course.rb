@@ -73,9 +73,13 @@ class Course < ActiveRecord::Base
     }
   end
 
-  def role_for_user(user)
+  def membership_for_user(user)
     UserCourseMembership.where( course_id: self.id, 
-                               user_id: user.id).first.role_string
+                               user_id: user.id).first
+  end
+
+  def role_string_for_user(user)
+    self.membership_for_user(user).role_string
   end
 
   def all_submission_similarity_cluster_groups
