@@ -49,19 +49,16 @@ class AssignmentsController < ApplicationController
 
   # GET /courses/1/assignments/1/upload_log
   def show_log
-    @course = Course.find(params[:course_id])
     @assignment = Assignment.find(params[:assignment_id])
   end
 
   # GET /courses/1/assignments/new
   def new
-    @course = Course.find(params[:course_id])
     @assignment = Assignment.new
   end
 
   # POST /courses/1/assignments
   def create
-    @course = Course.find(params[:course_id])
     @assignment = Assignment.new { |a|
       a.title = params[:assignment]["title"]
       a.language = params[:assignment]["language"]
@@ -96,7 +93,6 @@ class AssignmentsController < ApplicationController
 
   # DELETE /courses/1/assignments/1
   def destroy
-    @course = Course.find(params[:course_id])
     @assignment = Assignment.find(params[:id])
     @assignment.destroy
   

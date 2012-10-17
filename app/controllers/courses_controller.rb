@@ -16,13 +16,21 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
 class CoursesController < ApplicationController
+  before_filter { |controller|
+    if params[:course_id]
+      @course = Course.find(params[:course_id])
+      controller.send :authenticate_actions_for_role, UserCourseMembership::ROLE_STUDENT,
+                                                      course: @course,
+                                                      only: [ :index ]
+    end
+  }
+
   # GET /courses
   def index
     @courses = @user.courses
   end
 
   def cluster_students
-    @course = Course.find(params["course_id"])
     respond_to do |format|
       format.json { 
         render json: @course.cluster_students.collect { |s| 

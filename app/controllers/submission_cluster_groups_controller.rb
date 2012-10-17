@@ -1,15 +1,24 @@
 class SubmissionClusterGroupsController < ApplicationController
+  before_filter { |controller|
+    if params[:assignment_id]
+      @assignment = Assignment.find(params[:assignment_id])
+      @course = @assignment.course
+      controller.send :authenticate_actions_for_role, UserCourseMembership::ROLE_TEACHING_ASSISTANT,
+                                                      course: @course,
+                                                      only: [ :index, :new, :create ]
+      controller.send :authenticate_actions_for_role, UserCourseMembership::ROLE_STUDENT,
+                                                      course: @course,
+                                                      only: [ ]
+    end
+  }
+
   # GET /assignments/1/cluster_groups
   def index
-    @assignment = Assignment.find(params[:assignment_id])
-    @course = @assignment.course
     @cluster_groups = @assignment.submission_cluster_groups
   end
 
   # GET /assignments/1/cluster_groups/new
   def new
-    @assignment = Assignment.find(params[:assignment_id])
-    @course = @assignment.course
     @assignment_plagiarism_cases = []
     @assignment_plagiarism_cases[SubmissionClusterGroup::TYPE_CONFIRMED_OR_SUSPECTED_PLAGIARISM_CRITERION] =
       @assignment.suspected_plagiarism_cases + @assignment.confirmed_plagiarism_cases
@@ -20,9 +29,6 @@ class SubmissionClusterGroupsController < ApplicationController
 
   # POST /assignments/1/cluster_groups
   def create
-    @assignment = Assignment.find(params[:assignment_id])
-    @course = @assignment.course
-
     # Determine cut-off criterion if type requires
     if params[:submission_cluster_group]["cut_off_criterion_type"] == SubmissionClusterGroup::TYPE_CONFIRMED_OR_SUSPECTED_PLAGIARISM_CRITERION.to_s
       params[:submission_cluster_group]["cut_off_criterion"] = @assignment.confirmed_or_suspected_plagiarism_cases.collect { |submission_similarity|
@@ -80,8 +86,6 @@ class SubmissionClusterGroupsController < ApplicationController
 
   # DELETE /assignments/1/cluster_groups/1
   def destroy
-    @assignment = Assignment.find(params[:assignment_id])
-    @course = @assignment.course
     @submission_cluster_group = SubmissionClusterGroup.find(params[:id])
     @submission_cluster_group.destroy
 
