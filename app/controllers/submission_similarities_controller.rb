@@ -1,8 +1,22 @@
 class SubmissionSimilaritiesController < ApplicationController
+  before_filter { |controller|
+    @course = nil
+    if params[:assignment_id]
+      @assignment = Assignment.find(params["assignment_id"])
+      @course = @assignment.course
+    end
+    if params[:course_id]
+      @course = Course.find(params[:course_id])
+    end
+    if @course
+      controller.send :authenticate_actions_for_role, UserCourseMembership::ROLE_STUDENT,
+                                                      course: @course,
+                                                      only: [ ]
+    end
+  }
+
   # GET /assignments/1/submission_similarities
   def index
-    @assignment = Assignment.find(params["assignment_id"])
-    @course = @assignment.course
     @submission_similarities = SubmissionSimilarity.where(
       assignment_id: @assignment.id 
     ).paginate  page: params[:page], 
@@ -12,8 +26,6 @@ class SubmissionSimilaritiesController < ApplicationController
 
   # GET /assignments/1/submission_similarities/1
   def show
-    @assignment = Assignment.find(params["assignment_id"])
-    @course = @assignment.course
     @submission_similarity = SubmissionSimilarity.find(params["id"])
     @submission1 = @submission_similarity.submission1
     @submission2 = @submission_similarity.submission2
@@ -36,7 +48,6 @@ class SubmissionSimilaritiesController < ApplicationController
 
   # PUT /students/1/submission_similarities/1/confirm_as_plagiarism
   def confirm_as_plagiarism
-    @assignment = Assignment.find(params["assignment_id"])
     @submission_similarity = SubmissionSimilarity.find(params["submission_similarity_id"])
     @submission_similarity.status = SubmissionSimilarity::STATUS_CONFIRMED_AS_PLAGIARISM
     if @submission_similarity.save
@@ -58,7 +69,6 @@ class SubmissionSimilaritiesController < ApplicationController
 
   # PUT /students/1/submission_similarities/1/suspect_as_plagiarism
   def suspect_as_plagiarism
-    @assignment = Assignment.find(params["assignment_id"])
     @submission_similarity = SubmissionSimilarity.find(params["submission_similarity_id"])
     @submission_similarity.status = SubmissionSimilarity::STATUS_SUSPECTED_AS_PLAGIARISM
     if @submission_similarity.save
@@ -82,7 +92,6 @@ class SubmissionSimilaritiesController < ApplicationController
 
   # PUT /students/1/submission_similarities/1/unmark_as_plagiarism
   def unmark_as_plagiarism
-    @assignment = Assignment.find(params["assignment_id"])
     @submission_similarity = SubmissionSimilarity.find(params["submission_similarity_id"])
     @submission_similarity.status = SubmissionSimilarity::STATUS_NOT_PLAGIARISM
     if @submission_similarity.save
