@@ -22,6 +22,12 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 
 <h2>Announcements</h2>
 
+<% if flash[:notice] %>
+  <div class="notice">
+    <%= flash[:notice] %>
+  </div>
+<% end %>
+
 <% if @announcements.empty? %>
   <div class="announcement">No announcements</div>
 <% else %>
@@ -29,7 +35,16 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
     <div class="announcement">
       <h3><%= a.title + " " if a.title %></h3>
       <div><%= a.html_content.html_safe %></div>
-      <span><%= a.updated_at.in_time_zone %></span>
+      <span><%= a.updated_at.in_time_zone %></span> 
+      <% if @user.is_some_staff? %>
+        <div class="actions"><%= link_to "Edit", edit_announcement_url(a) %> <%= link_to "Delete", announcement_url(a), method: "delete", confirm: "Delete announcement?" %></div>
+      <% end %>
     </div>
   <% } %>
 <% end %>
+
+<hr />
+
+<p>
+<%= link_to "New announcement", new_announcement_url if @user.is_some_staff? %>
+</p>

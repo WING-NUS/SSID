@@ -28,6 +28,10 @@ class Course < ActiveRecord::Base
   validates :code, uniqueness: { :scope => [ :academic_year, :semester ] }
   before_save :upcase_code
 
+  def code_and_name
+    [self.code, self.name].join(" ")
+  end
+
   def students
     self.student_memberships.collect { |m| m.user }
   end

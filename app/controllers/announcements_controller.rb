@@ -16,8 +16,113 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
 class AnnouncementsController < ApplicationController
+  before_filter { |controller|
+    if params[:announcement] and params[:announcement]["course_id"]
+      @course = Course.find(params[:announcement]["course_id"])
+      controller.send :authenticate_actions_for_role, UserCourseMembership::ROLE_TEACHING_ASSISTANT,
+                                                      course: @course,
+                                                      only: [ :index ]
+      controller.send :authenticate_actions_for_role, UserCourseMembership::ROLE_STUDENT,
+                                                      course: @course,
+                                                      only: [ :index ]
+    end
+  }
+
   # GET /announcements
   def index
     @announcements = @user.courses.collect { |c| c.announcements }.flatten
+  end
+
+  # GET /announcements/new
+  def new
+    @announcement = Announcement.new
+    @announceable_courses = @user.courses.select { |course|
+      course.membership_for_user(@user).role == UserCourseMembership::ROLE_TEACHING_STAFF
+    }
+  end
+
+  # POST /announcements
+  def create
+    # Fill in parameters
+    @announcement = Announcement.new { |a|
+      a.title = params[:announcement]["title"]
+      a.html_content = params[:announcement]["html_content"]
+    }
+
+    # Find course
+    course = nil
+    if params[:announcement] and params[:announcement]["course_id"]
+      course = Course.find(params[:announcement]["course_id"])
+    end
+
+    # Check permissions
+    @announceable_courses = @user.courses.select { |course|
+      course.membership_for_user(@user).role == UserCourseMembership::ROLE_TEACHING_STAFF
+    }
+    if course and @announceable_courses.include? course
+      @announcement.announceable = course
+    else
+      @announcement.errors.add :course_id, "must be selected from the available options"
+    end
+  
+    # Check content
+    @announcement.errors.add_on_blank :html_content
+
+    if @announcement.errors.empty? and @announcement.save
+      redirect_to announcements_url, notice: 'Announcement was successfully created.'
+    else
+      render action: "new"
+    end
+  end
+
+  # GET /announcements/1/edit
+  def edit
+    @announcement = Announcement.find(params[:id])
+    @announceable_courses = @user.courses.select { |course|
+      course.membership_for_user(@user).role == UserCourseMembership::ROLE_TEACHING_STAFF
+    }
+  end
+
+  # PUT /announcements/1
+  def update
+    # Find announcement
+    @announcement = Announcement.find(params[:id])
+
+    # Update
+    @announcement.title = params[:announcement]["title"]
+    @announcement.html_content = params[:announcement]["html_content"]
+
+    # Find course
+    course = nil
+    if params[:announcement] and params[:announcement]["course_id"]
+      course = Course.find(params[:announcement]["course_id"])
+    end
+
+    # Check permissions
+    @announceable_courses = @user.courses.select { |course|
+      course.membership_for_user(@user).role == UserCourseMembership::ROLE_TEACHING_STAFF
+    }
+    if course and @announceable_courses.include? course
+      @announcement.announceable = course
+    else
+      @announcement.errors.add :course_id, "must be selected from the available options"
+    end
+  
+    # Check content
+    @announcement.errors.add_on_blank :html_content
+
+    if @announcement.errors.empty? and @announcement.save
+      redirect_to announcements_url, notice: 'Announcement was successfully updated.'
+    else
+      render action: "edit"
+    end
+  end
+
+  # DELETE /announcements/1
+  def destroy
+    @announcement = Announcement.find(params[:id])
+    @announcement.destroy
+
+    redirect_to announcements_url, notice: 'Announcement was successfully deleted.'
   end
 end

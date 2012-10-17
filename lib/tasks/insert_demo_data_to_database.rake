@@ -30,7 +30,7 @@ namespace :SSID do
 
     # Create announcement for course
     if course.announcements.empty?
-      course.announcements.create(html_content: "Welcome to SSID. A plagiarism detection system developed in NUS.")
+      course.announcements.create(title: "Welcome to SSID", html_content: "SSID is a plagiarism detection system developed in NUS.")
     end
 
     # Create teaching staff for course

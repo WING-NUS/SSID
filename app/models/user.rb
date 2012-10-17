@@ -28,4 +28,8 @@ class User < ActiveRecord::Base
   validates :id_string, presence: true, :unless => :is_admin 
 
   has_secure_password
+
+  def is_some_staff?
+    self.courses.any? { |c| c.membership_for_user(self).role == UserCourseMembership::ROLE_TEACHING_STAFF }
+  end
 end

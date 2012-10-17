@@ -22,10 +22,47 @@ body.announcements_index {
         content: "— ";
       }
     }
+
+    div.actions {
+      margin-bottom: 20px;
+    }
   }
 
   div.alert {
     color: rgb(255, 0, 0);
     margin-top: 15px;
+  }
+}
+
+body.announcements {
+  h3 {
+    margin-bottom: 5px;
+  }
+
+  label {
+    width: 200px;
+    margin-top: 5px;
+    display: inline-block;
+  }
+
+  input.title {
+    width: 600px;
+  }
+
+  textarea {
+    width: 100%;
+  }
+
+  input.submit {
+    margin-top: 15px;
+  }
+
+  div.field_with_errors {
+    display: inline-table;
+    padding: 0;
+  }
+
+  div.notice {
+    color: rgb(0, 160, 0);
   }
 }
