@@ -20,49 +20,4 @@ class AnnouncementsController < ApplicationController
   def index
     @announcements = @user.courses.collect { |c| c.announcements }.flatten
   end
-
-  # GET /announcements/1
-# def show
-#   @announcement = Announcement.find(params[:id])
-# end
-
-# # GET /announcements/new
-# def new
-#   @announcement = Announcement.new
-# end
-
-# # GET /announcements/1/edit
-# def edit
-#   @announcement = Announcement.find(params[:id])
-# end
-
-# # POST /announcements
-# def create
-#   @announcement = Announcement.new(params[:announcement])
-
-#   if @announcement.save
-#     redirect_to @announcement, notice: 'Announcement was successfully created.'
-#   else
-#     render action: "new"
-#   end
-# end
-
-# # PUT /announcements/1
-# def update
-#   @announcement = Announcement.find(params[:id])
-
-#   if @announcement.update_attributes(params[:announcement])
-#     redirect_to @announcement, notice: 'Announcement was successfully updated.'
-#   else
-#     render action: "edit"
-#   end
-# end
-
-# # DELETE /announcements/1
-# def destroy
-#   @announcement = Announcement.find(params[:id])
-#   @announcement.destroy
-# 
-#   redirect_to announcements_url
-# end
 end
