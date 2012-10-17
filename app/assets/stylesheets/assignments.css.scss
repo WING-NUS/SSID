@@ -67,11 +67,14 @@ body.assignments_index {
   }
 
   table.processed_assignments {
+    th.submissions_col {
+      width: 100px;
+    }
     th.suspected_cases_col {
-      width: 150px;
+      width: 100px;
     }
     th.marked_cases_col {
-      width: 150px;
+      width: 100px;
     }
 
     th.action_col {
