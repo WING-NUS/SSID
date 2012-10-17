@@ -16,9 +16,20 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
 class AssignmentsController < ApplicationController
+  before_filter { |controller|
+    if params[:course_id]
+      @course = Course.find(params[:course_id])
+      controller.send :authenticate_actions_for_role, UserCourseMembership::ROLE_TEACHING_ASSISTANT,
+                                                      course: @course,
+                                                      only: [ :index, :cluster_students ]
+      controller.send :authenticate_actions_for_role, UserCourseMembership::ROLE_STUDENT,
+                                                      course: @course,
+                                                      only: [ ]
+    end
+  }
+
   # GET /courses/1/assignments
   def index
-    @course = Course.find(params[:course_id])
     @assignments = @course.assignments
     @processing_assignments = @course.processing_assignments
     @processed_assignments = @course.processed_assignments
@@ -35,11 +46,6 @@ class AssignmentsController < ApplicationController
       }
     end
   end
-
-  # GET /courses/1/assignments/1
-# def show
-#   @assignment = Assignment.find(params[:id])
-# end
 
   # GET /courses/1/assignments/1/upload_log
   def show_log
