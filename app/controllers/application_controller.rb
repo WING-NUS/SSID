@@ -65,6 +65,8 @@ class ApplicationController < ActionController::Base
   #   end
   # }
   def authenticate_actions_for_role(role, opts={})
+    return if @user.is_admin
+
     # Sanitize
     raise unless opts[:course]
     raise unless opts[:only]
@@ -78,6 +80,17 @@ class ApplicationController < ActionController::Base
     # Check if we need to authenticate
     if current_role == role
       unless opts[:only].include? action_name.intern
+        redirect_to( { controller: "announcements", action: "index" }, alert: "You do not have access to the url \"#{request.env['REQUEST_URI']}\". Please contact the administrator for more information.")
+      end
+    end
+  end
+
+  def authenticate_actions_for_admin(opts)
+    raise unless opts[:only]
+
+    # Check if we need to authenticate
+    unless @user.is_admin
+      if opts[:only].include? action_name.intern
         redirect_to( { controller: "announcements", action: "index" }, alert: "You do not have access to the url \"#{request.env['REQUEST_URI']}\". Please contact the administrator for more information.")
       end
     end

@@ -17,8 +17,21 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 
 class CoursesController < ApplicationController
   before_filter { |controller|
+    controller.send :authenticate_actions_for_admin, only: [ :new, :create, :edit, :update, :destroy ]
+  }
+  before_filter { |controller|
     if params[:course_id]
       @course = Course.find(params[:course_id])
+    elsif params[:id]
+      @course = Course.find(params[:id])
+    end
+    if @course
+      controller.send :authenticate_actions_for_role, UserCourseMembership::ROLE_TEACHING_STAFF,
+                                                      course: @course,
+                                                      only: [ :index, :cluster_students ]
+      controller.send :authenticate_actions_for_role, UserCourseMembership::ROLE_TEACHING_ASSISTANT,
+                                                      course: @course,
+                                                      only: [ :index, :cluster_students ]
       controller.send :authenticate_actions_for_role, UserCourseMembership::ROLE_STUDENT,
                                                       course: @course,
                                                       only: [ :index ]
@@ -27,9 +40,69 @@ class CoursesController < ApplicationController
 
   # GET /courses
   def index
-    @courses = @user.courses
+    @courses = @user.is_admin ? Course.all : @user.courses
   end
 
+  # GET /courses/new
+  def new
+    @course = Course.new
+  end
+
+  # POST /courses
+  def create
+    @course = Course.new { |c|
+      c.code = params[:course]["code"]
+      c.name = params[:course]["name"]
+      c.academic_year = params[:course]["academic_year"]
+      c.semester = params[:course]["semester"]
+      c.expiry = Time.zone.local_to_utc(DateTime.new(params[:course]["expiry(1i)"].to_i,
+                                                     params[:course]["expiry(2i)"].to_i,
+                                                     params[:course]["expiry(3i)"].to_i,
+                                                     params[:course]["expiry(4i)"].to_i,
+                                                     params[:course]["expiry(5i)"].to_i))
+    }
+    
+    if @course.errors.empty? and @course.save
+      redirect_to courses_url, notice: 'Course was successfully created.'
+    else
+      render action: "new"
+    end
+  end
+
+  # GET /courses/1/edit
+  def edit
+    @course = Course.find(params[:id])
+  end
+
+  # PUT /courses/1
+  def update
+    @course = Course.find(params[:id])
+    @course.code = params[:course]["code"]
+    @course.name = params[:course]["name"]
+    @course.academic_year = params[:course]["academic_year"]
+    @course.semester = params[:course]["semester"]
+    @course.expiry = Time.zone.local_to_utc(DateTime.new(params[:course]["expiry(1i)"].to_i,
+                                                         params[:course]["expiry(2i)"].to_i,
+                                                         params[:course]["expiry(3i)"].to_i,
+                                                         params[:course]["expiry(4i)"].to_i,
+                                                         params[:course]["expiry(5i)"].to_i))
+    
+    if @course.errors.empty? and @course.save
+      redirect_to courses_url, notice: 'Course was successfully updated.'
+    else
+      render action: "new"
+    end
+  end
+
+  # DELETE /courses/1
+  def destroy
+    @course = Course.find(params[:id])
+    @course.destroy
+
+    redirect_to courses_url, notice: 'Course was successfully deleted.'
+  end
+
+  # GET /courses/1/cluster_students.json
   def cluster_students
     respond_to do |format|
       format.json { 

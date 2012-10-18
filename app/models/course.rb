@@ -25,6 +25,7 @@ class Course < ActiveRecord::Base
   has_many :teaching_assistant_memberships, class_name: "UserCourseMembership", conditions: { role: UserCourseMembership::ROLE_TEACHING_ASSISTANT }
 
   validates_presence_of :code
+  validates_presence_of :name
   validates :code, uniqueness: { :scope => [ :academic_year, :semester ] }
   before_save :upcase_code
 
@@ -83,7 +84,7 @@ class Course < ActiveRecord::Base
   end
 
   def role_string_for_user(user)
-    self.membership_for_user(user).role_string
+    user.is_admin ? "Administrator" : self.membership_for_user(user).role_string
   end
 
   def all_submission_similarity_cluster_groups
@@ -96,6 +97,13 @@ class Course < ActiveRecord::Base
     self.assignments.collect { |a|
       a.cluster_students
     }.flatten.uniq.sort
+  end
+
+  def self.options_for_academic_year
+    starting_year = Time.now.in_time_zone.year - 1
+    (starting_year..(starting_year+5)).to_a.collect { |y|
+      "#{y}/#{y+1}"
+    }
   end
 
   private

@@ -18,6 +18,7 @@ body.courses_index {
     border-spacing: 0;
     border-collapse: collapse;
     width: 100%;
+    margin-bottom: 20px;
 
     th {
       border: 1px solid rgb(0, 0, 0);
@@ -27,9 +28,20 @@ body.courses_index {
       text-transform: uppercase;
       padding: 3px 10px;
       text-align: left;
-
     }
     
+    th.year_sem_col {
+      width: 220px;
+    }
+
+    th.edit_col {
+      width: 100px;
+    }
+
+    th.action_col {
+      width: 220px;
+    }
+
     td {
       border: 1px dotted #bbb;
       padding: 3px 10px;
@@ -47,5 +59,27 @@ body.courses_index {
           margin-right: 0;
       }
     }
+  }
+}
+
+body.courses {
+  label {
+    width: 200px;
+    margin-top: 5px;
+    display: inline-block;
+  }
+
+  input.submit {
+    margin-top: 15px;
+  }
+
+  div.field_with_errors {
+    display: inline-table;
+    padding: 0;
+  }
+
+  div.notice {
+    color: rgb(0, 160, 0);
+    margin-bottom: 15px;
   }
 }

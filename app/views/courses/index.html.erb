@@ -15,16 +15,24 @@ You should have received a copy of the GNU Lesser General Public License
 along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 %>
 <h2>Courses</h2>
+<% if flash[:notice] %>
+  <div class="notice">
+    <%= flash[:notice] %>
+  </div>
+<% end %>
 
 <table>
   <thead>
     <tr>
       <th class="code_col">Code</th>
       <th class="name_col">Name</th>
-      <th class="year_col">Academic Year</th>
-      <th class="semester_col">Semester</th>
+      <th class="year_sem_col">Academic Year (Semester)</th>
       <th class="role_col">Your Role</th>
-      <th class="assignments_col">Assignments</th>
+      <% unless @user.is_admin %>
+        <th class="assignments_col">Assignments</th>
+      <% else %>
+        <th class="edit_col">Actions</th>
+      <% end %>
       <th class="action_col">View</th>
     </tr>
   </thead>
@@ -38,10 +46,16 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
   <tr>
     <td><%= course.code %></td>
     <td><%= course.name %></td>
-    <td><%= course.academic_year %></td>
-    <td><%= course.semester %></td>
+    <td><%= course.academic_year %> Semester <%= course.semester %></td>
     <td><%= course.role_string_for_user(@user) %></td>
-    <td><%= course.assignments.size %></td>
+    <% unless @user.is_admin %>
+      <td><%= course.assignments.size %></td>
+    <% else %>
+      <td>
+        <%= link_to "Edit", edit_course_url(course) %>
+        <%= link_to "Delete", course_url(course), method: "delete", confirm: "Delete course?", class: "last" %>
+      </td>
+    <% end %>
     <td>
       <%= link_to "Assignments", course_assignments_url(course) %>
       <%= link_to "Users", course_users_url(course) %>
@@ -52,3 +66,8 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 <% end %>
   </tbody>
 </table>
+
+<% if @user.is_admin %>
+  <hr />
+  <%= link_to "New Course", new_course_url %>
+<% end %>

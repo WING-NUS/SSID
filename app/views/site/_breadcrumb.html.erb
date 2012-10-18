@@ -1,7 +1,12 @@
 <div class="breadcrumb">
   <%= link_to "Courses", courses_path %> 
-
-  <% if controller_name == "users" and action_name == "index" %>
+  <% if controller_name == "courses" %>
+    <% if action_name == "new" or action_name == "create" %>
+      &gt; New Course
+    <% elsif action_name == "edit" or action_name == "update" %>
+      &gt; Edit Course
+    <% end %>
+  <% elsif controller_name == "users" and action_name == "index" %>
     &gt; <%= link_to "#{course.code} Users", course_users_url(course) %>
   <% elsif controller_name == "visualize" %>
     &gt; <%= link_to "#{course.code} Visualizations", course_visualize_url(course) %>
