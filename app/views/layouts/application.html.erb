@@ -26,7 +26,7 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 <body class="<%= controller_name %> <%= controller_name %>_<%= action_name %>">
   <%= javascript_tag "if (window.#{controller_name.singularize.camelize} && #{controller_name.singularize.camelize}.onLoad) { #{controller_name.singularize.camelize}.onLoad(); };" %>
   <h1 id="top_banner">Student Submissions Integrity Diagnosis (SSID) System</h1>
-  <ul id="menu">
+  <ul id="menu"<%= %Q{ class="admin"}.html_safe if @user.is_admin %>>
 <% if @user %>
     <li<%= highlight_if_current root_url %>><%= link_to "Home", root_url %></li>
     <li<%= highlight_if_current courses_url %>><%= link_to "Courses", courses_url %></li>
