@@ -26,12 +26,12 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 <body class="<%= controller_name %> <%= controller_name %>_<%= action_name %>">
   <%= javascript_tag "if (window.#{controller_name.singularize.camelize} && #{controller_name.singularize.camelize}.onLoad) { #{controller_name.singularize.camelize}.onLoad(); };" %>
   <h1 id="top_banner">Student Submissions Integrity Diagnosis (SSID) System</h1>
-  <ul id="menu"<%= %Q{ class="admin"}.html_safe if @user.is_admin %>>
+  <ul id="menu"<%= %Q{ class="admin"}.html_safe if @user and @user.is_admin %>>
 <% if @user %>
     <li<%= highlight_if_current root_url %>><%= link_to "Home", root_url %></li>
     <li<%= highlight_if_current courses_url %>><%= link_to "Courses", courses_url %></li>
     <% if @user.is_admin %>
-      <li<%= highlight_if_current users_url %>><%= link_to "Users", users_url %></li>
+      <li<%= highlight_if_current admin_users_url %>><%= link_to "Users", admin_users_url %></li>
     <% end %>
     <li<%= highlight_if_current edit_user_url(@user) %>><%= link_to "Settings", edit_user_url(@user) %></li>
     <li<%= highlight_if_current guide_url %>><%= link_to "User Guide", guide_url %></li>
@@ -40,7 +40,7 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
   </ul>
 
   <div id="content">
-    <%= render partial: "site/breadcrumb", locals: { course: @course, assignment: @assignment, submission: @submission, submission_similarity: @submission_similarity } unless @course.nil? %>
+    <%= render partial: "site/breadcrumb", locals: { course: @course, assignment: @assignment, submission: @submission, submission_similarity: @submission_similarity } unless @course.nil? or controller_path == "admin/users" %>
 <%= yield :pre_content %>
 <%= yield %>
   </div>

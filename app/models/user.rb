@@ -28,8 +28,25 @@ class User < ActiveRecord::Base
   validates :id_string, presence: true, :unless => :is_admin 
 
   has_secure_password
+  before_destroy :ensure_an_admin_remains
 
   def is_some_staff?
     self.courses.any? { |c| c.membership_for_user(self).role == UserCourseMembership::ROLE_TEACHING_STAFF }
+  end
+
+  def full_name
+    the_full_name = self.read_attribute(:full_name) || ""
+    the_full_name.strip.empty? ? nil : the_full_name
+  end
+
+  private
+
+  def ensure_an_admin_remains
+    if self.is_admin and User.where(is_admin: true).count == 1
+      errors.add :base, "Cannot delete last admin"
+      false
+    else
+      true
+    end
   end
 end

@@ -35,4 +35,10 @@ class UserCourseMembership < ActiveRecord::Base
   def role_string
     ROLE_STRINGS[self.role]
   end
+
+  def self.options_for_non_student_roles
+    ROLE_STRINGS.each_with_index.reject { |role_string, role_id|
+      role_id == ROLE_STUDENT
+    }
+  end
 end

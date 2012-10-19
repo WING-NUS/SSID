@@ -35,6 +35,14 @@ body.users {
     padding: 0px;
     display: inline-table;
   }
+
+  hr {
+    margin-top: 15px;
+  }
+
+  div.new_user {
+    margin-top: 10px;
+  }
 }
 
 body.users_index {
@@ -60,10 +68,26 @@ body.users_index {
         width: 125px;
       }
     }
+
+    th.actions_col {
+      width: 110px;
+    }
     
     td {
       border: 1px dotted #bbb;
       padding: 3px 10px;
+
+      a {
+        &, &:hover, &:visited {
+          margin-right: 20px;
+        }
+        &:hover {
+          color: rgb(255, 108, 0);
+        }
+      }
+      a.last {
+          margin-right: 0;
+      }
     }
   }
 }

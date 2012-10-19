@@ -10,13 +10,26 @@
       </ul>
     </div>
   <% end %>
-  <div>
-    <%= f.label :old_password %>:
-    <%= f.password_field :old_password %>
-  </div>
+  <% if @user.is_admin %>
+    <div>
+      <%= f.label :full_name %>:
+      <%= f.text_field :full_name %>
+    </div>
+    <div>
+      <%= f.label :name, "Login" %>:
+      <%= f.text_field :name %>
+    </div>
+  <% end %>
+  <% unless @user.is_admin %>
+    <div>
+      <%= f.label :old_password %>:
+      <%= f.password_field :old_password %>
+    </div>
+  <% end %>
   <div>
     <%= f.label :new_password %>:
     <%= f.password_field :new_password %>
+    <%= "(<em>Leave blank to keep unchanged</em>)".html_safe if @user.is_admin %>
   </div>
   <div>
     <%= f.label :confirm_new_password %>:
