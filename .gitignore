@@ -28,3 +28,5 @@
 
 # Ignore mysql-connector-java-5.1.13-bin.jar
 /lib/java/jar/mysql-connector-java-5.1.13-bin.jar
+
+.DS_Store
