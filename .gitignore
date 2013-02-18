@@ -42,3 +42,6 @@
 /lib/antlr/grammars/src/cpp/Helper/Dictionary.cpp
 /lib/antlr/grammars/src/cpp/cpp_full_prog
 /lib/antlr/grammars/src/python3/test_cpython3
+
+# Ignore .DS_Store
+.DS_Store
