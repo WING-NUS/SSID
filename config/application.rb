@@ -55,5 +55,8 @@ module SSID
 
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
-  end
+
+    config.assets.precompile += %w( prettify/prettify.js  explorer_canvas/* jit/*)
+    config.assets.precompile += %w( prettify/prettify.css)
+end
 end

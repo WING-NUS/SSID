@@ -26,5 +26,19 @@
 /log/*.log
 /tmp
 
+# Ignore all asset files
+/public/assets/*
+
 # Ignore mysql-connector-java-5.1.13-bin.jar
 /lib/java/jar/mysql-connector-java-5.1.13-bin.jar
+
+# Ignore lexer files
+/lib/antlr/grammars/src/python3/python3Lexer.h
+/lib/antlr/grammars/src/python3/python3Lexer.c
+/lib/antlr/grammars/src/python3/python3Parser.c
+/lib/antlr/grammars/src/python3/python3Parser.h
+/lib/antlr/grammars/bin/python3/python3_lexer
+/lib/antlr/grammars/bin/cpp/cpp_lexer
+/lib/antlr/grammars/src/cpp/Helper/Dictionary.cpp
+/lib/antlr/grammars/src/cpp/cpp_full_prog
+/lib/antlr/grammars/src/python3/test_cpython3

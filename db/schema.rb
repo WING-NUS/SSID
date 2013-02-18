@@ -164,7 +164,7 @@ ActiveRecord::Schema.define(:version => 20121010131232) do
   create_table "users", :force => true do |t|
     t.string   "name"
     t.string   "full_name"
-    t.string   "password_digest", :default => "$2a$10$5YW4JToSgD2V0oG7BpWlvO8PJ1SCF2S66rHErofs5vqm48Ke9FfhG"
+    t.string   "password_digest", :default => "$2a$10$25D8jsI4eCUKuPOnSHiEiuMIv8.6RHZthx6eZ5IDCfT/TVKPmZBfK"
     t.boolean  "is_admin",        :default => false,                                                          :null => false
     t.string   "id_string"
     t.datetime "created_at",                                                                                  :null => false
