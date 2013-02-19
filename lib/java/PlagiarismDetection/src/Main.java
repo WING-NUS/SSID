@@ -71,13 +71,21 @@ public class Main {
 		} else if (language.equals(JavaTokenizer.language)) {
 			JavaTokenizer.getTokenizer().TokenizeSubmissions(submissions);
 		} else if (ANTLRDynamicTokenizer.understandsLanguage(language)) {
+			System.out.println("[" + dateFormat.format(new java.util.Date()) 
+          + "] ANTLR tokenizer started run: " + language;
 			ANTLRDynamicTokenizer.getTokenizer(language).TokenizeSubmissions(submissions);
 		} else {
 			throw new Exception("Grammar for language \""+ language + "\" not found");
 		}
-
+		
+		System.out.println("[" + dateFormat.format(new java.util.Date()) 
+          + "] ANTLR tokenizer completed";
+	  
 		try {
 
+		System.out.println("[" + dateFormat.format(new java.util.Date()) 
+          + "] Converting to submission tokens started run";
+	  
 			NGramizer.getNGramizer().constructSubmissionsNGrams(submissions,
 					nGramSize);
 
