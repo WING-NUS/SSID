@@ -79,7 +79,7 @@ public final class ANTLRDynamicTokenizer extends Tokenizer {
     // Get path of Submission, otherwise, create temp file
     String path =  s.getPath();
     String tmpFileName = null;
-    System.out.println("Tokenize: Get temp file starting...");
+    System.out.println("Preparing temp file...");
 	if (path == null) {
       // Create temp file for submission
       ArrayList<String> lines = s.getCombinedCode();
@@ -96,14 +96,14 @@ public final class ANTLRDynamicTokenizer extends Tokenizer {
       }
       path = tmpFileName;
     }
-	System.out.println("Tokenize: Get temp file completed");
+	System.out.println("Temp file prepared");
     
     // Run ANTLR and read tokens
     ArrayList<String> lexerOutput = null;
     try {
-	System.out.println("Tokenize: Preparing to run lexer");
+	System.out.println("Preparing to run lexer");
       lexerOutput = runLexer(path);
-	System.out.println("Tokenize: Lexer completed");
+	System.out.println("Lexer completed");
     } catch (Exception ex) {
       System.err.println("Error running lexer");
       System.err.println(ex);
@@ -113,16 +113,15 @@ public final class ANTLRDynamicTokenizer extends Tokenizer {
     // Convert tokens to PlagiarismDetection tokens
     TokenList tokenList = null;
     try {
-	System.out.println("Tokenize: Converting to PD Tokens");
+	System.out.println("Converting to PD readable Tokens");
 	tokenList = processLexerOutput(lexerOutput);
-	System.out.println("Tokenize: Convert completed");
+	System.out.println("Convert completed");
     } catch (Exception ex) {
       System.err.println(ex);
       System.exit(1);
     }
 
     s.setCodeTokens(tokenList);
-	System.out.println("Tokenize: setTokens for submission");
     // Delete temp file if any
     if (tmpFileName != null) {
       (new File(tmpFileName)).delete();
@@ -235,7 +234,7 @@ public final class ANTLRDynamicTokenizer extends Tokenizer {
 	tokenClassString = "Ignore";
 	// Filter out \n statements
 	if (!tokenString.equals('\n') && !tokenString.equals("\\n")){
-		System.out.println("processLexerOutput: Unknown format, ignoring line: " + tokenString);
+		System.out.println("Unknown format, ignoring line: " + tokenString);
 	}
       }
 
