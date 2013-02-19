@@ -39,11 +39,18 @@ module SubmissionsHandler
     # Move upload into dir
     FileUtils.mv file.tempfile.path, upload_file
     
+    # Add filters for file types
+    rejected_formats = [".zip",".txt"]
+
     # Extract submissions into dir
     Zip::ZipFile.open(upload_file) { |zip_file|
       zip_file.each { |f|
-        upload_log << %Q{[#{Time.now.in_time_zone}] Extracting #{f.name}}
-        zip_file.extract(f, File.join(upload_dir, f.name))
+	if rejected_formats.include? File.extname(f.name)
+	  	upload_log << %Q{[#{Time.now.in_time_zone}] Invalid file type, Ignoring #{f.name}}
+	else
+        	upload_log << %Q{[#{Time.now.in_time_zone}] Extracting #{f.name}}
+        	zip_file.extract(f, File.join(upload_dir, f.name))
+	end
       }
     }
 
