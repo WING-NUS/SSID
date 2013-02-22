@@ -58,6 +58,7 @@ GEM
     multi_json (1.5.0)
     mysql2 (0.3.11)
     polyglot (0.3.3)
+    ptools (1.2.2)
     rack (1.4.3)
     rack-cache (1.2)
       rack (>= 0.4)
@@ -116,6 +117,7 @@ DEPENDENCIES
   coffee-rails (~> 3.2.1)
   jquery-rails
   mysql2
+  ptools
   rails (= 3.2.11)
   rubyzip
   sass-rails (~> 3.2.3)

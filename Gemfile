@@ -54,3 +54,6 @@ gem "will_paginate"
 
 # pretty print
 gem "awesome_print"
+
+# use to check if file is binary
+gem 'ptools'
