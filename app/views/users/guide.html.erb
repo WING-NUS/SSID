@@ -20,7 +20,7 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 <%
 
 def genBlankLink(text)
-  "<a class='normalLink' href='' onclick='return false;'>#{text}</a>"
+  "<a class='normalLink' href='' onclick='return false;'>#{text}</a>".html_safe
 end
 
 def image(file)
@@ -32,7 +32,7 @@ def imagefaq(file)
 end
 
 def backToTop()
-  "<a class=\"normalLink\" style='color : blue;' href=\"#top\">Back to top</a>"
+  "<a class=\"normalLink\" style=\"color : blue;\" href=\"#top\">Back to top</a>".html_safe
 end
 %>
 
