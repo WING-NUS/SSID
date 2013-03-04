@@ -66,33 +66,29 @@ public class Main {
 		ArrayList<Submission> submissions = SubmissionRetriever
 				.retrieveSubmissions(compareFolderPath);
 
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z");
+
 		if (language.equals(CTokenizer.language)) {
 			CTokenizer.getTokenizer().TokenizeSubmissions(submissions);
 		} else if (language.equals(JavaTokenizer.language)) {
 			JavaTokenizer.getTokenizer().TokenizeSubmissions(submissions);
 		} else if (ANTLRDynamicTokenizer.understandsLanguage(language)) {
-			System.out.println("[" + dateFormat.format(new java.util.Date()) 
-          + "] ANTLR tokenizer started run: " + language;
+			System.out.println("[" + dateFormat.format(new java.util.Date()) + "] ANTLR tokenizer started run: " + language);
 			ANTLRDynamicTokenizer.getTokenizer(language).TokenizeSubmissions(submissions);
 		} else {
 			throw new Exception("Grammar for language \""+ language + "\" not found");
 		}
-		
-		System.out.println("[" + dateFormat.format(new java.util.Date()) 
-          + "] ANTLR tokenizer completed";
-	  
-		try {
 
-		System.out.println("[" + dateFormat.format(new java.util.Date()) 
-          + "] Converting to submission tokens started run";
-	  
+		System.out.println("[" + dateFormat.format(new java.util.Date()) + "] ANTLR tokenizer completed");
+
+		try {
+			System.out.println("[" + dateFormat.format(new java.util.Date()) + "] Converting to submission tokens started run");
 			NGramizer.getNGramizer().constructSubmissionsNGrams(submissions,
 					nGramSize);
 
 			ArrayList<Result> simResults = SimComparer.getComparer()
 					.compareSubmissions(submissions, nGramSize, minMatch);
 
-      DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z");
 			System.out.println("[" + dateFormat.format(new java.util.Date()) 
           + "] Plagarism detection completed with duration = "
 					+ new java.text.DecimalFormat("0.000").format((System

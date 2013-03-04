@@ -79,7 +79,8 @@ public final class ANTLRDynamicTokenizer extends Tokenizer {
     // Get path of Submission, otherwise, create temp file
     String path =  s.getPath();
     String tmpFileName = null;
-    if (path == null) {
+    System.out.println("Preparing temp file...");
+	if (path == null) {
       // Create temp file for submission
       ArrayList<String> lines = s.getCombinedCode();
       tmpFileName = "/tmp/SSID_ANTLRDynamicTokenizer-" + (new java.util.Date()).getTime() + "-" + Math.random(); 
@@ -95,11 +96,14 @@ public final class ANTLRDynamicTokenizer extends Tokenizer {
       }
       path = tmpFileName;
     }
+	System.out.println("Temp file prepared");
     
     // Run ANTLR and read tokens
     ArrayList<String> lexerOutput = null;
     try {
+	System.out.println("Preparing to run lexer");
       lexerOutput = runLexer(path);
+	System.out.println("Lexer completed");
     } catch (Exception ex) {
       System.err.println("Error running lexer");
       System.err.println(ex);
@@ -109,13 +113,15 @@ public final class ANTLRDynamicTokenizer extends Tokenizer {
     // Convert tokens to PlagiarismDetection tokens
     TokenList tokenList = null;
     try {
-      tokenList = processLexerOutput(lexerOutput);
+	System.out.println("Converting to PD readable Tokens");
+	tokenList = processLexerOutput(lexerOutput);
+	System.out.println("Convert completed");
     } catch (Exception ex) {
       System.err.println(ex);
       System.exit(1);
     }
-    s.setCodeTokens(tokenList);
 
+    s.setCodeTokens(tokenList);
     // Delete temp file if any
     if (tmpFileName != null) {
       (new File(tmpFileName)).delete();
@@ -204,20 +210,32 @@ public final class ANTLRDynamicTokenizer extends Tokenizer {
     TokenList tokens = new TokenList();
     ArrayList<String> filteredLexerOutput = new ArrayList<String>();
 
+
     // Remove Unmapped and Ignored Token names so that we can predict end of statement in the next loop
     for (String tokenString : lexerOutput ) {
       // Extract info
-      String[] cols = tokenString.split(",");
-      String tokenType = cols[3];
+      String[] cols = tokenString.split(","); 
+      String tokenClassString;      
 
-      // Get token class string
-      String tokenName = this.tokenNames.get(tokenType);
-      if (tokenName == null) {
-        throw new Exception("Unrecognized token type: "+tokenType);
-      }
-      String tokenClassString = this.tokenNameMappings.get(tokenName);
-      if (tokenClassString == null) {
-        throw new Exception("Unrecognized token name: "+tokenName);
+      if (cols.length >= 4){
+	// Defensive programming
+      	String tokenType = cols[3];
+
+      	// Get token class string
+      	String tokenName = this.tokenNames.get(tokenType);
+      	if (tokenName == null) {
+        	throw new Exception("Unrecognized token type: "+tokenType);
+      	}
+      	tokenClassString = this.tokenNameMappings.get(tokenName);
+      	if (tokenClassString == null) {
+        	throw new Exception("Unrecognized token name: "+tokenName);
+      	}
+      }else{
+	tokenClassString = "Ignore";
+	// Filter out \n statements
+	if (!tokenString.equals('\n') && !tokenString.equals("\\n")){
+		System.out.println("Unknown format, ignoring line: " + tokenString);
+	}
       }
 
       if (tokenClassString.equals("Symbol")

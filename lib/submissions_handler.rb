@@ -39,11 +39,26 @@ module SubmissionsHandler
     # Move upload into dir
     FileUtils.mv file.tempfile.path, upload_file
     
+    # Add filters for file types
+    accepted_formats = [".py",".java", ".cpp", ".c", ".h"]
+
     # Extract submissions into dir
     Zip::ZipFile.open(upload_file) { |zip_file|
       zip_file.each { |f|
-        upload_log << %Q{[#{Time.now.in_time_zone}] Extracting #{f.name}}
-        zip_file.extract(f, File.join(upload_dir, f.name))
+	# isdirectory or filter by accepted file extension
+	if !f.file? or accepted_formats.include? File.extname(f.name)
+		upload_log << %Q{[#{Time.now.in_time_zone}] Extracting #{f.name}}
+		filepath = File.join(upload_dir, f.name)
+                zip_file.extract(f, filepath)
+		
+		# Reject files that passed the extension test but might be a binary file in disguise
+		if f.file? and File.binary? filepath
+			upload_log << %Q{[#{Time.now.in_time_zone}] Detected binary file, deleting #{f.name}}
+			FileUtils.rm filepath
+		end
+	else
+		upload_log << %Q{[#{Time.now.in_time_zone}] Invalid file type, Ignoring #{f.name} with extension #{File.extname(f.name)}}
+	end
       }
     }
 
