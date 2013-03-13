@@ -8,7 +8,9 @@ gem 'rails', '3.2.11'
 gem 'mysql2'
 
 # Use sqlite3 instead of mysql:
-gem 'sqlite3'
+group :development, :test do
+   gem 'sqlite3'
+end
 
 
 # Gems used only for assets and not required
