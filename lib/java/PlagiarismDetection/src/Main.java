@@ -37,6 +37,7 @@ public class Main {
 		long start = System.nanoTime();
 
 		if (args.length != 9) {
+			System.out.println("Your input arguments:" + Arrays.toString(args));
 			throw new Exception(
 					"Usage: jPDS <Assignment Id> <Compare Folder path> <Language> <minMatch> <N-Gram> <database host> <database name> <database username> <database password>");
 		}
