@@ -102,7 +102,8 @@ int main(int argc, char *argv[])
   {
     char *tokenString = (char *) currToken->getText(currToken)->chars;
     tokenLength = strlen(tokenString);
-    char *newTokenString = str_replace(tokenString, "\n", "\\n");
+    char *newTokenString = str_replace(tokenString, "\r\n", "\n");
+    newTokenString = str_replace(newTokenString,"\n","\\n");
     printf("%u,%u,%u,%u,%s\n", currToken->getLine(currToken), startPosition, tokenLength, currToken->getType(currToken), newTokenString);
     startPosition += tokenLength;
     currToken = tokSource->nextToken(tokSource);
