@@ -57,6 +57,12 @@ class Course < ActiveRecord::Base
     }.flatten
   end
 
+  def empty_assignments
+    self.assignments.reject { |a|
+      !a.submission_similarity_process.nil?
+    }
+  end
+
   def processing_assignments
     self.assignments.reject { |a|
       a.submission_similarity_process.nil? or 

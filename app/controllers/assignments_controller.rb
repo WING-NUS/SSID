@@ -31,6 +31,7 @@ class AssignmentsController < ApplicationController
   # GET /courses/1/assignments
   def index
     @assignments = @course.assignments
+    @empty_assignments = @course.empty_assignments
     @processing_assignments = @course.processing_assignments
     @processed_assignments = @course.processed_assignments
     @erroneous_assignments = @course.erroneous_assignments
@@ -52,6 +53,11 @@ class AssignmentsController < ApplicationController
     @assignment = Assignment.find(params[:assignment_id])
   end
 
+  # GET /courses/1/assignments/1
+  def show
+    @assignment = Assignment.find(params[:id])
+  end
+
   # GET /courses/1/assignments/new
   def new
     @assignment = Assignment.new
@@ -68,26 +74,45 @@ class AssignmentsController < ApplicationController
     }
 
     # Process file if @assignment is valid and file was uploaded
-    if @assignment.valid? and not (params[:assignment]["file"].nil? or params[:assignment]["file"].content_type != "application/zip")
-      require 'submissions_handler'
-
+    if @assignment.valid?
+     
       # Save assignment to obtain id
       return render action: "new" unless @assignment.save
-
-      # Process upload file
-      submissions_path = SubmissionsHandler.process_upload(params[:assignment]["file"], @assignment)
-
-      # Launch java program to process submissions
-      SubmissionsHandler.process_submissions(submissions_path, @assignment)
-
-      redirect_to course_assignments_url(@course), notice: 'Assignment was successfully created.'
-    else
-      if params[:assignment]["file"].nil?
-        @assignment.errors.add :file, "is not selected for upload"
-      elsif params[:assignment]["file"].content_type != "application/zip"
-        @assignment.errors.add :file, "for upload must be a zip file"
+      
+      if !params[:assignment]["file"].nil?
+        if (params[:assignment]["file"].content_type == "application/zip")
+          self.start_upload(@assignment, params[:assignment]["file"])
+        else
+          if params[:assignment]["file"].nil?
+            @assignment.errors.add :file, "is not selected for upload"
+          elsif params[:assignment]["file"].content_type != "application/zip"
+            @assignment.errors.add :file, "for upload must be a zip file"
+          end
+         return render action: "new"
+        end
+      else
+        redirect_to course_assignments_url(@course), notice: 'Assignment was successfully created.'
       end
+      
+    else
       render action: "new"
+    end
+  end
+  
+  # PUT /courses/1/assignments/1
+  def update
+    @assignment = Assignment.find(params[:id])
+    
+    if !(params[:assignment].nil? or params[:assignment]["file"].content_type != "application/zip")
+      self.start_upload(@assignment, params[:assignment]["file"])
+      redirect_to course_assignments_url(@course), notice: 'File was successfully uploaded.'
+    else
+      if params[:assignment].nil?
+          @assignment.errors.add :file, "is not selected for upload"
+      elsif params[:assignment]["file"].content_type != "application/zip"
+          @assignment.errors.add :file, "for upload must be a zip file"
+      end
+      return render action: "show" 
     end
   end
 
@@ -97,5 +122,15 @@ class AssignmentsController < ApplicationController
     @assignment.destroy
   
     redirect_to course_assignments_url(@course), notice: 'Assignment was successfully deleted.'
+  end
+  
+  def start_upload(assignment, file)
+      require 'submissions_handler'
+
+      # Process upload file
+      submissions_path = SubmissionsHandler.process_upload(file, assignment)
+
+      # Launch java program to process submissions
+      SubmissionsHandler.process_submissions(submissions_path, assignment)
   end
 end

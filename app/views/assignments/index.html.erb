@@ -34,6 +34,33 @@
       </tbody>
     </table>
   <% end %>
+  
+  <% unless @empty_assignments.empty? %>
+    <h3>Empty:</h3>
+    <table class="empty_assignments">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th class="lang_col">Language</th>
+          <th class="submitted_on_col">Submitted On</th>
+          <th class="action_col">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+      <% @empty_assignments.each { |a| %>
+      <tr>
+        <td><%= a.title %></td>
+        <td><%= a.language_string %></td>
+        <td><%= a.created_at.in_time_zone %></td>
+        <td>
+          <%= link_to "Upload submission", course_assignment_url(@course, a) %>
+          <%= link_to "Delete", course_assignment_url(@course, a), method: "delete", class: "last", confirm: "Delete assignment?" %>
+        </td>
+      </tr>
+      <% } %>
+      </tbody>
+    </table>
+  <% end %>
 
   <% unless @processing_assignments.empty? %>
     <h3>Processing:</h3>

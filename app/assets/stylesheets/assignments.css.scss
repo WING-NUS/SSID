@@ -71,7 +71,7 @@ body.assignments_index {
     }
   }
 
-  table.erroneous_assignments, table.processing_assignments {
+  table.erroneous_assignments, table.processing_assignments, table.empty_assignments {
     th.action_col {
       width: 250px;
     }
