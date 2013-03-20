@@ -23,7 +23,7 @@ SSID works with lexers based on [ANTLR Grammars](http://www.antlr.org/grammar/li
      
 3. Execute the following command in the root directory of SSID:
 	 <pre>
-	rake db:migrate RAILS_ENV="production"<br/>
+	rake db:migrate RAILS_ENV="production"
 	rake db:seed
 	</pre>
 	 
