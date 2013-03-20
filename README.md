@@ -22,7 +22,10 @@ SSID works with lexers based on [ANTLR Grammars](http://www.antlr.org/grammar/li
      <pre>bundle install</pre>
      
 3. Execute the following command in the root directory of SSID:
-	 <pre>rake db:migrate RAILS_ENV="production"</pre>
+	 <pre>
+	rake db:migrate RAILS_ENV="production"<br/>
+	rake db:seed
+	</pre>
 	 
 4. Configure Apache to serve web requests to SSID
 
