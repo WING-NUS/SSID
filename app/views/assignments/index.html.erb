@@ -1,3 +1,7 @@
+<%= javascript_tag do %>
+  statusURL = "<%= course_status_url(@course)%>";
+<% end %>
+
 <h2><%= @course.code %> Assignments</h2>
 <% if flash[:notice] %>
   <div class="notice">
@@ -8,123 +12,10 @@
 <% if @assignments.empty? %>
   <p class="none_created">No Assignment has been created.</p>
 <% else %>
-  <% unless @erroneous_assignments.empty? %>
-    <h3>Erroneous:</h3>
-    <table class="erroneous_assignments">
-      <thead>
-        <tr>
-          <th>Title</th>
-          <th class="lang_col">Language</th>
-          <th class="submitted_on_col">Submitted On</th>
-          <th class="action_col">Action</th>
-        </tr>
-      </thead>
-      <tbody>
-      <% @erroneous_assignments.each { |a| %>
-      <tr>
-        <td><%= a.title %></td>
-        <td><%= a.language_string %></td>
-        <td><%= a.submission_similarity_process.created_at.in_time_zone %></td>
-        <td>
-          <%= link_to "View upload log", course_assignment_log_url(@course, a) %>
-          <%= link_to "Delete", course_assignment_url(@course, a), method: "delete", class: "last", confirm: "Delete assignment?" %>
-        </td>
-      </tr>
-      <% } %>
-      </tbody>
-    </table>
-  <% end %>
-  
-  <% unless @empty_assignments.empty? %>
-    <h3>Empty (yet to submit file for uploading):</h3>
-    <table class="empty_assignments">
-      <thead>
-        <tr>
-          <th>Title</th>
-          <th class="lang_col">Language</th>
-          <th class="submitted_on_col">Submitted On</th>
-          <th class="action_col">Action</th>
-        </tr>
-      </thead>
-      <tbody>
-      <% @empty_assignments.each { |a| %>
-      <tr>
-        <td><%= a.title %></td>
-        <td><%= a.language_string %></td>
-        <td><%= a.created_at.in_time_zone %></td>
-        <td>
-          <%= link_to "Upload submission", course_assignment_url(@course, a) %>
-          <%= link_to "Delete", course_assignment_url(@course, a), method: "delete", class: "last", confirm: "Delete assignment?" %>
-        </td>
-      </tr>
-      <% } %>
-      </tbody>
-    </table>
-  <% end %>
-
-  <% unless @processing_assignments.empty? %>
-    <h3>Processing:</h3>
-    <table class="processing_assignments">
-      <thead>
-        <tr>
-          <th>Title</th>
-          <th class="lang_col">Language</th>
-          <th class="submitted_on_col">Submitted On</th>
-          <th class="action_col">Action</th>
-        </tr>
-      </thead>
-      <tbody>
-      <% @processing_assignments.each { |a| %>
-      <tr>
-        <td><%= a.title %></td>
-        <td><%= a.language_string %></td>
-        <td><%= a.submission_similarity_process.created_at.in_time_zone %></td>
-        <td class="processing"><em>Processing...</em></td>
-      </tr>
-      <% } %>
-      </tbody>
-    </table>
-  <% end %>
-
-  <% unless @processed_assignments.empty? %>
-    <% unless @erroneous_assignments.empty? and @processing_assignments.empty? %>
-      <h3>Processed:</h3>
-    <% end %>
-    <table class="processed_assignments">
-      <thead>
-        <tr>
-          <th>Title</th>
-          <th class="lang_col">Language</th>
-          <th class="submissions_col">Submissions</th>
-          <th class="suspected_cases_col">Suspected Plagiarism Cases</th>
-          <th class="marked_cases_col">Confirmed Plagiarism Cases</th>
-          <th class="action_col">View</th>
-          <th class="delete_col"></th>
-        </tr>
-      </thead>
-      <tbody>
-      <% @processed_assignments.each { |a| %>
-      <tr>
-        <td><%= a.title %></td>
-        <td><%= a.language_string %></td>
-        <td><%= a.submissions.size %></td>
-        <td><%= a.suspected_plagiarism_cases.size %></td>
-        <td><%= a.confirmed_plagiarism_cases.size %></td>
-        <td>
-          <%= link_to "Submission similarities", assignment_submission_similarities_url(a) %>
-          <%= link_to "Similarity groups", assignment_cluster_groups_url(a) %>
-          <%= link_to "Upload log", course_assignment_log_url(@course, a), class: "last" %>
-        </td>
-        <td>
-          <%= link_to "Delete", course_assignment_url(@course, a), method: "delete", class: "last", confirm: "Delete assignment?" %>
-        </td>
-      </tr>
-      <% } %>
-      </tbody>
-    </table>
-  <% end %>
+  <div id='status'>
+    
+  </div>
 <% end %>
-
 <hr />
 <div class="actions">
   <%= link_to "New Assignment", new_course_assignment_url(@course) %>

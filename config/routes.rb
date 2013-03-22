@@ -28,6 +28,7 @@ SSID::Application.routes.draw do
 
   resources :announcements
   resources :courses do
+    get 'status'
     resources :assignments do
       get "log" => "assignments#show_log"
     end
