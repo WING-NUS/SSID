@@ -82,6 +82,7 @@ class AssignmentsController < ApplicationController
       if !params[:assignment]["file"].nil?
         if (params[:assignment]["file"].content_type == "application/zip")
           self.start_upload(@assignment, params[:assignment]["file"])
+          redirect_to course_assignments_url(@course), notice: 'Assignment was successfully created.'
         else
           if params[:assignment]["file"].nil?
             @assignment.errors.add :file, "is not selected for upload"
