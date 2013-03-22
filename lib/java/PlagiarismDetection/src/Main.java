@@ -94,8 +94,13 @@ public class Main {
           + "] Plagarism detection completed with duration = "
 					+ new java.text.DecimalFormat("0.000").format((System
 							.nanoTime() - start) / Math.pow(10, 9)) + "s");
+			
+			System.out.println("[" + dateFormat.format(new java.util.Date()) + "] Starting upload to database...");
 
 			MySQLDB.getMySQLDB().insertIntoDB(aId, submissions, simResults);
+			
+			System.out.println("[" + dateFormat.format(new java.util.Date()) 
+          + "] Plagarism detection completed upload to database");
 
 		} catch (Exception ex) {
 			System.out.println(ex.getMessage());
