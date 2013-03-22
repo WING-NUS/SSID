@@ -23,3 +23,10 @@ Assignment.onLoad = ->
       Site.registerHighlightRowMethodsForLink(this)
       return
     return
+  
+$(document).ready ->
+  if $("#status").length > 0
+    $("#status").load statusURL
+    setInterval (->
+      $("#status").load statusURL
+    ), 3000
