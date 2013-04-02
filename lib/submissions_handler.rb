@@ -18,6 +18,40 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 require 'zip/zip'
 require 'open3'
 
+class ReorgBot
+
+  attr_accessor :path
+  attr_accessor :dir
+
+  def initialize(path)
+    raise ArgumentError, "path '#{path}' does not exist!" unless File.exist?(path)
+    raise ArgumentError, "path '#{path} is not a directory you dolt!" unless File.directory?(path)
+    @path = path
+    @dir = Dir.new(path)
+  end
+
+  def dirs
+    @dir.select { |f| File.directory?(File.join(@path, f)) }
+  end
+
+  def empty_dirs
+    dirs.select { |d| Dir[File.join(@path, d, '*')].empty? }
+  end
+
+  def non_empty_dirs
+    dirs - empty_dirs
+  end
+
+  def remove_empty_dirs
+    log = [];
+    empty_dirs.each do |d|
+      FileUtils.rm_rf(File.join(@path, d))
+      log << %Q{[#{Time.now.in_time_zone}] Deleting directory: #{File.join(@path, d)}}
+    end
+    log
+  end
+end
+
 module SubmissionsHandler
   def self.process_upload(file, assignment)
     upload_dir = File.join(Rails.root, "upload", assignment.id.to_s)
@@ -61,6 +95,10 @@ module SubmissionsHandler
 	end
       }
     }
+    
+    upload_log << %Q{[#{Time.now.in_time_zone}] Checking for empty directories}
+    bot = ReorgBot.new(upload_dir)
+    upload_log << bot.remove_empty_dirs
 
     # Save log
     upload_log << %Q{[#{Time.now.in_time_zone}] Unzip complete}
