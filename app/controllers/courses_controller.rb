@@ -28,10 +28,10 @@ class CoursesController < ApplicationController
     if @course
       controller.send :authenticate_actions_for_role, UserCourseMembership::ROLE_TEACHING_STAFF,
                                                       course: @course,
-                                                      only: [ :index, :cluster_students ]
+                                                      only: [ :index, :cluster_students , :status]
       controller.send :authenticate_actions_for_role, UserCourseMembership::ROLE_TEACHING_ASSISTANT,
                                                       course: @course,
-                                                      only: [ :index, :cluster_students ]
+                                                      only: [ :index, :cluster_students , :status]
       controller.send :authenticate_actions_for_role, UserCourseMembership::ROLE_STUDENT,
                                                       course: @course,
                                                       only: [ :index ]
