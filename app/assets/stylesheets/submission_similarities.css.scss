@@ -54,6 +54,26 @@ body.submission_similarities_index {
 }
 
 body.submission_similarities_show {
+  div.slideleft{
+    position:absolute;
+    left: 0px;
+    top:250px;
+  }
+  
+  div.button{
+    color: #FFFFFF;
+    font-weight: bold;
+    padding: 3px 5px;
+    background-color:#e7860d;
+    height:36px;
+    vertical-align: middle;
+    border-top: solid thin #000000;
+    border-right: solid thin #000000;
+    border-bottom: solid thin #000000;
+    
+    float: right;
+  }
+  
   div.submissions {
     overflow-y: auto;
     width: 100%;
@@ -77,13 +97,14 @@ body.submission_similarities_show {
     }
 
     div.submission1 {
-      float: left;
-      width: 50%;
+      float: right;
+      width: 45%;
+      margin-left: 100px;
     }
 
     div.submission2 {
-      float: right;
-      width: 50%;
+      float: left;
+      width: 45%;
     }
   }
 
@@ -110,7 +131,6 @@ body.submission_similarities_show {
       border-spacing: 0;
       border-collapse: collapse;
       width: 490px;
-      margin: 10px auto 20px;
       text-align: left;
 
       th {
@@ -139,6 +159,7 @@ body.submission_similarities_show {
       td {
         border: 1px dotted #bbb;
         padding: 3px 10px;
+        background-color: #FFFFFF;
 
         a {
           &, &:hover, &:visited {
