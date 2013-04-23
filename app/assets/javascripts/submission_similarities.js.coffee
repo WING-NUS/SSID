@@ -146,7 +146,7 @@ SubmissionSimilarity.onLoad = ->
 
     return
 
-SubmissionSimilarity.ready ->
+$(document).ready ->
   $(".slideleft .button").click ->
     $lefty = $(this).parent()
     (if parseInt($lefty.css("left"), 10) is 0 then $(this).text("SHOW") else $(this).text("HIDE"))
