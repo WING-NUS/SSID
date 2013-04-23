@@ -23,6 +23,9 @@ SubmissionSimilarity.slideToLine = (checkBox) ->
   startLine1 = parseInt values[0]
   startLine2 = parseInt values[2]
   
+  $("div.submission1").stop()
+  $("div.submission2").stop()
+  
   s1y = $("div.submission1 li:eq("+startLine1+")").offset().top - $("div.submission1").offset().top
   s2y = $("div.submission2 li:eq("+startLine2+")").offset().top - $("div.submission2").offset().top
   
