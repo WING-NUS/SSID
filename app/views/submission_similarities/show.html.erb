@@ -1,26 +1,29 @@
 <h2>Submission Similarities for Students <%= @submission_similarity.student1.id_string %> and <%= @submission_similarity.student2.id_string %> (<%= @submission_similarity.similarity %>%)</h2>
 <div class="options">
   Highlight similarities found in:
+  <div class='slideleft'>
+  <div class='button'>HIDE</div>
   <table class="lines">
     <thead>
       <tr>
-        <th class="check_box_col"><%= check_box_tag nil %></th>
         <th class="lines_col">Submission by <%= @student1.id_string %></th>
         <th class="lines_col">Submission by <%= @student2.id_string %></th>
         <th>Num of Matching Statements</th>
+        <th class="check_box_col"><%= check_box_tag nil %></th>
       </tr>
     </thead>
     <tbody>
       <% @submission_similarity.mappings.sort_by { |m| m.start_line1 }.each { |mapping| %>
       <tr>
-        <td><%= check_box_tag nil, mapping.line_ranges_html_value, false %></td>
         <td>Lines <%= mapping.line_range1_string %></td>
         <td>Lines <%= mapping.line_range2_string %></td>
         <td class="num_statements_cell"><%= mapping.statement_count %></td>
+        <td><%= check_box_tag nil, mapping.line_ranges_html_value, false %></td>
       </tr>
       <% } %>
     </tbody>
   </table>
+  </div>
   <div class="mark_as_suspicious">
     <% if @submission_similarity.status == SubmissionSimilarity::STATUS_NOT_PLAGIARISM %>
       <p><%= link_to "Mark these similarities as suspicious", assignment_submission_similarity_suspect_as_plagiarism_url(@assignment, @submission_similarity), :method => :put, confirm: "Mark these similarities as suspicious?" %> or <%= link_to "Confirm these similarities as plagiarism", assignment_submission_similarity_confirm_as_plagiarism_url(@assignment, @submission_similarity), :method => :put, confirm: "Confirm these similarities as plagiarism?" %></p>
