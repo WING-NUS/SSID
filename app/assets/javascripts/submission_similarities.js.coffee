@@ -109,6 +109,7 @@ SubmissionSimilarity.onLoad = ->
 
     $("table.lines td").hover(
       ->
+        SubmissionSimilarity.slideToLine(this)
         SubmissionSimilarity.highlightLines($(this).parent().find("input"))
         return
       ->
@@ -137,6 +138,7 @@ SubmissionSimilarity.onLoad = ->
       ->
         $("table.lines tbody tr").each ->
           inputNode = $(this).find("input")
+          SubmissionSimilarity.slideToLine(this)
           if !inputNode.attr("checked")
             SubmissionSimilarity.highlightLines(inputNode)
           return
@@ -151,7 +153,6 @@ SubmissionSimilarity.onLoad = ->
     )
 
     $("table.lines th.check_box_col input").click (event) ->
-      SubmissionSimilarity.slideToLine(this)
       SubmissionSimilarity.toggleAllRowHighlights(this)
       event.stopPropagation()
       return
