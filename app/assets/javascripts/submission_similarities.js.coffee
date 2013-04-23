@@ -17,7 +17,7 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 
 window.SubmissionSimilarity ||= {}
 
-SubmissionSimlarity.slideToLine = (checkBox) ->
+SubmissionSimilarity.slideToLine = (checkBox) ->
   # Get lines
   values = $(checkBox).val().split("_")
   startLine1 = parseInt values[0]
