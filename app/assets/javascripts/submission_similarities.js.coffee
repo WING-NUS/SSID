@@ -17,13 +17,11 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 
 window.SubmissionSimilarity ||= {}
 
-SubmissionSimilarity.highlightLines = (checkBox) ->
+SubmissionSimlarity.slideToLine = (checkBox) ->
   # Get lines
   values = $(checkBox).val().split("_")
   startLine1 = parseInt values[0]
-  endLine1 = parseInt values[1]
   startLine2 = parseInt values[2]
-  endLine2 = parseInt values[3]
   
   s1y = $("div.submission1 li:eq("+startLine1+")").offset().top - $("div.submission1").offset().top
   s2y = $("div.submission2 li:eq("+startLine2+")").offset().top - $("div.submission2").offset().top
@@ -33,6 +31,14 @@ SubmissionSimilarity.highlightLines = (checkBox) ->
 
   $("div.submission2").animate
     scrollTop: '+=' + s2y, 1000
+
+SubmissionSimilarity.highlightLines = (checkBox) ->
+  # Get lines
+  values = $(checkBox).val().split("_")
+  startLine1 = parseInt values[0]
+  endLine1 = parseInt values[1]
+  startLine2 = parseInt values[2]
+  endLine2 = parseInt values[3]
 
   # Add highlights
   $(checkBox).closest("tr").addClass("highlight")
@@ -145,6 +151,7 @@ SubmissionSimilarity.onLoad = ->
     )
 
     $("table.lines th.check_box_col input").click (event) ->
+      SubmissionSimilarity.slideToLine(this)
       SubmissionSimilarity.toggleAllRowHighlights(this)
       event.stopPropagation()
       return
