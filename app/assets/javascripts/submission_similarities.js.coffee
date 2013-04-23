@@ -145,3 +145,9 @@ SubmissionSimilarity.onLoad = ->
       return
 
     return
+
+SubmissionSimilarity.ready ->
+  $(".slideleft .button").click ->
+    $lefty = $(this).parent()
+    (if parseInt($lefty.css("left"), 10) is 0 then $(this).text("SHOW") else $(this).text("HIDE"))
+    $lefty.animate left: (if parseInt($lefty.css("left"), 10) is 0 then 100 - $lefty.outerWidth() else 0)
