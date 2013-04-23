@@ -100,11 +100,15 @@ body.submission_similarities_show {
       float: left;
       width: 45%;
       margin-left: 100px;
+      overflow-y: auto;
+      height: 700px;
     }
 
     div.submission2 {
       float: left;
       width: 45%;
+      overflow-y: auto;
+      height: 700px;
     }
   }
 

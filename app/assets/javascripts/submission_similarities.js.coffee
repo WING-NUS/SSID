@@ -17,6 +17,24 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 
 window.SubmissionSimilarity ||= {}
 
+SubmissionSimilarity.slideToLine = (checkBox) ->
+  # Get lines
+  values = $(checkBox).val().split("_")
+  startLine1 = parseInt values[0]
+  startLine2 = parseInt values[2]
+  
+  $("div.submission1").stop()
+  $("div.submission2").stop()
+  
+  s1y = $("div.submission1 li:eq("+startLine1+")").offset().top - $("div.submission1").offset().top
+  s2y = $("div.submission2 li:eq("+startLine2+")").offset().top - $("div.submission2").offset().top
+  
+  $("div.submission1").animate
+    scrollTop: '+=' + s1y, 1000
+
+  $("div.submission2").animate
+    scrollTop: '+=' + s2y, 1000
+
 SubmissionSimilarity.highlightLines = (checkBox) ->
   # Get lines
   values = $(checkBox).val().split("_")
@@ -94,6 +112,7 @@ SubmissionSimilarity.onLoad = ->
 
     $("table.lines td").hover(
       ->
+        SubmissionSimilarity.slideToLine($(this).parent().find("input"))
         SubmissionSimilarity.highlightLines($(this).parent().find("input"))
         return
       ->
