@@ -24,6 +24,15 @@ SubmissionSimilarity.highlightLines = (checkBox) ->
   endLine1 = parseInt values[1]
   startLine2 = parseInt values[2]
   endLine2 = parseInt values[3]
+  
+  s1y = $("div.submission1 li:eq("+startLine1+")").offset().top - $(".div.submission1").offset().top
+  s2y = $("div.submission2 li:eq("+startLine2+")").offset().top - $(".div.submission2").offset().top
+  
+  $(".submission1").animate
+    scrollTop: '+=' + s1y, 1000
+
+  $(".submission2").animate
+    scrollTop: '+=' + s2y, 1000
 
   # Add highlights
   $(checkBox).closest("tr").addClass("highlight")
