@@ -1,0 +1,62 @@
+[
+  <%# Root Node %>
+  {
+    "id": "<%= @submission_cluster_id %>",
+    "name": "",
+    "data": {
+      "$type"       : "none",
+      "$width"      : 0,
+      "$height"     : 0,
+      "$labelColor" : "white" 
+    }, 
+    "adjacencies": [
+      <% @submissions.each { |submission| %>
+        {
+          "nodeTo"  : "<%= "#{@submission_cluster_id}_#{submission.student.id_string}" %>",
+          "data"    : {
+            "$alpha": 0
+          }
+        }
+        <%= (submission == @submissions.last) ? "" : ", " %>
+      <% } %>
+    ]
+  },
+
+  <%# Child Nodes %>
+  <% @submissions.each { |submission1| %>
+    {
+      "id"    : "<%= "#{@submission_cluster_id}_#{submission1.student.id_string}" %>",
+      "name"  : "<%= submission1.student.id_string %>",
+      "data"  : {
+        "is_plagiarism" : <%= submission1.is_plagiarism ? "true" : "false" %>,
+        "logUrl"        : "<%= assignment_submission_log_url(@assignment, submission1) %>"
+      },
+      "adjacencies": [
+        {
+          "nodeTo": "<%= @submission_cluster_id %>"
+        },
+        <% was_skipped = false %>
+        <% @submissions.each { |submission2| %>
+          <% submission_similarity = SubmissionSimilarity.where(
+            ["submission1_id IN (?) AND submission2_id IN (?)", 
+              [submission1.id, submission2.id], [submission1.id, submission2.id]]
+          ).first %>
+          <% unless submission1 == submission2 %>
+            {
+              "nodeTo": "<%= "#{@submission_cluster_id}_#{submission2.student.id_string}" %>",
+              "data"  : {
+                "$color"    : "<%= SubmissionClustersHelper.color_for_similarity(submission_similarity.similarity) %>",
+                "$lineWidth"    : "<%= SubmissionClustersHelper.weight_for_similarity(submission_similarity.similarity) %>",
+                "submissionSimilarityUrl"    : "<%= assignment_submission_similarity_url(@assignment, submission_similarity) %>"
+              }
+            }
+            <%= "," unless (submission2 == @submissions.last || (submission2 == @submissions[-2] && !was_skipped)) %>
+          <% else %>
+            <% was_skipped = true %>
+          <% end %>
+        <% } %>
+      ]
+    }
+    <%= (submission1 == @submissions.last) ? "" : ", " %>
+  <% } %>
+]

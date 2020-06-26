@@ -1,0 +1,63 @@
+<h2>Submission Similarities for Students <%= @submission_similarity.student1.id_string %> and <%= @submission_similarity.student2.id_string %> (<%= @submission_similarity.similarity %>%)</h2>
+<div class="options">
+  Highlight similarities found in:
+  <div class='slideleft'>
+  <div class='button'>HIDE</div>
+  <table class="lines">
+    <thead>
+      <tr>
+        <th class="lines_col">Submission by <%= @student1.id_string %></th>
+        <th class="lines_col">Submission by <%= @student2.id_string %></th>
+        <th>Num of Matching Statements</th>
+        <th class="check_box_col"><%= check_box_tag nil %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @submission_similarity.mappings.sort_by { |m| m.start_line1 }.each { |mapping| %>
+      <tr>
+        <td>Lines <%= mapping.line_range1_string %></td>
+        <td>Lines <%= mapping.line_range2_string %></td>
+        <td class="num_statements_cell"><%= mapping.statement_count %></td>
+        <td><%= check_box_tag nil, mapping.line_ranges_html_value, false %></td>
+      </tr>
+      <% } %>
+    </tbody>
+  </table>
+  </div>
+  <div class="mark_as_suspicious">
+    <% if @submission_similarity.status == SubmissionSimilarity::STATUS_NOT_PLAGIARISM %>
+      <p><%= link_to "Mark these similarities as suspicious", assignment_submission_similarity_suspect_as_plagiarism_url(@assignment, @submission_similarity), :method => :put, confirm: "Mark these similarities as suspicious?" %> or <%= link_to "Confirm these similarities as plagiarism", assignment_submission_similarity_confirm_as_plagiarism_url(@assignment, @submission_similarity), :method => :put, confirm: "Confirm these similarities as plagiarism?" %></p>
+    <% elsif @submission_similarity.status == SubmissionSimilarity::STATUS_SUSPECTED_AS_PLAGIARISM %>
+      <p>These similarities were marked as suspicious. <%= link_to "Remove suspicion", assignment_submission_similarity_unmark_as_plagiarism_url(@assignment, @submission_similarity), :method => :put, confirm: "Remove suspicion of plagiarism?" %> or <%= link_to "Confirm as plagiarism", assignment_submission_similarity_confirm_as_plagiarism_url(@assignment, @submission_similarity), :method => :put, confirm: "Confirm these similarities as plagiarism?" %></p>
+    <% elsif %>
+      <p>These similarities were confirmed as plagiarism. <%= link_to "Remove", assignment_submission_similarity_unmark_as_plagiarism_url(@assignment, @submission_similarity), :method => :put, confirm: "Remove confirmation as plagiarism?" %></p>
+    <% end %>
+  </div>
+  <% if @submission_similarity.status == SubmissionSimilarity::STATUS_CONFIRMED_AS_PLAGIARISM %>
+  <div>
+    <p>Mark student(s) as guilty for plagiarism:</p>
+    <p class="check_boxes">
+      <label><%= check_box_tag "toggle_guilty_#{@submission_similarity.id}_#{@submission1.id}", nil, @submission1.is_plagiarism, class: "guilty_check_box" %> Student <%= @student1.id_string %></label>
+      <label><%= check_box_tag "toggle_guilty_#{@submission_similarity.id}_#{@submission2.id}", nil, @submission2.is_plagiarism, class: "guilty_check_box" %> Student <%= @student2.id_string %></label>
+    </p>
+  </div>
+  <% end %>
+</div>
+<div class="submissions">
+  <div class="submission1">
+    <h3>Submission by <%= @student1.id_string %> (<%= link_to "Log", assignment_submission_log_url(@assignment, @submission1) %>)</h3>
+    <pre class="prettyprint linenums <%= @assignment.prettify_js_lang %>">
+    <% @submission1.lines.each { |line| %>
+      <%= line %>
+    <% } %>
+    </pre>
+  </div>
+  <div class="submission2">
+    <h3>Submission by <%= @student2.id_string %> (<%= link_to "Log", assignment_submission_log_url(@assignment, @submission2) %>)</h3>
+    <pre class="prettyprint linenums <%= @assignment.prettify_js_lang %>">
+    <% @submission2.lines.each { |line| %>
+      <%= line %>
+    <% } %>
+    </pre>
+  </div>
+</div>

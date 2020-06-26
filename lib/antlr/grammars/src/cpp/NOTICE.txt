@@ -1,0 +1,55 @@
+ 
+DISCLAIMER:
+
+THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+ IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+ INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ 	
+
+INITIAL CONSIDERATIONS:
+
+ This is a derived work. Please find the complete original
+  work in the included zip file "CPP_parser_v_3.2.zip".
+  This is an initial public release that needs more work
+  to be complete. The major goal was to enable this parser
+  to compile with ANTLR 3.2. Known issues include this
+  may not compile with ANTLRWorks and must only be compiled
+  through the command line suing the "compile.bat" script
+  which is included in the package.
+
+
+VERSION NOTICE:
+
+ -- 2010 --
+ Version 4.0.1 August 2010
+ Modified and reworked to compile with ANTLR 3.2
+  by Ramin Zaghi
+
+ Please note that this is the first public release
+  for ANTLR 3.2; This does not comiple with any older
+  versions of ANTLR. This may also have some missing 
+  features compared to the 2007 update by David Wigg.
+  I am publishing this work only to make this first
+  ANTLR 3.2 update  available  to  the  community
+  however if you are interested in a more complete 
+  work please take a look at David's 2007 update.
+ 
+  I emphasize that this new update needs more work
+  and can be restructured to make it more developer
+  friendly. The project file is a MSVS2008 project
+  file and it only includes a "Debug" configuration.
+  
+  You may send your comments to < antlr3_cpp_parser@taggedprogramming.com >
+  
+ -- 2011 --
+  Version 4.1.0  January 2011
+  Functional ANTLR 3.2 parser. 
+   Updated by Aurelian Melinte <ame01@gmx.net> with the 
+   assistance of David Wigg<wiggjd@bcs.org.uk>

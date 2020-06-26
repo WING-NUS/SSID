@@ -1,0 +1,21 @@
+<table class="ranking">
+  <thead>
+    <tr>
+      <th class="rank_col">Rank</th>
+      <th colspan="2">Student ID</th>
+      <th class="num_assignments_col">Num of Assignments</th>
+      <th class="num_clusters_col">Num of Clusters</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% students.each_with_index { |student, idx| %>
+      <tr>
+        <td class="rank_col"><%= idx + 1 %></td>
+        <td class="rank_check_box_cell"><%= check_box_tag nil, "student_"+student.id_string, false %></td>
+        <td><%= student.id_string %></td>
+        <td><%= num_assignments[student.id] %></td>
+        <td><%= num_clusters[student.id] %></td>
+      </tr>
+    <% } %>
+  </tbody>
+</table>

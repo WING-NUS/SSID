@@ -1,0 +1,31 @@
+<h3>Top Similar Submissions for Student: <%= student.id_string %></h3>
+<table id="table_student_<%= student.id %>" class="top_similar_submissions">
+  <thead>
+    <tr>
+      <th class="assignment_col">Assignment</th>
+      <th colspan="2">Student ID</th>
+      <th>Submission Similarity</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% assignments.each { |assignment| %>
+      <% submission_similarities = assignment.submission_similarities_for_student(student).sort_by { |ss| 1.0 / ss.similarity }[0..(num_display-1)] %>
+      <% submission_similarities.each_with_index { |submission_similarity, ss_idx| %>
+        <tr>
+          <% if ss_idx == 0 %>
+            <td rowspan="<%= submission_similarities.size %>" class="assignment_cell"><%= assignment.title %></td>
+          <% end %>
+          <% other_student = submission_similarity.other_student(student) %>
+          <% other_submission = submission_similarity.other_submission(student) %>
+          <td class="check_box_cell not_assignment_cell"><%= check_box_tag nil, "student_"+other_student.id_string, false %></td>
+          <% if other_submission.is_plagiarism %>
+            <td class="student_id_cell not_assignment_cell"><%= link_to other_student.id_string, assignment_submission_log_url(assignment, other_submission), class: "is_plagiarism" %></td>
+          <% else %>
+            <td class="student_id_cell not_assignment_cell"><%= link_to other_student.id_string, assignment_submission_log_url(assignment, other_submission) %></td>
+          <% end %>
+          <td class="submission_similarity not_assignment_cell"><span class="similarity_bar">&nbsp;</span> <span class="similarity_value"><%= submission_similarity.similarity %>%</span></td>
+        </tr>
+      <% } %>
+    <% } %>
+  </tbody>
+</table>

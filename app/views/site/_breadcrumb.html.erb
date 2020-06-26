@@ -1,0 +1,46 @@
+<div class="breadcrumb">
+  <%= link_to "Courses", courses_path %> 
+  <% if controller_name == "courses" %>
+    <% if action_name == "new" or action_name == "create" %>
+      &gt; New Course
+    <% elsif action_name == "edit" or action_name == "update" %>
+      &gt; Edit Course
+    <% end %>
+  <% elsif controller_name == "users" and action_name == "index" %>
+    &gt; <%= link_to "#{course.code} Users", course_users_url(course) %>
+  <% elsif controller_name == "visualize" %>
+    &gt; <%= link_to "#{course.code} Visualizations", course_visualize_url(course) %>
+    <% if action_name != "index" %>
+      &gt; <%= action_name.humanize.titleize %>
+    <% end %>
+  <% elsif course  %>
+    &gt; <%= link_to "#{course.code} Assignments", course_assignments_url(course) %>
+  <% end %>
+  <% if assignment %>
+    <% if controller_name == "assignments" %>
+      <% if action_name == "new" or action_name == "create" %>
+        &gt; New Assignment
+      <% elsif action_name == "edit" or action_name == "update" %>
+        &gt; Edit Assignment
+      <% elsif action_name == "show_log" %>
+        &gt; <%= %Q{Assignment: #{assignment.title} Upload Log} %>
+      <% end %>
+    <% elsif controller_name == "submission_similarities" %>
+      &gt; <%= link_to %Q{Assignment: #{assignment.title} Submission Similarities}, assignment_submission_similarities_url(assignment) %>
+      <% if action_name == "show" %>
+        &gt; Submissions from Student <%= submission_similarity.student1.id_string %> and <%= submission_similarity.student2.id_string %>
+      <% end %>
+    <% elsif controller_name == "submission_logs" %>
+      &gt; <%= %Q{Assignment: #{assignment.title} Submission Log for Student #{submission.student_id_string}} %>
+    <% end %>
+  <% end %>
+  <% if controller_name == "submission_cluster_groups" or controller_name == "submission_clusters" %>
+    &gt; <%= link_to "Assignment: #{assignment.title} Submission Cluster Groups", assignment_cluster_groups_url(@assignment) %> 
+    <% if action_name == "new" or action_name == "create" %>
+      &gt; New Submission Cluster Group
+    <% end %>
+  <% end %>
+  <% if controller_name == "submission_clusters" %>
+    &gt; Cluster Group (Cut-Off Criterion = <%= @submission_cluster_group.cut_off_criterion %>%)
+  <% end %>
+</div>
