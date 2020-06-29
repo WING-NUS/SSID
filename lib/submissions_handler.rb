@@ -17,7 +17,6 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 
 require 'zip'
 require 'open3'
-require 'filemagic'
 
 class ReorgBot
 
@@ -88,10 +87,10 @@ module SubmissionsHandler
                     zip_file.extract(f, filepath)
         
         # Reject files that passed the extension test but might be a binary file in disguise
-        if f.file? filepath and binary?(filepath)
-          upload_log << %Q{[#{Time.now.in_time_zone}] Detected binary file, deleting #{f.name}}
-          FileUtils.rm filepath
-        end
+        # if f.file? filepath
+        #   upload_log << %Q{[#{Time.now.in_time_zone}] Detected binary file, deleting #{f.name}}
+        #   FileUtils.rm filepath
+        # end
       else
         upload_log << %Q{[#{Time.now.in_time_zone}] Invalid file type, Ignoring #{f.name} with extension #{File.extname(f.name)}}
       end
@@ -222,14 +221,4 @@ module SubmissionsHandler
 
     strings.join("\n")
   end
-
-  def binary?(filename)
-    begin
-      fm= FileMagic.new(FileMagic::MAGIC_MIME)
-      !(fm.file(filename)=~ /^text\//)
-    ensure
-      fm.close
-    end
-  end
-
 end

@@ -30,7 +30,11 @@ gem 'activestorage', '~> 6.0', '>= 6.0.3.2'
 # handles zip files, older version: zip-zip
 gem 'rubyzip', '~> 2.3'
 
-# gem 'ruby-filemagic', '~> 0.7.2'
+# extends :File methods
+# gem 'win32-file', '~> 0.8.2'
+# gem 'ptools', '~> 1.3', '>= 1.3.7'
+
+# gem 'filemaigc'
 
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
