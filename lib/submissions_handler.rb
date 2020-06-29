@@ -17,6 +17,7 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 
 require 'zip'
 require 'open3'
+require 'filemagic'
 
 class ReorgBot
 
@@ -57,7 +58,7 @@ module SubmissionsHandler
     upload_dir = File.join(Rails.root, "upload", assignment.id.to_s)
 
     # Clear upload dir if exists
-    FileUtils.rm_r upload_dir if File.exist? upload_dir
+    FileUtils.remove_dir upload_dir if File.exist? upload_dir
 
     # Create upload dir
     FileUtils.mkdir_p(upload_dir)
@@ -67,34 +68,34 @@ module SubmissionsHandler
     upload_log << assignment.upload_log if assignment.upload_log
     upload_log << %Q{[#{Time.now.in_time_zone}] Received file: #{file.original_filename}}
 
+
     # Rename upload to original file name
     upload_file = File.join(upload_dir, file.original_filename)
 
-
     # Move upload into dir
-    FileUtils.mv file.path, upload_file
-    
+    FileUtils.copy_entry(file.path, upload_file)
+
     # Add filters for file types
     accepted_formats = [".py",".java", ".cpp", ".c", ".h"]
 
     # Extract submissions into dir
-    Zip::ZipFile.open(upload_file) { |zip_file|
+    Zip::File.open(upload_file) { |zip_file|
       zip_file.each { |f|
-	# isdirectory or filter by accepted file extension
-	if !f.file? or accepted_formats.include? File.extname(f.name)
-		upload_log << %Q{[#{Time.now.in_time_zone}] Extracting #{f.name}}
-		filepath = File.join(upload_dir, f.name)
-                zip_file.extract(f, filepath)
-		
-		# Reject files that passed the extension test but might be a binary file in disguise
-		if f.file? and File.binary? filepath
-			upload_log << %Q{[#{Time.now.in_time_zone}] Detected binary file, deleting #{f.name}}
-			FileUtils.rm filepath
-		end
-	else
-		upload_log << %Q{[#{Time.now.in_time_zone}] Invalid file type, Ignoring #{f.name} with extension #{File.extname(f.name)}}
-	end
-      }
+      # isdirectory or filter by accepted file extension
+      if !f.file? or accepted_formats.include? File.extname(f.name)
+        upload_log << %Q{[#{Time.now.in_time_zone}] Extracting #{f.name}}
+        filepath = File.join(upload_dir, f.name)
+                    zip_file.extract(f, filepath)
+        
+        # Reject files that passed the extension test but might be a binary file in disguise
+        if f.file? filepath and binary?(filepath)
+          upload_log << %Q{[#{Time.now.in_time_zone}] Detected binary file, deleting #{f.name}}
+          FileUtils.rm filepath
+        end
+      else
+        upload_log << %Q{[#{Time.now.in_time_zone}] Invalid file type, Ignoring #{f.name} with extension #{File.extname(f.name)}}
+      end
+        }
     }
     
     upload_log << %Q{[#{Time.now.in_time_zone}] Checking for empty directories}
@@ -221,4 +222,14 @@ module SubmissionsHandler
 
     strings.join("\n")
   end
+
+  def binary?(filename)
+    begin
+      fm= FileMagic.new(FileMagic::MAGIC_MIME)
+      !(fm.file(filename)=~ /^text\//)
+    ensure
+      fm.close
+    end
+  end
+
 end

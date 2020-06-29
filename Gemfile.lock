@@ -201,6 +201,7 @@ DEPENDENCIES
   mysql2 (~> 0.5.3)
   puma (~> 4.1)
   rails (~> 6.0.3, >= 6.0.3.2)
+  rubyzip (~> 2.3)
   sass-rails (>= 6)
   selenium-webdriver
   turbolinks (~> 5)

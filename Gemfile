@@ -27,6 +27,11 @@ gem 'actionmailer', '~> 6.0', '>= 6.0.3.2'
 # handle file uploads
 gem 'activestorage', '~> 6.0', '>= 6.0.3.2'
 
+# handles zip files, older version: zip-zip
+gem 'rubyzip', '~> 2.3'
+
+# gem 'ruby-filemagic', '~> 0.7.2'
+
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
 
