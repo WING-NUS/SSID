@@ -14,7 +14,7 @@
 
   <target name="compile">
     <mkdir dir="${classes.dir}"/>
-    <javac srcdir="${src.dir}" destdir="${classes.dir}" classpath="${classpath.dir}/snakeyaml-1.10.jar">
+    <javac srcdir="${src.dir}" destdir="${classes.dir}" debug="true" classpath="${classpath.dir}/snakeyaml-1.10.jar">
       <compilerarg value="-Xlint:unchecked"/>
     </javac>
   </target>
