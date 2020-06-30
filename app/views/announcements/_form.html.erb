@@ -10,7 +10,7 @@
     </div>
   <% end %>
   <div>
-    <%= f.label :course_id, "Course" %>:
+    <%= f.label :courses, "Course" %>:
     <%= select_tag :announcement_course_id, options_from_collection_for_select(@announceable_courses, "id", "code_and_name"), name: "announcement[course_id]" %>
   </div>
   <div>

@@ -30,13 +30,13 @@ SSID::Application.configure do
   # config.active_record.auto_explain_threshold_in_seconds = 0.5
 
   # Do not compress assets
-  config.assets.compress = false
+  config.assets.compress = true
 
   # Expands the lines which load the assets
   config.assets.debug = true
 
   # allow local storae use for file uploads
-  config.active_storage.service = :local
+  # config.active_storage.service = :local
 
   # whitelist attributes for mass-assignment
   # config.active_record.whitelist_attributes = true

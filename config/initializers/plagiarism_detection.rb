@@ -17,5 +17,5 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 
 # Be sure to restart your server when you modify this file.
 
-SSID::Application.config.plagiarism_detection_path = File.join(Rails.root, "lib", "java", "jar", "PlagiarismDetection.jar")
+SSID::Application.config.plagiarism_detection_path = File.join("C:/cygwin64", Rails.root, "lib", "java", "jar", "PlagiarismDetection.jar")
 SSID::Application.config.ld_library_path = "/usr/local/lib";

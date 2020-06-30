@@ -12,9 +12,11 @@
 <% if @assignments.empty? %>
   <p class="none_created">No Assignment has been created.</p>
 <% else %>
-  <div id='status'>
-    
-  </div>
+  <% @assignments.each do |assignment| %>
+    <div id="status">
+      <%= link_to "Show" , assignment_path(assignment) %>
+    </div>
+  <% end %>
 <% end %>
 <hr />
 <div class="actions">

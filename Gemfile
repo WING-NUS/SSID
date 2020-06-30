@@ -10,7 +10,7 @@ gem 'mysql2', '~> 0.5.3'
 # Use Puma as the app server
 gem 'puma', '~> 4.1'
 # Use SCSS for stylesheets
-gem 'sass-rails', '>= 6'
+# gem 'sass-rails', '>= 6'
 # Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker
 gem 'webpacker', '~> 4.0'
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
@@ -30,6 +30,8 @@ gem 'activestorage', '~> 6.0', '>= 6.0.3.2'
 # handles zip files, older version: zip-zip
 gem 'rubyzip', '~> 2.3'
 
+gem 'sprockets-rails', :require => 'sprockets/railtie'
+
 # extends :File methods
 # gem 'win32-file', '~> 0.8.2'
 # gem 'ptools', '~> 1.3', '>= 1.3.7'
@@ -38,6 +40,19 @@ gem 'rubyzip', '~> 2.3'
 
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
+
+# pagination
+gem 'will_paginate', '~> 3.3'
+
+# pretty print
+
+gem 'jquery-rails', '~> 4.4'
+
+group :assets do
+  gem 'sass-rails', '~> 6.0'
+  gem 'coffee-rails', '~> 5.0'
+  gem 'uglifier', '~> 4.2'
+end
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.2', require: false
