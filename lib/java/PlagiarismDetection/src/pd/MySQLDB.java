@@ -79,7 +79,7 @@ public final class MySQLDB {
 		HashMap<String, Integer> students = new HashMap<String, Integer>();
 
     // Find course id
-		PreparedStatement stmt = con.prepareStatement(COURSE_ID_SELECT);
+		PreparedStatement stmt = con.prepareStatement(COURSE_ID_SELECT, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 		stmt.setString(1, aIdString);
 		ResultSet rs = stmt.executeQuery();
 		rs.first();
@@ -131,9 +131,10 @@ public final class MySQLDB {
 		ResultSet rs = null;
 
     // Find student in db
-		stmt = con.prepareStatement(STUDENT_SELECT);
+		stmt = con.prepareStatement(STUDENT_SELECT, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 		stmt.setString(1, matric);
-    rs = stmt.executeQuery();
+		rs = stmt.executeQuery();
+		int userId;
     
     // If no results, we need to insert student into the db
     if (rs.first() == false) {
@@ -145,32 +146,38 @@ public final class MySQLDB {
         stmt.setString(2, matric);
         stmt.setString(3, dateTime);
         stmt.setString(4, dateTime);
-        stmt.execute();
+        stmt.executeUpdate();
         rs = stmt.getGeneratedKeys();
         rs.first();
       } catch (Exception ex) {
         System.err.println(ex);
-      }
-    }
+      } finally {
+		userId = rs.getInt(1);
+		rs.close();
+		stmt.close();
+	  }
+    } else {
+		// Get new or existing student id
+		userId = rs.getInt(1);
+		rs.close();
+		stmt.close();
+	}
 
-    // Get new or existing student id
-		int userId = rs.getInt(1);
-    rs.close();
-    stmt.close();
+    
 
     // Find course membership
-    stmt = con.prepareStatement(STUDENT_MEMBERSHIP_SELECT);
+    stmt = con.prepareStatement(STUDENT_MEMBERSHIP_SELECT, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
     stmt.setInt(1, userId);
     stmt.setInt(2, courseId);
     stmt.setInt(3, 2); // 2 = ROLE_STUDENT; See UserCourseMembership model file for details
     rs = stmt.executeQuery();
 
     // If no results, we need to create a membership row
-    if (rs.first() == false) {
+    if (rs.isBeforeFirst() == false) {
       try {
         rs.close();
         stmt.close();
-        stmt = con.prepareStatement(STUDENT_MEMBERSHIP_INSERT);
+        stmt = con.prepareStatement(STUDENT_MEMBERSHIP_INSERT, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
         stmt.setInt(1, userId);
         stmt.setInt(2, courseId);
         stmt.setInt(3, 2); // 2 = ROLE_STUDENT; See UserCourseMembership model file for details
