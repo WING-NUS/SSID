@@ -44,6 +44,7 @@ public class Main {
 
 		String aId = args[0];
 		String compareFolderPath = args[1];
+		System.out.println(compareFolderPath);
 		String language = args[2];
 		int minMatch = Integer.parseInt(args[3]);
 		if (minMatch <= 0) {

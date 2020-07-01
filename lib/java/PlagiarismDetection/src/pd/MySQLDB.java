@@ -27,7 +27,7 @@ public final class MySQLDB {
 
 	private static String USER_ID;
 	private static String USER_PASSWORD;
-	private static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
+	private static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
 	private static String MYSQL_URL;
 	private static final String STUDENT_INSERT = "INSERT IGNORE INTO users(name, id_string, created_at, updated_at) VALUES (?, ?, ?, ?)";
   private static final String STUDENT_MEMBERSHIP_INSERT = "INSERT INTO user_course_memberships(user_id, course_id, role, created_at, updated_at) VALUES (?, ?, ?, ?, ?)";

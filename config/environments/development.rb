@@ -6,6 +6,9 @@ SSID::Application.configure do
   # since you don't have to restart the web server when you make code changes.
   config.cache_classes = false
 
+  # watch for changes in source code
+  config.file_watcher = ActiveSupport::FileUpdateChecker
+
   # Log error messages when you accidentally call methods on nil.
   config.whiny_nils = true
 

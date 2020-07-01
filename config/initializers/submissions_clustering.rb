@@ -17,4 +17,4 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 
 # Be sure to restart your server when you modify this file.
 
-SSID::Application.config.submissions_clustering_path = File.join(Rails.root, "lib", "java", "jar", "SubmissionsClustering.jar")
+SSID::Application.config.submissions_clustering_path = File.join(".", "lib", "java", "jar", "SubmissionsClustering.jar")

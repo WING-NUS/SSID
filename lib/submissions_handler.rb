@@ -54,7 +54,7 @@ end
 
 module SubmissionsHandler
   def self.process_upload(file, assignment)
-    upload_dir = File.join(Rails.root, "upload", assignment.id.to_s)
+    upload_dir = File.join(".", "upload", assignment.id.to_s)
 
     # Clear upload dir if exists
     FileUtils.remove_dir upload_dir if File.exist? upload_dir
