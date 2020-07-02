@@ -64,10 +64,6 @@ class AnnouncementsController < ApplicationController
     else
       @announcement.errors.add :course_id, "must be selected from the available options"
     end
-  
-    # Check content
-    # depreciated with no replacement
-    # @announcement.errors.add_on_blank :html_content
 
     if @announcement.errors.empty? and @announcement.save
       redirect_to announcements_url, notice: 'Announcement was successfully created.'

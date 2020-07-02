@@ -28,6 +28,10 @@ SSID::Application.routes.draw do
 
   resources :announcements
 
+  namespace :admin do
+    resources :users
+  end
+  
   resources :courses do
     # missing view
     get 'status' 
@@ -79,9 +83,8 @@ SSID::Application.routes.draw do
   get "clusters/:id/show_table_partial" => "submission_clusters#show_table_partial"
 
   resources :users
-  namespace :admin do
-    resources :users
-  end
+
+
   
   resources :students, controller: "users" do
     get "submission_similarities/show_table_partial" => "submission_similarities#show_table_partial"
