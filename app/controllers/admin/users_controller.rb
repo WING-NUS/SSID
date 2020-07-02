@@ -53,7 +53,7 @@ class Admin::UsersController < ApplicationController
     end
 
     # Construct basic attributes for course user or for admin user
-    if @course
+    if defined? @course
       # Check if user exists
       @existing_user = User.where(id_string: params[:user]["id_string"]).first
       if @existing_user
@@ -96,7 +96,7 @@ class Admin::UsersController < ApplicationController
 
     # Check for errors and render view
     if @the_user.errors.empty? and @the_user.save
-      if @existing_user
+      if defined? @existing_user
         redirect_to admin_users_url, notice: "User was successfully added to #{@course.code}."
       else
         redirect_to admin_users_url, notice: 'User was successfully created.'
