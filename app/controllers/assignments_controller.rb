@@ -36,7 +36,8 @@ class AssignmentsController < ApplicationController
     @processed_assignments = @course.processed_assignments
     @erroneous_assignments = @course.erroneous_assignments
   end
-
+  
+  # GET /assignments/1/cluster_students
   def cluster_students
     @assignment = Assignment.find(params["assignment_id"])
     respond_to do |format|
@@ -48,7 +49,7 @@ class AssignmentsController < ApplicationController
     end
   end
 
-  # GET /courses/1/assignments/1/upload_log
+  # GET /courses/1/assignments/1/log
   def show_log
     @assignment = Assignment.find(params[:assignment_id])
   end
