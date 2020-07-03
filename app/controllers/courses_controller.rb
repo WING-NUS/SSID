@@ -16,7 +16,6 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
 class CoursesController < ApplicationController
-  protect_from_forgery except: :status
   before_action { |controller|
     controller.send :authenticate_actions_for_admin, only: [ :new, :create, :edit, :update, :destroy ]
   }
@@ -112,7 +111,7 @@ class CoursesController < ApplicationController
     redirect_to courses_url, notice: 'Course was successfully deleted.'
   end
 
-  # GET /courses/1/cluster_students.json
+  # GET /courses/1/cluster_students
   def cluster_students
     respond_to do |format|
       format.json { 

@@ -22,7 +22,7 @@ SSID::Application.routes.draw do
   get "login" => "sessions#new"
   post "login" => "sessions#create"
   delete "logout" => "sessions#destroy"
-
+  
   get "guide" => "users#guide"
   root to: "announcements#index"
 
