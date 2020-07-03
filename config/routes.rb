@@ -60,10 +60,9 @@ SSID::Application.routes.draw do
       put "unmark_as_plagiarism" => "submission_similarities#unmark_as_plagiarism"
     end
 
-    # resources :submissions do
-    #   # missing view
-    #   get "log" => "submission_logs#index"
-    # end
+    resources :submissions do
+      get "log" => "submission_logs#index"
+    end
   end
 
   resources :submission_similarities do
@@ -78,11 +77,13 @@ SSID::Application.routes.draw do
   #   resources :clusters, controller: "submission_clusters"
   # end
 
+  get "clusters/:id" => "submission_clusters#show", defaults: { format: 'json' }
+  get "clusters/show_for_submission_ids" => "submission_clusters#show_for_submission_ids", defaults: { format: 'json' }
   get "clusters/ids_and_group_ids_for_student_ids" => "submission_clusters#ids_and_group_ids_for_student_ids", defaults: { format: 'json' }
   get "clusters/show_graph_partial" => "submission_clusters#show_graph_partial"
   get "clusters/show_ranking_partial" => "submission_clusters#show_ranking_partial"
-  get "clusters/show_for_submission_ids" => "submission_clusters#show_for_submission_ids", defaults: { format: 'json' }
-  get "clusters/:id" => "submission_clusters#show", defaults: { format: 'json' }
+  
+  
   get "clusters/:id/show_graph_partial" => "submission_clusters#show_graph_partial"
   get "clusters/:id/show_table_partial" => "submission_clusters#show_table_partial"
 

@@ -90,7 +90,7 @@ class SubmissionClustersController < ApplicationController
   end
 
   # GET /clusters/1/show_graph_partial
-  # GET /clusters/show_graph_partial
+  # GET /clusters/show_graph_partial => not working
   def show_graph_partial
     if params[:id]
       render partial: "submission_cluster_graph", locals: { cluster_id: @submission_cluster.id, submission_student_ids: @submission_cluster.submission_student_ids }
