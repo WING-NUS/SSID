@@ -16,7 +16,7 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
 SSID::Application.routes.draw do
-  # resources :submission_logs
+  resources :submission_logs
 
   # Login/Logout routes
   get "login" => "sessions#new"
@@ -33,10 +33,10 @@ SSID::Application.routes.draw do
   end
 
   resources :courses do
-    # missing view
-    get 'status' 
+    get 'status'
+    get "cluster_students", defaults: { format: "json" }
 
-   resources :users
+    resources :users
 
     resources :assignments do
       get "log" => "assignments#show_log"
@@ -46,12 +46,12 @@ SSID::Application.routes.draw do
     get "visualize/similarity_cluster_graph" => "visualize#similarity_cluster_graph"
     get "visualize/similarity_cluster_table" => "visualize#similarity_cluster_table"
     get "visualize/top_similar_submissions" => "visualize#top_similar_submissions"
-    get "cluster_students"
   end
 
   resources :assignments do 
-    # broken
     get "cluster_students", defaults: { format: "json" }
+
+    resources :cluster_groups, controller: "submission_cluster_groups"
 
     resources :submission_similarities do
       put "confirm_as_plagiarism" => "submission_similarities#confirm_as_plagiarism"
@@ -59,12 +59,10 @@ SSID::Application.routes.draw do
       put "unmark_as_plagiarism" => "submission_similarities#unmark_as_plagiarism"
     end
 
-    resources :cluster_groups, controller: "submission_cluster_groups"
-
-    resources :submissions do
-      # missing view
-      get "log" => "submission_logs#index"
-    end
+    # resources :submissions do
+    #   # missing view
+    #   get "log" => "submission_logs#index"
+    # end
   end
 
   resources :submission_similarities do
@@ -87,10 +85,6 @@ SSID::Application.routes.draw do
   get "clusters/:id/show_graph_partial" => "submission_clusters#show_graph_partial"
   get "clusters/:id/show_table_partial" => "submission_clusters#show_table_partial"
 
-  resources :users
-
-
-  
   resources :students, controller: "users" do
     get "submission_similarities/show_table_partial" => "submission_similarities#show_table_partial"
   end
