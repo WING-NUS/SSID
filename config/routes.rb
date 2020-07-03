@@ -33,7 +33,6 @@ SSID::Application.routes.draw do
   end
   resources :users
   
-
   resources :courses do
     get 'status'
     get "cluster_students", defaults: { format: "json" }

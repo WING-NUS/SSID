@@ -13,8 +13,8 @@
     <div>
       <% if session[:user_id] %>
       <%= link_to 'Guide', guide_path %>
-      <%= link_to 'Announcements', guide_path %>
-      <%= link_to 'Courses', guide_path %>
+      <%= link_to 'Announcements', announcements_path %>
+      <%= link_to 'Courses', courses_path %>
       <% if @user.is_admin %>
         <%= link_to 'Users', admin_users_path %>
       <% end %>
