@@ -25,7 +25,7 @@
           <td><%= cluster_group.clusters.size %></td>
           <td>[Created on <%= cluster_group.created_at.in_time_zone %>] <%= cluster_group.description %></td>
           <td>
-            <%= link_to "View Clusters", clusters_show_graph_partial_url(cluster_group) %>
+            <%= link_to "View Clusters", clusters_id_partial_graph_path, :id => cluster_group.clusters.ids %>
             <%= link_to "Delete", assignment_cluster_group_url(@assignment, cluster_group), method: "delete", class: "last", confirm: "Delete cluster group?" %>
           </td>
         </tr>
