@@ -31,6 +31,8 @@ SSID::Application.routes.draw do
   namespace :admin do
     resources :users
   end
+  resources :users
+  
 
   resources :courses do
     get 'status'
