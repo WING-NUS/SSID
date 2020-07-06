@@ -84,7 +84,7 @@ SSID::Application.routes.draw do
   get "clusters/show_ranking_partial" => "submission_clusters#show_ranking_partial"
   
   
-  get "clusters/:id/show_graph_partial" => "submission_clusters#show_graph_partial", :as => "clusters_id_partial_graph"
+  get "clusters/:id/show_graph_partial" => "submission_clusters#show_graph_partial"
   get "clusters/:id/show_table_partial" => "submission_clusters#show_table_partial"
 
   resources :students, controller: "users" do
