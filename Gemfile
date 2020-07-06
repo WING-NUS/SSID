@@ -23,9 +23,6 @@ gem 'bcrypt', '~> 3.1.7'
 
 gem 'actionmailer', '~> 6.0', '>= 6.0.3.2'
 
-# handle file uploads
-gem 'activestorage', '~> 6.0', '>= 6.0.3.2'
-
 # handles zip files, older version: zip-zip
 gem 'rubyzip', '~> 2.3'
 

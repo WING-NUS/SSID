@@ -94,9 +94,9 @@ SubmissionSimilarity.toggleAllRowHighlights = (el) ->
 SubmissionSimilarity.toggleGuilty = (el) ->
   ids = $(el).attr("id").replace(/toggle_guilty_/, "").split("_")
   if $(el).attr("checked")
-    url = "/SSID/submission_similarities/"+ids[0]+"/submissions/"+ids[1]+"/mark_as_guilty"
+    url = "./submission_similarities/"+ids[0]+"/submissions/"+ids[1]+"/mark_as_guilty"
   else
-    url = "/SSID/submission_similarities/"+ids[0]+"/submissions/"+ids[1]+"/mark_as_not_guilty"
+    url = "./submission_similarities/"+ids[0]+"/submissions/"+ids[1]+"/mark_as_not_guilty"
   $.ajax
     url: url
     type: "PUT"

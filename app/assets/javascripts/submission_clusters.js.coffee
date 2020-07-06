@@ -20,7 +20,7 @@ window.SubmissionCluster ||= {}
 SubmissionCluster.drawClusters = ->
   $("div.cluster").each ->
     clusterId = $(this).attr("id").replace(/^cluster_/, "")
-    $.getJSON "/SSID/clusters/"+clusterId, (data) ->
+    $.getJSON "./clusters/"+clusterId, (data) ->
       SubmissionCluster.drawCluster(clusterId, data)
       return
     return

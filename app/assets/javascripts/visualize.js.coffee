@@ -200,7 +200,7 @@ VisualizeTopSimilarSubmissions.showTable = (el) ->
   for studentId in studentIds
     do (studentId) ->
       data["studentId"] = studentId
-      $.get("/SSID/students/"+studentId+"/submission_similarities/show_table_partial", data,
+      $.get("./students/"+studentId+"/submission_similarities/show_table_partial", data,
         (html) ->
           $("#table_student_"+studentId).replaceWith html
           VisualizeTopSimilarSubmissions.registerClusterTableEvents($("#table_student_"+studentId))
@@ -256,7 +256,7 @@ VisualizeSimilarityClusterTable.showTable = (el) ->
       existing_clusters_data["assignment_id"] = $("#existing_clusters_assignment_selector").val()
 
     # Find cluster Ids and cluster Group Ids using ajax
-    $.getJSON "/SSID/clusters/ids_and_group_ids_for_student_ids", existing_clusters_data, (data) ->
+    $.getJSON "./clusters/ids_and_group_ids_for_student_ids", existing_clusters_data, (data) ->
       for dict in data
         clusterIds.push dict["id"]
         clusterIdMembershipDict[dict["id"]] = dict["group_id"]
@@ -286,7 +286,7 @@ VisualizeSimilarityClusterTable.drawTables = (el, clusterIds) ->
     $("#clusters").html("<h3>Submission Similarity Cluster Tables</h3>")
 
   # Draw Ranking table
-  $.get("/SSID/clusters/show_ranking_partial", { "clusterIds" : clusterIds },
+  $.get("./clusters/show_ranking_partial", { "clusterIds" : clusterIds },
     (html) ->
       $("#ranking").append html
       VisualizeSimilarityClusterTable.registerRankingTableEvents()
@@ -302,7 +302,7 @@ VisualizeSimilarityClusterTable.drawTables = (el, clusterIds) ->
   for clusterId in clusterIds
     # Use closure, otherwise vars in callback will be wrong
     do (clusterId) ->
-      $.get("/SSID/clusters/"+clusterId+"/show_table_partial",
+      $.get("./clusters/"+clusterId+"/show_table_partial",
         (html) ->
           $("#cluster_"+clusterId).replaceWith html
           VisualizeSimilarityClusterTable.registerClusterTableEvents($("#cluster_"+clusterId))
@@ -338,7 +338,7 @@ VisualizeSimilarityClusterGraph.showGraph = (el) ->
     $("#clusters").append "<div id=\"cluster_"+clusterId+"\" class=\"cluster\"></div>"
     
     # Get template and data for drawing
-    $.get "/SSID/clusters/show_graph_partial", (html) ->
+    $.get "./clusters/show_graph_partial", (html) ->
       clusterId = submissionIds.join("_")
       # Create canvas
       $("#cluster_"+clusterId).append html
@@ -351,7 +351,7 @@ VisualizeSimilarityClusterGraph.showGraph = (el) ->
       # Set canvas id
       $("#canvas_wrapper_").attr("id", "canvas_wrapper_"+clusterId)
       # Draw into html
-      $.getJSON "/SSID/clusters/show_for_submission_ids", { "ids" : submissionIds }, (data) ->
+      $.getJSON "./clusters/show_for_submission_ids", { "ids" : submissionIds }, (data) ->
         SubmissionCluster.drawCluster(clusterId, data)
         return
       return
@@ -381,7 +381,7 @@ VisualizeSimilarityClusterGraph.showGraph = (el) ->
       existing_clusters_data["assignment_id"] = $("#existing_clusters_assignment_selector").val()
 
     # Find cluster Ids and cluster Group Ids using ajax
-    $.getJSON "/SSID/clusters/ids_and_group_ids_for_student_ids", existing_clusters_data, (data) ->
+    $.getJSON "./clusters/ids_and_group_ids_for_student_ids", existing_clusters_data, (data) ->
       for dict in data
         clusterIds.push dict["id"]
         clusterIdMembershipDict[dict["id"]] = dict["group_id"]
@@ -414,7 +414,7 @@ VisualizeSimilarityClusterGraph.drawClusters = (el, clusterIds, clusterIdMembers
   for clusterId in clusterIds
     # Use closure, otherwise vars in callback will be wrong
     do (clusterId) ->
-      $.get "/SSID/clusters/"+clusterId+"/show_graph_partial", (html) ->
+      $.get "./clusters/"+clusterId+"/show_graph_partial", (html) ->
         # Create html container
         $("#cluster_"+clusterId).append html
         # Get extra description from table
@@ -424,7 +424,7 @@ VisualizeSimilarityClusterGraph.drawClusters = (el, clusterIds, clusterIdMembers
         # Add description to title
         $("#cluster_"+clusterId+" h3:eq(0)").before("<h3>Assignment: "+assignment_title+" (Cut-Off Criterion "+cut_off_criterion+"%)</h3>")
         # Draw into html
-        $.getJSON "/SSID/clusters/"+clusterId, (data) ->
+        $.getJSON "./clusters/"+clusterId, (data) ->
           SubmissionCluster.drawCluster(clusterId, data)
           return
         return
@@ -442,7 +442,7 @@ VisualizeSimilarityClusterGraph.selectAssignmentForSubmissions = (el) ->
   $(el).nextAll("span").first().html("Loading...")
   $(el).nextAll("select").first().attr("disabled", "disabled")
   assignment_id = $(el).val()
-  $.getJSON "/SSID/assignments/"+assignment_id+"/submissions", (data) ->
+  $.getJSON "./assignments/"+assignment_id+"/submissions", (data) ->
     options = ["<option value=\"\"></option>"]
     for submission in data
       options.push "<option value=\""+submission["id"]+"\">"+submission["student_id_string"]+"</option>"
@@ -457,7 +457,7 @@ VisualizeTopSimilarSubmissions.selectAssignmentForSubmissions = (el) ->
   $(el).nextAll("span").first().html("Loading...")
   $(el).nextAll("select").first().attr("disabled", "disabled")
   assignment_id = $(el).val()
-  $.getJSON "/SSID/assignments/"+assignment_id+"/submissions", (data) ->
+  $.getJSON "./assignments/"+assignment_id+"/submissions", (data) ->
     options = ["<option value=\"\"></option>"]
     for submission in data
       options.push "<option value=\""+submission["student_id"]+"\">"+submission["student_id_string"]+"</option>"
@@ -474,9 +474,9 @@ VisualizeSimilarityClusterGraph.selectAssignmentForExistingClusters = (el) ->
   # Get assignment_id / course_id
   selected_id = $(el).val()
   if $("option:selected", el).html() == "All"
-    url = "/SSID/courses/"+selected_id+"/cluster_students"
+    url = "./courses/"+selected_id+"/cluster_students"
   else
-    url = "/SSID/assignments/"+selected_id+"/cluster_students"
+    url = "./assignments/"+selected_id+"/cluster_students"
 
   $.getJSON url, (data) ->
     options = ["<option value=\"\"></option>"]
