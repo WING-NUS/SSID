@@ -14,10 +14,6 @@
 <% else %>
   <% @assignments.each do |assignment| %>
     <div id="status">
-      <%= link_to "Submission Details" , assignment_path(assignment) %>
-      <%= link_to "Students" %>
-      <%= link_to "New Cluster" , new_assignment_cluster_group_path(assignment) %>
-      <%= link_to "Existing Clusters" , assignment_cluster_groups_path(assignment) %>
 
     </div>
   <% end %>
