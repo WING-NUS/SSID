@@ -66,7 +66,6 @@ SSID::Application.routes.draw do
   end
 
   resources :submission_similarities do
-    # /submission_similarities/:id/submissions/:id does not work as expected so why is this resource placed here?
     resources :submissions do
       put "mark_as_guilty" => "submissions#mark_as_guilty"
       put "mark_as_not_guilty" => "submissions#mark_as_not_guilty"
@@ -77,13 +76,12 @@ SSID::Application.routes.draw do
     resources :clusters, controller: "submission_clusters"
   end
   
-  get "clusters/:id" => "submission_clusters#show", defaults: { format: 'json' }
   get "clusters/show_for_submission_ids" => "submission_clusters#show_for_submission_ids", defaults: { format: 'json' }
   get "clusters/ids_and_group_ids_for_student_ids" => "submission_clusters#ids_and_group_ids_for_student_ids", defaults: { format: 'json' }
   get "clusters/show_graph_partial" => "submission_clusters#show_graph_partial"
   get "clusters/show_ranking_partial" => "submission_clusters#show_ranking_partial"
   
-  
+  get "clusters/:id" => "submission_clusters#show", defaults: { format: 'json' }
   get "clusters/:id/show_graph_partial" => "submission_clusters#show_graph_partial"
   get "clusters/:id/show_table_partial" => "submission_clusters#show_table_partial"
 
