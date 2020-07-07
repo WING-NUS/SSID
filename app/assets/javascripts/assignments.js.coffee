@@ -27,6 +27,6 @@ Assignment.onLoad = ->
 $(document).ready ->
   if $("#status").length > 0
     $("#status").load statusURL
-    setInterval (->
-      $("#status").load statusURL
-    ), 3000
+    # setInterval (->
+    #   $("#status").load statusURL
+    # ), 3000
