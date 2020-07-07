@@ -60,7 +60,7 @@ class SubmissionsController < ApplicationController
         sl.log_type = SubmissionLog::TYPE_STUDENT_MARK_AS_GUILTY
       }
     end
-    render nothing: true, status: 200
+    # render body :nil, status: 200
   end
 
   def mark_as_not_guilty
@@ -74,6 +74,6 @@ class SubmissionsController < ApplicationController
         sl.log_type = SubmissionLog::TYPE_STUDENT_MARK_AS_NOT_GUILTY
       }
     end
-    render nothing: true, status: 200
+    # render body: nil, status: 200
   end
 end
