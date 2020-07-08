@@ -115,38 +115,24 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
           Site.registerHighlightRowMethodsForLink(this);
         });
         prettyPrint();
+
         $("table.lines td").hover(function() {
           SubmissionSimilarity.slideToLine($(this).parent().find("input"));
           SubmissionSimilarity.highlightLines($(this).parent().find("input"));
         }, function() {
           SubmissionSimilarity.unhighlightLines($(this).parent().find("input"));
         });
-        $("table.lines td").on("click", function() {
-          SubmissionSimilarity.toggleRowHighlight($(this).parent());
-        });
-        $("table.lines td input").click(function(event) {
-        //   event.stopPropagation();
-        });
-        $("table.lines th.check_box_col").on("click", function() {
-          var inputNode;
-          inputNode = $(this).find("input");
-          if (inputNode.is(":checked")) {
-            inputNode.prop('checked', false);
-          } else {
-            inputNode.prop("checked", true);
-          }
-            SubmissionSimilarity.toggleAllRowHighlights(inputNode);
-          });
-        $("table.lines th.check_box_col").hover(function() {
-          $("table.lines tbody tr").each(function() {
+
+        $("table.lines th.check_box_col").hover(
+          function() {$("table.lines tbody tr").each(function() {
             var inputNode;
             inputNode = $(this).find("input");
             if (!inputNode.is(":checked")) {
               SubmissionSimilarity.highlightLines(inputNode);
             }
           });
-        }, function() {
-          $("table.lines tbody tr").each(function() {
+          }, 
+          function() {$("table.lines tbody tr").each(function() {
             var inputNode;
             inputNode = $(this).find("input");
             if (!inputNode.is(":checked")) {
@@ -154,9 +140,12 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
             }
           });
         });
+        
+        $("table.lines td.check_box_col").on("click", function() {
+          SubmissionSimilarity.toggleRowHighlight(this);
+        });
         $("table.lines th.check_box_col input").on('click', function(event) {
           SubmissionSimilarity.toggleAllRowHighlights(this);
-        //   event.stopPropagation();
         });
         $("input.guilty_check_box").change(function() {
           SubmissionSimilarity.toggleGuilty(this);

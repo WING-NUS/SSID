@@ -65,6 +65,7 @@ SSID::Application.routes.draw do
     end
   end
 
+  # ajax calls
   resources :submission_similarities do
     resources :submissions do
       put "mark_as_guilty" => "submissions#mark_as_guilty"
