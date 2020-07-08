@@ -13,13 +13,15 @@
   <tbody>
     <% @submission.student.submissions.each do |sub| %>
         <% sub.logs.reverse.each do |log| %>
-        <tr>
-            <td><%= log.created_at.in_time_zone.strftime '%Y-%m-%d %H:%M:%S'   %></td>
-            <td><%= log.submission.course.code_and_name  %></td>
-            <td><%= log.submission.assignment.title %></td>
-            <td><%= log.marker.full_name %></td>
-            <td><%= log.log_string %></td>
-        </tr>
+          <% if !log.submission.assignment.nil? %>
+          <tr>
+              <td><%= log.created_at.in_time_zone.strftime '%Y-%m-%d %H:%M:%S' %></td>
+              <td><%= log.submission.course.code_and_name %></td>
+              <td><%= log.submission.assignment.title %></td>
+              <td><%= log.marker.full_name %></td>
+              <td><%= log.log_string %></td>
+          </tr>
+          <% end %>
         <% end %>
     <% end %>  
   </tbody>
