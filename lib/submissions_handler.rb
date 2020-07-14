@@ -84,8 +84,8 @@ module SubmissionsHandler
       if !f.file? or accepted_formats.include? File.extname(f.name)
         upload_log << %Q{[#{Time.now.in_time_zone}] Extracting #{f.name}}
         filepath = File.join(upload_dir, f.name)
-                    zip_file.extract(f, filepath)
-        
+        zip_file.extract(f, filepath)
+
         # Reject files that passed the extension test but might be a binary file in disguise
         # if f.file? filepath
         #   upload_log << %Q{[#{Time.now.in_time_zone}] Detected binary file, deleting #{f.name}}
@@ -94,7 +94,7 @@ module SubmissionsHandler
       else
         upload_log << %Q{[#{Time.now.in_time_zone}] Invalid file type, Ignoring #{f.name} with extension #{File.extname(f.name)}}
       end
-        }
+      }
     }
     
     upload_log << %Q{[#{Time.now.in_time_zone}] Checking for empty directories}
