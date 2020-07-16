@@ -19,7 +19,7 @@ package pd.utils.Tokens;
 
 import java.util.*;
 
-public class TokenList extends ArrayList<Token> {
+public class TokenList extends ArrayList<TokenSSID> {
 
 	private static final long serialVersionUID = 1791998687760639392L;
 	private boolean[] markedTokens = null;
@@ -71,7 +71,7 @@ public class TokenList extends ArrayList<Token> {
 	}
 
 	@Override
-	public boolean add(Token t) {
+	public boolean add(TokenSSID t) {
 
 		if (t.isStartOfStatement()) {
 			startOfStmtTokenIndices.add(size());

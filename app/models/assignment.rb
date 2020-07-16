@@ -33,7 +33,7 @@ class Assignment < ActiveRecord::Base
     java: "Java",
     c: "C (Experimental)",
     cpp: "C++",
-    python3: "Python 3"
+    python3: "Python3"
   }
 
   PRETTIFY_LANGUAGES = {

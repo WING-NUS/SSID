@@ -59,10 +59,10 @@ public final class NGramizer {
 				offset_list[i] = 0 - i;
 			}
 			// int hashCode = 0;
-			Token t;
+			TokenSSID t;
 			NGram nGram;
 
-			// int b = Token.getRegCount();
+			// int b = TokenSSID.getRegCount();
 			// int bk = ((int) Math.pow(b, nGramSize) % Integer.MAX_VALUE);
 			// int cbk = 0;
 			// Queue<Integer> cs = new LinkedList<Integer>();

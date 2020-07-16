@@ -17,7 +17,7 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
  
 package pd.utils.Tokens;
 
-public final class ConstantToken extends Token {
+public final class ConstantToken extends TokenSSID {
 
 	private static final int CONSTANT_REG = 0;
 

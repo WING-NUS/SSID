@@ -97,7 +97,7 @@ public final class PyTokenizer extends Tokenizer {
 		boolean nextTokenIsStartOfStatement = true, ignorableToken = false; // ignorableToken,
 																			// record
 																			// prev
-																			// token
+																			// TokenSSID
 																			// is
 																			// ignorable
 		boolean preBlock = false; // For recording if current in if, while
@@ -154,8 +154,8 @@ public final class PyTokenizer extends Tokenizer {
 					nextTokenIsStartOfStatement = false;
 
 					if (ignorableToken) {
-						Token last = result.get(result.size() - 1);
-						Token prev = result.get(result.size() - 2);
+						TokenSSID last = result.get(result.size() - 1);
+						TokenSSID prev = result.get(result.size() - 2);
 
 						result.remove(result.size() - 2);
 						last.setStartOfStatement(prev.isStartOfStatement());
@@ -221,7 +221,7 @@ public final class PyTokenizer extends Tokenizer {
 					case ';':
 						if (brackets == 0) {
 							result.get(result.size() - 1).setEndOfStatement(
-									Token.EndOfStatementType.COUNTABLE);
+									TokenSSID.EndOfStatementType.COUNTABLE);
 							nextTokenIsStartOfStatement = true;
 
 							while (!blockDeclared.empty()
@@ -278,7 +278,7 @@ public final class PyTokenizer extends Tokenizer {
 			}
 			if (preprocessDirective) {
 				result.get(result.size() - 1).setEndOfStatement(
-						Token.EndOfStatementType.NON_COUNTABLE);
+						TokenSSID.EndOfStatementType.NON_COUNTABLE);
 				nextTokenIsStartOfStatement = true;
 			}
 
@@ -315,7 +315,7 @@ public final class PyTokenizer extends Tokenizer {
 
 			endLoc = lr.getGPos() - 1;
 			result.add(new ConstantToken(startLoc, endLoc, line,
-					thisIsStartOfStatement, Token.EndOfStatementType.FALSE));
+					thisIsStartOfStatement, TokenSSID.EndOfStatementType.FALSE));
 			break;
 
 		case '"':
@@ -336,7 +336,7 @@ public final class PyTokenizer extends Tokenizer {
 			// thisIsStartOfStatement ? KGramChar.TokenType.START_OF_STATEMENT :
 			// KGramChar.TokenType.UNDEFINED));
 			result.add(new ConstantToken(startLoc, endLoc, line,
-					thisIsStartOfStatement, Token.EndOfStatementType.FALSE));
+					thisIsStartOfStatement, TokenSSID.EndOfStatementType.FALSE));
 			break;
 
 		case '/':
@@ -360,7 +360,7 @@ public final class PyTokenizer extends Tokenizer {
 				// KGramChar.TokenType.UNDEFINED));
 				result.add(new SymbolToken(Character.toString(curChar), pos,
 						pos, line, thisIsStartOfStatement,
-						Token.EndOfStatementType.FALSE));
+						TokenSSID.EndOfStatementType.FALSE));
 				break;
 			}
 			break;
@@ -383,7 +383,7 @@ public final class PyTokenizer extends Tokenizer {
 		// thisIsStartOfStatement ? KGramChar.TokenType.START_OF_STATEMENT :
 		// KGramChar.TokenType.UNDEFINED));
 		result.add(new ConstantToken(startLoc, lr.getGPos() - 1, line,
-				thisIsStartOfStatement, Token.EndOfStatementType.FALSE));
+				thisIsStartOfStatement, TokenSSID.EndOfStatementType.FALSE));
 	}
 
 	// private static String digestWord(ArrayList<KGramChar> result, LineReader
@@ -407,14 +407,14 @@ public final class PyTokenizer extends Tokenizer {
 		// char filter;
 		if (constantKeywords.contains(string)) {
 			result.add(new ConstantToken(startLoc, endLoc, line,
-					thisIsStartOfStatement, Token.EndOfStatementType.FALSE));
+					thisIsStartOfStatement, TokenSSID.EndOfStatementType.FALSE));
 		} else if (!keywords.contains(string)) {
 			result.add(new VariableToken(string, startLoc, endLoc, line,
-					thisIsStartOfStatement, Token.EndOfStatementType.FALSE));
+					thisIsStartOfStatement, TokenSSID.EndOfStatementType.FALSE));
 			// filter = VARIABLE;
 		} else {
 			result.add(new KeywordToken(string, startLoc, endLoc, line,
-					thisIsStartOfStatement, Token.EndOfStatementType.FALSE));
+					thisIsStartOfStatement, TokenSSID.EndOfStatementType.FALSE));
 			// filter = KEYWORD;
 		}
 
@@ -439,16 +439,16 @@ public final class PyTokenizer extends Tokenizer {
 	}
 
 	private void addOpenBlockBracket(TokenList result) {
-		Token lastToken = result.get(result.size() - 1);
+		TokenSSID lastToken = result.get(result.size() - 1);
 		result.add(new SymbolToken("{", lastToken.getCodeStartIndex(),
 				lastToken.getCodeEndIndex(), lastToken.getCodeLine(), false,
-				Token.EndOfStatementType.FALSE));
+				TokenSSID.EndOfStatementType.FALSE));
 	}
 
 	private void addCloseBlockBracket(TokenList result) {
-		Token lastToken = result.get(result.size() - 1);
+		TokenSSID lastToken = result.get(result.size() - 1);
 		result.add(new SymbolToken("}", lastToken.getCodeStartIndex(),
 				lastToken.getCodeEndIndex(), lastToken.getCodeLine(), false,
-				Token.EndOfStatementType.FALSE));
+				TokenSSID.EndOfStatementType.FALSE));
 	}
 }

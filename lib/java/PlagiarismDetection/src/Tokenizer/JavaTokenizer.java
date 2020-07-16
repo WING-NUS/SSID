@@ -88,7 +88,7 @@ public final class JavaTokenizer extends Tokenizer {
 
 		int brackets = 0;
 
-		// ignorableToken, record prev token is ignorable
+		// ignorableToken, record prev TokenSSID is ignorable
 		boolean nextTokenIsStartOfStatement = true, ignorePrevToken = false;
 		boolean preBlock = false; // For recording if current in if, while
 		boolean postBlock = false; // For recording if current in do
@@ -139,8 +139,8 @@ public final class JavaTokenizer extends Tokenizer {
 					nextTokenIsStartOfStatement = false;
 
 					if (ignorePrevToken) {
-						Token last = result.get(result.size() - 1);
-						Token prev = result.get(result.size() - 2);
+						TokenSSID last = result.get(result.size() - 1);
+						TokenSSID prev = result.get(result.size() - 2);
 
 						result.remove(result.size() - 2);
 						last.setStartOfStatement(prev.isStartOfStatement());
@@ -150,7 +150,7 @@ public final class JavaTokenizer extends Tokenizer {
 						ignorePrevToken = false;
 					}
 
-					Token lastToken = result.get(result.size() - 1), typeToken, curToken;
+					TokenSSID lastToken = result.get(result.size() - 1), typeToken, curToken;
 					if (lastToken instanceof VariableToken) {
 						int arrayOpened = 0, specOpened = 0;
 						boolean safe = true;
@@ -273,14 +273,14 @@ public final class JavaTokenizer extends Tokenizer {
 					case ';':
 						if (brackets == 0) {
 							result.get(result.size() - 1).setEndOfStatement(
-									Token.EndOfStatementType.NON_COUNTABLE);
+									TokenSSID.EndOfStatementType.NON_COUNTABLE);
 							nextTokenIsStartOfStatement = true;
 							if (preprocessDirective) {
 								preprocessDirective = false;
 							} else {
 								result.get(result.size() - 1)
 										.setEndOfStatement(
-												Token.EndOfStatementType.COUNTABLE);
+												TokenSSID.EndOfStatementType.COUNTABLE);
 							}
 
 							while (!blockDeclared.empty()
@@ -346,7 +346,7 @@ public final class JavaTokenizer extends Tokenizer {
 
 			endLoc = lr.getGPos() - 1;
 			result.add(new ConstantToken(startLoc, endLoc, line,
-					thisIsStartOfStatement, Token.EndOfStatementType.FALSE));
+					thisIsStartOfStatement, TokenSSID.EndOfStatementType.FALSE));
 			break;
 
 		case '"':
@@ -379,7 +379,7 @@ public final class JavaTokenizer extends Tokenizer {
 				int pos = lr.getGPos() - 1;
 				result.add(new SymbolToken(Character.toString(curChar), pos,
 						pos, line, thisIsStartOfStatement,
-						Token.EndOfStatementType.FALSE));
+						TokenSSID.EndOfStatementType.FALSE));
 				break;
 			}
 			break;
@@ -398,7 +398,7 @@ public final class JavaTokenizer extends Tokenizer {
 		}
 		result.add(new ConstantToken(startLoc, lr.getGPos() - 1, line,
 				thisIsStartOfStatement ? true : false,
-				Token.EndOfStatementType.FALSE));
+				TokenSSID.EndOfStatementType.FALSE));
 	}
 
 	private String digestWord(TokenList result, LineReader lr, char curChar,
@@ -418,13 +418,13 @@ public final class JavaTokenizer extends Tokenizer {
 		endLoc = lr.getGPos() - 1;
 		if (constantKeywords.contains(string)) {
 			result.add(new ConstantToken(startLoc, endLoc, line,
-					thisIsStartOfStatement, Token.EndOfStatementType.FALSE));
+					thisIsStartOfStatement, TokenSSID.EndOfStatementType.FALSE));
 		} else if (!keywords.contains(string)) {
 			result.add(new VariableToken(string, startLoc, endLoc, line,
-					thisIsStartOfStatement, Token.EndOfStatementType.FALSE));
+					thisIsStartOfStatement, TokenSSID.EndOfStatementType.FALSE));
 		} else {
 			result.add(new KeywordToken(string, startLoc, endLoc, line,
-					thisIsStartOfStatement, Token.EndOfStatementType.FALSE));
+					thisIsStartOfStatement, TokenSSID.EndOfStatementType.FALSE));
 		}
 
 		return string;
@@ -445,16 +445,16 @@ public final class JavaTokenizer extends Tokenizer {
 	}
 
 	private void addOpenBlockBracket(TokenList result) {
-		Token lastToken = result.get(result.size() - 1);
+		TokenSSID lastToken = result.get(result.size() - 1);
 		result.add(new SymbolToken("{", lastToken.getCodeStartIndex(),
 				lastToken.getCodeEndIndex(), lastToken.getCodeLine(), false,
-				Token.EndOfStatementType.FALSE));
+				TokenSSID.EndOfStatementType.FALSE));
 	}
 
 	private void addCloseBlockBracket(TokenList result) {
-		Token lastToken = result.get(result.size() - 1);
+		TokenSSID lastToken = result.get(result.size() - 1);
 		result.add(new SymbolToken("}", lastToken.getCodeStartIndex(),
 				lastToken.getCodeEndIndex(), lastToken.getCodeLine(), false,
-				Token.EndOfStatementType.FALSE));
+				TokenSSID.EndOfStatementType.FALSE));
 	}
 }

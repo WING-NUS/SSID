@@ -141,7 +141,6 @@ module SubmissionsHandler
               %Q{#{assignment.id} #{compare_dir} #{assignment.language.downcase} } +
               %Q{#{assignment.min_match_length} #{assignment.ngram_size} } +
               %Q{#{host} #{database} #{username} #{password}}
-
     # Fork to run java program in background
     ruby_pid = Process.fork do
       java_log = ""

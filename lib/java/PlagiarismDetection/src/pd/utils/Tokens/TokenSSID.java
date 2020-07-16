@@ -19,13 +19,13 @@ package pd.utils.Tokens;
 
 import java.util.HashMap;
 
-public abstract class Token {
+public abstract class TokenSSID {
 
 	/**
 	 * With effect from year 2011, we have 3 types of end of statement FALSE
-	 * defines this token is NOT the end of a statement COUNTABLE defines this
-	 * token is the end of a countable statement (example: statement in method
-	 * body) NON_COUNTABLE defines this token is the end of a statement but
+	 * defines this TokenSSID is NOT the end of a statement COUNTABLE defines this
+	 * TokenSSID is the end of a countable statement (example: statement in method
+	 * body) NON_COUNTABLE defines this TokenSSID is the end of a statement but
 	 * should not consider for plagiarism (example: statement in preprocess
 	 * directives)
 	 */
@@ -33,22 +33,22 @@ public abstract class Token {
 		FALSE, COUNTABLE, NON_COUNTABLE
 	}
 
-	// StartLoc and EndLoc define the location of the value this token
+	// StartLoc and EndLoc define the location of the value this TokenSSID
 	// represents in the submission
 	private int startLoc, endLoc;
-	// Line of the value this token represents in the submission
+	// Line of the value this TokenSSID represents in the submission
 	private int line;
-	// Defines if this token is the beginning of a statement
+	// Defines if this TokenSSID is the beginning of a statement
 	private boolean startOfStatement;
-	// Define if this token is the terminal of a statement
+	// Define if this TokenSSID is the terminal of a statement
 	private EndOfStatementType endOfStatement = EndOfStatementType.FALSE;
 
-	// Define the register of each different token type (note: may or may not be
+	// Define the register of each different TokenSSID type (note: may or may not be
 	// the same as child classes), use for indexing
 	protected static int classReg = 2; // Constant is 0, Variable is 1
 	protected static HashMap<String, Integer> registers = new HashMap<String, Integer>();
 
-	// Represents the registered id of this token, use for indexing. Registered
+	// Represents the registered id of this TokenSSID, use for indexing. Registered
 	// id may not be unique, this is to be decided by the programmer.
 	protected int reg;
 	private static final int BIT_SIZE = 2;
@@ -58,20 +58,20 @@ public abstract class Token {
 	 * Constructor
 	 * 
 	 * @param startLoc
-	 *            The starting location of the value represented by this token
+	 *            The starting location of the value represented by this TokenSSID
 	 *            in the submission
 	 * @param endLoc
-	 *            The ending location of the value represented by this token in
+	 *            The ending location of the value represented by this TokenSSID in
 	 *            the submission
 	 * @param line
-	 *            The line of the value represented by this token in the
+	 *            The line of the value represented by this TokenSSID in the
 	 *            submission
 	 * @param startOfStatement
-	 *            Define if this token is the beginning of a statement
+	 *            Define if this TokenSSID is the beginning of a statement
 	 * @param endOfStatement
-	 *            Define if this token is the terminal of a statement
+	 *            Define if this TokenSSID is the terminal of a statement
 	 */
-	public Token(int startLoc, int endLoc, int line, boolean startOfStatement,
+	public TokenSSID(int startLoc, int endLoc, int line, boolean startOfStatement,
 			EndOfStatementType endOfStatement) {
 		this.startLoc = startLoc;
 		this.endLoc = endLoc;
@@ -121,16 +121,16 @@ public abstract class Token {
 	}
 
 	/***
-	 * Get the starting location of this token in the submission
+	 * Get the starting location of this TokenSSID in the submission
 	 * 
-	 * @return The starting location of this token in the submission
+	 * @return The starting location of this TokenSSID in the submission
 	 */
 	public int getCodeStartIndex() {
 		return startLoc;
 	}
 
 	/***
-	 * Set the starting location (index) of this token in the submission
+	 * Set the starting location (index) of this TokenSSID in the submission
 	 * 
 	 * @param start
 	 *            The starting location (index) in the submission
@@ -140,35 +140,35 @@ public abstract class Token {
 	}
 
 	/***
-	 * Get the line of this token in the submission
+	 * Get the line of this TokenSSID in the submission
 	 * 
-	 * @return The line of this token in the submission
+	 * @return The line of this TokenSSID in the submission
 	 */
 	public int getCodeLine() {
 		return line;
 	}
 
 	/***
-	 * Set the line of this token in the submission
+	 * Set the line of this TokenSSID in the submission
 	 * 
 	 * @param line
-	 *            The line of this token in the submission
+	 *            The line of this TokenSSID in the submission
 	 */
 	public void setLine(int line) {
 		this.line = line;
 	}
 
 	/***
-	 * Get the ending location of this token in the submission
+	 * Get the ending location of this TokenSSID in the submission
 	 * 
-	 * @return The ending location of this token in the submission
+	 * @return The ending location of this TokenSSID in the submission
 	 */
 	public int getCodeEndIndex() {
 		return endLoc;
 	}
 
 	/***
-	 * Set the ending location of this token in the submission
+	 * Set the ending location of this TokenSSID in the submission
 	 * 
 	 * @param end
 	 */
@@ -177,38 +177,38 @@ public abstract class Token {
 	}
 
 	/***
-	 * Determine if this token is the beginning of a statement
+	 * Determine if this TokenSSID is the beginning of a statement
 	 * 
-	 * @return True if this token is the beginning of a statement, else False
+	 * @return True if this TokenSSID is the beginning of a statement, else False
 	 */
 	public boolean isStartOfStatement() {
 		return startOfStatement;
 	}
 
 	/***
-	 * Determine if this token is the terminal of a statement
+	 * Determine if this TokenSSID is the terminal of a statement
 	 * 
-	 * @return True if this token is the terminal of a statement, else False
+	 * @return True if this TokenSSID is the terminal of a statement, else False
 	 */
 	public EndOfStatementType isEndOfStatement() {
 		return endOfStatement;
 	}
 
 	/***
-	 * Set if this token is the beginning of a statement
+	 * Set if this TokenSSID is the beginning of a statement
 	 * 
 	 * @param value
-	 *            True if this token is the beginning of a statement, else False
+	 *            True if this TokenSSID is the beginning of a statement, else False
 	 */
 	public void setStartOfStatement(boolean value) {
 		startOfStatement = value;
 	}
 
 	/***
-	 * Set if this token is the terminal of a statement
+	 * Set if this TokenSSID is the terminal of a statement
 	 * 
 	 * @param value
-	 *            True if this token is the beginning of a statement, else False
+	 *            True if this TokenSSID is the beginning of a statement, else False
 	 */
 	public void setEndOfStatement(EndOfStatementType value) {
 		endOfStatement = value;

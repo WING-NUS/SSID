@@ -14,7 +14,7 @@
 
   <target name="compile">
     <mkdir dir="${classes.dir}"/>
-    <javac srcdir="${src.dir}" destdir="${classes.dir}" debug="true" classpath="${classpath.dir}/snakeyaml-1.10.jar">
+    <javac srcdir="${src.dir}" destdir="${classes.dir}" debug="true" debuglevel="lines,vars,source" classpath="${classpath.dir}/snakeyaml-1.10.jar">
       <compilerarg value="-Xlint:unchecked"/>
     </javac>
   </target>
@@ -24,7 +24,7 @@
     <jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${classes.dir}">
       <manifest>
         <attribute name="Main-Class" value="${main-class}"/>
-        <attribute name="Class-Path" value="./mysql-connector-java-8.0.20.jar ./snakeyaml-1.10.jar"/>
+        <attribute name="Class-Path" value="./mysql-connector-java-8.0.20.jar ./snakeyaml-1.10.jar ./antlr-4.8-complete.jar"/>
       </manifest>
     </jar>
   </target>
