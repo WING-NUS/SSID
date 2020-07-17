@@ -16,7 +16,6 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 import Tokenizer.*;
-import Python3.*;
 import java.util.*;
 import java.text.*;
 
@@ -71,11 +70,13 @@ public class Main {
 
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z");
 
-		if (language.equals(CTokenizer.language)) {
-			CTokenizer.getTokenizer().TokenizeSubmissions(submissions);
-		} else if (language.equals(JavaTokenizer.language)) {
-			JavaTokenizer.getTokenizer().TokenizeSubmissions(submissions);
-		} else if (ANTLRDynamicTokenizer.understandsLanguage(language)) {
+		// if (language.equals(CTokenizer.language)) {
+		// 	CTokenizer.getTokenizer().TokenizeSubmissions(submissions);
+		// } 
+		// else if (language.equals(JavaTokenizer.language)) {
+		// 	JavaTokenizer.getTokenizer().TokenizeSubmissions(submissions);
+		// } 
+		if (ANTLRDynamicTokenizer.understandsLanguage(language)) {
 			System.out.println("[" + dateFormat.format(new java.util.Date()) + "] ANTLR tokenizer started run: " + language);
 			ANTLRDynamicTokenizer.getTokenizer(language).TokenizeSubmissions(submissions);
 		} else {

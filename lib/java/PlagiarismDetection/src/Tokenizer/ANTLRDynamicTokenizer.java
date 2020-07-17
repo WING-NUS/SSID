@@ -16,7 +16,8 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
  */
  
 package Tokenizer;
-import Python3.*;
+import python3.*;
+import javalang.*;
 
 import java.io.*;
 import java.util.*;
@@ -132,9 +133,7 @@ public final class ANTLRDynamicTokenizer extends Tokenizer {
   }
 
   private ANTLRDynamicTokenizer(String language) {
-    // Set language and binPath to run lexer
     this.language = language;
-    // this.binPath = ANTLRDynamicTokenizer.grammarsBinDir + "/" + this.language + "/" + this.language + "_lexer";
     
     // Read tokenNames
     String tokenNamesPath = ANTLRDynamicTokenizer.grammarsBinDir + "/" + this.language + "/" + this.language + "_tokens";
@@ -172,7 +171,9 @@ public final class ANTLRDynamicTokenizer extends Tokenizer {
   private ArrayList<String> runLexer(String fileName) throws Exception {
     ArrayList<String> lexerOutput = new ArrayList<String>();
     // Call Antlr4 Lexer to generate tokens from char stream
-    Python3Lexer lexer = new Python3Lexer(CharStreams.fromFileName(fileName));
+    String[] args = {language, fileName};
+    Lexer lexer = getLexer(args);
+
     List<? extends Token> tokenList = new ArrayList<>(); 
     tokenList = lexer.getAllTokens(); 
     for (Token token : tokenList) { 
@@ -191,6 +192,28 @@ public final class ANTLRDynamicTokenizer extends Tokenizer {
     }
     // Return lexer output as string array
     return lexerOutput;
+  }
+
+  private Lexer getLexer(String[] args) throws IOException, Exception {
+    String language = args[0];
+    String fileName = args[1];
+    // check against language in grammarbinDir
+    if (language.equals("java")) {
+      JavaLexer lexer = new JavaLexer(CharStreams.fromFileName(fileName));
+      return lexer;
+    } 
+    // else if (language.equals("c")) {
+      
+    // } else if (language.equals("cpp")) {
+
+    // } 
+    else if (language.equals("python3")) {
+      Python3Lexer lexer = new Python3Lexer(CharStreams.fromFileName(fileName));
+      return lexer;
+    } else {
+      String errorMessage = String.format("%s Lexer not found. %s package containing the Lexer may have been excluded in build process.", language, language);
+      throw new Exception (errorMessage);
+    }
   }
 
   private TokenList processLexerOutput(ArrayList<String> lexerOutput) throws Exception {
