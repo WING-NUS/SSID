@@ -1,6 +1,6 @@
 // Generated from JavaLexer.g4 by ANTLR 4.8
 // package cannot be named "java"
-package javalang;
+package Antlr4Grammars.javalang;
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.Token;

@@ -1,5 +1,5 @@
 // Generated from Python3.g4 by ANTLR 4.8
-package python3;
+package Antlr4Grammars.python3;
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;

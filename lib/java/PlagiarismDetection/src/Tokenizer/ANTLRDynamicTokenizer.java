@@ -16,8 +16,11 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
  */
  
 package Tokenizer;
-import python3.*;
-import javalang.*;
+
+import Antlr4Grammars.javalang.*;
+import Antlr4Grammars.c.*;
+import Antlr4Grammars.python3.*;
+import Antlr4Grammars.cpp.*;
 
 import java.io.*;
 import java.util.*;
@@ -201,13 +204,13 @@ public final class ANTLRDynamicTokenizer extends Tokenizer {
     if (language.equals("java")) {
       JavaLexer lexer = new JavaLexer(CharStreams.fromFileName(fileName));
       return lexer;
-    } 
-    // else if (language.equals("c")) {
-      
-    // } else if (language.equals("cpp")) {
-
-    // } 
-    else if (language.equals("python3")) {
+    } else if (language.equals("c")) {
+      CLexer lexer = new CLexer(CharStreams.fromFileName(fileName));
+      return lexer;
+    } else if (language.equals("cpp")) {
+      CPP14Lexer lexer = new CPP14Lexer(CharStreams.fromFileName(fileName));
+      return lexer;
+    } else if (language.equals("python3")) {
       Python3Lexer lexer = new Python3Lexer(CharStreams.fromFileName(fileName));
       return lexer;
     } else {
