@@ -27,7 +27,6 @@ import java.util.*;
 import pd.utils.*;
 import pd.utils.Tokens.*;
 import org.antlr.v4.runtime.*;
-import org.antlr.v4.codegen.target.Python3Target;
 
 public final class ANTLRDynamicTokenizer extends Tokenizer {
   private static String grammarsBinDir;
@@ -183,11 +182,14 @@ public final class ANTLRDynamicTokenizer extends Tokenizer {
       String lineNumber = String.valueOf(token.getLine());
       String startNumber = String.valueOf(token.getStartIndex());
       String tokenType = String.valueOf(token.getType());
-      String tokenString = lexer.getVocabulary().getSymbolicName(token.getType());
-      String tokenLength = null;
-      if (tokenString != null) {
-        tokenLength = String.valueOf(tokenString.length());
-      } 
+      String tokenString = null;
+      try {
+        tokenString = lexer.getVocabulary().getSymbolicName(token.getType());
+      } finally {
+        tokenString = token.getText();
+      }
+      String tokenLength = String.valueOf(tokenString.length());
+
       StringJoiner joiner = new StringJoiner(",");
       joiner.add(lineNumber).add(startNumber).add(tokenLength).add(tokenType).add(tokenString);
       String row = joiner.toString();
