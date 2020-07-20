@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Student Submission Integrity Diagnosis
 
 Student Submission Integrity Diagnosis (SSID) is a Ruby on Rails web application suite for managing courses, assignments, staff, teaching assistants, students, and student code submissions and most importantly, to **detect and visualize plagiarism** among student code submissions. 
@@ -35,29 +34,3 @@ SSID works with lexers based on [ANTLR Grammars](http://www.antlr.org/grammar/li
 SSID is licensed under the [GNU Lesser General Public License] [gpl]
 
 [gpl]: http://www.gnu.org/licenses/
-=======
-# README
-
-This README would normally document whatever steps are necessary to get the
-application up and running.
-
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
->>>>>>> ac79b4e3728af52aad64b206d74cd6fa45c3e7cc
