@@ -4,8 +4,7 @@ Steps to build grammar.
 The grammar files (.g4) understood by Antlr4 is publicly available
 at https://github.com/antlr/grammars-v4
 
-Demonstration using C language
-==============================
+### Demonstration using C language
 
 1. Obtain grammar file (C.g4) 
 wget https://raw.githubusercontent.com/antlr/grammars-v4/master/c/C.g4

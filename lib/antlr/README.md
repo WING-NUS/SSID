@@ -8,8 +8,7 @@ bin - contains separate directories for each recognizable grammar by
 src - contains the ANTLR4 grammar file (file extension .g4). Follow the README 
       file to generate the token file in the bin directory
 
-ADDING A NEW ANTLR4 GRAMMAR
-==========================
+### ADDING A NEW ANTLR4 GRAMMAR
 
 To add a new language grammar for PlagiarismDetection.jar to recognize:
 
@@ -39,8 +38,8 @@ To add a new language grammar for PlagiarismDetection.jar to recognize:
 4. Edit SSID/lib/java/PlagiarismDetection/src/Tokenizer/ANTLRDynamicTokenizer.java to include new LangLexer. See SSID/lib/java/PlagiarismDetection/README 
 on how to edit java code.
 
-ANTLR4 Tool and Runtime Libaries
-================================
+### ANTLR4 Tool and Runtime Libaries
+
 Obtain antlr-4.8-complete.jar using
  - wget https://www.antlr.org/download/antlr-4.8-complete.jar
 

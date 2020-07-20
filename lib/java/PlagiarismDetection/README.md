@@ -3,8 +3,7 @@ and install it in the appropriate directory (./../jar).
 To do so, simply run "ant"
 
 
-Adding New Grammar
-==================
+### Adding New Grammar
 
 The instructions from antlr/README and antlr/grammars/src/README must be completed before the following steps can be carried out.
 
@@ -16,14 +15,14 @@ Antlr4Grammars.lang
     import Antlr4Grammars.c.*;
     </pre>
 
-2. Allow the function getLexer(String[] args) to obtain the correct LangLexer. 
+2. Allow the function getLexer(String[ ] args) to obtain the correct LangLexer. 
     <pre>
     else if (language.equals("lang")) {
       LangLexer lexer = new LangLexer(CharStreams.fromFileName(fileName));
       return lexer;
     }
     </pre>
-    In the case of C language,
+    For exmaple in the case of C language,
     <pre>
     else if (language.equals("c")) {
       CLexer lexer = new CLexer(CharStreams.fromFileName(fileName));
