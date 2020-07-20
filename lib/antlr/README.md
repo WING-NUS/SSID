@@ -33,7 +33,7 @@ To add a new language grammar for PlagiarismDetection.jar to recognize:
 
 3. Each grammar has its associated LangLexer.java and LangParser.java in the source code of PlagiarsmDetection (SSID/lib/java/PlagiarismDetection/src Antlr4Grammars) that is required for PlagiarismDetection.jar to understand the grammar. SSID/lib/antlr/grammars/src/README shows the steps to generate the LangLexer.java and LangParser.java files.
 
-*In theory only LangLexer.java is needed for PlagiarismDetection.jar but some LangLexer.java makes use of methods from LangParser.java. LangParser.java is included in to prevent compilation issues when building PlagiarismDetection.jar
+   *In theory only LangLexer.java is needed for PlagiarismDetection.jar but some LangLexer.java makes use of methods from LangParser.java. LangParser.java is included in to prevent compilation issues when building PlagiarismDetection.jar
 
 4. Edit SSID/lib/java/PlagiarismDetection/src/Tokenizer/ANTLRDynamicTokenizer.java to include new LangLexer. See SSID/lib/java/PlagiarismDetection/README 
 on how to edit java code.
@@ -49,4 +49,4 @@ has the binaries for
    from the Lang.g4 file
 
    - Antlr4 Runtime libaries needed for PlagairismDetection.jar to use 
-   the LangLexer.java and LangParser.java files to understand the Lang_tokens file.
+   the langLexer.java and LangParser.java files to understand the Lang_tokens file.
