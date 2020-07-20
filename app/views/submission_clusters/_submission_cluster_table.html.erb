@@ -1,0 +1,19 @@
+<table id="cluster_<%= cluster.id %>" class="cluster">
+  <thead>
+    <tr><th colspan="2">Assignment: <%= cluster.assignment.title %></th></tr>
+    <tr><th colspan="2">Cut-Off Criterion: <%= cluster.submission_cluster_group.cut_off_criterion %>%</th></tr>
+  </thead>
+  <tbody>
+    <tr><td colspan="2" class="hide_link_cell"><%= link_to "Collapse Student IDs (#{cluster.submissions.size})", "#" %></td></tr>
+    <% cluster.submissions.each { |submission| %>
+      <tr>
+        <td class="check_box_cell"><%= check_box_tag nil, "student_"+submission.student.id_string, false %></td>
+        <% if submission.is_plagiarism %>
+          <td><%= link_to submission.student.id_string, assignment_submission_log_url(cluster.assignment, submission), class: "is_plagiarism" %></td>
+        <% else %>
+          <td><%= link_to submission.student.id_string, assignment_submission_log_url(cluster.assignment, submission) %></td>
+        <% end %>
+      </tr>
+    <% } %>
+  </tbody>
+</table>

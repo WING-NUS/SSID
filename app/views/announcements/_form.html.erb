@@ -1,0 +1,29 @@
+<%= form_for(@announcement) do |f| %>
+  <% if @announcement.errors.any? %>
+    <div id="error_explanation">
+      <h3><%= pluralize(@announcement.errors.count, "error") %> prohibited this announcement from being saved:</h3>
+      <ul>
+      <% @announcement.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <div>
+    <%= f.label :courses, "Course" %>:
+    <%= select_tag :announcement_course_id, options_from_collection_for_select(@announceable_courses, "id", "code_and_name"), name: "announcement[course_id]" %>
+  </div>
+  <div>
+    <%= f.label :title, "Announcement Title" %>:
+    <%= f.text_field :title , class: "title" %>
+  </div>
+  <div>
+    <%= f.label :html_content, "Content:" %>
+  </div>
+  <div>
+    <%= f.text_area :html_content %>
+  </div>
+  <div>
+    <%= f.submit class: "submit" %>
+  </div>
+<% end %>

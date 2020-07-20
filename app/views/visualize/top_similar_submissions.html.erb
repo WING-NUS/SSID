@@ -1,0 +1,24 @@
+<div id="visualize_content">
+  <h2><%= @course.code %> Visualization: Top Similar Submissions</h2>
+  <div>
+    This visualization presents a tabular view of the most similar submissions in one or more assignments for the chosen student IDs.
+    <ul>
+      <li>Student IDs shown in <span class="red">red</span> represent submissions that have been confirmed as plagiarisms</li>
+      <li>Click any student ID to view the log for the corresponding submission</li>
+      <li>Click any check box to highlight the corresponding student ID in all tables</li>
+    </ul>
+  </div>
+  <hr />
+  <div id="options">
+    <p>Visualize top similar submissions for assignment <%= select_tag "submissions_assignment_selector", options_for_select([["All", @course.id]] + @course.assignments.collect { |a| [ a.title, a.id ] }), onchange: "VisualizeTopSimilarSubmissions.selectAssignmentForSubmissions(this);" %> for each of the following students:
+    <%= select_tag "submissions", options_from_collection_for_select(@course.students, "id", "id_string"), multiple: true, include_blank: true, class: "submissions" %>
+    <span>(selected 0 of <%= @course.students.size %>)</span></p>
+    <p>Display up to <%= text_field_tag "num_most_similar_submissions", 5 %> most similar submissions for each student ID for each assignment</p>
+    <hr />
+    <%= submit_tag "Show Tables", onclick: "VisualizeTopSimilarSubmissions.showTable(this)" %>
+    <%= submit_tag "Clear Tables", id: "clear_results" %>
+    <span></span>
+  </div>
+  <div id="tables">
+  </div>
+</div>

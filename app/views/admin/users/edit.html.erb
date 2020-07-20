@@ -1,0 +1,7 @@
+<% if @course %>
+  <h2>Edit <%= @course.code %> User</h2>
+<% else %>
+  <h2>Edit Admin User</h2>
+<% end %>
+
+<%= render 'edit_form' %>

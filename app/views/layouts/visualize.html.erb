@@ -1,0 +1,15 @@
+<% content_for :head do %>
+  <!--[if IE]><%= javascript_include_tag "explorer_canvas/excanvas.compiled.js" %><![endif]-->
+  <%= javascript_include_tag "jit/jit-yc.js" %>
+<% end %>
+<% content_for :pre_content do %>
+  <div id="visualize_menu">
+    <ul>
+      <li><%= link_to_unless_current "#{@course.code} Visualizations", course_visualize_url(@course) %></li>
+      <li><%= link_to_unless_current "Similarity Cluster Graph", course_visualize_similarity_cluster_graph_url(@course) %></li>
+      <li><%= link_to_unless_current "Similarity Cluster Table", course_visualize_similarity_cluster_table_url(@course) %></li>
+      <li><%= link_to_unless_current "Top Similar Submissions", course_visualize_top_similar_submissions_url(@course) %></li>
+    </ul>
+  </div>
+<% end %>
+<%= render :template => 'layouts/application' %>

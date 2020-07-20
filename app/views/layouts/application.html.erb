@@ -1,0 +1,45 @@
+<%#
+This file is part of SSID.
+SSID is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+SSID is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+You should have received a copy of the GNU Lesser General Public License
+along with SSID.  If not, see <http://www.gnu.org/licenses/>.
+%>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Student Submissions Integrity Diagnosis (SSID) System</title>
+  <%= stylesheet_link_tag    "application", :media => "all" %>
+  <%= javascript_include_tag "application" %>
+  <%= yield :head %>
+  <%= csrf_meta_tags %>
+</head>
+<body class="<%= controller_name %> <%= controller_name %>_<%= action_name %>">
+  <%= javascript_tag "if (window.#{controller_name.singularize.camelize} && #{controller_name.singularize.camelize}.onLoad) { #{controller_name.singularize.camelize}.onLoad(); };" %>
+  <h1 id="top_banner">Student Submissions Integrity Diagnosis (SSID) System</h1>
+  <ul id="menu"<%= %Q{ class="admin"}.html_safe if @user and @user.is_admin %>>
+<% if @user %>
+    <li<%= highlight_if_current root_url %>><%= link_to "Home", root_url %></li>
+    <li<%= highlight_if_current courses_url %>><%= link_to "Courses", courses_url %></li>
+    <% if @user.is_admin %>
+      <li<%= highlight_if_current admin_users_url %>><%= link_to "Users", admin_users_url %></li>
+    <% end %>
+    <li<%= highlight_if_current edit_user_url(@user) %>><%= link_to "Settings", edit_user_url(@user) %></li>
+    <li<%= highlight_if_current guide_url %>><%= link_to "User Guide", guide_url %></li>
+    <li<%= highlight_if_current logout_url %>><%= link_to "Log Out", logout_url, :method => :delete, confirm: "Log out of SSID?" %></li>
+<% end %>
+  </ul>
+
+  <div id="content">
+    <%= render partial: "site/breadcrumb", locals: { course: @course, assignment: @assignment, submission: @submission, submission_similarity: @submission_similarity } unless @course.nil? or controller_path == "admin/users" %>
+<%= yield :pre_content %>
+<%= yield %>
+  </div>
+</body>
+</html>

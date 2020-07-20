@@ -1,0 +1,45 @@
+<%= form_for([:admin, @the_user]) do |f| %>
+  <% if @the_user.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@the_user.errors.count, "error") %> prohibited this user from being saved:</h2>
+
+      <ul>
+      <% @the_user.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <div>
+    <%= f.label :full_name %>:
+    <%= f.text_field :full_name %>
+  </div>
+  <% if @course %>
+    <div>
+      <%= hidden_field_tag :user_course_id, @course.id, name: "user[course_id]" %>
+      <%= f.label :id_string, "ID" %>:
+      <%= f.text_field :id_string %>
+    </div>
+    <% unless @membership.role == UserCourseMembership::ROLE_STUDENT %>
+      <div>
+        <%= f.label :course_role %>:
+        <%= select_tag "user_course_role", options_for_select(UserCourseMembership.options_for_non_student_roles, @membership.role ), name: "user[course_role]" %>
+      </div>
+    <% end %>
+  <% end %>
+  <div>
+    <%= f.label :name, "Login" %>:
+    <%= f.text_field :name %>
+  </div>
+  <div>
+    <%= f.label :new_password %>:
+    <%= f.password_field :new_password %> (<em>Leave blank to keep unchanged</em>)
+  </div>
+  <div>
+    <%= f.label :confirm_new_password %>:
+    <%= f.password_field :confirm_new_password %> 
+  </div>
+  <div>
+    <%= f.submit class: "submit" %>
+  </div>
+<% end %>

@@ -1,0 +1,40 @@
+<h2>Assignment: <%= @assignment.title %> Submission Cluster Groups</h2>
+<% if flash[:notice] %>
+  <div class="notice">
+    <%= flash[:notice] %>
+  </div>
+<% end %>
+
+<% if @cluster_groups.empty? %>
+  <p class="none_created">No cluster group has been created.<br />
+  Cluster groups allow you to identify clusters of students with submission similarity values above a defined threshold.</p>
+<% else %>
+  <table>
+    <thead>
+      <tr>
+        <th>Cut-Off Criterion</th>
+        <th>Number of Clusters</th>
+        <th>Description</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @cluster_groups.each { |cluster_group| %>
+        <tr>
+          <td><%= cluster_group.cut_off_criterion %></td>
+          <td><%= cluster_group.clusters.size %></td>
+          <td>[Created on <%= cluster_group.created_at.in_time_zone %>] <%= cluster_group.description %></td>
+          <td>
+            <%= link_to "View Clusters", cluster_group_clusters_url(cluster_group) %>
+            <%= link_to "Delete", assignment_cluster_group_url(@assignment, cluster_group), method: "delete", class: "last", confirm: "Delete cluster group?" %>
+          </td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+<% end %>
+
+<hr />
+<div class="actions">
+  <%= link_to "New Cluster Group", new_assignment_cluster_group_url(@assignment) %>
+</div>
