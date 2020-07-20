@@ -6,7 +6,7 @@ To do so, simply run "ant"
 Adding New Grammar
 ==================
 
-The instructions from antlr/README and antlr/grammars/README must be completed before the following steps can be carried out.
+The instructions from antlr/README and antlr/grammars/src/README must be completed before the following steps can be carried out.
 
 Perform the following steps in src/Tokenzier/ANTLRDynamicTokenizer.java to allow the built PlagiarismDetection.jar to read new Antlr4 grammar.
 

@@ -1,12 +1,12 @@
 This directory is organized into two subdirectories
 
 bin - contains separate directories for each recognizable grammar by
-      PlagiarismDetection.jar Each grammar directory contains a README,
+      PlagiarismDetection.jar Each grammar directory contains
       the _tokens file containing a list of keywords in
       the language and _token_mapings file containing the mapping between the _tokens file and the tokens understood by PlagiarismDetection.jar
 
-src - contains the ANTLR4 grammar file (file extension .g4) with a SSID_README 
-      file explaining how to generate the token file in the bin directory
+src - contains the ANTLR4 grammar file (file extension .g4). Follow the README 
+      file to generate the token file in the bin directory
 
 ADDING A NEW ANTLR4 GRAMMAR
 ==========================
@@ -42,7 +42,7 @@ on how to edit java code.
 ANTLR4 Tool and Runtime Libaries
 ================================
 Obtain antlr-4.8-complete.jar using
-wget https://www.antlr.org/download/antlr-4.8-complete.jar
+ - wget https://www.antlr.org/download/antlr-4.8-complete.jar
 
 The binary file (antlr-4.8-complete.jar) located in SSID/lib/java/jar
 has the binaries for 
