@@ -18,8 +18,8 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 class SubmissionCluster < ActiveRecord::Base
   belongs_to :submission_cluster_group
   has_many :memberships, class_name: "SubmissionClusterMembership", :dependent => :delete_all
-  has_many :submissions, :through => :memberships, :uniq => true
-
+  has_many :submissions, -> { distinct }, :through => :memberships
+  
   def submission_student_ids
     self.submissions.collect { |s|
       s.student.id_string

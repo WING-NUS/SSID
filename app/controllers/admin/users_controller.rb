@@ -16,7 +16,7 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
 class Admin::UsersController < ApplicationController
-  before_filter { |controller|
+  before_action { |controller|
     controller.send :authenticate_actions_for_admin, 
                     only: [ :index, :new, :create, :edit, :update, :destroy ] # all methods
   }
@@ -53,7 +53,7 @@ class Admin::UsersController < ApplicationController
     end
 
     # Construct basic attributes for course user or for admin user
-    if @course
+    if !@course.nil?
       # Check if user exists
       @existing_user = User.where(id_string: params[:user]["id_string"]).first
       if @existing_user
@@ -97,7 +97,8 @@ class Admin::UsersController < ApplicationController
     # Check for errors and render view
     if @the_user.errors.empty? and @the_user.save
       if @existing_user
-        redirect_to admin_users_url, notice: "User was successfully added to #{@course.code}."
+        redirect_to admin_users_url, notice: "User was successfully added 
+        to #{@course.code}."
       else
         redirect_to admin_users_url, notice: 'User was successfully created.'
       end

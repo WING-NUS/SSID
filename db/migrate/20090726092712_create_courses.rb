@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
-class CreateCourses < ActiveRecord::Migration
+class CreateCourses < ActiveRecord::Migration[6.0]
   def change
     create_table :courses do |t|
       t.string  :code, null: false

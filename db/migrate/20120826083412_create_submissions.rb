@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
-class CreateSubmissions < ActiveRecord::Migration
+class CreateSubmissions < ActiveRecord::Migration[6.0]
   def change
     create_table :submissions do |t|
       t.text    :lines, limit: 4294967295

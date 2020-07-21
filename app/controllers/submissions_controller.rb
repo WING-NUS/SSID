@@ -16,7 +16,7 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
 class SubmissionsController < ApplicationController
-  before_filter { |controller|
+  before_action { |controller|
     @course = nil
     if params[:assignment_id]
       @assignment = Assignment.find(params[:assignment_id])
@@ -33,6 +33,7 @@ class SubmissionsController < ApplicationController
     end
   }
 
+  # GET /assignments/id/submissions/log ???
   def index
     @submissions = @assignment.submissions
 
@@ -59,7 +60,7 @@ class SubmissionsController < ApplicationController
         sl.log_type = SubmissionLog::TYPE_STUDENT_MARK_AS_GUILTY
       }
     end
-    render nothing: true, status: 200
+    # render body :nil, status: 200
   end
 
   def mark_as_not_guilty
@@ -73,6 +74,6 @@ class SubmissionsController < ApplicationController
         sl.log_type = SubmissionLog::TYPE_STUDENT_MARK_AS_NOT_GUILTY
       }
     end
-    render nothing: true, status: 200
+    # render body: nil, status: 200
   end
 end

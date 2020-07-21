@@ -139,7 +139,7 @@ public final class SimComparer {
 
 		ArrayList<Mapping> tokenMappings = result.getTokenIndexMappings();
 
-		Token s1StartToken, s2StartToken, s1EndToken, s2EndToken;
+		TokenSSID s1StartToken, s2StartToken, s1EndToken, s2EndToken;
 		for (Mapping m : tokenMappings) {
 			s1StartToken = s1Tokens.get(m.getStartIndex1());
 			s1EndToken = s1Tokens.get(m.getEndIndex1());
@@ -160,7 +160,7 @@ public final class SimComparer {
 	}
 
 	/***
-	 * Return the token mappings using GST
+	 * Return the TokenSSID mappings using GST
 	 * 
 	 * @param s1NGrams
 	 * @param s2NGramIndices
@@ -200,7 +200,7 @@ public final class SimComparer {
 		// curCSMapped = current countable statement mapped
 		// curNCSMapped = current non-countable statement mapped
 		int s1EndIndex, s2EndIndex, curCSMapped, curNCSMapped, curTotalStatementMapped, s1EndOfStmtIndex, s2StartIndex, s2EndOfStmtIndex;
-		Token s1Token, s2Token;
+		TokenSSID s1Token, s2Token;
 		HashMap<Integer, Integer> s2Matches;
 		ArrayList<Integer> s2Indices;
 		NGram s1NGram;
@@ -233,10 +233,10 @@ public final class SimComparer {
 									.equals(s2Token = s2Tokens.get(s2EndIndex))
 							&& !s1Tokens.isTokenMarked(s1EndIndex)
 							&& !s2Tokens.isTokenMarked(s2EndIndex)) {
-						if (s1Token.isEndOfStatement() == Token.EndOfStatementType.COUNTABLE) {
+						if (s1Token.isEndOfStatement() == TokenSSID.EndOfStatementType.COUNTABLE) {
 							curCSMapped++;
 							s1EndOfStmtIndex = s1EndIndex;
-						} else if (s1Token.isEndOfStatement() == Token.EndOfStatementType.NON_COUNTABLE) {
+						} else if (s1Token.isEndOfStatement() == TokenSSID.EndOfStatementType.NON_COUNTABLE) {
 							curNCSMapped++;
 							s1EndOfStmtIndex = s1EndIndex;
 						}

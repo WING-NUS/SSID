@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
-class CreateSubmissionLogs < ActiveRecord::Migration
+class CreateSubmissionLogs < ActiveRecord::Migration[6.0]
   def change
     create_table :submission_logs do |t|
       t.integer :submission_id, null: false

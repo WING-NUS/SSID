@@ -17,7 +17,7 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
  
 package pd.utils.Tokens;
 
-public final class KeywordToken extends Token {
+public final class KeywordToken extends TokenSSID {
 
 	private String strValue;
 

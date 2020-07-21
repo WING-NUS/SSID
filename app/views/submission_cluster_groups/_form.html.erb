@@ -15,7 +15,7 @@
       <% if type_idx == SubmissionClusterGroup::TYPE_CONFIRMED_OR_SUSPECTED_PLAGIARISM_CRITERION or 
            type_idx == SubmissionClusterGroup::TYPE_CONFIRMED_PLAGIARISM_CRITERION %>
         <% disabled = "disabled" if @assignment_plagiarism_cases[type_idx].empty? %>
-        <div><label<%= %Q{ class="disabled"}.html_safe if disabled %>>
+        <div><label <%= %Q{ class="disabled"}.html_safe if disabled %>>
         <%= f.radio_button :cut_off_criterion_type, type_idx, 
                             checked: @submission_cluster_group.cut_off_criterion_type == type_idx,
                             onclick: "SubmissionClusterGroup.disableUserDefinedTextField();", 

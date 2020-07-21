@@ -9,7 +9,7 @@
         <th class="lines_col">Submission by <%= @student1.id_string %></th>
         <th class="lines_col">Submission by <%= @student2.id_string %></th>
         <th>Num of Matching Statements</th>
-        <th class="check_box_col"><%= check_box_tag nil %></th>
+        <th class="check_box_col"><%= check_box_tag nil, nil, false %></th>
       </tr>
     </thead>
     <tbody>
@@ -26,11 +26,11 @@
   </div>
   <div class="mark_as_suspicious">
     <% if @submission_similarity.status == SubmissionSimilarity::STATUS_NOT_PLAGIARISM %>
-      <p><%= link_to "Mark these similarities as suspicious", assignment_submission_similarity_suspect_as_plagiarism_url(@assignment, @submission_similarity), :method => :put, confirm: "Mark these similarities as suspicious?" %> or <%= link_to "Confirm these similarities as plagiarism", assignment_submission_similarity_confirm_as_plagiarism_url(@assignment, @submission_similarity), :method => :put, confirm: "Confirm these similarities as plagiarism?" %></p>
+      <p><%= link_to "Mark these similarities as suspicious", assignment_submission_similarity_suspect_as_plagiarism_url(@assignment, @submission_similarity), :method => :put, data: {confirm: "Mark these similarities as suspicious?"} %> or <%= link_to "Confirm these similarities as plagiarism", assignment_submission_similarity_confirm_as_plagiarism_url(@assignment, @submission_similarity), :method => :put, data: {confirm: "Confirm these similarities as plagiarism?"} %></p>
     <% elsif @submission_similarity.status == SubmissionSimilarity::STATUS_SUSPECTED_AS_PLAGIARISM %>
-      <p>These similarities were marked as suspicious. <%= link_to "Remove suspicion", assignment_submission_similarity_unmark_as_plagiarism_url(@assignment, @submission_similarity), :method => :put, confirm: "Remove suspicion of plagiarism?" %> or <%= link_to "Confirm as plagiarism", assignment_submission_similarity_confirm_as_plagiarism_url(@assignment, @submission_similarity), :method => :put, confirm: "Confirm these similarities as plagiarism?" %></p>
+      <p>These similarities were marked as suspicious. <%= link_to "Remove suspicion", assignment_submission_similarity_unmark_as_plagiarism_url(@assignment, @submission_similarity), :method => :put, data: {confirm: "Remove suspicion of plagiarism?"} %> or <%= link_to "Confirm as plagiarism", assignment_submission_similarity_confirm_as_plagiarism_url(@assignment, @submission_similarity), :method => :put, data: {confirm: "Confirm these similarities as plagiarism?"} %></p>
     <% elsif %>
-      <p>These similarities were confirmed as plagiarism. <%= link_to "Remove", assignment_submission_similarity_unmark_as_plagiarism_url(@assignment, @submission_similarity), :method => :put, confirm: "Remove confirmation as plagiarism?" %></p>
+      <p>These similarities were confirmed as plagiarism. <%= link_to "Remove", assignment_submission_similarity_unmark_as_plagiarism_url(@assignment, @submission_similarity), :method => :put, data: {confirm: "Remove confirmation as plagiarism?"} %></p>
     <% end %>
   </div>
   <% if @submission_similarity.status == SubmissionSimilarity::STATUS_CONFIRMED_AS_PLAGIARISM %>

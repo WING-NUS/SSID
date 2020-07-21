@@ -16,6 +16,6 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
 class Announcement < ActiveRecord::Base
-  attr_accessible :title, :html_content
+  attr_accessor :title, :html_content
   belongs_to :announceable, polymorphic: true
 end

@@ -17,7 +17,7 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
  
 package pd.utils.Tokens;
 
-public final class VariableToken extends Token {
+public final class VariableToken extends TokenSSID {
 
 	private static final int VAR_REG = 1;
 	private String value;
@@ -37,7 +37,7 @@ public final class VariableToken extends Token {
 	@Override
 	public boolean equals(Object obj) {
 		return obj != null && getClass() == obj.getClass()
-				&& isStartOfStatement() == ((Token) obj).isStartOfStatement();
+				&& isStartOfStatement() == ((TokenSSID) obj).isStartOfStatement();
 	}
 
 	@Override

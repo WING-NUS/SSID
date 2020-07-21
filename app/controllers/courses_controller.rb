@@ -16,10 +16,10 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
 class CoursesController < ApplicationController
-  before_filter { |controller|
+  before_action { |controller|
     controller.send :authenticate_actions_for_admin, only: [ :new, :create, :edit, :update, :destroy ]
   }
-  before_filter { |controller|
+  before_action { |controller|
     if params[:course_id]
       @course = Course.find(params[:course_id])
     elsif params[:id]
@@ -38,17 +38,13 @@ class CoursesController < ApplicationController
     end
   }
   
-  # GET /courses/1/assignments/processing
+  # GET /courses/1/status
   def status
     @course = Course.find(params[:course_id])
     @empty_assignments = @course.empty_assignments
     @processing_assignments = @course.processing_assignments
     @processed_assignments = @course.processed_assignments
     @erroneous_assignments = @course.erroneous_assignments
-    
-    respond_to do |format|
-      format.js
-    end
   end
 
   # GET /courses
@@ -115,7 +111,7 @@ class CoursesController < ApplicationController
     redirect_to courses_url, notice: 'Course was successfully deleted.'
   end
 
-  # GET /courses/1/cluster_students.json
+  # GET /courses/1/cluster_students
   def cluster_students
     respond_to do |format|
       format.json { 

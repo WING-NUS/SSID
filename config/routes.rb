@@ -22,55 +22,70 @@ SSID::Application.routes.draw do
   get "login" => "sessions#new"
   post "login" => "sessions#create"
   delete "logout" => "sessions#destroy"
-
+  
   get "guide" => "users#guide"
   root to: "announcements#index"
 
   resources :announcements
+
+  namespace :admin do
+    resources :users
+  end
+  resources :users
+  
   resources :courses do
     get 'status'
+    get "cluster_students", defaults: { format: "json" }
+
+    resources :users
+
     resources :assignments do
       get "log" => "assignments#show_log"
     end
-    resources :users
+
     get "visualize/" => "visualize#index"
     get "visualize/similarity_cluster_graph" => "visualize#similarity_cluster_graph"
     get "visualize/similarity_cluster_table" => "visualize#similarity_cluster_table"
     get "visualize/top_similar_submissions" => "visualize#top_similar_submissions"
-    get "cluster_students"
   end
+
+  resources :assignments do 
+    get "cluster_students", defaults: { format: "json" }
+
+    resources :cluster_groups, controller: "submission_cluster_groups"
+
+    resources :submission_similarities do
+      put "confirm_as_plagiarism" => "submission_similarities#confirm_as_plagiarism"
+      put "suspect_as_plagiarism" => "submission_similarities#suspect_as_plagiarism"
+      put "unmark_as_plagiarism" => "submission_similarities#unmark_as_plagiarism"
+    end
+
+    resources :submissions do
+      get "log" => "submission_logs#index"
+    end
+  end
+
+  # ajax calls
   resources :submission_similarities do
     resources :submissions do
       put "mark_as_guilty" => "submissions#mark_as_guilty"
       put "mark_as_not_guilty" => "submissions#mark_as_not_guilty"
     end
   end
-  resources :assignments do 
-    get "cluster_students"
-    resources :submission_similarities do
-      put "confirm_as_plagiarism" => "submission_similarities#confirm_as_plagiarism"
-      put "suspect_as_plagiarism" => "submission_similarities#suspect_as_plagiarism"
-      put "unmark_as_plagiarism" => "submission_similarities#unmark_as_plagiarism"
-    end
-    resources :cluster_groups, controller: "submission_cluster_groups"
-    resources :submissions do
-      get "log" => "submission_logs#index"
-    end
-  end
+  
   resources :cluster_groups, controller: "submission_cluster_groups" do
     resources :clusters, controller: "submission_clusters"
   end
+  
+  get "clusters/show_for_submission_ids" => "submission_clusters#show_for_submission_ids", defaults: { format: 'json' }
   get "clusters/ids_and_group_ids_for_student_ids" => "submission_clusters#ids_and_group_ids_for_student_ids", defaults: { format: 'json' }
   get "clusters/show_graph_partial" => "submission_clusters#show_graph_partial"
   get "clusters/show_ranking_partial" => "submission_clusters#show_ranking_partial"
-  get "clusters/show_for_submission_ids" => "submission_clusters#show_for_submission_ids", defaults: { format: 'json' }
+  
   get "clusters/:id" => "submission_clusters#show", defaults: { format: 'json' }
   get "clusters/:id/show_graph_partial" => "submission_clusters#show_graph_partial"
   get "clusters/:id/show_table_partial" => "submission_clusters#show_table_partial"
-  resources :users
-  namespace :admin do
-    resources :users
-  end
+
   resources :students, controller: "users" do
     get "submission_similarities/show_table_partial" => "submission_similarities#show_table_partial"
   end

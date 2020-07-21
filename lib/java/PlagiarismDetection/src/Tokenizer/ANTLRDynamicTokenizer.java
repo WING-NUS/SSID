@@ -17,10 +17,16 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
  
 package Tokenizer;
 
+import Antlr4Grammars.javalang.*;
+import Antlr4Grammars.c.*;
+import Antlr4Grammars.python3.*;
+import Antlr4Grammars.cpp.*;
+
 import java.io.*;
 import java.util.*;
 import pd.utils.*;
 import pd.utils.Tokens.*;
+import org.antlr.v4.runtime.*;
 
 public final class ANTLRDynamicTokenizer extends Tokenizer {
   private static String grammarsBinDir;
@@ -129,9 +135,7 @@ public final class ANTLRDynamicTokenizer extends Tokenizer {
   }
 
   private ANTLRDynamicTokenizer(String language) {
-    // Set language and binPath to run lexer
     this.language = language;
-    this.binPath = ANTLRDynamicTokenizer.grammarsBinDir + "/" + this.language + "/" + this.language + "_lexer";
     
     // Read tokenNames
     String tokenNamesPath = ANTLRDynamicTokenizer.grammarsBinDir + "/" + this.language + "/" + this.language + "_tokens";
@@ -167,43 +171,54 @@ public final class ANTLRDynamicTokenizer extends Tokenizer {
   }
 
   private ArrayList<String> runLexer(String fileName) throws Exception {
-    // Run lexer as separate process
-    Runtime runtime = Runtime.getRuntime();
-    String commandString = this.binPath + " " + fileName;
-    Process lexerProcess = runtime.exec(commandString); 
-
-    // Read lexer output
-    Scanner lexerScanner = new Scanner(lexerProcess.getInputStream());
     ArrayList<String> lexerOutput = new ArrayList<String>();
-    while (lexerScanner.hasNext()) {
-      lexerOutput.add(lexerScanner.nextLine());
-    }
-    lexerScanner.close();
+    // Call Antlr4 Lexer to generate tokens from char stream
+    String[] args = {language, fileName};
+    Lexer lexer = getLexer(args);
 
-    // Read lexer error
-    Scanner lexerErrorScanner = new Scanner(lexerProcess.getErrorStream());
-    StringBuffer errorSb = new StringBuffer();
-    while (lexerErrorScanner.hasNext()) {
-      errorSb.append(lexerErrorScanner.nextLine());
-    }
-    lexerErrorScanner.close();
+    List<? extends Token> tokenList = new ArrayList<>(); 
+    tokenList = lexer.getAllTokens(); 
+    for (Token token : tokenList) { 
+      String lineNumber = String.valueOf(token.getLine());
+      String startNumber = String.valueOf(token.getStartIndex());
+      String tokenType = String.valueOf(token.getType());
+      String tokenString = null;
+      try {
+        tokenString = lexer.getVocabulary().getSymbolicName(token.getType());
+      } finally {
+        tokenString = token.getText();
+      }
+      String tokenLength = String.valueOf(tokenString.length());
 
-    // Clean up
-    try {
-      lexerProcess.waitFor();
-    } catch (InterruptedException ex) {
-      System.err.println("hi");
-      System.err.println(ex);
-      System.exit(1);
+      StringJoiner joiner = new StringJoiner(",");
+      joiner.add(lineNumber).add(startNumber).add(tokenLength).add(tokenType).add(tokenString);
+      String row = joiner.toString();
+      lexerOutput.add(row);
     }
-
-    // Check for error
-    if (lexerProcess.exitValue() != 0) {
-      throw new Exception("Lexer exit with value "+lexerProcess.exitValue()+": "+errorSb.toString());
-    }
-
     // Return lexer output as string array
     return lexerOutput;
+  }
+
+  private Lexer getLexer(String[] args) throws IOException, Exception {
+    String language = args[0];
+    String fileName = args[1];
+    // check against language in grammarbinDir
+    if (language.equals("java")) {
+      JavaLexer lexer = new JavaLexer(CharStreams.fromFileName(fileName));
+      return lexer;
+    } else if (language.equals("c")) {
+      CLexer lexer = new CLexer(CharStreams.fromFileName(fileName));
+      return lexer;
+    } else if (language.equals("cpp")) {
+      CPP14Lexer lexer = new CPP14Lexer(CharStreams.fromFileName(fileName));
+      return lexer;
+    } else if (language.equals("python3")) {
+      Python3Lexer lexer = new Python3Lexer(CharStreams.fromFileName(fileName));
+      return lexer;
+    } else {
+      String errorMessage = String.format("%s Lexer not found. %s package containing the Lexer may have been excluded in build process.", language, language);
+      throw new Exception (errorMessage);
+    }
   }
 
   private TokenList processLexerOutput(ArrayList<String> lexerOutput) throws Exception {
@@ -230,12 +245,12 @@ public final class ANTLRDynamicTokenizer extends Tokenizer {
       	if (tokenClassString == null) {
         	throw new Exception("Unrecognized token name: "+tokenName);
       	}
-      }else{
-	tokenClassString = "Ignore";
-	// Filter out \n statements
-	if (!tokenString.equals('\n') && !tokenString.equals("\\n")){
-		System.out.println("Unknown format, ignoring line: " + tokenString);
-	}
+      } else{
+        tokenClassString = "Ignore";
+        // Filter out \n statements
+        if (!tokenString.equals('\n') && !tokenString.equals("\\n")){
+          System.out.println("Unknown format, ignoring line: " + tokenString);
+        }
       }
 
       if (tokenClassString.equals("Symbol")
@@ -293,13 +308,13 @@ public final class ANTLRDynamicTokenizer extends Tokenizer {
       boolean isStartOfStatement = (lineNumber != lastLineNumber);
 
       // Set EndOfStatementType enum type based on nextLineNumber
-      Token.EndOfStatementType endOfStatementType;
+      TokenSSID.EndOfStatementType endOfStatementType;
       if (nextLineNumber == lineNumber) {
-        endOfStatementType = Token.EndOfStatementType.FALSE;
+        endOfStatementType = TokenSSID.EndOfStatementType.FALSE;
       } else if (statementHasNonCountableKeyword) {
-        endOfStatementType = Token.EndOfStatementType.NON_COUNTABLE;
+        endOfStatementType = TokenSSID.EndOfStatementType.NON_COUNTABLE;
       } else {
-        endOfStatementType = Token.EndOfStatementType.COUNTABLE;
+        endOfStatementType = TokenSSID.EndOfStatementType.COUNTABLE;
       }
 
       // Figure out Token class and then create
@@ -340,7 +355,7 @@ public final class ANTLRDynamicTokenizer extends Tokenizer {
 
       // Update
       lastLineNumber = lineNumber;
-      if (endOfStatementType != Token.EndOfStatementType.FALSE) {
+      if (endOfStatementType != TokenSSID.EndOfStatementType.FALSE) {
         statementHasNonCountableKeyword = false;
       }
     }

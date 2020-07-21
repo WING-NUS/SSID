@@ -17,11 +17,11 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 
 class Assignment < ActiveRecord::Base
   has_many :submission_similarities, :dependent => :delete_all
-  has_many :submission_cluster_groups, :dependent => :delete_all, order: "cut_off_criterion DESC"
+  has_many :submission_cluster_groups, -> { order("cut_off_criterion DESC") }, :dependent => :delete_all
   has_one :submission_similarity_process, :dependent => :delete
-  has_many :suspected_plagiarism_cases, class_name: "SubmissionSimilarity", conditions: "status = #{SubmissionSimilarity::STATUS_SUSPECTED_AS_PLAGIARISM}"
-  has_many :confirmed_or_suspected_plagiarism_cases, class_name: "SubmissionSimilarity", conditions: "status = #{SubmissionSimilarity::STATUS_CONFIRMED_AS_PLAGIARISM} OR status = #{SubmissionSimilarity::STATUS_SUSPECTED_AS_PLAGIARISM}"
-  has_many :confirmed_plagiarism_cases, class_name: "SubmissionSimilarity", conditions: "status = #{SubmissionSimilarity::STATUS_CONFIRMED_AS_PLAGIARISM}"
+  has_many :suspected_plagiarism_cases, -> { where("status = #{SubmissionSimilarity::STATUS_SUSPECTED_AS_PLAGIARISM}") }, class_name: "SubmissionSimilarity"
+  has_many :confirmed_or_suspected_plagiarism_cases, -> { where("status = #{SubmissionSimilarity::STATUS_CONFIRMED_AS_PLAGIARISM} OR status = #{SubmissionSimilarity::STATUS_SUSPECTED_AS_PLAGIARISM}") }, class_name: "SubmissionSimilarity"
+  has_many :confirmed_plagiarism_cases, -> { where("status = #{SubmissionSimilarity::STATUS_CONFIRMED_AS_PLAGIARISM}") }, class_name: "SubmissionSimilarity"
   has_many :submissions
   belongs_to :course
 
@@ -33,7 +33,7 @@ class Assignment < ActiveRecord::Base
     java: "Java",
     c: "C (Experimental)",
     cpp: "C++",
-    python3: "Python 3"
+    python3: "Python3"
   }
 
   PRETTIFY_LANGUAGES = {

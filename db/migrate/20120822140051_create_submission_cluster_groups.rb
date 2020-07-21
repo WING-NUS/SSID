@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
-class CreateSubmissionClusterGroups < ActiveRecord::Migration
+class CreateSubmissionClusterGroups < ActiveRecord::Migration[6.0]
   def change
     create_table :submission_cluster_groups do |t|
       t.integer :assignment_id, null: false
@@ -28,6 +28,6 @@ class CreateSubmissionClusterGroups < ActiveRecord::Migration
 
     add_index :submission_cluster_groups, :assignment_id
     add_index :submission_cluster_groups, [:assignment_id, :cut_off_criterion], unique: true, name: "on_assignment_id_and_cut_off_criterion"
-    add_index :submission_cluster_groups, [:assignment_id, :description]
+    # add_index :submission_cluster_groups, [:assignment_id, :description]
   end
 end

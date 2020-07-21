@@ -1,4 +1,4 @@
-require File.expand_path('../boot', __FILE__)
+require_relative 'boot'
 
 require 'rails/all'
 
@@ -58,5 +58,5 @@ module SSID
 
     config.assets.precompile += %w( prettify/prettify.js  explorer_canvas/* jit/*)
     config.assets.precompile += %w( prettify/prettify.css)
-end
+  end
 end

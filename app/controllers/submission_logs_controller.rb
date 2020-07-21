@@ -16,7 +16,7 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
 class SubmissionLogsController < ApplicationController
-  before_filter { |controller|
+  before_action { |controller|
     if params[:assignment_id]
       @assignment = Assignment.find(params["assignment_id"])
       @course = @assignment.course

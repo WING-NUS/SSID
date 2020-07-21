@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
-class CreateSubmissionSimilarities < ActiveRecord::Migration
+class CreateSubmissionSimilarities < ActiveRecord::Migration[6.0]
   def change
     create_table :submission_similarities do |t|
       t.integer :assignment_id, null: false

@@ -16,7 +16,7 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
 class SubmissionClustersController < ApplicationController
-  before_filter { |controller|
+  before_action { |controller|
     @course = nil
     if params[:id]
       @submission_cluster = SubmissionCluster.find(params[:id])
@@ -90,7 +90,7 @@ class SubmissionClustersController < ApplicationController
   end
 
   # GET /clusters/1/show_graph_partial
-  # GET /clusters/show_graph_partial
+  # GET /clusters/show_graph_partial => not working
   def show_graph_partial
     if params[:id]
       render partial: "submission_cluster_graph", locals: { cluster_id: @submission_cluster.id, submission_student_ids: @submission_cluster.submission_student_ids }

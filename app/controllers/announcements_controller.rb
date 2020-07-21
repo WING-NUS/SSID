@@ -16,7 +16,7 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
 class AnnouncementsController < ApplicationController
-  before_filter { |controller|
+  before_action { |controller|
     if params[:announcement] and params[:announcement]["course_id"]
       @course = Course.find(params[:announcement]["course_id"])
       controller.send :authenticate_actions_for_role, UserCourseMembership::ROLE_TEACHING_ASSISTANT,
@@ -64,9 +64,6 @@ class AnnouncementsController < ApplicationController
     else
       @announcement.errors.add :course_id, "must be selected from the available options"
     end
-  
-    # Check content
-    @announcement.errors.add_on_blank :html_content
 
     if @announcement.errors.empty? and @announcement.save
       redirect_to announcements_url, notice: 'Announcement was successfully created.'

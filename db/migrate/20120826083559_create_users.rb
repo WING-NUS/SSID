@@ -17,7 +17,7 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 
 require 'bcrypt'
 
-class CreateUsers < ActiveRecord::Migration
+class CreateUsers < ActiveRecord::Migration[6.0]
   def change
     create_table :users do |t|
       t.string :name, uniq: true

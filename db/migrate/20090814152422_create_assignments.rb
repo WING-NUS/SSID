@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
-class CreateAssignments < ActiveRecord::Migration
+class CreateAssignments < ActiveRecord::Migration[6.0]
   def change
     create_table :assignments do |t|
       t.string :title, null: false

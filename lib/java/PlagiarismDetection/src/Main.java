@@ -44,6 +44,7 @@ public class Main {
 
 		String aId = args[0];
 		String compareFolderPath = args[1];
+		System.out.println(compareFolderPath);
 		String language = args[2];
 		int minMatch = Integer.parseInt(args[3]);
 		if (minMatch <= 0) {
@@ -69,11 +70,13 @@ public class Main {
 
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z");
 
-		if (language.equals(CTokenizer.language)) {
-			CTokenizer.getTokenizer().TokenizeSubmissions(submissions);
-		} else if (language.equals(JavaTokenizer.language)) {
-			JavaTokenizer.getTokenizer().TokenizeSubmissions(submissions);
-		} else if (ANTLRDynamicTokenizer.understandsLanguage(language)) {
+		// if (language.equals(CTokenizer.language)) {
+		// 	CTokenizer.getTokenizer().TokenizeSubmissions(submissions);
+		// } 
+		// else if (language.equals(JavaTokenizer.language)) {
+		// 	JavaTokenizer.getTokenizer().TokenizeSubmissions(submissions);
+		// } 
+		if (ANTLRDynamicTokenizer.understandsLanguage(language)) {
 			System.out.println("[" + dateFormat.format(new java.util.Date()) + "] ANTLR tokenizer started run: " + language);
 			ANTLRDynamicTokenizer.getTokenizer(language).TokenizeSubmissions(submissions);
 		} else {

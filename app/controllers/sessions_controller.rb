@@ -16,7 +16,7 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
 class SessionsController < ApplicationController
-  skip_before_filter :authorize
+  skip_before_action :authorize
 
   def new
   end

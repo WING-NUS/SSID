@@ -16,7 +16,7 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
 class AssignmentsController < ApplicationController
-  before_filter { |controller|
+  before_action { |controller|
     if params[:course_id]
       @course = Course.find(params[:course_id])
       controller.send :authenticate_actions_for_role, UserCourseMembership::ROLE_TEACHING_ASSISTANT,
@@ -36,7 +36,8 @@ class AssignmentsController < ApplicationController
     @processed_assignments = @course.processed_assignments
     @erroneous_assignments = @course.erroneous_assignments
   end
-
+  
+  # GET /assignments/1/cluster_students
   def cluster_students
     @assignment = Assignment.find(params["assignment_id"])
     respond_to do |format|
@@ -48,7 +49,7 @@ class AssignmentsController < ApplicationController
     end
   end
 
-  # GET /courses/1/assignments/1/upload_log
+  # GET /courses/1/assignments/1/log
   def show_log
     @assignment = Assignment.find(params[:assignment_id])
   end
@@ -80,13 +81,16 @@ class AssignmentsController < ApplicationController
       return render action: "new" unless @assignment.save
       
       if !params[:assignment]["file"].nil?
-        if (params[:assignment]["file"].content_type == "application/zip")
+        if (params[:assignment]["file"].content_type == "application/x-zip-compressed" || 
+          params[:assignment]["file"].content_type == "application/x-zip-compressed-compressed" ||
+          params[:assignment]["file"].content_type == "application/x-zip-compressed")
+
           self.start_upload(@assignment, params[:assignment]["file"])
           redirect_to course_assignments_url(@course), notice: 'Assignment was successfully created.'
         else
           if params[:assignment]["file"].nil?
             @assignment.errors.add :file, "is not selected for upload"
-          elsif params[:assignment]["file"].content_type != "application/zip"
+          elsif params[:assignment]["file"].content_type != "application/x-zip-compressed"
             @assignment.errors.add :file, "for upload must be a zip file"
           end
          return render action: "new"
@@ -104,13 +108,13 @@ class AssignmentsController < ApplicationController
   def update
     @assignment = Assignment.find(params[:id])
     
-    if !(params[:assignment].nil? or params[:assignment]["file"].content_type != "application/zip")
+    if !(params[:assignment].nil? or params[:assignment]["file"].content_type != "application/x-zip-compressed")
       self.start_upload(@assignment, params[:assignment]["file"])
       redirect_to course_assignments_url(@course), notice: 'File was successfully uploaded.'
     else
       if params[:assignment].nil?
           @assignment.errors.add :file, "is not selected for upload"
-      elsif params[:assignment]["file"].content_type != "application/zip"
+      elsif params[:assignment]["file"].content_type != "application/x-zip-compressed"
           @assignment.errors.add :file, "for upload must be a zip file"
       end
       return render action: "show" 

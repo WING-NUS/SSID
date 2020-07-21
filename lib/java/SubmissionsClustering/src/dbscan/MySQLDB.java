@@ -25,7 +25,7 @@ public final class MySQLDB {
 
 	static String USER_ID;
 	static String USER_PASSWORD;
-	static String JDBC_DRIVER = "com.mysql.jdbc.Driver";
+	static String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
 	static String MYSQL_URL;
 	private static final String INSERT_CLUSTERS_QUERY = "INSERT INTO submission_clusters(submission_cluster_group_id, created_at, updated_at) VALUES (?, ?, ?)";
 	private static final String INSERT_CLUSTER_MEMBERS_QUERY = "INSERT INTO submission_cluster_memberships(submission_cluster_id, submission_id, created_at, updated_at) VALUES (?, ?, ?, ?)";

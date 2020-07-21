@@ -6,6 +6,9 @@ SSID::Application.configure do
   # since you don't have to restart the web server when you make code changes.
   config.cache_classes = false
 
+  # watch for changes in source code
+  config.file_watcher = ActiveSupport::FileUpdateChecker
+
   # Log error messages when you accidentally call methods on nil.
   config.whiny_nils = true
 
@@ -23,20 +26,23 @@ SSID::Application.configure do
   config.action_dispatch.best_standards_support = :builtin
 
   # Raise exception on mass assignment protection for Active Record models
-  config.active_record.mass_assignment_sanitizer = :strict
+  # config.active_record.mass_assignment_sanitizer = :strict
 
   # Log the query plan for queries taking more than this (works
   # with SQLite, MySQL, and PostgreSQL)
-  config.active_record.auto_explain_threshold_in_seconds = 0.5
+  # config.active_record.auto_explain_threshold_in_seconds = 0.5
 
   # Do not compress assets
-  config.assets.compress = false
+  config.assets.compress = true
 
   # Expands the lines which load the assets
   config.assets.debug = true
 
+  # allow local storae use for file uploads
+  # config.active_storage.service = :local
+
   # whitelist attributes for mass-assignment
-  config.active_record.whitelist_attributes = true
+  # config.active_record.whitelist_attributes = true
 
   # Set time zone
   config.time_zone = "Singapore"

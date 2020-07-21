@@ -19,8 +19,8 @@ class User < ActiveRecord::Base
   MIN_PASSWORD_LENGTH = 6
 
   has_many :memberships , class_name: "UserCourseMembership", :dependent => :delete_all
-  has_many :courses, :through => :memberships, :uniq => true
-  has_many :assignments, :through => :courses, :uniq => true
+  has_many :courses, -> { distinct }, :through => :memberships
+  has_many :assignments, -> { distinct }, :through => :courses
   has_many :submissions, foreign_key: "student_id"
 
   validates :name, :password_digest, presence: true

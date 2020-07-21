@@ -42,7 +42,7 @@ public class MappingComparator implements Comparator<Mapping> {
 	 * @return If both have the same number of statements and tokens matched,
 	 *         return 0. If not, return 1 if m1 has less number of statements
 	 *         than m2, -1 if not. If both have the same number of statements,
-	 *         return 1 if m1 has less token matched, -1 if not.
+	 *         return 1 if m1 has less TokenSSID matched, -1 if not.
 	 */
 	@Override
 	public int compare(Mapping m1, Mapping m2) {

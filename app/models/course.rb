@@ -16,13 +16,13 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
 class Course < ActiveRecord::Base
-  has_many :announcements, :as => :announceable, order: "updated_at DESC"
+  has_many :announcements, -> {  order "updated_at DESC" }, :as => :announceable
   has_many :assignments, :dependent => :delete_all
   has_many :memberships, class_name: "UserCourseMembership", :dependent => :delete_all
   has_many :users, :through => :memberships
-  has_many :student_memberships, class_name: "UserCourseMembership", conditions: { role: UserCourseMembership::ROLE_STUDENT }
-  has_many :staff_memberships, class_name: "UserCourseMembership", conditions: { role: UserCourseMembership::ROLE_TEACHING_STAFF }
-  has_many :teaching_assistant_memberships, class_name: "UserCourseMembership", conditions: { role: UserCourseMembership::ROLE_TEACHING_ASSISTANT }
+  has_many :student_memberships, -> { where role: UserCourseMembership::ROLE_STUDENT }, class_name: "UserCourseMembership"
+  has_many :staff_memberships, -> { where  role: UserCourseMembership::ROLE_TEACHING_STAFF }, class_name: "UserCourseMembership"
+  has_many :teaching_assistant_memberships, -> { where role: UserCourseMembership::ROLE_TEACHING_ASSISTANT }, class_name: "UserCourseMembership"
 
   validates_presence_of :code
   validates_presence_of :name

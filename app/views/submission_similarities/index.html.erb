@@ -17,16 +17,16 @@
     </tr>
   </thead>
   <tbody>
-<% @submission_similarities.each do |ss| %>
-  <tr>
-    <td><%= ss.student1.id_string %></td>
-    <td><%= ss.student2.id_string %></td>
-    <td><%= ss.similarity %>%</td>
-    <td><%= ss.average_similarity %>%</td>
-    <td><%= ss.status_string.html_safe %></td>
-    <td><%= link_to "View Submissions", assignment_submission_similarity_url(@assignment, ss) %></td>
-  </tr>
-<% end %>
+    <% @submission_similarities.each do |ss| %>
+      <tr>
+        <td><%= ss.student1.id_string %></td>
+        <td><%= ss.student2.id_string %></td>
+        <td><%= ss.similarity %>%</td>
+        <td><%= ss.average_similarity %>%</td>
+        <td><%= ss.status_string.html_safe %></td>
+        <td><%= link_to "View Submissions", assignment_submission_similarity_url(@assignment, ss) %></td>
+      </tr>
+    <% end %>
   </tbody>
 </table>
 

@@ -71,12 +71,12 @@ public class NGram {
 	}
 
 	private void append(int startIndex, TokenList tokens) {
-		for (Token t : tokens) {
+		for (TokenSSID t : tokens) {
 			append(startIndex++, t);
 		}
 	}
 
-	public void append(int index, Token t) {
+	public void append(int index, TokenSSID t) {
 		if (codeStartLoc == -1) {
 			codeStartLoc = t.getCodeStartIndex();
 			codeStartLine = t.getCodeLine();
@@ -92,8 +92,8 @@ public class NGram {
 		// startOfStmtTokenIndices.add(index);
 		// }
 
-		// hashCode = hashCode << Token.getBitRequired() | t.hashCode();
-		hashCode = hashCode * Token.getRegCount() + t.hashCode();
+		// hashCode = hashCode << TokenSSID.getBitRequired() | t.hashCode();
+		hashCode = hashCode * TokenSSID.getRegCount() + t.hashCode();
 		tokens.add(t);
 	}
 
@@ -112,8 +112,8 @@ public class NGram {
 			return true;
 		}
 
-		Iterator<Token> i = tokens.iterator();
-		Iterator<Token> other = ((NGram) obj).tokens.iterator();
+		Iterator<TokenSSID> i = tokens.iterator();
+		Iterator<TokenSSID> other = ((NGram) obj).tokens.iterator();
 
 		while (i.hasNext() && other.hasNext()) {
 			if (!(i.next().equals(other.next()))) {

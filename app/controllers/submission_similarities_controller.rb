@@ -16,7 +16,7 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
 class SubmissionSimilaritiesController < ApplicationController
-  before_filter { |controller|
+  before_action { |controller|
     @course = nil
     if params[:assignment_id]
       @assignment = Assignment.find(params["assignment_id"])
@@ -36,9 +36,7 @@ class SubmissionSimilaritiesController < ApplicationController
   def index
     @submission_similarities = SubmissionSimilarity.where(
       assignment_id: @assignment.id 
-    ).paginate  page: params[:page], 
-                order: 'similarity desc', 
-                per_page: 20
+    ).order('similarity desc').paginate(page: params[:page], per_page: 20)
   end
 
   # GET /assignments/1/submission_similarities/1

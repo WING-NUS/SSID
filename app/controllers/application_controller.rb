@@ -16,83 +16,84 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
 class ApplicationController < ActionController::Base
-  protect_from_forgery
-  before_filter :authorize
-  before_filter :sanitize_id, only: [:index, :show, :edit, :update, :destroy]
-
-  protected
-
-  def authorize
-    @user = User.find_by_id(session[:user_id]) 
-    unless @user
-      redirect_to login_url, notice: "Please log in"
+    protect_from_forgery
+    before_action :authorize
+    before_action :sanitize_id, only: [:index, :show, :edit, :update, :destroy]
+  
+    protected
+  
+    def authorize
+      @user = User.find_by_id(session[:user_id]) 
+      unless @user
+        redirect_to login_url, notice: "Please log in"
+      end
     end
-  end
-
-  private
-
-  def sanitize_id
-    begin
-      # Since we have nested controllers, we need to check for every "_id" params
-      params.each { |key, value|
-        next unless key.to_s.match(/_id$/)
-        controller_for_key = key.to_s.scan(/^(.+)_id$/).first.first
-        @obj = controller_for_key.classify.constantize.find_by_id(value)
-        unless @obj
-          message = "Could not find any #{controller_for_key.classify.tableize.humanize.pluralize.titleize} with id #{value}"
-          if action_name != "index"
-            redirect_to({ controller: controller_name, action: "index" }, alert: message)
-          else
-            redirect_to({ controller: "announcements", action: "index" }, alert: message)
+  
+    private
+  
+    def sanitize_id
+      begin
+        # Since we have nested controllers, we need to check for every "_id" params
+        params.each { |key, value|
+          next unless key.to_s.match(/_id$/)
+          controller_for_key = key.to_s.scan(/^(.+)_id$/).first.first
+          @obj = controller_for_key.classify.constantize.find_by_id(value)
+          unless @obj
+            message = "Could not find any #{controller_for_key.classify.tableize.humanize.pluralize.titleize} with id #{value}"
+            if action_name != "index"
+              redirect_to({ controller: controller_name, action: "index" }, alert: message)
+            else
+              redirect_to({ controller: "announcements", action: "index" }, alert: message)
+            end
           end
+        }
+      rescue
+        # controller_name did not correspond to any known models
+      end
+    end
+  
+    # This method should be called by each controller for every role in UserCourseMembership to whitelist
+    # actions allowed for each role. The method delegates how to find the course object to the controller
+    # Example usage:
+    #
+    # before_action { |controller|
+    #   @course = get_course_from_params
+    #   if params[:course_id]
+    #     controller.send :authenticate_actions_for_role, UserCourseMembership::ROLE_TEACHING_STAFF,
+    #                                                     course: @course,
+    #                                                     only: [ :edit ]
+    #   end
+    # }
+
+    def authenticate_actions_for_role(role, opts={})
+      return if @user.is_admin
+  
+      # Sanitize
+      raise unless opts[:course]
+      raise unless opts[:only]
+  
+      # Get course
+      course = opts[:course]
+  
+      # Get current user's role
+      current_role = course.membership_for_user(@user).role
+  
+      # Check if we need to authenticate
+      if current_role == role
+        unless opts[:only].include? action_name.intern
+          redirect_to( { controller: "announcements", action: "index" }, alert: "You do not have access to the url \"#{request.env['REQUEST_URI']}\". Please contact the administrator for more information.")
         end
-      }
-    rescue
-      # controller_name did not correspond to any known models
+      end
     end
-  end
-
-  # This method should be called by each controller for every role in UserCourseMembership to whitelist
-  # actions allowed for each role. The method delegates how to find the course object to the controller
-  # Example usage:
-  #
-  # before_filter { |controller|
-  #   @course = get_course_from_params
-  #   if params[:course_id]
-  #     controller.send :authenticate_actions_for_role, UserCourseMembership::ROLE_TEACHING_STAFF,
-  #                                                     course: @course,
-  #                                                     only: [ :edit ]
-  #   end
-  # }
-  def authenticate_actions_for_role(role, opts={})
-    return if @user.is_admin
-
-    # Sanitize
-    raise unless opts[:course]
-    raise unless opts[:only]
-
-    # Get course
-    course = opts[:course]
-
-    # Get current user's role
-    current_role = course.membership_for_user(@user).role
-
-    # Check if we need to authenticate
-    if current_role == role
-      unless opts[:only].include? action_name.intern
-        redirect_to( { controller: "announcements", action: "index" }, alert: "You do not have access to the url \"#{request.env['REQUEST_URI']}\". Please contact the administrator for more information.")
+  
+    def authenticate_actions_for_admin(opts)
+      raise unless opts[:only]
+  
+      # Check if we need to authenticate
+      unless @user.is_admin
+        if opts[:only].include? action_name.intern
+          redirect_to( { controller: "announcements", action: "index" }, alert: "You do not have access to the url \"#{request.env['REQUEST_URI']}\". Please contact the administrator for more information.")
+        end
       end
     end
   end
-
-  def authenticate_actions_for_admin(opts)
-    raise unless opts[:only]
-
-    # Check if we need to authenticate
-    unless @user.is_admin
-      if opts[:only].include? action_name.intern
-        redirect_to( { controller: "announcements", action: "index" }, alert: "You do not have access to the url \"#{request.env['REQUEST_URI']}\". Please contact the administrator for more information.")
-      end
-    end
-  end
-end
