@@ -31,7 +31,7 @@ class Assignment < ActiveRecord::Base
 
   LANGUAGES = {
     java: "Java",
-    c: "C (Experimental)",
+    c: "C",
     cpp: "C++",
     python3: "Python3"
   }

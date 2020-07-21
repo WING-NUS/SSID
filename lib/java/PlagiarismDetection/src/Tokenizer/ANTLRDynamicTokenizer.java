@@ -175,10 +175,8 @@ public final class ANTLRDynamicTokenizer extends Tokenizer {
     // Call Antlr4 Lexer to generate tokens from char stream
     String[] args = {language, fileName};
     Lexer lexer = getLexer(args);
-
-    List<? extends Token> tokenList = new ArrayList<>(); 
-    tokenList = lexer.getAllTokens(); 
-    for (Token token : tokenList) { 
+    for (Token token = lexer.nextToken(); token.getType() != Token.EOF; token = lexer.nextToken()) {
+      try {
       String lineNumber = String.valueOf(token.getLine());
       String startNumber = String.valueOf(token.getStartIndex());
       String tokenType = String.valueOf(token.getType());
@@ -194,8 +192,12 @@ public final class ANTLRDynamicTokenizer extends Tokenizer {
       joiner.add(lineNumber).add(startNumber).add(tokenLength).add(tokenType).add(tokenString);
       String row = joiner.toString();
       lexerOutput.add(row);
+      } catch (Exception errMessage) {
+        System.err.println(errMessage);
+      }
     }
     // Return lexer output as string array
+    // System.out.println(lexerOutput);
     return lexerOutput;
   }
 
@@ -248,7 +250,7 @@ public final class ANTLRDynamicTokenizer extends Tokenizer {
       } else{
         tokenClassString = "Ignore";
         // Filter out \n statements
-        if (!tokenString.equals('\n') && !tokenString.equals("\\n")){
+        if (!tokenString.equals("\n") && !tokenString.equals("\\n")){
           System.out.println("Unknown format, ignoring line: " + tokenString);
         }
       }
