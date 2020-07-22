@@ -176,25 +176,19 @@ public final class ANTLRDynamicTokenizer extends Tokenizer {
     String[] args = {language, fileName};
     Lexer lexer = getLexer(args);
     for (Token token = lexer.nextToken(); token.getType() != Token.EOF; token = lexer.nextToken()) {
-      try {
-      String lineNumber = String.valueOf(token.getLine());
-      String startNumber = String.valueOf(token.getStartIndex());
-      String tokenType = String.valueOf(token.getType());
-      String tokenString = null;
-      try {
-        tokenString = lexer.getVocabulary().getSymbolicName(token.getType());
-      } finally {
-        tokenString = token.getText();
-      }
-      String tokenLength = String.valueOf(tokenString.length());
+        String lineNumber = String.valueOf(token.getLine());
+        String startNumber = String.valueOf(token.getStartIndex());
+        String tokenType = String.valueOf(token.getType());
+        String tokenString = token.getText();
+        String  tokenLength = String.valueOf(tokenString.length());
+        
+        // this step is done in accordance to the initial antlr code (2013) written by Eugene.
+        tokenString = tokenString.replace("\n", "\\n");
 
-      StringJoiner joiner = new StringJoiner(",");
-      joiner.add(lineNumber).add(startNumber).add(tokenLength).add(tokenType).add(tokenString);
-      String row = joiner.toString();
-      lexerOutput.add(row);
-      } catch (Exception errMessage) {
-        System.err.println(errMessage);
-      }
+        StringJoiner joiner = new StringJoiner(",");
+        joiner.add(lineNumber).add(startNumber).add(tokenLength).add(tokenType).add(tokenString);
+        String row = joiner.toString();
+        lexerOutput.add(row);
     }
     // Return lexer output as string array
     return lexerOutput;
