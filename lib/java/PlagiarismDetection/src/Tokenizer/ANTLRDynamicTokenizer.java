@@ -197,7 +197,6 @@ public final class ANTLRDynamicTokenizer extends Tokenizer {
       }
     }
     // Return lexer output as string array
-    // System.out.println(lexerOutput);
     return lexerOutput;
   }
 

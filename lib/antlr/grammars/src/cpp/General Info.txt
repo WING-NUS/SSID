@@ -1,0 +1,3 @@
+Version of grammar in antlr/grammars-v4 commit history:
+commit cab524ff576304ed261d47d583f71eb018696e25
+
