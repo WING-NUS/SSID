@@ -102,7 +102,7 @@ NotEqual,Symbol
 Arrow,Symbol
 Dot,Symbol
 Ellipsis,Ignore
-Identifier,Symbol
+Identifier,Variable
 Constant,Ignore
 DigitSequence,Constant
 StringLiteral,Constant
