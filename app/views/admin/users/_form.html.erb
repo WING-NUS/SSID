@@ -20,15 +20,15 @@
     <%= f.text_field :full_name %>
   </div>
   <% if @course %>
-  <div>
-    <%= hidden_field_tag :user_course_id, @course.id, name: "user[course_id]" %>
-    <%= f.label :id_string, "ID" %>:
-    <%= f.text_field :id_string %>
-  </div>
-  <div>
-    <%= f.label :course_role %>:
-    <%= select_tag "user_course_role", options_for_select(UserCourseMembership.options_for_non_student_roles), name: "user[course_role]" %>
-  </div>
+    <div>
+      <%= hidden_field_tag :user_course_id, @course.id, name: "user[course_id]" %>
+      <%= f.label :id_string, "ID" %>:
+      <%= f.text_field :id_string %>
+    </div>
+    <div>
+      <%= f.label :course_role %>:
+      <%= select_tag "user_course_role", options_for_select(UserCourseMembership.options_for_non_student_roles), name: "user[course_role]" %>
+    </div>
   <% end %>
   <div>
     <%= f.label :name, "Login" %>:
