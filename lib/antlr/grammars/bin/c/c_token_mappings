@@ -106,7 +106,7 @@ Identifier,Symbol
 Constant,Ignore
 DigitSequence,Constant
 StringLiteral,Constant
-ComplexDefine,Constant
+ComplexDefine,Variable
 IncludeDirective,Ignore
 AsmBlock,Ignore
 LineAfterPreprocessing,Ignore

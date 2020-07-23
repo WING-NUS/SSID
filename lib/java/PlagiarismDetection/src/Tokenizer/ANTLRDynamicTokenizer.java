@@ -181,10 +181,6 @@ public final class ANTLRDynamicTokenizer extends Tokenizer {
         String tokenType = String.valueOf(token.getType());
         String tokenString = token.getText();
         String  tokenLength = String.valueOf(tokenString.length());
-        
-        // this step is done in accordance to the initial antlr code (2013) written by Eugene.
-        tokenString = tokenString.replace("\n", "\\n");
-
         StringJoiner joiner = new StringJoiner(",");
         joiner.add(lineNumber).add(startNumber).add(tokenLength).add(tokenType).add(tokenString);
         String row = joiner.toString();
