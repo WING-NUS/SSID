@@ -16,7 +16,7 @@ Auto,Keyword
 Break,Keyword
 Case,Keyword
 Char,Keyword
-Const,Ignore
+Const,Keyword
 Continue,Keyword
 Default,Keyword
 Do,Keyword
