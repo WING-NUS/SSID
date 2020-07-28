@@ -2,7 +2,7 @@
 
 Student Submission Integrity Diagnosis (SSID) is a Ruby on Rails web application suite for managing courses, assignments, staff, teaching assistants, students, and student code submissions and most importantly, to **detect and visualize plagiarism** among student code submissions. 
 
-SSID works with lexers based on [ANTLR4 Grammars](https://github.com/antlr/grammars-v4) so if you can find / write a grammar for it, SSID can detect and visualize plagiarism for it. SSID uses the [JavaScript InfoVis Toolkit](http://philogb.github.com/jit/) for its plagiarism visualization. Code display and syntax highlighting is handled by [google-code-prettify](http://code.google.com/p/google-code-prettify/). 
+SSID works with lexers based on [ANTLR4 Grammars](https://github.com/antlr/grammars-v4) so if you can find / write a grammar for it, SSID can detect and visualize plagiarism for it -- The README in lib/antlr/grammars/src and lib/java/PlagiarismDetection lists the steps needed to add a new grammar.  SSID uses the [JavaScript InfoVis Toolkit](http://philogb.github.com/jit/) for its plagiarism visualization. Code display and syntax highlighting is handled by [google-code-prettify](http://code.google.com/p/google-code-prettify/). 
 
 ## Installation
 1. Install MySQL 8.0, Apache, Ruby (2.6.6), and [bundler](https://rubygems.org/gems/bundler/versions/2.1.4) v2.1.4 
