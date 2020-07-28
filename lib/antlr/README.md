@@ -41,7 +41,9 @@ on how to edit java code.
 ### ANTLR4 Tool and Runtime Libaries
 
 Obtain antlr-4.8-complete.jar using
- - wget https://www.antlr.org/download/antlr-4.8-complete.jar
+<pre>
+wget https://www.antlr.org/download/antlr-4.8-complete.jar
+</pre>
 
 The binary file (antlr-4.8-complete.jar) located in SSID/lib/java/jar
 has the binaries for 

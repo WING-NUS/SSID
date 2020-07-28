@@ -118,7 +118,7 @@ IDENTIFIER,Variable
 'catch',Keyword
 'char',Keyword
 'class',Keyword
-'const',Consant
+'const',Ignore
 'continue',Keyword
 'default',Keyword
 'do',Keyword

@@ -32,7 +32,6 @@ public final class ANTLRDynamicTokenizer extends Tokenizer {
   private static String grammarsBinDir;
   private static Hashtable<String, ANTLRDynamicTokenizer> tokenizers = new Hashtable<String, ANTLRDynamicTokenizer>();
   private String language;
-  private String binPath;
   private Hashtable<String, String> tokenNames;
   private Hashtable<String, String> tokenNameMappings;
   private String REGEX_NON_COUNTABLE_KEYWORDS = "^(import|include|package|require)$";
@@ -57,7 +56,6 @@ public final class ANTLRDynamicTokenizer extends Tokenizer {
         hasBinForLanguage = true;
       }
     }
-
     return hasBinForLanguage;
   }
 
@@ -71,7 +69,6 @@ public final class ANTLRDynamicTokenizer extends Tokenizer {
     if (!ANTLRDynamicTokenizer.tokenizers.containsKey(language)) {
       ANTLRDynamicTokenizer.tokenizers.put(language, new ANTLRDynamicTokenizer(language));
     }
-
     return ANTLRDynamicTokenizer.tokenizers.get(language);
 	}
 
@@ -86,30 +83,30 @@ public final class ANTLRDynamicTokenizer extends Tokenizer {
     String path =  s.getPath();
     String tmpFileName = null;
     System.out.println("Preparing temp file...");
-	if (path == null) {
-      // Create temp file for submission
-      ArrayList<String> lines = s.getCombinedCode();
-      tmpFileName = "/tmp/SSID_ANTLRDynamicTokenizer-" + (new java.util.Date()).getTime() + "-" + Math.random(); 
-      try {
-        FileWriter fileWriter = new FileWriter(new File(tmpFileName));
-        for (String line : lines) {
-          fileWriter.write(line + "\n");
+    if (path == null) {
+        // Create temp file for submission
+        ArrayList<String> lines = s.getCombinedCode();
+        tmpFileName = "/tmp/SSID_ANTLRDynamicTokenizer-" + (new java.util.Date()).getTime() + "-" + Math.random(); 
+        try {
+          FileWriter fileWriter = new FileWriter(new File(tmpFileName));
+          for (String line : lines) {
+            fileWriter.write(line + "\n");
+          }
+          fileWriter.close();
+        } catch (Exception e) {
+          System.err.println("Error writing to temp file: " + tmpFileName);
+          System.exit(1);
         }
-        fileWriter.close();
-      } catch (Exception e) {
-        System.err.println("Error writing to temp file: " + tmpFileName);
-        System.exit(1);
+        path = tmpFileName;
       }
-      path = tmpFileName;
-    }
-	System.out.println("Temp file prepared");
+	  System.out.println("Temp file prepared");
     
     // Run ANTLR and read tokens
     ArrayList<String> lexerOutput = null;
     try {
-	System.out.println("Preparing to run lexer");
+	    System.out.println("Preparing to run lexer");
       lexerOutput = runLexer(path);
-	System.out.println("Lexer completed");
+	    System.out.println("Lexer completed");
     } catch (Exception ex) {
       System.err.println("Error running lexer");
       System.err.println(ex);
@@ -119,9 +116,9 @@ public final class ANTLRDynamicTokenizer extends Tokenizer {
     // Convert tokens to PlagiarismDetection tokens
     TokenList tokenList = null;
     try {
-	System.out.println("Converting to PD readable Tokens");
-	tokenList = processLexerOutput(lexerOutput);
-	System.out.println("Convert completed");
+      System.out.println("Converting to PD readable Tokens");
+      tokenList = processLexerOutput(lexerOutput);
+      System.out.println("Convert completed");
     } catch (Exception ex) {
       System.err.println(ex);
       System.exit(1);
@@ -175,25 +172,18 @@ public final class ANTLRDynamicTokenizer extends Tokenizer {
     // Call Antlr4 Lexer to generate tokens from char stream
     String[] args = {language, fileName};
     Lexer lexer = getLexer(args);
-
-    List<? extends Token> tokenList = new ArrayList<>(); 
-    tokenList = lexer.getAllTokens(); 
-    for (Token token : tokenList) { 
+    for (Token token = lexer.nextToken(); token.getType() != Token.EOF; token = lexer.nextToken()) {
       String lineNumber = String.valueOf(token.getLine());
       String startNumber = String.valueOf(token.getStartIndex());
       String tokenType = String.valueOf(token.getType());
-      String tokenString = null;
-      try {
-        tokenString = lexer.getVocabulary().getSymbolicName(token.getType());
-      } finally {
-        tokenString = token.getText();
-      }
+      String tokenString = token.getText();
       String tokenLength = String.valueOf(tokenString.length());
-
+      
       StringJoiner joiner = new StringJoiner(",");
       joiner.add(lineNumber).add(startNumber).add(tokenLength).add(tokenType).add(tokenString);
       String row = joiner.toString();
       lexerOutput.add(row);
+      // System.out.println(lexer.getVocabulary().getSymbolicName(token.getType()));
     }
     // Return lexer output as string array
     return lexerOutput;
@@ -225,7 +215,6 @@ public final class ANTLRDynamicTokenizer extends Tokenizer {
     TokenList tokens = new TokenList();
     ArrayList<String> filteredLexerOutput = new ArrayList<String>();
 
-
     // Remove Unmapped and Ignored Token names so that we can predict end of statement in the next loop
     for (String tokenString : lexerOutput ) {
       // Extract info
@@ -233,7 +222,7 @@ public final class ANTLRDynamicTokenizer extends Tokenizer {
       String tokenClassString;      
 
       if (cols.length >= 4){
-	// Defensive programming
+      	// Defensive programming
       	String tokenType = cols[3];
 
       	// Get token class string
@@ -248,7 +237,7 @@ public final class ANTLRDynamicTokenizer extends Tokenizer {
       } else{
         tokenClassString = "Ignore";
         // Filter out \n statements
-        if (!tokenString.equals('\n') && !tokenString.equals("\\n")){
+        if (!tokenString.equals("\n") && !tokenString.equals("\\n")){
           System.out.println("Unknown format, ignoring line: " + tokenString);
         }
       }

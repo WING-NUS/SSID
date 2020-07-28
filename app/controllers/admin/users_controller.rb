@@ -67,6 +67,7 @@ class Admin::UsersController < ApplicationController
       @the_user.is_admin = true
       @the_user.full_name = params[:user]["full_name"]
       @the_user.name = params[:user]["name"]
+      @the_user.id_string = params[:user]["name"]
     end
 
     # Validate password unless its an existing user

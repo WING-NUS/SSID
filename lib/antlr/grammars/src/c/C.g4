@@ -893,8 +893,7 @@ SChar
     ;
 
 ComplexDefine
-    :   '#' Whitespace? 'define'  ~[#]*
-        -> skip
+    :   '#' Whitespace? 'define' (~[\\\r\n] | '\\\\' '\r'? '\n' | '\\'. )*
     ;
          
 IncludeDirective
@@ -944,7 +943,7 @@ Newline
     ;
 
 BlockComment
-    :   '/*' .*? '*/'
+    :   ( '/*' .*? '*/' | '/**' .*? '*/')
         -> skip
     ;
 
