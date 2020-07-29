@@ -1,0 +1,2 @@
+# Internal documentation for SSID
+
