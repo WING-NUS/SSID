@@ -15,6 +15,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
+require 'zip'
+
 class AssignmentsController < ApplicationController
   before_action { |controller|
     if params[:course_id]
