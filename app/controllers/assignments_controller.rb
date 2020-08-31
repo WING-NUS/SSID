@@ -81,10 +81,7 @@ class AssignmentsController < ApplicationController
       return render action: "new" unless @assignment.save
       
       if !params[:assignment]["file"].nil?
-        if (params[:assignment]["file"].content_type == "application/x-zip-compressed" || 
-          params[:assignment]["file"].content_type == "application/x-zip-compressed-compressed" ||
-          params[:assignment]["file"].content_type == "application/x-zip-compressed")
-
+        if (is_valid_zip?(params[:assignment]["file"].content_type, params[:assignment]["file"].path))
           self.start_upload(@assignment, params[:assignment]["file"])
           redirect_to course_assignments_url(@course), notice: 'Assignment was successfully created.'
         else
@@ -108,7 +105,7 @@ class AssignmentsController < ApplicationController
   def update
     @assignment = Assignment.find(params[:id])
     
-    if !(params[:assignment].nil? or params[:assignment]["file"].content_type != "application/x-zip-compressed")
+    if !(params[:assignment].nil? or or !(is_valid_zip?(params[:assignment]["file"].content_type, params[:assignment]["file"].path)))
       self.start_upload(@assignment, params[:assignment]["file"])
       redirect_to course_assignments_url(@course), notice: 'File was successfully uploaded.'
     else
@@ -138,4 +135,28 @@ class AssignmentsController < ApplicationController
       # Launch java program to process submissions
       SubmissionsHandler.process_submissions(submissions_path, assignment)
   end
+
+  def is_valid_zip?(memeType, filePath)
+    print filePath
+    print memeType 
+    if memeType == "application/x-zip-compressed" || 
+      memeType == "application/zip-compressed" ||
+      memeType == "application/zip"
+      return true;
+    else
+      return is_opened_as_zip?(filePath)
+    end
+  end
+
+  def is_opened_as_zip?(path)
+    print path
+    zip = Zip::File.open(path)
+    true
+  rescue StandardError
+    false
+  ensure
+    zip.close if zip
+  end
 end
+
+
