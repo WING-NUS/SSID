@@ -15,7 +15,18 @@ You should have received a copy of the GNU Lesser General Public License
 along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
+require 'zip'
+
 class AssignmentsController < ApplicationController
+  
+  # Define valid zip mime types as constant variables
+  X_ZIP_COMPRESSED_MIME_TYPE = "application/x-zip-compressed"
+  ZIP_COMPRESSED_MIME_TYPE = "application/zip-compressed"
+  APPLICATION_ZIP_MIME_TYPE = "application/zip"
+  MULTIPART_X_ZIP_MIME_TYPE = "multipart/x-zip"
+  OCTET_STREAM_MIME_TYPE = "application/octet-stream"
+ 
+
   before_action { |controller|
     if params[:course_id]
       @course = Course.find(params[:course_id])
@@ -81,10 +92,7 @@ class AssignmentsController < ApplicationController
       return render action: "new" unless @assignment.save
       
       if !params[:assignment]["file"].nil?
-        if (params[:assignment]["file"].content_type == "application/x-zip-compressed" || 
-          params[:assignment]["file"].content_type == "application/x-zip-compressed-compressed" ||
-          params[:assignment]["file"].content_type == "application/x-zip-compressed")
-
+        if (is_valid_zip?(params[:assignment]["file"].content_type, params[:assignment]["file"].path))
           self.start_upload(@assignment, params[:assignment]["file"])
           redirect_to course_assignments_url(@course), notice: 'Assignment was successfully created.'
         else
@@ -108,7 +116,7 @@ class AssignmentsController < ApplicationController
   def update
     @assignment = Assignment.find(params[:id])
     
-    if !(params[:assignment].nil? or params[:assignment]["file"].content_type != "application/x-zip-compressed")
+    if (!params[:assignment].nil? && (is_valid_zip?(params[:assignment]["file"].content_type, params[:assignment]["file"].path)))
       self.start_upload(@assignment, params[:assignment]["file"])
       redirect_to course_assignments_url(@course), notice: 'File was successfully uploaded.'
     else
@@ -138,4 +146,43 @@ class AssignmentsController < ApplicationController
       # Launch java program to process submissions
       SubmissionsHandler.process_submissions(submissions_path, assignment)
   end
+
+  # Responsible for verifying whether a uploaded file is zip by checking its mime type and/or whether can it be extracted by the zip library.
+  # For files with mime type = application/octet-stream, it needs to be further verified by the zip library as it can be a rar file.
+  # Params:
+  # +mimeType+:: string that contains the file's mimetype
+  # +filePath+:: string that contains the file's path which is to be used by the zip library when extracting the file
+  def is_valid_zip?(mimeType, filePath)
+    # Valid zip file mime types that does not required to be further verified by the zip library
+    if mimeType == X_ZIP_COMPRESSED_MIME_TYPE || 
+      mimeType == ZIP_COMPRESSED_MIME_TYPE ||
+      mimeType == APPLICATION_ZIP_MIME_TYPE ||
+      mimeType == MULTIPART_X_ZIP_MIME_TYPE
+      return true;
+    # Need to be further verified by zip library as it can be a rar file
+    elsif if mimeType == OCTET_STREAM_MIME_TYPE && is_opened_as_zip?(filePath)
+      return true;
+    end
+    # For other mime types, safe to consider that it is not a zip file
+      return false;
+    end
+  end
+
+
+  # Responsible for verifying whether a uploaded file is zip by checking whether can it be extracted by the zip library
+  # Params:
+  # +filePath+:: string that contains the file's path which is to be used by the zip library when extracting the file
+  def is_opened_as_zip?(path)
+    # File is zip if the zip library is able to extract the file
+    zip = Zip::File.open(path)
+    true
+  rescue => error_msg
+    puts error_msg
+    false
+  ensure
+    zip.close if zip
+  end
+
 end
+
+
