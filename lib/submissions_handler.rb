@@ -88,7 +88,7 @@ module SubmissionsHandler
         # Create Directory
         FileUtils.mkdir_p(File.dirname(f_path))
         # Extract files into the file path
-        zip_file.extract(f, f_path)
+        zip_file.extract(f, f_path) unless File.exist?(f_path)
 
         # Reject files that passed the extension test but might be a binary file in disguise
         # if f.file? filepath
