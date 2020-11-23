@@ -14,7 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with SSID.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 package Tokenizer;
 
 import Antlr4Grammars.javalang.*;
@@ -35,7 +35,7 @@ public final class ANTLRDynamicTokenizer extends Tokenizer {
   private Hashtable<String, String> tokenNames;
   private Hashtable<String, String> tokenNameMappings;
   private String REGEX_NON_COUNTABLE_KEYWORDS = "^(import|include|package|require)$";
-  
+
   /*
    * Sets the directory path to find recognizable grammars
    */
@@ -51,7 +51,7 @@ public final class ANTLRDynamicTokenizer extends Tokenizer {
   public static boolean understandsLanguage(String language) {
     File[] grammarBinFiles = (new File(ANTLRDynamicTokenizer.grammarsBinDir)).listFiles();
     boolean hasBinForLanguage = false;
-    for (int i=0; i<grammarBinFiles.length; ++i) {
+    for (int i = 0; i < grammarBinFiles.length; ++i) {
       if (grammarBinFiles[i].getName().equals(language)) {
         hasBinForLanguage = true;
       }
@@ -62,7 +62,7 @@ public final class ANTLRDynamicTokenizer extends Tokenizer {
   /*
    * Creates or returns tokenizer from hashtable
    */
-	public static Tokenizer getTokenizer(String language) throws Exception {
+  public static Tokenizer getTokenizer(String language) throws Exception {
     if (ANTLRDynamicTokenizer.grammarsBinDir == null) {
       throw new Exception("getTokenizer() called without grammarsBinDir defined");
     }
@@ -70,43 +70,49 @@ public final class ANTLRDynamicTokenizer extends Tokenizer {
       ANTLRDynamicTokenizer.tokenizers.put(language, new ANTLRDynamicTokenizer(language));
     }
     return ANTLRDynamicTokenizer.tokenizers.get(language);
-	}
+  }
 
-	public void TokenizeSubmissions(ArrayList<Submission> submissions) {
-		for (Submission s : submissions) {
-			tokenize(s);
-		}
-	}
+  public void TokenizeSubmissions(ArrayList<Submission> submissions) {
+    Iterator<Submission> itr = submissions.iterator();
+    while (itr.hasNext()) {
+      Submission s = itr.next();
+      tokenize(s);
+      if (s.getCodeTokens().size() == 0) {
+        System.out.println("Empty file detected & would be removed from Plagiarism Detection");
+        itr.remove();
+      }
+    }
+  }
 
-	private void tokenize(Submission s) {
+  private void tokenize(Submission s) {
     // Get path of Submission, otherwise, create temp file
-    String path =  s.getPath();
+    String path = s.getPath();
     String tmpFileName = null;
     System.out.println("Preparing temp file...");
     if (path == null) {
-        // Create temp file for submission
-        ArrayList<String> lines = s.getCombinedCode();
-        tmpFileName = "/tmp/SSID_ANTLRDynamicTokenizer-" + (new java.util.Date()).getTime() + "-" + Math.random(); 
-        try {
-          FileWriter fileWriter = new FileWriter(new File(tmpFileName));
-          for (String line : lines) {
-            fileWriter.write(line + "\n");
-          }
-          fileWriter.close();
-        } catch (Exception e) {
-          System.err.println("Error writing to temp file: " + tmpFileName);
-          System.exit(1);
+      // Create temp file for submission
+      ArrayList<String> lines = s.getCombinedCode();
+      tmpFileName = "/tmp/SSID_ANTLRDynamicTokenizer-" + (new java.util.Date()).getTime() + "-" + Math.random();
+      try {
+        FileWriter fileWriter = new FileWriter(new File(tmpFileName));
+        for (String line : lines) {
+          fileWriter.write(line + "\n");
         }
-        path = tmpFileName;
+        fileWriter.close();
+      } catch (Exception e) {
+        System.err.println("Error writing to temp file: " + tmpFileName);
+        System.exit(1);
       }
-	  System.out.println("Temp file prepared");
-    
+      path = tmpFileName;
+    }
+    System.out.println("Temp file prepared");
+
     // Run ANTLR and read tokens
     ArrayList<String> lexerOutput = null;
     try {
-	    System.out.println("Preparing to run lexer");
+      System.out.println("Preparing to run lexer");
       lexerOutput = runLexer(path);
-	    System.out.println("Lexer completed");
+      System.out.println("Lexer completed");
     } catch (Exception ex) {
       System.err.println("Error running lexer");
       System.err.println(ex);
@@ -133,9 +139,10 @@ public final class ANTLRDynamicTokenizer extends Tokenizer {
 
   private ANTLRDynamicTokenizer(String language) {
     this.language = language;
-    
+
     // Read tokenNames
-    String tokenNamesPath = ANTLRDynamicTokenizer.grammarsBinDir + "/" + this.language + "/" + this.language + "_tokens";
+    String tokenNamesPath = ANTLRDynamicTokenizer.grammarsBinDir + "/" + this.language + "/" + this.language
+        + "_tokens";
     this.tokenNames = new Hashtable<String, String>();
     try {
       File tokenNamesFile = new File(tokenNamesPath);
@@ -149,9 +156,10 @@ public final class ANTLRDynamicTokenizer extends Tokenizer {
       System.err.println(ex);
       System.exit(1);
     }
-    
+
     // Read tokenNameMappings
-    String tokenNameMappingsPath = ANTLRDynamicTokenizer.grammarsBinDir + "/" + this.language + "/" + this.language + "_token_mappings";
+    String tokenNameMappingsPath = ANTLRDynamicTokenizer.grammarsBinDir + "/" + this.language + "/" + this.language
+        + "_token_mappings";
     this.tokenNameMappings = new Hashtable<String, String>();
     try {
       File tokenNameMappingsFile = new File(tokenNameMappingsPath);
@@ -170,7 +178,7 @@ public final class ANTLRDynamicTokenizer extends Tokenizer {
   private ArrayList<String> runLexer(String fileName) throws Exception {
     ArrayList<String> lexerOutput = new ArrayList<String>();
     // Call Antlr4 Lexer to generate tokens from char stream
-    String[] args = {language, fileName};
+    String[] args = { language, fileName };
     Lexer lexer = getLexer(args);
     for (Token token = lexer.nextToken(); token.getType() != Token.EOF; token = lexer.nextToken()) {
       String lineNumber = String.valueOf(token.getLine());
@@ -178,7 +186,7 @@ public final class ANTLRDynamicTokenizer extends Tokenizer {
       String tokenType = String.valueOf(token.getType());
       String tokenString = token.getText();
       String tokenLength = String.valueOf(tokenString.length());
-      
+
       StringJoiner joiner = new StringJoiner(",");
       joiner.add(lineNumber).add(startNumber).add(tokenLength).add(tokenType).add(tokenString);
       String row = joiner.toString();
@@ -206,8 +214,10 @@ public final class ANTLRDynamicTokenizer extends Tokenizer {
       Python3Lexer lexer = new Python3Lexer(CharStreams.fromFileName(fileName));
       return lexer;
     } else {
-      String errorMessage = String.format("%s Lexer not found. %s package containing the Lexer may have been excluded in build process.", language, language);
-      throw new Exception (errorMessage);
+      String errorMessage = String.format(
+          "%s Lexer not found. %s package containing the Lexer may have been excluded in build process.", language,
+          language);
+      throw new Exception(errorMessage);
     }
   }
 
@@ -215,54 +225,53 @@ public final class ANTLRDynamicTokenizer extends Tokenizer {
     TokenList tokens = new TokenList();
     ArrayList<String> filteredLexerOutput = new ArrayList<String>();
 
-    // Remove Unmapped and Ignored Token names so that we can predict end of statement in the next loop
-    for (String tokenString : lexerOutput ) {
+    // Remove Unmapped and Ignored Token names so that we can predict end of
+    // statement in the next loop
+    for (String tokenString : lexerOutput) {
       // Extract info
-      String[] cols = tokenString.split(","); 
-      String tokenClassString;      
+      String[] cols = tokenString.split(",");
+      String tokenClassString;
 
-      if (cols.length >= 4){
-      	// Defensive programming
-      	String tokenType = cols[3];
+      if (cols.length >= 4) {
+        // Defensive programming
+        String tokenType = cols[3];
 
-      	// Get token class string
-      	String tokenName = this.tokenNames.get(tokenType);
-      	if (tokenName == null) {
-        	throw new Exception("Unrecognized token type: "+tokenType);
-      	}
-      	tokenClassString = this.tokenNameMappings.get(tokenName);
-      	if (tokenClassString == null) {
-        	throw new Exception("Unrecognized token name: "+tokenName);
-      	}
-      } else{
+        // Get token class string
+        String tokenName = this.tokenNames.get(tokenType);
+        if (tokenName == null) {
+          throw new Exception("Unrecognized token type: " + tokenType);
+        }
+        tokenClassString = this.tokenNameMappings.get(tokenName);
+        if (tokenClassString == null) {
+          throw new Exception("Unrecognized token name: " + tokenName);
+        }
+      } else {
         tokenClassString = "Ignore";
         // Filter out \n statements
-        if (!tokenString.equals("\n") && !tokenString.equals("\\n")){
+        if (!tokenString.equals("\n") && !tokenString.equals("\\n")) {
           System.out.println("Unknown format, ignoring line: " + tokenString);
         }
       }
 
-      if (tokenClassString.equals("Symbol")
-          || tokenClassString.equals("Variable")
-          || tokenClassString.equals("Constant")
-          || tokenClassString.equals("Keyword")) {
+      if (tokenClassString.equals("Symbol") || tokenClassString.equals("Variable")
+          || tokenClassString.equals("Constant") || tokenClassString.equals("Keyword")) {
         filteredLexerOutput.add(tokenString);
       } else if (tokenClassString.equals("Ignore")) {
         // Ignore token
       } else {
-        throw new Exception("Unrecognized token class: "+tokenClassString);
+        throw new Exception("Unrecognized token class: " + tokenClassString);
       }
     }
 
     // Loop through filtered tokens
     int lastLineNumber = -1;
     boolean statementHasNonCountableKeyword = false;
-    for (int i=0; i<filteredLexerOutput.size(); ++i) {
+    for (int i = 0; i < filteredLexerOutput.size(); ++i) {
       // Get tokenStrings
       String tokenString = filteredLexerOutput.get(i);
       String nextTokenString = null;
       if (i != filteredLexerOutput.size() - 1) {
-        nextTokenString = filteredLexerOutput.get(i+1);
+        nextTokenString = filteredLexerOutput.get(i + 1);
       }
 
       // Extract info
@@ -286,11 +295,11 @@ public final class ANTLRDynamicTokenizer extends Tokenizer {
       // Get token class string
       String tokenName = this.tokenNames.get(tokenType);
       if (tokenName == null) {
-        throw new Exception("Unrecognized token type: "+tokenType);
+        throw new Exception("Unrecognized token type: " + tokenType);
       }
       String tokenClassString = this.tokenNameMappings.get(tokenName);
       if (tokenClassString == null) {
-        throw new Exception("Unrecognized token name: "+tokenName);
+        throw new Exception("Unrecognized token name: " + tokenName);
       }
 
       // Set startOfStatement variable based on lineNumbers
@@ -308,38 +317,23 @@ public final class ANTLRDynamicTokenizer extends Tokenizer {
 
       // Figure out Token class and then create
       if (tokenClassString.equals("Symbol")) {
-        tokens.add(new SymbolToken( tokenText, 
-                                    startingPosition, 
-                                    endingPosition, 
-                                    lineNumber, 
-                                    isStartOfStatement,
-                                    endOfStatementType));
+        tokens.add(new SymbolToken(tokenText, startingPosition, endingPosition, lineNumber, isStartOfStatement,
+            endOfStatementType));
       } else if (tokenClassString.equals("Variable")) {
-        tokens.add(new VariableToken( tokenText,
-                                      startingPosition, 
-                                      endingPosition, 
-                                      lineNumber, 
-                                      isStartOfStatement,
-                                      endOfStatementType));
+        tokens.add(new VariableToken(tokenText, startingPosition, endingPosition, lineNumber, isStartOfStatement,
+            endOfStatementType));
       } else if (tokenClassString.equals("Constant")) {
-        tokens.add(new ConstantToken( startingPosition, 
-                                      endingPosition, 
-                                      lineNumber, 
-                                      isStartOfStatement,
-                                      endOfStatementType));
+        tokens.add(
+            new ConstantToken(startingPosition, endingPosition, lineNumber, isStartOfStatement, endOfStatementType));
       } else if (tokenClassString.equals("Keyword")) {
         if (tokenText.matches(REGEX_NON_COUNTABLE_KEYWORDS)) {
           // We assume that the non-countable keyword cannot be the last token
-          // of the statement. Otherwise, endOfStatementType will not be set 
+          // of the statement. Otherwise, endOfStatementType will not be set
           // correctly.
           statementHasNonCountableKeyword = true;
         }
-        tokens.add(new KeywordToken(  tokenText,
-                                      startingPosition, 
-                                      endingPosition, 
-                                      lineNumber, 
-                                      isStartOfStatement,
-                                      endOfStatementType));
+        tokens.add(new KeywordToken(tokenText, startingPosition, endingPosition, lineNumber, isStartOfStatement,
+            endOfStatementType));
       }
 
       // Update
