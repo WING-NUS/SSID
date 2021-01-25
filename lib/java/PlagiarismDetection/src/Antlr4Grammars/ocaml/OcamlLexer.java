@@ -399,4 +399,4 @@ public class OcamlLexer extends Lexer {
 			_decisionToDFA[i] = new DFA(_ATN.getDecisionState(i), i);
 		}
 	}
-}
+} 

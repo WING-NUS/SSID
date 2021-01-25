@@ -134,11 +134,11 @@ NL
 LabelName	
     : LowercaseIdent
     ;  
- 
+
 Label	
     : '~' + LabelName + ':'
     ;  
- 
+
 OptLabel	
     : '?' + LabelName +  ':'
     ;
@@ -156,4 +156,3 @@ OperatorChar
     :  '!' | '$' | '%' | '&' | '*' | '+' | '-' | '.' | '/' 
     | ':' |'<' | '=' | '>' | '?' | '@' | '^' | '|' | '~'
     ;
- 
