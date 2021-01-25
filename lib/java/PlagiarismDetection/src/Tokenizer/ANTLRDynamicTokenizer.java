@@ -211,7 +211,7 @@ public final class ANTLRDynamicTokenizer extends Tokenizer {
       ScalaLexer lexer = new ScalaLexer(CharStreams.fromFileName(fileName));
       return lexer;
     } else if (language.equals("matlab")) {	
-      MatlabLexer lexer = new MatlabLexer(CharStreams.fromFileName(fileName));
+      matlabLexer lexer = new matlabLexer(CharStreams.fromFileName(fileName));
       return lexer;
     } else {
       String errorMessage = String.format("%s Lexer not found. %s package containing the Lexer may have been excluded in build process.", language, language);
