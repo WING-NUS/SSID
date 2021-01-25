@@ -13,11 +13,11 @@
 '*',Symbol
 '/',Symbol
 '>',Symbol
-'>=',Symbol
+'greaterequal',Symbol
 '<',Symbol
-'<=',Symbol
-'==',Symbol
-'!=',Symbol
+'lesserequal',Symbol
+'equality_expression',Symbol
+'notequal',Symbol
 '!',Symbol
 '&',Symbol
 '&&',Symbol
@@ -26,10 +26,10 @@
 '~',Symbol
 '<-',Symbol
 '<<-',Symbol
-'=',Symbol
+'equal',Symbol
 '->',Symbol
 '->>',Symbol
-':=',Symbol
+'dotequal',Symbol
 'function',Keyword
 '(',Symbol
 ')',Symbol
@@ -50,7 +50,7 @@
 'NaN',Keyword
 'TRUE',Keyword
 'FALSE',Keyword
-',',Symbol
+'comma',Symbol
 '...',Keyword
 '.',Symbol
 HEX,Variable
