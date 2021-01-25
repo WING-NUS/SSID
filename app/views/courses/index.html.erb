@@ -53,7 +53,7 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
     <% else %>
       <td>
         <%= link_to "Edit", edit_course_url(course) %>
-        <%= link_to "Delete", course_url(course), method: :delete, data: {confirm: "This module will be permanently deleted and cannot be recovered. Are you sure?"}, class: "last" %> 
+        <%= link_to "Delete", course_url(course), method: "delete", data: {confirm: "This module will be permanently deleted and cannot be recovered. Are you sure?"}, class: "last" %> 
         </td>
     <% end %>
     <td>
