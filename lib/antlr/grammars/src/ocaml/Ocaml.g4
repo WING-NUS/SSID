@@ -1,3 +1,5 @@
+// Adapted from https://askra.de/software/ocaml-doc/4.02/full-grammar.html
+
 grammar Ocaml;
 
 and: 'and';        
