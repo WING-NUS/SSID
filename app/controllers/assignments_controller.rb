@@ -160,9 +160,8 @@ class AssignmentsController < ApplicationController
       mimeType == MULTIPART_X_ZIP_MIME_TYPE
       return true;
     # Need to be further verified by zip library as it can be a rar file
-    elsif if mimeType == OCTET_STREAM_MIME_TYPE && is_opened_as_zip?(filePath)
+    elsif mimeType == OCTET_STREAM_MIME_TYPE && is_opened_as_zip?(filePath)
       return true;
-    end
     # For other mime types, safe to consider that it is not a zip file
       return false;
     end

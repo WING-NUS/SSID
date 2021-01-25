@@ -17,7 +17,7 @@
         <td><%= a.submission_similarity_process.created_at.in_time_zone %></td>
         <td>
           <%= link_to "View upload log", course_assignment_log_url(@course, a) %>
-          <%= link_to "Delete", course_assignment_url(@course, a), method: "delete", class: "last", confirm: "Delete assignment?" %>
+          <%= link_to "Delete", course_assignment_url(@course, a), method: "delete", class: "last", data: {confirm: "This assignment will be permanently deleted and cannot be recovered. Are you sure?"}%>
         </td>
       </tr>
       <% } %>
@@ -44,7 +44,7 @@
           <td><%= a.created_at.in_time_zone %></td>
           <td>
             <%= link_to "Upload submission", course_assignment_url(@course, a) %>
-            <%= link_to "Delete", course_assignment_url(@course, a), method: "delete", class: "last", confirm: "Delete assignment?" %>
+            <%= link_to "Delete", course_assignment_url(@course, a), method: "delete", class: "last", data: {confirm: "This assignment will be permanently deleted and cannot be recovered. Are you sure?"} %>
           </td>
         </tr>
       <% } %>
@@ -107,7 +107,7 @@
           <%= link_to "Upload log", course_assignment_log_url(@course, a), class: "last" %>
         </td>
         <td>
-          <%= link_to "Delete", course_assignment_url(@course, a), method: "delete", class: "last", confirm: "Delete assignment?" %>
+          <%= link_to "Delete", course_assignment_url(@course, a), method: "delete", class: "last", data: {confirm: "This assignment will be permanently deleted and cannot be recovered. Are you sure?"} %>
         </td>
       </tr>
       <% } %>
