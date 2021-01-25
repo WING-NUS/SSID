@@ -42,7 +42,7 @@ class Assignment < ActiveRecord::Base
     c: "c",
     cpp: "cpp",
     python3: "py"
-    scala: "scala"
+    scala: ".scala"
   }
 
   def self.options_for_languages
