@@ -33,16 +33,18 @@ class Assignment < ActiveRecord::Base
     java: "Java",
     c: "C",
     cpp: "C++",
-    python3: "Python3"
-    scala: "Scala"
+    python3: "Python3",
+    scala: "Scala",
+    ocaml: "Ocaml"
   }
 
   PRETTIFY_LANGUAGES = {
     java: "java",
     c: "c",
     cpp: "cpp",
-    python3: "py"
-    scala: ".scala"
+    python3: "py",
+    scala: "scala",
+    ocaml: "ocaml"
   }
 
   def self.options_for_languages
