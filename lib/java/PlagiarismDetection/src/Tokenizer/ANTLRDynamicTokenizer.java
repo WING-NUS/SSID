@@ -22,6 +22,7 @@ import Antlr4Grammars.c.*;
 import Antlr4Grammars.python3.*;
 import Antlr4Grammars.cpp.*;
 import Antlr4Grammars.scala.*;
+import Antlr4Grammars.r.*;
 
 import java.io.*;
 import java.util.*;
@@ -208,6 +209,9 @@ public final class ANTLRDynamicTokenizer extends Tokenizer {
       return lexer;
     } else if (language.equals("scala")) {	
       ScalaLexer lexer = new ScalaLexer(CharStreams.fromFileName(fileName));
+      return lexer;
+    } else if (language.equals("r")) {	
+      RLexer lexer = new RLexer(CharStreams.fromFileName(fileName));
       return lexer;
     } else {
       String errorMessage = String.format("%s Lexer not found. %s package containing the Lexer may have been excluded in build process.", language, language);
