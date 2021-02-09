@@ -75,7 +75,7 @@ module SubmissionsHandler
     FileUtils.copy_entry(file.path, upload_file)
 
     # Add filters for file types
-    accepted_formats = [".py",".java", ".cpp", ".c", ".h", ".scala", ".ml", ".mli"]
+    accepted_formats = [".py",".java", ".cpp", ".c", ".h", ".scala", ".m", ".ml", ".mli", ".r"]
 
     # Extract submissions into dir
     Zip::File.open(upload_file) { |zip_file|

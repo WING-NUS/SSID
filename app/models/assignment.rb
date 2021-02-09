@@ -35,6 +35,8 @@ class Assignment < ActiveRecord::Base
     cpp: "C++",
     python3: "Python3",
     scala: "Scala",
+    matlab: "Matlab",
+    r: "R",
     ocaml: "Ocaml"
   }
 
@@ -44,6 +46,8 @@ class Assignment < ActiveRecord::Base
     cpp: "cpp",
     python3: "py",
     scala: "scala",
+    matlab: "matlab",
+    r: "r",
     ocaml: "ocaml"
   }
 
