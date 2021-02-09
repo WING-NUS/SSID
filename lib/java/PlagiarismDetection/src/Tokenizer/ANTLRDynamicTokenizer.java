@@ -21,6 +21,9 @@ import Antlr4Grammars.javalang.*;
 import Antlr4Grammars.c.*;
 import Antlr4Grammars.python3.*;
 import Antlr4Grammars.cpp.*;
+import Antlr4Grammars.scala.*;
+import Antlr4Grammars.r.*;
+import Antlr4Grammars.ocaml.*;
 
 import java.io.*;
 import java.util.*;
@@ -212,6 +215,14 @@ public final class ANTLRDynamicTokenizer extends Tokenizer {
       return lexer;
     } else if (language.equals("python3")) {
       Python3Lexer lexer = new Python3Lexer(CharStreams.fromFileName(fileName));
+      return lexer;
+    } else if (language.equals("scala")) {	
+      ScalaLexer lexer = new ScalaLexer(CharStreams.fromFileName(fileName));
+      return lexer;
+    } else if (language.equals("r")) {	
+      RLexer lexer = new RLexer(CharStreams.fromFileName(fileName));
+    } else if (language.equals("ocaml")) {	
+      OcamlLexer lexer = new OcamlLexer(CharStreams.fromFileName(fileName));
       return lexer;
     } else {
       String errorMessage = String.format(
