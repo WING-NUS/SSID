@@ -26,7 +26,7 @@
           <td>[Created on <%= cluster_group.created_at.in_time_zone %>] <%= cluster_group.description %></td>
           <td>
             <%= link_to "View Clusters", cluster_group_clusters_url(cluster_group) %>
-            <%= link_to "Delete", assignment_cluster_group_url(@assignment, cluster_group), method: "delete", class: "last", confirm: "Delete cluster group?" %>
+            <%= link_to "Delete", assignment_cluster_group_url(@assignment, cluster_group), method: "delete", class: "last", data: {confirm: "This cluster group will be permanently deleted and cannot be recovered. Are you sure?"} %>
           </td>
         </tr>
       <% } %>

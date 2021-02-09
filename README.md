@@ -2,12 +2,13 @@
 
 Student Submission Integrity Diagnosis (SSID) is a Ruby on Rails web application suite for managing courses, assignments, staff, teaching assistants, students, and student code submissions and most importantly, to **detect and visualize plagiarism** among student code submissions. 
 
-SSID works with lexers based on [ANTLR4 Grammars](https://github.com/antlr/grammars-v4) so if you can find / write a grammar for it, SSID can detect and visualize plagiarism for it -- The README in lib/antlr/grammars/src and lib/java/PlagiarismDetection lists the steps needed to add a new grammar.  SSID uses the [JavaScript InfoVis Toolkit](http://philogb.github.com/jit/) for its plagiarism visualization. Code display and syntax highlighting is handled by [google-code-prettify](http://code.google.com/p/google-code-prettify/). 
+SSID works with lexers based on [ANTLR4 Grammars](https://github.com/antlr/grammars-v4) so if you can find / write a grammar for it, SSID can detect and visualize plagiarism for it (scroll down and click on the guide on "Adding support for new language in SSID" to learn the steps needed to add a new grammar).  SSID uses the [JavaScript InfoVis Toolkit](http://philogb.github.com/jit/) for its plagiarism visualization. Code display and syntax highlighting is handled by [google-code-prettify](http://code.google.com/p/google-code-prettify/). 
 
 ## Table Of Contents
 
 - [Prerequisites](#prerequisites)
 - [Setup & Configuration](#setup-and-configuration)
+- [Site Map](#site-map)
 - [License](#license)
 
 ## Prerequisites
@@ -62,6 +63,11 @@ Before following the below instructions, please ensure that you have met all the
 	<pre>
 	RAILS_ENV=development rails server
 	</pre>
+
+## Site Map
+- [Adding support for new language in SSID](doc/add_support_for_new_language.md)
+- [Deploying SSID app on a Linux/Unix production server](doc/deploying_rails_on_linux.md)
+- [User Guide](doc/SSID_User%20Guide_V1.pdf)
 
 ## License
 
