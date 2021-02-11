@@ -81,7 +81,7 @@ public final class ANTLRDynamicTokenizer extends Tokenizer {
       Submission s = itr.next();
       tokenize(s);
       if (s.getCodeTokens().size() == 0) {
-        System.out.println("Empty file detected & would be removed from Plagiarism Detection");
+        System.err.println("Empty file detected & would be removed from Plagiarism Detection");
         itr.remove();
       }
     }
