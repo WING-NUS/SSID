@@ -53,6 +53,11 @@ class ReorgBot
 end
 
 module SubmissionsHandler
+
+  # Params for data truncation
+  MAX_DATA_CHAR_SIZE = 64000
+  DATA_TRUNCATE_MSG = "... (Data  got truncated)"
+
   def self.process_upload(file, assignment)
     upload_dir = File.join(".", "upload", assignment.id.to_s)
 
@@ -64,9 +69,8 @@ module SubmissionsHandler
 
     # Keep log
     upload_log = []
-    upload_log << assignment.upload_log if assignment.upload_log
+    upload_log << assignment.upload_log.truncate(MAX_DATA_CHAR_SIZE, separator: ' ', omission: DATA_TRUNCATE_MSG) if assignment.upload_log
     upload_log << %Q{[#{Time.now.in_time_zone}] Received file: #{file.original_filename}}
-
 
     # Rename upload to original file name
     upload_file = File.join(upload_dir, file.original_filename)
@@ -157,7 +161,7 @@ module SubmissionsHandler
       # Update log
       upload_log = []
       upload_log << assignment.upload_log if assignment.upload_log
-      upload_log << java_log
+      upload_log << java_log.truncate(MAX_DATA_CHAR_SIZE, separator: ' ', omission: DATA_TRUNCATE_MSG)
       assignment.upload_log = upload_log.join("\n")
       
       # Update status
