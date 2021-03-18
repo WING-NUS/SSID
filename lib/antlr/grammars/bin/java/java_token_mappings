@@ -127,7 +127,7 @@ IDENTIFIER,Variable
 'enum',Keyword
 'extends',Keyword
 'final',Ignore
-'finally',Keryword
+'finally',Keyword
 'float',Keyword
 'for',Keyword
 'if',Keyword
