@@ -99,6 +99,10 @@ Please `mysql -u root -p` to try to login into `root` to see if the password is 
 
 
 
+🎉🎉🎉 All done!
+
+
+
 ## Final Words
 
 If you have a problem installing, don't hesitate to ask Yisong or Riyas. One response of ours might save you several hours!
