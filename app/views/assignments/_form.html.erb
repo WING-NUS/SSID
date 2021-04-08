@@ -29,7 +29,30 @@
     <%= f.label :file, "Student submissions (zip) [?]", title: "The zip file should contain one folder for each student's code files; folders are named according to student ID; Name your folder as \"skeleton\" for the codes you wish to exclude from the system" %>
     <%= f.file_field :file %>
   </div>
+  
+  <div>
+  <%= f.label :mapbox, "Upload map file?" %>
+  <%= f.check_box :mapbox,{}, "Yes", "No"%>
+  </div>
+  <div id="map_file_details" style="display:none;">
+  <%= f.label :mapfile, "Mapping file (csv) [?]", title: "The zip file should contain one folder for each student's code files; folders are named according to student ID; Name your folder as \"skeleton\" for the codes you wish to exclude from the system" %>
+  <%= f.file_field :mapfile, accept: '.csv' %>
+
+  </div>
   <div>
     <%= f.submit class: "submit" %>
   </div>
 <% end %>
+
+<script type="text/javascript">
+  var checkbox = document.getElementById('assignment_mapbox');
+  var details_div = document.getElementById('map_file_details');
+  checkbox.onchange = function() {
+     if(this.checked) {
+       details_div.style['display'] = 'block';
+     } else {
+       details_div.style['display'] = 'none';
+     }
+  };
+</script>
+
