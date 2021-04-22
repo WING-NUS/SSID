@@ -30,7 +30,7 @@ Before following the below instructions, please ensure that you have met all the
 1. Clone SSID's source code onto your computer
 	<pre>git clone https://github.com/WING-NUS/SSID.git</pre>
 	
-2. Go to *config/database/database.yml* and modify the file by changing the username and password fields with your MySQL database settings (Please do it for all the 3 listed databases in the file)
+2. Go to *config/database.yml* and modify the file by changing the username and password fields with your MySQL database settings (Please do it for all the 3 listed databases in the file)
 	
 3. Now, go to *config/envionments/* and add the respective line to the respective file(s)
    -  Under *config/envionments/development.rb* & *config/envionments/test.rb*, add the below line:
