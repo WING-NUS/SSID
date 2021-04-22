@@ -1,15 +1,12 @@
 # When a beginner read the source code of SSID
 
-This document marks the down the process a beginner read the source code of SSID and tries to resolve some issues (e.g. Issue [74](https://github.com/WING-NUS/SSID/issues/74)) in early 2021. 
-
-We hope this document will help other beginners. 
+This document marks down the process of a beginner read the source code of SSID and tries to resolve some issues (e.g. Issue [74](https://github.com/WING-NUS/SSID/issues/74)) in early 2021. 
 
 
 
-From a high-level:
-
-- [SSID/app](https://github.com/WING-NUS/SSID/tree/master/app) contains the ruby files for the web service.
-- [SSID/lib](https://github.com/WING-NUS/SSID/tree/master/lib) contains the java files that serves as the computation engine for plagrism detection.
+- From a high level view:
+  - [SSID/app](https://github.com/WING-NUS/SSID/tree/master/app) contains the ruby files for the web service.
+  - [SSID/lib](https://github.com/WING-NUS/SSID/tree/master/lib) contains the java files that serve as the computation engine for plagiarism detection.
 
 
 
@@ -25,8 +22,8 @@ The structure of `lib` is as followed:
 
 - [SSID/lib/antlr](https://github.com/WING-NUS/SSID/tree/master/lib/antlr): Support different languages to be detected by SSID. Please refer to Riyas' note on adding a new language [[link](https://github.com/WING-NUS/SSID/blob/master/doc/add_support_for_new_language.md)].
 - [SSID/lib/assets](https://github.com/WING-NUS/SSID/tree/master/lib/assets): Not important?
-- **[SSID/lib/java](https://github.com/WING-NUS/SSID/tree/master/lib/java):** The main functions and logics for plagrism detection are implemented here.
-  - [SSID/lib/java/PlagiarismDetection](https://github.com/WING-NUS/SSID/tree/master/lib/java/PlagiarismDetection): Core functions of plagrism detection.
+- **[SSID/lib/java](https://github.com/WING-NUS/SSID/tree/master/lib/java):** The main functions and logic for plagiarism detection are implemented here.
+  - [SSID/lib/java/PlagiarismDetection](https://github.com/WING-NUS/SSID/tree/master/lib/java/PlagiarismDetection): Core functions of plagiarism detection.
   - [SSID/lib/java/SubmissionsClustering](https://github.com/WING-NUS/SSID/tree/master/lib/java/SubmissionsClustering): Core functions of Submission Clustering. 
 - [SSID/lib/tasks](https://github.com/WING-NUS/SSID/tree/master/lib/tasks): Not important?
 
@@ -66,7 +63,7 @@ Convert completed
 [2021-04-08 11:35:51 SGT] Plagarism detection completed upload to database
 ```
 
-**Code Snippet 1:** Workflow of SSID. Interestingly this update log is exactly what we get in Issue [74](https://github.com/WING-NUS/SSID/issues/74). As we can see in the snippet, SSID was not able to inform user that his uploaded file structure was not correct. 
+**Code Snippet 1:** Workflow of SSID. Interestingly this update log is exactly what we get in Issue [74](https://github.com/WING-NUS/SSID/issues/74). As we can see in the snippet, SSID was not able to inform the user that his uploaded file structure was not correct. 
 
 
 
@@ -88,8 +85,7 @@ Please refer to the Appendix of this document for **Code Snippet 2**.
 ## A lazy solution for Issue [74](https://github.com/WING-NUS/SSID/issues/74)
 
 Since we have understood the workflow of SSID, we have come up with a lazy solution for Issue 74. 
-
-In Step 4, we can add a checkpoint to see if the `length of token == 0`. If this is the case, we can inform user the submission format is incorrect. One possible reason is the `zip` process is incorrect. 
+In Step 4, we can add a checkpoint to see if the length of token == 0. If this is the case, we can inform the user the submission format is incorrect. One possible reason is the zip process is incorrect. 
 
 
 
