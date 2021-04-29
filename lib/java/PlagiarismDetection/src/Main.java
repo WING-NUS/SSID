@@ -69,6 +69,11 @@ public class Main {
 		ArrayList<Submission> submissions = SubmissionRetriever
 				.retrieveSubmissions(compareFolderPath);
 
+		if (submissions.size == 0) {
+			System.out.println("ERROR: Submission count is zero.\nOne possible reason is that your Zip format is not correct.\nYou need to directly zip the submissions, instead of creating a new folder.\nPlease refer to URL for details.");
+			throw new Exception("ERROR: Submission count is zero.");
+		}
+
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z");
 
 		// if (language.equals(CTokenizer.language)) {
