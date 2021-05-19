@@ -58,7 +58,7 @@ module SubmissionsHandler
   MAX_DATA_CHAR_SIZE = 64000
   DATA_TRUNCATE_MSG = "... (Data  got truncated)"
 
-  def self.process_upload(file, assignment)
+  def self.process_upload(file, isMapEnabled, mapfile, assignment)
     upload_dir = File.join(".", "upload", assignment.id.to_s)
 
     # Clear upload dir if exists
@@ -109,6 +109,13 @@ module SubmissionsHandler
     bot = ReorgBot.new(upload_dir)
     upload_log << bot.remove_empty_dirs
 
+    # Move map file (if uploaded by user) into dir	
+    if (isMapEnabled)		
+      upload_map_file = File.join(upload_dir, "mapfile.csv")	
+      FileUtils.copy_entry(mapfile.path, upload_map_file)	
+    end	
+	  
+
     # Save log
     upload_log << %Q{[#{Time.now.in_time_zone}] Unzip complete}
     assignment.upload_log = upload_log.join("\n")
@@ -121,7 +128,7 @@ module SubmissionsHandler
     upload_dir
   end
 
-  def self.process_submissions(path, assignment)
+  def self.process_submissions(path, assignment, isMapEnabled)
     # Create directory for code comparison, delete first if necessary
     compare_dir = File.join(path, "_compare")
     FileUtils.rm(compare_dir, force: true) if File.exist? compare_dir
@@ -129,7 +136,7 @@ module SubmissionsHandler
     
     # For each student submission, combine the code files into one
     Dir.glob(File.join(path, "*")).each { |subpath|
-      next if subpath == compare_dir
+      next if subpath == compare_dir || (File.file?(subpath) && subpath.split('.').last.to_s.downcase == 'csv')
 
       # Combine code files and write into compare dir as new file with same name, remove ext if any
       File.open(File.join(compare_dir, File.basename(subpath, File.extname(subpath))), 'w') { |f|
@@ -148,7 +155,7 @@ module SubmissionsHandler
     command = %Q{java -Xmx1024M -jar "#{Rails.application.config.plagiarism_detection_path}" } + 
               %Q{#{assignment.id} #{compare_dir} #{assignment.language.downcase} } +
               %Q{#{assignment.min_match_length} #{assignment.ngram_size} } +
-              %Q{#{host} #{database} #{username} #{password}}
+              %Q{#{host} #{database} #{username} #{password} #{isMapEnabled}}
     # Fork to run java program in background
     ruby_pid = Process.fork do
       java_log = ""

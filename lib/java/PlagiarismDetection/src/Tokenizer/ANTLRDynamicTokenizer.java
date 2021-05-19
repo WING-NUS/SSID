@@ -221,6 +221,7 @@ public final class ANTLRDynamicTokenizer extends Tokenizer {
       return lexer;
     } else if (language.equals("matlab")) {	
       matlabLexer lexer = new matlabLexer(CharStreams.fromFileName(fileName));
+      return lexer;
     } else if (language.equals("ocaml")) {	
       OcamlLexer lexer = new OcamlLexer(CharStreams.fromFileName(fileName));
       return lexer;
