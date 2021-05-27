@@ -85,7 +85,7 @@ module SubmissionsHandler
     Zip::File.open(upload_file) { |zip_file|
       zip_file.each { |f|
       # isdirectory or filter by accepted file extension
-      if !f.file? or accepted_formats.include? File.extname(f.name)
+      if File.directory?(f.name) or accepted_formats.include? File.extname(f.name)
         upload_log << %Q{[#{Time.now.in_time_zone}] Extracting #{f.name}}
         # Obtain File Path
         f_path = File.join(upload_dir, f.name)
