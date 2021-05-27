@@ -41,6 +41,8 @@ Before following the below instructions, please ensure that you have met all the
      
 4. Open your terminal and navigate to the code directory. Run bundler to install the necessary gems (including rails) from the root directory of SSID:
      <pre>bundle install</pre>
+     #Use the following solution if you have problem "Your bundle is locked to mimemagic (0.3.5)"
+     <pre>https://stackoverflow.com/questions/66919504/your-bundle-is-locked-to-mimemagic-0-3-5-but-that-version-could-not-be-found</pre>
         
 5. Execute the following command in the root directory of SSID depending on which mode you wish to run the app:
 	- Production Mode
