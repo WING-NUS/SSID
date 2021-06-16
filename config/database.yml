@@ -9,9 +9,9 @@ development:
   reconnect: false
   database: ssid_development
   pool: 5
-  host: 127.0.0.1
-  username: ssid
-  password: ssid123
+  host: <%= ENV['MYSQL_DATABASE_HOST'] %>
+  username: <%= ENV['MYSQL_DATABASE_USERNAME'] %>
+  password: <%= ENV['MYSQL_DATABASE_PASSWORD'] %>
   # socket: /var/lib/mysql/mysql.sock
 
 # Warning: The database defined as "test" will be erased and
@@ -23,9 +23,9 @@ test:
   reconnect: false
   database: ssid_test
   pool: 5
-  host: 127.0.0.1
-  username: ssid
-  password: ssid123
+  host: <%= ENV['MYSQL_DATABASE_HOST'] %>
+  username: <%= ENV['MYSQL_DATABASE_USERNAME'] %>
+  password: <%= ENV['MYSQL_DATABASE_PASSWORD'] %>
   socket: /var/lib/mysql/mysql.sock
 
 production:
@@ -34,7 +34,7 @@ production:
   reconnect: false
   database: ssid_production
   pool: 5
-  host: 127.0.0.1
-  username: ssid
-  password: ssid123
+  host: <%= ENV['MYSQL_DATABASE_HOST'] %>
+  username: <%= ENV['MYSQL_DATABASE_USERNAME'] %>
+  password: <%= ENV['MYSQL_DATABASE_PASSWORD'] %>
   socket: /var/lib/mysql/mysql.sock

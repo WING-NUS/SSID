@@ -10,6 +10,10 @@ services:
       - "3000:3000"
     environment:
       RAILS_ENV: development
+      MYSQL_DATABASE_HOST: 172.17.42.1 # this is the Docker bridge IP address, which maps to the Docker host's localhost
+                                       # assumes you have a local MySQL DB setup properly
+      MYSQL_DATABASE_USERNAME: root
+      MYSQL_DATABASE_PASSWORD: password # TODO: use Docker secrets for this
 
   production:
     image: ssid-production # needs to be unique (open issue https://github.com/docker/compose/issues/7262)
@@ -21,3 +25,7 @@ services:
       - "80:80"
     environment:
       RAILS_ENV: production
+      MYSQL_DATABASE_HOST: 172.17.42.1 # this is the Docker bridge IP address, which maps to the Docker host's localhost
+                                       # assumes the Docker host is also hosting the prod MySQL DB
+      MYSQL_DATABASE_USERNAME: root
+      MYSQL_DATABASE_PASSWORD: password # TODO: use Docker secrets for this
