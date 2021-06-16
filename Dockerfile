@@ -36,13 +36,11 @@ COPY --chown=app:app . /home/app/SSID
 
 # DEVELOPMENT BUILD
 FROM base AS development
-ENV RAILS_ENV development 
 ENTRYPOINT ["rails", "server", "-b", "0.0.0.0"]
 
 
 # PRODUCTION BUILD
 FROM base AS production
 RUN bundle exec rake assets:precompile
-ENV RAILS_ENV production
 USER root
 ENTRYPOINT ["bundle", "exec", "passenger", "start"]
