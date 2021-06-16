@@ -1,6 +1,7 @@
 version: "2.3"
 services:
   development:
+    # TODO: add bind volume for hot reloading
     image: ssid-development # needs to be unique (open issue https://github.com/docker/compose/issues/7262)
     build:
       dockerfile: Dockerfile
@@ -10,8 +11,8 @@ services:
       - "3000:3000"
     environment:
       RAILS_ENV: development
-      MYSQL_DATABASE_HOST: 172.17.42.1 # this is the Docker bridge IP address, which maps to the Docker host's localhost
-                                       # assumes you have a local MySQL DB setup properly
+      MYSQL_DATABASE_HOST: 192.168.1.232 # IP of your local machine, needed docker containers don't have access to localhost's ports by default
+                                         # assumes you have a local MySQL DB setup properly
       MYSQL_DATABASE_USERNAME: root
       MYSQL_DATABASE_PASSWORD: password # TODO: use Docker secrets for this
 
