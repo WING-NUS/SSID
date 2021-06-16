@@ -33,6 +33,7 @@ USER app
 
 COPY --chown=app:app . /home/app/SSID
 
+RUN rm -rf /home/app/SSID/tmp/* # tmp folder must be empty, otherwise can throw "service already running" error
 
 # DEVELOPMENT BUILD
 FROM base AS development
