@@ -1,8 +1,23 @@
-version: "2.2"
+version: "2.3"
 services:
-  web:
-    build: .
+  development:
+    image: ssid-development # needs to be unique (open issue https://github.com/docker/compose/issues/7262)
+    build:
+      dockerfile: Dockerfile
+      context: .
+      target: development
     ports:
       - "3000:3000"
+    environment:
+      RAILS_ENV: development
+
+  production:
+    image: ssid-production # needs to be unique (open issue https://github.com/docker/compose/issues/7262)
+    build:
+      dockerfile: Dockerfile
+      context: .
+      target: production
+    ports:
+      - "80:80"
     environment:
       RAILS_ENV: production

@@ -66,7 +66,7 @@ SSID::Application.configure do
   # config.active_record.auto_explain_threshold_in_seconds = 0.5
 
   # whitelist attributes for mass-assignment
-  config.active_record.whitelist_attributes = true
+  # config.active_record.whitelist_attributes = true
 
   # Set time zone
   config.time_zone = "Singapore"

@@ -1,4 +1,5 @@
-FROM exoplatform/jdk:openjdk-11-ubuntu-1804
+# BASE LAYER
+FROM exoplatform/jdk:openjdk-11-ubuntu-1804 AS base
 
 RUN apt-get update && apt-get install -y git curl build-essential libssl-dev libreadline-dev zlib1g-dev sqlite3 libsqlite3-dev mysql-client libmysqlclient-dev
 RUN adduser --gecos '' --disabled-password app
@@ -32,7 +33,16 @@ USER app
 
 COPY --chown=app:app . /home/app/SSID
 
+
+# DEVELOPMENT BUILD
+FROM base AS development
 ENV RAILS_ENV development 
+ENTRYPOINT ["rails", "server", "-b", "0.0.0.0"]
 
-ENTRYPOINT ["rails", "server"]
 
+# PRODUCTION BUILD
+FROM base AS production
+RUN bundle exec rake assets:precompile
+ENV RAILS_ENV production
+USER root
+ENTRYPOINT ["bundle", "exec", "passenger", "start"]
