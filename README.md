@@ -13,58 +13,72 @@ SSID works with lexers based on [ANTLR4 Grammars](https://github.com/antlr/gramm
 
 ## Prerequisites
 
----
-**NOTE**: If you are using a Windows OS, please ensure that you have a linux environment to make changes to the code and run it in either the development or production mode. This is because some functions like fork are not supported by the Windows OS. To run a linux environment on Windows, you can either
-- [Dual boot linux on Windows](https://itsfoss.com/install-ubuntu-1404-dual-boot-mode-windows-8-81-uefi/) (Recommended)
-- [Install Cygwin](https://www.cygwin.com/)
----
-  
-1. Ensure you have Java `11` (revision `11` or later) installed in your Computer.
-2. Ensure that you have installed Ruby (v2.6.6) and [bundler](https://rubygems.org/gems/bundler/versions/2.1.4) (v2.1.4) 
-3. Since the application uses MySQL as its database server, please ensure that you have installed MySQL 8.0.
+- Machine with a working version of Docker (tested with 19.03.8 and 20.10.7 on macOS). Make sure your version meets one of the following minimum requirements:
+	+ Docker for Mac/Windows 18.03+
+	+ Docker for Linux 20.10.0+
+		* _TODO: Test this_
 
 ## Setup and Configuration
 
-Before following the below instructions, please ensure that you have met all the prerequesties listed
+### MySQL Section
 
-1. Clone SSID's source code onto your computer
-	<pre>git clone https://github.com/WING-NUS/SSID.git</pre>
-	
-2. Go to *config/database.yml* and modify the file by changing the username and password fields with your MySQL database settings (Please do it for all the 3 listed databases in the file)
-	
-3. Now, go to *config/envionments/* and add the respective line to the respective file(s)
-   -  Under *config/envionments/development.rb* & *config/envionments/test.rb*, add the below line:
-   <pre>config.eager_load = false</pre>
+Under development.
 
-   -  Under *config/envionments/production.rb* add the below line:
-   <pre>config.eager_load = true</pre>
-     
-4. Open your terminal and navigate to the code directory. Run bundler to install the necessary gems (including rails) from the root directory of SSID:
-     <pre>bundle install</pre>
-     #Use the following solution if you have problem "Your bundle is locked to mimemagic (0.3.5)"
-     <pre>https://stackoverflow.com/questions/66919504/your-bundle-is-locked-to-mimemagic-0-3-5-but-that-version-could-not-be-found</pre>
-        
-5. Execute the following command in the root directory of SSID depending on which mode you wish to run the app:
-	- Production Mode
-	<pre>
-	rake db:migrate RAILS_ENV=production
-	rake db:seed
-	</pre>
+### Development
 
-	- Development Mode
-	<pre>
-	rake db:create db:schema:dump db:migrate RAILS_ENV=development
-	rake db:seed
-	</pre>
- 
-6. Running SSID: Execute the following command in the root directory of SSID depending on which mode you wish to run the app:
+Clone SSID's source code onto your computer.
+<pre>git clone https://github.com/WING-NUS/SSID.git</pre>
 
-	- Production mode: configure Apache to serve web requests to SSID
-	
-    - Development mode:
-	<pre>
-	RAILS_ENV=development rails server
-	</pre>
+Open your terminal and navigate to the code directory. Then, build the development docker image.
+<pre>docker build --target development -t ssid-development:latest .</pre>
+
+_At this stage, IFF you're running Docker for Linux, edit line #14 of `docker-compose.yaml` to your local network IP. This is because the Docker alias it uses doesn't work on Linux. See in-line comments for moret details._
+
+Once the image is built, go ahead and run the container using the handy `docker-compose`.
+<pre>docker-compose run --service-ports development</pre>
+
+After you're finished developing, shutdown the container.
+<pre>docker-compose down</pre>
+
+Note that because of a quirk with how `docker-compose` works, the following is the correct way to restart the container.
+<pre>docker-compose down && docker-compose run --service-ports development</pre>
+
+### Production
+
+Notes:
+- This guide assumes MySQL has already been setup on the local machine. If it's being hosted remotely, edit the IP in `docker-compose.yaml` accordingly.
+- Currently, the password is stored in plaintext in `docker-compose.yaml`. **Do not push the production database password.** Edit the config on the server locally using `nano` or `vim`.
+- Ruby on Rails requires you to have a `credentials.yml` file in `config/`. This should already exist on the actual production server. If you're testing it locally, you can generate your own by running `rails credentials:edit` in the repo's root folder.
+
+
+SSH into the production server. Clone SSID's source code.
+<pre>git clone https://github.com/WING-NUS/SSID.git</pre>
+
+Navigate to the code directory. Then, build the production docker image.
+<pre>docker build --target production -t ssid-production:latest .</pre>
+
+Once the image is built, go ahead and run the container using the handy `docker-compose`.
+<pre>docker-compose run --service-ports production</pre>
+
+When you need to, shutdown the container.
+<pre>docker-compose down</pre>
+
+Note that because of a quirk with how `docker-compose` works, the following is the correct way to restart the container.
+<pre>docker-compose down && docker-compose run --service-ports development</pre>
+
+#### Upgrading the container
+
+With our current setup, there will be some minimal amount of downtime during upgrades. 
+
+First, shutdown the container.
+<pre>docker-compose down</pre>
+
+Next, pull the latest version from the GitHub repo. 
+<pre>git pull</pre>
+
+Finally, start the container again.
+<pre>docker-compose run --service-ports development</pre>
+
 
 ## Site Map
 - [Adding support for new language in SSID](doc/add_support_for_new_language.md)
