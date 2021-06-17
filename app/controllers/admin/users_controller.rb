@@ -17,7 +17,16 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 
 class Admin::UsersController < ApplicationController
   before_action { |controller|
-    controller.send :authenticate_actions_for_admin, 
+    
+  # obtain course (if any)
+    begin
+      @course = Course.find(params[:course_id])
+    rescue ActiveRecord::RecordNotFound
+        @course = Course.find(params[:user]["course_id"]) rescue nil
+    end
+   
+    controller.send :authenticate_actions_for_admin_or_teaching_staff,
+                    course: @course, 
                     only: [ :index, :new, :create, :edit, :update, :destroy ] # all methods
   }
 
@@ -29,6 +38,7 @@ class Admin::UsersController < ApplicationController
     @teaching_assistants = Hash[@courses.collect { |c| [c.id, c.teaching_assistants] }]
     @students = Hash[@courses.collect { |c| [c.id, c.students] }]
     @loners = User.all - UserCourseMembership.all.collect { |m| m.user } - @admins
+    @guests = Hash[@courses.collect { |c| [c.id, c.guests] }]
   end
 
   # GET /admin/users/new
@@ -91,20 +101,47 @@ class Admin::UsersController < ApplicationController
             m.course = @course
           }
           raise ActiveRecord::Rollback unless membership.save
+          
+          # if user is guest, create a entry under guest database as well
+          if params[:user]["course_role"] == '3'
+            guest = GuestUsersDetail.new { |g|
+              g.user_id = @the_user.id
+              g.course_id = @course.id
+              g.hash_string = params[:user]["id_string"]
+              g.assignment_id = 0
+            }
+            raise ActiveRecord::Rollback unless guest.save
+          end
         end
       end
     end
 
-    # Check for errors and render view
-    if @the_user.errors.empty? and @the_user.save
-      if @existing_user
-        redirect_to admin_users_url, notice: "User was successfully added 
-        to #{@course.code}."
+    @user = User.find_by_id(session[:user_id]) 
+
+    if (@user.is_admin)
+      # Check for errors and render view
+      if @the_user.errors.empty? and @the_user.save
+        if @existing_user
+          redirect_to admin_users_url, notice: "User was successfully added 
+          to #{@course.code}."
+        else 
+          redirect_to admin_users_url, notice: 'User was successfully created.'
+        end
       else
-        redirect_to admin_users_url, notice: 'User was successfully created.'
+        render action: "new"
       end
-    else
-      render action: "new"
+    else 
+      # Check for errors and render view
+      if @the_user.errors.empty? and @the_user.save
+        if @existing_user
+          redirect_to course_users_url(@course), notice: "User was successfully added 
+          to #{@course.code}."
+        else 
+          redirect_to course_users_url(@course), notice: 'User was successfully created.'
+        end
+      else
+        render action: "new"
+      end
     end
   end
 
@@ -186,11 +223,24 @@ class Admin::UsersController < ApplicationController
     # Check if we are destroying the membeship, not the user
     if params[:course_id]
       course = Course.find(params[:course_id])
+      
+      # see whether the user to be deleted is a guest user
       membership = course.membership_for_user(@the_user)
-      if membership && membership.role != UserCourseMembership::ROLE_STUDENT && membership.destroy
-        redirect_to admin_users_url, notice: "User was removed from #{course.code}."
+      guest = course.guest_user_finder(@the_user)
+      
+      # redirect link accordingly depending on whether user is admin or teaching staff
+      @user = User.find_by_id(session[:user_id]) 
+      url = admin_users_url
+      if (!@user.is_admin)
+        url = course_users_url(course)
+      end
+      
+      if membership && membership.role == UserCourseMembership::ROLE_GUEST && guest.destroy && membership.destroy 
+        redirect_to url, notice: "User was removed from #{course.code}."
+      elsif membership && membership.role != UserCourseMembership::ROLE_STUDENT && membership.destroy
+        redirect_to url, notice: "User was removed from #{course.code}."
       else
-        redirect_to admin_users_url, alert: "Error removing user"
+        redirect_to url, alert: "Error removing user"
       end
     else
       if @the_user.destroy

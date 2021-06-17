@@ -1,4 +1,9 @@
 <h2><%= @course.code %> Users</h2>
+<% if flash[:notice] %>
+  <div class="notice">
+    <%= flash[:notice] %>
+  </div>
+<% end %>
 
 <table>
   <thead>
@@ -6,15 +11,22 @@
       <th>Full Name</th>
       <th class="id_col">ID</th>
       <th class="role_col">Role</th>
+      <th class="actions_col">Actions</th>
     </tr>
   </thead>
   <tbody>
-    <% (@staff + @teaching_assistants + @students).each { |user| %>
+    <% (@staff + @teaching_assistants + @students + @guests).each { |user| %>
       <tr>
         <td><%= user.full_name || "--" %></td>
         <td><%= user.id_string %></td>
         <td><%= @course.role_string_for_user(user) %></td>
+        <% if @course.role_string_for_user(user) != "Student" %>
+        <td><%= link_to "Remove", admin_user_url(user)+"?course_id=#{@course.id}", method: "delete", data: {confirm: "Do you want to confirm remove user from course?"}, class: "last" %></td>
+        <% end %>
       </tr>
     <% } %>
   </tbody>
 </table>
+
+<div class="new_user"><%= link_to "Add #{@course.code} User", new_admin_user_url+"?course_id=#{@course.id}" %></div>
+
