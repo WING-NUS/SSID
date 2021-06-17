@@ -20,7 +20,6 @@ import java.util.*;
 import java.text.*;
 
 import pd.utils.*;
-
 import pd.*;
 
 public class Main {
@@ -68,11 +67,17 @@ public class Main {
 
 		ArrayList<Submission> submissions = SubmissionRetriever
 				.retrieveSubmissions(compareFolderPath);
+		System.out.println("Checking Files Format ...");
 
-		if (submissions.size == 0) {
+		if (submissions.size() <= 1) {
 			System.out.println("ERROR: Submission count is zero.\nOne possible reason is that your Zip format is not correct.\nYou need to directly zip the submissions, instead of creating a new folder.\nPlease refer to URL for details.");
-			throw new Exception("ERROR: Submission count is zero.");
+			//throw new Exception("ERROR: Submission count is zero.");
+			System.exit(0);
 		}
+
+		System.out.println(submissions.size());
+
+
 
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z");
 
