@@ -26,6 +26,8 @@ class AssignmentsController < ApplicationController
   MULTIPART_X_ZIP_MIME_TYPE = "multipart/x-zip"
   OCTET_STREAM_MIME_TYPE = "application/octet-stream"
 
+  require 'submissions_handler'
+
   before_action { |controller|
     if params[:course_id]
       @course = Course.find(params[:course_id])
@@ -90,82 +92,313 @@ class AssignmentsController < ApplicationController
       # Save assignment to obtain id
       return render action: "new" unless @assignment.save
 
-      isMapEnabled = (params[:assignment]["mapbox"] == "Yes")? true : false;
+      #@change = false
 
-      # No student submission file was uploaded
-      if params[:assignment]["file"].nil?
+      #gon.mychange = false
+
+      # Get all the parameters
+      isOptionalOptionsEnabled = (params[:assignment]["mapbox"] == "Yes")? true : false;
+      isCodeFileUploaded = (params[:assignment]["file"].nil? == true)? false : true;
+      isMapFileUploaded = (params[:assignment]["mapfile"].nil? == true)? false : true;
+      isRefFileUploaded = (params[:assignment]["refDir"].nil? == true)? false : true;
+      isCodeFileStructureAllFiles = (params[:assignment]["file_structure"] == "all")? true : false;
+      codeFile = params[:assignment]["file"];
+      mapFile = (isOptionalOptionsEnabled)? params[:assignment]["mapfile"] : nil; 
+      refFile = (isOptionalOptionsEnabled)? params[:assignment]["refDir"] : nil;
+      isPreviewButtonClicked = params[:preview]
+
+      @assignment.filesIgnore = (isOptionalOptionsEnabled)? params[:assignment]["filesIgnore"] : "";
+      @assignment.filesProcess = (isOptionalOptionsEnabled)? params[:assignment]["filesProcess"] : ""
+      @assignment.email = (isOptionalOptionsEnabled)? params[:assignment]["email"] : ""
+  
+      # determine whether valid code file
+      isValidCodeFile = false
+      # determine whether valid map file
+      isValidMapFile = false
+      # determine whether valid ref dir file
+      isValidRefDir = false
+      # submitted code files or dir size (depending on which code file structure was selected)
+      @codeFilesOrDirSize = 0
+      # dir hash to display contents inside dir (applicable if code file structure is 'By Dir')
+      @dirHash = {}
+      # determine whether any params has error and prevent assignment from processing
+      hasErrorParams = false
+      # file path of extracted code file
+      codeFilePath = ""
+      # file path of extracted ref file
+      refFilePath = "" 
+      @dirSize = 0
+      @dirHash = {}
+
+      # no student submission file was uploaded
+      if !(isCodeFileUploaded)
         # Create asssignment but don't process it
-        redirect_to course_assignments_url(@course), notice: 'Assignment was successfully created. Please upload the student submission files and mapping file (if any) to process the assignment'
-      # Student submission file is a valid zip
-      elsif (is_valid_zip?(params[:assignment]["file"].content_type, params[:assignment]["file"].path))
-        # Don't process the file and show error if the mapping was enabled but no mapping file was uploaded
-        if (is_valid_map_or_no_map?(isMapEnabled, params[:assignment]["mapfile"])) 
-          self.start_upload(@assignment, params[:assignment]["file"], isMapEnabled, params[:assignment]["mapfile"])
-          redirect_to course_assignments_url(@course), notice: 'Assignment was successfully created. Please refresh this page after a few minutes to view the similarity results.'
-        # Don't process the file and show error if the mapping was enabled but no mapping file was uploaded
-        elsif (isMapEnabled && params[:assignment]["mapfile"].nil?)
-          @assignment.errors.add(:mapfile, "containing mapped student names need to be uploaded if the 'Upload map file' box is ticked")
-          return render action: "new"
-        # Don't process the file and show error if the mapping was enabled but no mapping file was uploaded
-        else 
-          @assignment.errors.add :mapfile, "containing mapped student names must be a valid csv file"
-          return render action: "new"
-        end
-      # Student submission file is not a valid zip file
+        redirect_to course_assignments_url(@course), notice: 'Assignment was successfully created. Please upload the student submission files to preview files and/or process the assignment'
+      # ascertain that all the fields are valid
       else
-        @assignment.errors.add :file, "containing student submission files must be a valid zip file"
-        if (params[:assignment]["mapfile"].nil? && isMapEnabled)
-          @assignment.errors.add :mapfile, "containing mapped student names need to be uploaded if the 'Upload map file' box is ticked"
-        elsif !(is_valid_map_or_no_map?(isMapEnabled, params[:assignment]["mapfile"])) 
-          @assignment.errors.add :mapfile, "containing mapped student names must be a valid csv file"
+        # verify codeFile, mapFile (if uploaded) and refFile (if uploaded)
+        isValidCodeFile = is_valid_zip?(codeFile.content_type, codeFile.path)
+        isValidMapFile = is_valid_map_or_no_map?(isOptionalOptionsEnabled, mapFile)
+        isValidRefFile = isRefFileUploaded && is_valid_zip?(refFile.content_type, refFile.path)
+        codeFile_path = ""
+        refFile_path = ""
+
+        if (!isValidCodeFile)
+          @assignment.errors.add :file, "containing student submission files must be a valid zip file"
+          hasErrorParams = true
         end
-        return render action: "new"
+        
+        if (isMapFileUploaded && !isValidMapFile) 
+          @assignment.errors.add :mapfile, "containing mapped student names must be a valid csv file"
+          hasErrorParams = true
+        end
+
+        if (isRefFileUploaded && !isValidRefFile) 
+          @assignment.errors.add :refDir, "containing referenced student submission files must be a valid zip file"
+          hasErrorParams = true
+        end
+
+        refFile_path = ""
+        codeFile_path = ""
+
+        if (!hasErrorParams) 
+
+          require 'submissions_handler'
+
+          # extract ref file (if uploaded)
+          if (isRefFileUploaded && isValidRefFile) 
+            refFile_path = SubmissionsHandler.extract_upload(
+              refFile, false, mapFile, @assignment, false, "ref"
+            )
+          end
+
+          # extract codefile and mapfile (if uploaded)
+          codeFile_path = SubmissionsHandler.extract_upload(
+            codeFile, isMapFileUploaded, mapFile, @assignment, true, "code"
+          )
+        
+        else
+          return render action: "new"
+        end
+
+        extract_uploaded_files(
+          @assignment, isRefFileUploaded, isCodeFileStructureAllFiles, isPreviewButtonClicked, 
+          refFile_path, codeFile_path, isValidRefFile, isMapFileUploaded
+        )
       end
     else
       render action: "new"
     end
+  end
+
+  def extract_uploaded_files(
+      assignment, isRefFileUploaded, isCodeFileStructureAllFiles, isPreviewButtonClicked, 
+      refFile_path, codeFile_path, isValidRefFile, isMapEnabled
+    )
+
+    @dirSize = 0
+    
+    # Create directory for code comparison, delete first if necessary
+    code_compare_dir = File.join(codeFile_path, "_compare")
+    FileUtils.rm(code_compare_dir, force: true) if File.exist? code_compare_dir
+    FileUtils.mkdir_p(File.join(codeFile_path, "_compare"))
+
+    # For each student submission, combine the code files into one
+    # Only match files in the current directory
+    # For file based comparision, no need to combine code files
+    if (isCodeFileStructureAllFiles)
+      
+      Dir.glob(File.join(codeFile_path, "**/*")).each do |file|
+        next if File.directory?(file) # skip the loop if the file is a directory
+        if (File.basename(file, File.extname(file)) != 'skeleton')
+          @dirSize += 1
+        end
+        arr = []
+        split_str = file.split('/')
+        filepath = split_str[split_str.count - 1]
+        arr.push(filepath)
+        @dirHash[File.basename(file, File.extname(file))] = arr
+        dest_folder = code_compare_dir + "/" + File.basename(file, File.extname(file)) + File.extname(file)
+          FileUtils.cp(file, dest_folder)
+     end
+
+      
+    # For folder comparision, combine code files and write into compare dir as new file with same name, remove ext if any  
+    else 
+      Dir.glob(File.join(codeFile_path, "*")).each { |subpath|
+      next if subpath == code_compare_dir || (File.file?(subpath) && subpath.split('.').last.to_s.downcase == 'csv')
+      
+      if (Dir.exist?(subpath))
+        split_str = subpath.split('/')
+        foldname = split_str[split_str.count - 1]
+        if (foldname != 'skeleton')
+          @dirSize += 1
+        end
+        files = Dir.entries(subpath).reject!{|file_name| [".","..",".gitignore"].include?(file_name)}
+        @dirHash[foldname] = files
+      end
+
+      File.open(File.join(code_compare_dir, File.basename(subpath, File.extname(subpath))), 'w') { |f|
+        f.puts string_from_combined_files(subpath)
+      }
+    
+    }
+    end
+
+    if (isRefFileUploaded && isValidRefFile) 
+      
+      # Create directory for code comparison, delete first if necessary
+      ref_compare_dir = File.join(refFile_path, "_compare")
+      FileUtils.rm(ref_compare_dir, force: true) if File.exist? ref_compare_dir
+      FileUtils.mkdir_p(File.join(refFile_path, "_compare"))
+      
+      if (isCodeFileStructureAllFiles)
+        
+        Dir.glob(File.join(refFile_path, "**/*")).each do |file|
+          next if File.directory?(file) # skip the loop if the file is a directory
+          # `git log -1 -r -n 1 --pretty=format:"%cd [%h]" -- #{file}`
+          dest_folder = ref_compare_dir + "/" + File.basename(file, File.extname(file)) + File.extname(file)
+            FileUtils.cp(file, dest_folder)
+      end
+
+        
+      # For folder comparision, combine code files and write into compare dir as new file with same name, remove ext if any  
+      else 
+        Dir.glob(File.join(refFile_path, "*")).each { |subpath|
+        next if subpath == ref_compare_dir || (File.file?(subpath) && subpath.split('.').last.to_s.downcase == 'csv')
+
+        File.open(File.join(ref_compare_dir, File.basename(subpath, File.extname(subpath))), 'w') { |f|
+          f.puts string_from_combined_files(subpath)
+        }
+      }
+      end
+    end
+
+    @previewStatement = (isCodeFileStructureAllFiles)? "SSID detected " + @dirSize.to_s + " file(s) for code comparision in your uploaded zip file"
+      : "SSID detected " + @dirSize.to_s + " root directories/ student folder(s) for code comparision in your uploaded zip file"
+    @column1Title = (isCodeFileStructureAllFiles)? "Filename" : "Root Directory"
+    @column2Title = (isCodeFileStructureAllFiles)? "Filepath After Extraction" : "Contents Inside Root Directory"
+    # Check the contents size inside zip
+    if (@dirSize == 0)
+      @statusStatement = "SSID cannot process the assignment due to empty/insufficient files to compare"
+      @assignment.errors.add :file, "containing student submission files cannot be empty"
+      return render action: "preview_files"
+    elsif (@dirSize == 1)
+      @statusStatement = "SSID cannot process the assignment due to empty/insufficient files to compare"
+      @assignment.errors.add :file, "containing student submission files must have more than 1 student folder/file"
+      return render action: "preview_files"
+    elsif (isPreviewButtonClicked)  
+      return render action: "preview_files"
+    end
+
+    #SubmissionsHandler.process_submissions(su_path, assignment, isMapEnabled)
+    #self.start_upload(@assignment, params[:assignment]["file"], isMapEnabled, params[:assignment]["mapfile"])
+    
+    require 'submissions_handler'
+    SubmissionsHandler.process_submissions(code_compare_dir, @assignment, isMapEnabled)
+ 
+    redirect_to course_assignments_url(@course), notice: 'Assignment was successfully created. Please refresh this page after a few minutes to view the similarity results.'
+   
   end
   
   # PUT /courses/1/assignments/1
   def update
     @assignment = Assignment.find(params[:id])
 
-    isMapEnabled = (params[:assignment]["mapbox"] == "Yes")? true : false;
+    # Get all the parameters
+    isOptionalOptionsEnabled = (params[:assignment]["mapbox"] == "Yes")? true : false;
+    isCodeFileUploaded = (params[:assignment]["file"].nil? == true)? false : true;
+    isMapFileUploaded = (params[:assignment]["mapfile"].nil? == true)? false : true;
+    isRefFileUploaded = (params[:assignment]["refDir"].nil? == true)? false : true;
+    isCodeFileStructureAllFiles = (params[:assignment]["file_structure"] == "all")? true : false;
+    codeFile = params[:assignment]["file"];
+    mapFile = (isOptionalOptionsEnabled)? params[:assignment]["mapfile"] : nil; 
+    refFile = (isOptionalOptionsEnabled)? params[:assignment]["refDir"] : nil;
+    isPreviewButtonClicked = params[:preview]
 
-    # No student submission file was uploaded
-    if params[:assignment]["file"].nil?
-      @assignment.errors.add :file, "containing student submission files need to be uploaded to process the assignment"
-        if (params[:assignment]["mapfile"].nil? && isMapEnabled)
-          @assignment.errors.add :mapfile, "containing mapped student names need to be uploaded if the 'Upload map file' box is ticked"
-        elsif !(is_valid_map_or_no_map?(isMapEnabled, params[:assignment]["mapfile"])) 
-          @assignment.errors.add :mapfile, "containing mapped student names must be a valid csv file"
-        end
-      return render action: "show"
-    elsif (is_valid_zip?(params[:assignment]["file"].content_type, params[:assignment]["file"].path))
-      # Don't process the file and show error if the mapping was enabled but no mapping file was uploaded
-      if (is_valid_map_or_no_map?(isMapEnabled, params[:assignment]["mapfile"])) 
-        self.start_upload(@assignment, params[:assignment]["file"], isMapEnabled, params[:assignment]["mapfile"])
-        redirect_to course_assignments_url(@course), notice: 'SSID will start to process the assignment now. Please refresh this page after a few minutes to view the similarity results.'
-      # Don't process the file and show error if the mapping was enabled but no mapping file was uploaded
-      elsif (isMapEnabled && params[:assignment]["mapfile"].nil?)
-        @assignment.errors.add(:mapfile, "containing mapped student names need to be uploaded if the 'Upload map file' box is ticked")
-        return render action: "show"
-      # Don't process the file and show error if the mapping was enabled but no mapping file was uploaded
-      else 
-        @assignment.errors.add :mapfile, "containing mapped student names must be a valid csv file"
-        return render action: "show"
-      end
-    # Student submission file is not a valid zip file
+    @assignment.filesIgnore = (isOptionalOptionsEnabled)? params[:assignment]["filesIgnore"] : "";
+    @assignment.filesProcess = (isOptionalOptionsEnabled)? params[:assignment]["filesProcess"] : ""
+    @assignment.email = (isOptionalOptionsEnabled)? params[:assignment]["email"] : ""
+
+    # determine whether valid code file
+    isValidCodeFile = false
+    # determine whether valid map file
+    isValidMapFile = false
+    # determine whether valid ref dir file
+    isValidRefDir = false
+    # submitted code files or dir size (depending on which code file structure was selected)
+    @codeFilesOrDirSize = 0
+    # dir hash to display contents inside dir (applicable if code file structure is 'By Dir')
+    @dirHash = {}
+    # determine whether any params has error and prevent assignment from processing
+    hasErrorParams = false
+    # file path of extracted code file
+    codeFilePath = ""
+    # file path of extracted ref file
+    refFilePath = "" 
+    @dirSize = 0
+    @dirHash = {}
+
+    # no student submission file was uploaded
+    if !(isCodeFileUploaded)
+      @assignment.errors.add :file, "containing student submission files need to be uploaded"
+      hasErrorParams = true
+      # ascertain that all the fields are valid
     else
-      @assignment.errors.add :file, "containing student submission files must be a valid zip file"
-      if (params[:assignment]["mapfile"].nil? && isMapEnabled)
-        @assignment.errors.add :mapfile, "containing mapped student names need to be uploaded if the 'Upload map file' box is ticked"
-      elsif !(is_valid_map_or_no_map?(isMapEnabled, params[:assignment]["mapfile"])) 
-        @assignment.errors.add :mapfile, "containing mapped student names must be a valid csv file"
+      # verify codeFile, mapFile (if uploaded) and refFile (if uploaded)
+      isValidCodeFile = is_valid_zip?(codeFile.content_type, codeFile.path)
+      isValidMapFile = is_valid_map_or_no_map?(isOptionalOptionsEnabled, mapFile)
+      isValidRefFile = isRefFileUploaded && is_valid_zip?(refFile.content_type, refFile.path)
+      codeFile_path = ""
+      refFile_path = ""
+
+      if (!isValidCodeFile)
+        @assignment.errors.add :file, "containing student submission files must be a valid zip file"
+        hasErrorParams = true
       end
-      return render action: "show"
+      
+      if (isMapFileUploaded && !isValidMapFile) 
+        @assignment.errors.add :mapfile, "containing mapped student names must be a valid csv file"
+        hasErrorParams = true
+      end
+
+      if (isRefFileUploaded && !isValidRefFile) 
+        @assignment.errors.add :refDir, "containing referenced student submission files must be a valid zip file"
+        hasErrorParams = true
+      end
+
+      refFile_path = ""
+      codeFile_path = ""
+
+      if (!hasErrorParams) 
+
+        require 'submissions_handler'
+
+        # extract ref file (if uploaded)
+        if (isRefFileUploaded && isValidRefFile) 
+          refFile_path = SubmissionsHandler.extract_upload(
+            refFile, false, mapFile, @assignment, false, "ref"
+          )
+        end
+
+        # extract codefile and mapfile (if uploaded)
+        codeFile_path = SubmissionsHandler.extract_upload(
+          codeFile, isMapFileUploaded, mapFile, @assignment, true, "code"
+        )
+      
+      else
+        return render action: "show"
+      end
+
+      extract_uploaded_files(
+        @assignment, isRefFileUploaded, isCodeFileStructureAllFiles, isPreviewButtonClicked, 
+        refFile_path, codeFile_path, isValidRefFile, isMapFileUploaded
+      )
     end
   end
+
+
+
 
   # DELETE /courses/1/assignments/1
   def destroy
@@ -175,16 +408,6 @@ class AssignmentsController < ApplicationController
     redirect_to course_assignments_url(@course), notice: 'Assignment was successfully deleted.'
   end
   
-  def start_upload(assignment, submissionFile, isMapEnabled, mapFile)
-      require 'submissions_handler'
-
-      # Process upload file
-      submissions_path = SubmissionsHandler.process_upload(submissionFile, isMapEnabled, mapFile, assignment)
-
-      # Launch java program to process submissions
-      SubmissionsHandler.process_submissions(submissions_path, assignment, isMapEnabled)
-  end
-
   # Responsible for verifying whether a uploaded file is zip by checking its mime type and/or whether can it be extracted by the zip library.
   # For files with mime type = application/octet-stream, it needs to be further verified by the zip library as it can be a rar file.
   # Params:
@@ -205,7 +428,6 @@ class AssignmentsController < ApplicationController
     end
   end
 
-
   # Responsible for verifying whether a uploaded file is zip by checking whether can it be extracted by the zip library
   # Params:
   # +filePath+:: string that contains the file's path which is to be used by the zip library when extracting the file
@@ -223,15 +445,27 @@ class AssignmentsController < ApplicationController
   def is_valid_map_or_no_map?(isMapEnabled, mapFile)
     if (!isMapEnabled)
       return true
-    else
-      if (mapFile.nil?) 
-        return false
-      elsif mapFile.content_type == "text/csv" && mapFile.path.split('.').last.to_s.downcase == 'csv'
+    elsif (!mapFile.nil?) 
+      if (mapFile.content_type == "text/csv" && mapFile.path.split('.').last.to_s.downcase == 'csv')
         return true
       else 
         return false
       end
     end
+    return true
+  end
+
+  def string_from_combined_files(path)
+    strings = []
+    if File.directory? path
+      Dir.glob(File.join(path, "*")).sort.each { |subpath|
+        strings << string_from_combined_files(subpath)
+      }
+    else
+      strings << File.open(path).readlines.join
+    end
+
+    strings.join("\n")
   end
 
 end

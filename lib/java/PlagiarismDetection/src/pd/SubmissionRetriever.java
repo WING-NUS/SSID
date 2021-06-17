@@ -67,9 +67,6 @@ public final class SubmissionRetriever {
 			Scanner scanner = new Scanner(mapNamesFile);
 			while (scanner.hasNext()) {
 				String[] cols = scanner.nextLine().split(",");
-				System.out.println("hi");
-				System.out.println(cols[0]);
-				System.out.println(cols[1]);
 				mappedNames.put(cols[0], cols[1]);
 			}
 			scanner.close();
@@ -82,13 +79,10 @@ public final class SubmissionRetriever {
 	}
 
 	private static String getStudentName(Hashtable<String, String> mappedNames, String studentName) {
-		System.out.println(studentName);
 		String mappedStudentName = mappedNames.get(studentName);
         if (mappedStudentName == null) {
-			System.out.println("why da?");
 			return studentName;
         } else {
-			System.out.println("working da");
 			System.out.println(mappedStudentName);
 			return (mappedStudentName + " (" + studentName + ")");
 		}
