@@ -47,6 +47,19 @@ https://www.ruby-lang.org/en/documentation/installation/#apt
 
 TODO Yisong: replicate my own installation and update on this. 
 
+Victor's comment: sometimes ruby version 2.6.6 is not found in rbenv list, can try install it manually
+```
+wget http://ftp.ruby-lang.org/pub/ruby/2.6/ruby-2.6.6.tar.gz
+tar -xzvf ruby-2.6.6.tar.gz
+cd ruby-2.6.6/
+./configure
+sudo make install
+```
+After this, need a restart of the system and check whether the correct version is installed.
+```
+ruby --version
+```
+
 
 
 I also had a hard time installing `bundler v2.1.4` since it is also the latest version. 
@@ -63,8 +76,14 @@ Make sure to follow these commands:
 gem 'bundler', '~> 2.1', '>= 2.1.4'
 gem install bundler -v 2.1.4
 ```
-
-
+Victor's comment: bundler install may fail due to several reasons, if so, pls try the following directly:
+```
+sudo install bundler -v 2.1.4
+```
+After this, pls check the bundler version:
+```
+bundle version
+```
 
 ### MySQL 8.0
 
