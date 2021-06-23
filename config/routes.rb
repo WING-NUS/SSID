@@ -41,6 +41,7 @@ SSID::Application.routes.draw do
 
     resources :assignments do
       get "log" => "assignments#show_log"
+      get "list" => "submissions#index"
     end
 
     get "visualize/" => "visualize#index"

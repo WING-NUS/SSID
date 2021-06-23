@@ -33,7 +33,7 @@ class SubmissionsController < ApplicationController
     end
   }
 
-  # GET /assignments/id/submissions/log ???
+  # GET /assignments/id/list
   def index
     @submissions = @assignment.submissions
 
