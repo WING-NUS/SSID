@@ -23,6 +23,7 @@ class Course < ActiveRecord::Base
   has_many :student_memberships, -> { where role: UserCourseMembership::ROLE_STUDENT }, class_name: "UserCourseMembership"
   has_many :staff_memberships, -> { where  role: UserCourseMembership::ROLE_TEACHING_STAFF }, class_name: "UserCourseMembership"
   has_many :teaching_assistant_memberships, -> { where role: UserCourseMembership::ROLE_TEACHING_ASSISTANT }, class_name: "UserCourseMembership"
+  has_many :guest_memberships, -> { where role: UserCourseMembership::ROLE_GUEST }, class_name: "UserCourseMembership"
 
   validates_presence_of :code
   validates_presence_of :name
@@ -43,6 +44,10 @@ class Course < ActiveRecord::Base
 
   def teaching_assistants
     self.teaching_assistant_memberships.collect { |m| m.user }
+  end
+
+  def guests
+    self.guest_memberships.collect { |m| m.user }
   end
 
   def submission_cluster_groups
@@ -86,6 +91,11 @@ class Course < ActiveRecord::Base
 
   def membership_for_user(user)
     UserCourseMembership.where( course_id: self.id, 
+                               user_id: user.id).first
+  end
+
+  def guest_user_finder(user)
+    GuestUsersDetail.where( course_id: self.id, 
                                user_id: user.id).first
   end
 

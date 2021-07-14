@@ -11,10 +11,45 @@
 
 <% if @assignments.empty? %>
   <p class="none_created">No Assignment has been created.</p>
+<% elsif @guest_user %>
+  <h3>Processed:</h3>
+  <table class="processed_assignments">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th class="lang_col">Language</th>
+        <th class="submissions_col">Submissions</th>
+        <th class="suspected_cases_col">Suspected Plagiarism Cases</th>
+        <th class="marked_cases_col">Confirmed Plagiarism Cases</th>
+        <th class="action_col">View</th>
+        <th class="delete_col"></th>
+      </tr>
+    </thead>
+    <tbody>
+    <% @processed_assignments.each { |a| %>
+      <% if @assignment_to_be_shown == a.id || @assignment_to_be_shown == 0 %>
+        <tr>
+          <td><%= a.title %></td>
+          <td><%= a.language_string %></td>
+          <td><%= a.submissions.size %></td>
+          <td><%= a.suspected_plagiarism_cases.size %></td>
+          <td><%= a.confirmed_plagiarism_cases.size %></td>
+          <td>
+            <%= link_to "Submission similarities", assignment_submission_similarities_url(a) %>
+            <%= link_to "Similarity groups", assignment_cluster_groups_url(a) %>
+            <%= link_to "Upload log", course_assignment_log_url(@course, a), class: "last" %>
+          </td>
+          <td>
+            <%= link_to "Delete", course_assignment_url(@course, a), method: "delete", class: "last", data: {confirm: "This assignment will be permanently deleted and cannot be recovered. Are you sure?"} %>
+          </td>
+        </tr>
+      <%  end %>
+    <% } %>
+    </tbody>
+  </table>
 <% else %>
   <% @assignments.each do |assignment| %>
     <div id="status">
-
     </div>
   <% end %>
 <% end %>

@@ -58,6 +58,9 @@ table {
   height: 22px;
   overflow: auto;
   padding: 0;
+  display: flex;
+  align-items: stretch; /* Default */
+  justify-content: space-between;
 
   li {
     list-style: none;

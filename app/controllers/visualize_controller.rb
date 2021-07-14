@@ -22,6 +22,9 @@ class VisualizeController < ApplicationController
       controller.send :authenticate_actions_for_role, UserCourseMembership::ROLE_STUDENT,
                                                       course: @course,
                                                       only: [ ]
+      controller.send :authenticate_actions_for_role, UserCourseMembership::ROLE_GUEST,
+                                                      course: @course,
+                                                      only: [ ]
     end
   }
 

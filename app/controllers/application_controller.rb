@@ -23,7 +23,10 @@ class ApplicationController < ActionController::Base
     protected
   
     def authorize
+      # get user and respective membership
       @user = User.find_by_id(session[:user_id]) 
+      @membership = UserCourseMembership.find_by_user_id(@user.id)
+      
       unless @user
         redirect_to login_url, notice: "Please log in"
       end
@@ -77,7 +80,7 @@ class ApplicationController < ActionController::Base
   
       # Get current user's role
       current_role = course.membership_for_user(@user).role
-  
+      
       # Check if we need to authenticate
       if current_role == role
         unless opts[:only].include? action_name.intern
@@ -91,6 +94,27 @@ class ApplicationController < ActionController::Base
   
       # Check if we need to authenticate
       unless @user.is_admin
+        if opts[:only].include? action_name.intern
+          redirect_to( { controller: "announcements", action: "index" }, alert: "You do not have access to the url \"#{request.env['REQUEST_URI']}\". Please contact the administrator for more information.")
+        end
+      end
+    end
+
+    def authenticate_actions_for_admin_or_teaching_staff(opts)
+      # Sanitize
+      raise unless opts[:only]
+  
+      user_current_role = nil
+
+      # Get course
+      if (opts[:course] != nil && !@user.is_admin)
+        course = opts[:course]
+        # check current user role (if any)
+        user_current_role = course.membership_for_user(@user).role
+      end
+     
+      # Check if we need to authenticate
+      unless @user.is_admin or user_current_role == UserCourseMembership::ROLE_TEACHING_STAFF
         if opts[:only].include? action_name.intern
           redirect_to( { controller: "announcements", action: "index" }, alert: "You do not have access to the url \"#{request.env['REQUEST_URI']}\". Please contact the administrator for more information.")
         end

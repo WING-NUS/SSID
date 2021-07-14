@@ -35,11 +35,21 @@ class AssignmentsController < ApplicationController
       controller.send :authenticate_actions_for_role, UserCourseMembership::ROLE_STUDENT,
                                                       course: @course,
                                                       only: [ ]
+      controller.send :authenticate_actions_for_role, UserCourseMembership::ROLE_GUEST,
+                                                      course: @course,
+                                                      only: [ :index ]
     end
   }
 
   # GET /courses/1/assignments
   def index
+    
+    # check whether is it a guest user 
+    @user = User.find_by_id(session[:user_id]) 
+    @guest_user = GuestUsersDetail.find_by_user_id(@user.id)
+    # obtain assignment to be shown if is a guest user
+    @assignment_to_be_shown = @guest_user.assignment_id
+    
     @assignments = @course.assignments
     @empty_assignments = @course.empty_assignments
     @processing_assignments = @course.processing_assignments

@@ -16,6 +16,18 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
 class UsersController < ApplicationController
+  before_action { |controller|
+    if params[:course_id]
+      @course = Course.find(params[:course_id])
+      controller.send :authenticate_actions_for_role, UserCourseMembership::ROLE_STUDENT,
+                                                      course: @course,
+                                                      only: [ ]
+      controller.send :authenticate_actions_for_role, UserCourseMembership::ROLE_GUEST,
+                                                      course: @course,
+                                                      only: [ ]
+    end
+  }
+
   # GET /courses/1/users
   def index
     @course = Course.find(params[:course_id])
@@ -23,6 +35,7 @@ class UsersController < ApplicationController
     @staff = @course.staff
     @teaching_assistants = @course.teaching_assistants
     @students = @course.students
+    @guests = @course.guests
   end
 
   # GET /users/1/edit

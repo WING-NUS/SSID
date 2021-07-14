@@ -1,9 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>jQuery UI Dialog - Modal form</title>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <style>
+    h1 { font-size: 1.2em; margin: .6em 0; }
+    div#users-contain { width: 600px; margin: 20px 0; }
+    div#users-contain table { margin: 1em 0; border-collapse: collapse; width: 100%; }
+    div#users-contain table td, div#users-contain table th { border: 1px solid #eee; padding: .6em 10px; text-align: left; }
+    .ui-dialog .ui-state-error { padding: .3em; }
+    .validateTips { border: 1px solid transparent; padding: 0.3em; }
+  </style>
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script>
+
+  $( function() {
+    dialog = $( "#dialog-form" ).dialog({
+      autoOpen: false,
+      height: 400,
+      width: 600,
+      modal: true,
+      buttons: {
+        Close: function() {
+          dialog.dialog( "close" ) ;
+        },
+        'Copy the link': copy
+      },
+      close: function() {
+        dialog.dialog( "close" );
+      }
+    });
+
+    function copy() {
+      console.log("here")
+      var url = document.getElementById("tp");
+      url.select();
+      document.execCommand("copy");
+      console.log(url)
+    }
+  });
+
+  $(document).ready(function(){
+    var isDialogDisplay = document.getElementById('isDialogDisplay').dataset.userId;
+    console.log(isDialogDisplay)
+    if (isDialogDisplay == 'true') {
+      console.log(isDialogDisplay)
+      dialog.dialog( "open" ); 
+    };
+  });
+  </script>
+</head>
+<body>
+
 <h2><%= @course.code %> Assignment: <%= @assignment.title %> Submission Similarities</h2>
+
+<% if flash[:notice] %>
+  <div class="notice">
+    <%= flash[:notice] %>
+  </div>
+<% end %>
 
 <ul>
   <li>Similarity values are not symmetric so we display both the maximum and average values in the table</li>
   <li>To analyze these similarities, <%= link_to "view", assignment_cluster_groups_url(@assignment) %> / <%= link_to "create", new_assignment_cluster_group_url(@assignment) %> submission cluster groups or <%= link_to "use the course visualizations", course_visualize_url(@course) %></li>
-</ul>
+  <li>To allow non-SSID users to view and analyse the results, <%= link_to "create", guest_user_create_path(:id => @assignment) %> a sharable link </li> 
+  </ul>
 
 <table>
   <thead>
@@ -31,3 +95,15 @@
 </table>
 
 <%= will_paginate @submission_similarities %>
+
+<div id="isDialogDisplay" data-user-id="<%= @displayDialog %>"></div>
+
+<div id="dialog-form" title="Create sharable link">
+  <p> With the generated link below, non-SSID users would be able to view the submission similarites for this assignment. </p> 
+  
+  <input type="text" id="tp" value=<%= @hashed_url %>  class="text ui-widget-content ui-corner-all" size="70" readonly><br><br>
+
+
+</div>
+</body>
+</html>
