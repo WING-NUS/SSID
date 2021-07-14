@@ -144,17 +144,17 @@ class AssignmentsController < ApplicationController
         refFile_path = ""
 
         if (!isValidCodeFile)
-          @assignment.errors.add :file, "containing student submission files must be a valid zip file"
+          @assignment.errors.add :file, "Containing student submission files must be a valid zip file"
           hasErrorParams = true
         end
         
         if (isMapFileUploaded && !isValidMapFile) 
-          @assignment.errors.add :mapfile, "containing mapped student names must be a valid csv file"
+          @assignment.errors.add :mapfile, "Containing mapped student names must be a valid CSV file"
           hasErrorParams = true
         end
 
         if (isRefFileUploaded && !isValidRefFile) 
-          @assignment.errors.add :refDir, "containing referenced student submission files must be a valid zip file"
+          @assignment.errors.add :refDir, "Containing referenced student submission files must be a valid zip file"
           hasErrorParams = true
         end
 
@@ -281,11 +281,11 @@ class AssignmentsController < ApplicationController
     # Check the contents size inside zip
     if (@dirSize == 0)
       @statusStatement = "SSID cannot process the assignment due to empty/insufficient files to compare"
-      @assignment.errors.add :file, "containing student submission files cannot be empty"
+      @assignment.errors.add :file, "Containing student submission files cannot be empty"
       return render action: "preview_files"
     elsif (@dirSize == 1)
       @statusStatement = "SSID cannot process the assignment due to empty/insufficient files to compare"
-      @assignment.errors.add :file, "containing student submission files must have more than 1 student folder/file"
+      @assignment.errors.add :file, "Containing student submission files must have at least 2 student folders/files"
       return render action: "preview_files"
     elsif (isPreviewButtonClicked)  
       return render action: "preview_files"
