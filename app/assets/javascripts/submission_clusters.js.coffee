@@ -72,7 +72,7 @@ SubmissionCluster.drawCluster = (clusterId, data) ->
           left = 0.5 * (parseFloat(nodeFromLeft) + parseFloat(nodeToLeft)) - 5
           top = 0.5 * (parseFloat(nodeFromTop) + parseFloat(nodeToTop)) - 8
           style = "position: absolute; left: "+left+"px; top: "+top+"px;"
-          $("#canvas_wrapper_"+clusterId+"-label").append("<div class=\"edgeLabel\" style=\""+style+"\"><a href=\""+adj.data.submissionSimilarityUrl+"\">view</div>")
+          $("#canvas_wrapper_"+clusterId+"-label").append("<div class=\"edgeLabel\" style=\""+style+"\"><a href=\""+adj.data.submissionSimilarityUrl+"\" style=\"margin-right: 10px\">view</a><span>\""+adj.data.submissionSimilarityPercentage+"\"</span></div>")
         return
       return
   )
