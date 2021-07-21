@@ -124,6 +124,10 @@ module SubmissionsHandler
     FileUtils.mkdir_p(File.join(path, "_compare"))
     
     # For each student submission, combine the code files into one
+    # Issue8: here is where merging the files. 
+    # Good idea: Put the lines as comments. So that the engine be misled by the lines being iserted.
+    # Each language, we have different syntax for comments. 
+    
     Dir.glob(File.join(path, "*")).each { |subpath|
       next if subpath == compare_dir
 
