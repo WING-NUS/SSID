@@ -76,6 +76,7 @@ public final class ANTLRDynamicTokenizer extends Tokenizer {
 	}
 
 	public void TokenizeSubmissions(ArrayList<Submission> submissions) {
+    // Issue8: Is it where we should add the segment lines?
 		for (Submission s : submissions) {
 			tokenize(s);
 		}

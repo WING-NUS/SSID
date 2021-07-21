@@ -49,6 +49,7 @@ class SubmissionSimilaritiesController < ApplicationController
   end
 
   # GET /students/1/submission_similarities/show_table_partial
+  # Issue8: Is it where we should add the segment lines?
   def show_table_partial
     locals = {}
     locals[:student] = User.find(params["student_id"])

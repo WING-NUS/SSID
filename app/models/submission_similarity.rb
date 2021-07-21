@@ -41,6 +41,7 @@ class SubmissionSimilarity < ActiveRecord::Base
   end
 
   def student1
+    # Issue8: Is it where we should add the segment lines? Shall we directly change the submission1 file?
     self.submission1.student
   end
 
