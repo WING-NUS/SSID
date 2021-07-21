@@ -23,6 +23,7 @@ class Assignment < ActiveRecord::Base
   has_many :confirmed_or_suspected_plagiarism_cases, -> { where("status = #{SubmissionSimilarity::STATUS_CONFIRMED_AS_PLAGIARISM} OR status = #{SubmissionSimilarity::STATUS_SUSPECTED_AS_PLAGIARISM}") }, class_name: "SubmissionSimilarity"
   has_many :confirmed_plagiarism_cases, -> { where("status = #{SubmissionSimilarity::STATUS_CONFIRMED_AS_PLAGIARISM}") }, class_name: "SubmissionSimilarity"
   has_many :submissions
+  
   belongs_to :course
 
   validates :title, :language, :min_match_length, :ngram_size, presence: true
@@ -51,8 +52,17 @@ class Assignment < ActiveRecord::Base
     ocaml: "ocaml"
   }
 
+  FILE_STRUCTURES = {
+    all: "By Files",
+    dir: "By Directory"
+  }
+
   def self.options_for_languages
     LANGUAGES.to_a.collect { |pair| pair.reverse }
+  end
+
+  def self.options_for_file_structure
+    FILE_STRUCTURES.to_a.collect { |pair| pair.reverse }
   end
 
   def prettify_js_lang

@@ -59,9 +59,10 @@ public class Main {
 		String dbUser = args[7];
 		String dbPwd = args[8];
 
-    // Setup ANTLRDynamicTokenizer
-		String antlrGrammarsBinDir = args[1] + "/../../../lib/antlr/grammars/bin/";
-    ANTLRDynamicTokenizer.setGrammarsBinDir(antlrGrammarsBinDir);
+    	// Setup ANTLRDynamicTokenizer
+		String antlrGrammarsBinDir = args[1] + "/../../../../lib/antlr/grammars/bin/";
+
+    	ANTLRDynamicTokenizer.setGrammarsBinDir(antlrGrammarsBinDir);
 
 		MySQLDB.setProperties(dbAddr, dbName, dbUser, dbPwd);
 
