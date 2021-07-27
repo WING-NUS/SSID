@@ -127,6 +127,8 @@ module SubmissionsHandler
     # Issue8: here is where merging the files. 
     # Good idea: Put the lines as comments. So that the engine be misled by the lines being iserted.
     # Each language, we have different syntax for comments. 
+
+    segment_string = '#SSID_END \n SSID Begin \n'
     
     Dir.glob(File.join(path, "*")).each { |subpath|
       next if subpath == compare_dir
@@ -219,11 +221,23 @@ module SubmissionsHandler
   def self.string_from_combined_files(path)
     strings = []
     if File.directory? path
+      # Yisong: I understand. Eugene is doing it in a recursive style. 
       Dir.glob(File.join(path, "*")).sort.each { |subpath|
         strings << string_from_combined_files(subpath)
       }
     else
+
+      comment_symbol = '#' # # is the comment symbol for Python.
+      # We should make it a variable to adapt to different languages. 
+      
+      start_string = comment_symbol + path + ' --- SSID_BEGIN_FILE'
+      boundary_string = comment_symbol + ' SSID_FILE_BOUNDARY'
+      end_string = comment_symbol + path + ' --- SSID_END_FILE'
+
+      strings << start_string
       strings << File.open(path).readlines.join
+      strings << boundary_string
+      strings << end_string
     end
 
     strings.join("\n")
