@@ -16,9 +16,12 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
 class Admin::UsersController < ApplicationController
+  
+  GUEST_USER_ROLE_ID = '3'
+  
   before_action { |controller|
     
-  # obtain course (if any)
+  # obtain course (if any) to determine whether the user has any course membership
     begin
       @course = Course.find(params[:course_id])
     rescue ActiveRecord::RecordNotFound
@@ -103,7 +106,7 @@ class Admin::UsersController < ApplicationController
           raise ActiveRecord::Rollback unless membership.save
           
           # if user is guest, create a entry under guest database as well
-          if params[:user]["course_role"] == '3'
+          if params[:user]["course_role"] == GUEST_USER_ROLE_ID 
             guest = GuestUsersDetail.new { |g|
               g.user_id = @the_user.id
               g.course_id = @course.id
@@ -118,31 +121,18 @@ class Admin::UsersController < ApplicationController
 
     @user = User.find_by_id(session[:user_id]) 
 
-    if (@user.is_admin)
-      # Check for errors and render view
-      if @the_user.errors.empty? and @the_user.save
-        if @existing_user
-          redirect_to admin_users_url, notice: "User was successfully added 
-          to #{@course.code}."
-        else 
-          redirect_to admin_users_url, notice: 'User was successfully created.'
-        end
-      else
-        render action: "new"
+    # Check for errors and render view
+    if @the_user.errors.empty? and @the_user.save
+      if @existing_user
+        redirect_to admin_users_url, notice: "User was successfully added 
+        to #{@course.code}."
+      else 
+        redirect_to admin_users_url, notice: 'User was successfully created.'
       end
-    else 
-      # Check for errors and render view
-      if @the_user.errors.empty? and @the_user.save
-        if @existing_user
-          redirect_to course_users_url(@course), notice: "User was successfully added 
-          to #{@course.code}."
-        else 
-          redirect_to course_users_url(@course), notice: 'User was successfully created.'
-        end
-      else
-        render action: "new"
-      end
+    else
+      render action: "new"
     end
+    
   end
 
   # GET /admin/users/1/edit

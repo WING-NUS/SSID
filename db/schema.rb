@@ -161,7 +161,7 @@ ActiveRecord::Schema.define(version: 2021_06_13_072330) do
   create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
     t.string "name"
     t.string "full_name"
-    t.string "password_digest", default: "$2a$12$Hr0rGnOdIXz3BpwzQhjmlulYdYc3B7XkXhdzi581VYbtBxOijOYWm"
+    t.string "password_digest", default: "$2a$12$BEjX4o6KQ8HsgdP7JV6NEuVygw6U5kaKQrvxk9U3xtotcS92.0BlG"
     t.boolean "is_admin", default: false, null: false
     t.string "id_string"
     t.datetime "created_at", precision: 6, null: false
