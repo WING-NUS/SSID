@@ -47,6 +47,7 @@
               "data"  : {
                 "$color"    : "<%= SubmissionClustersHelper.color_for_similarity(submission_similarity.similarity) %>",
                 "$lineWidth"    : "<%= SubmissionClustersHelper.weight_for_similarity(submission_similarity.similarity) %>",
+                "submissionSimilarityPercentage"    : "<%= submission_similarity.similarity %>",
                 "submissionSimilarityUrl"    : "<%= assignment_submission_similarity_url(@assignment, submission_similarity) %>"
               }
             }
