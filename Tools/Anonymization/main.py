@@ -1,6 +1,6 @@
 import sys
 import re
-import hashlib
+import hashlib, uuid
 from pathlib import Path
 from typing import Iterable, Pattern, Callable, List, Any
 import re
@@ -8,6 +8,8 @@ import argparse
 import logging 
 import os
 from os.path import join, getsize, isfile
+
+__version__ = "0.1"
 
 Regex_Dict = {
     "mac": r'(?:[0-9a-fA-F]:?){12}',
@@ -40,19 +42,19 @@ class Anonymizer():
             self.anonDicts[anon] = Regex_Dict[anon]
             self.logger.info("Added " + anon + "anonymizer type")
         else:
-            self.logger.error("Processing parser: You have entered an invalid anonymizer type.") 
+            self.logger.error("Processing parser: You have entered an invalid anonymizer type. Please look at the user guide & enter the appropriate anonymizer type." ) 
 
     def anonymize(self, text: str, file: str) -> str:
         '''
         Removes single line and block comments and anonymises text with respect to user's options
         '''
-        # remove single line comments such as (//, #) if user wants to
+        # remove single line comments such as (//, #) if user wants to (only applicable for C/C++/Java/Python files)
         if self.rm_single_comments:
             self.logger.info("[" + str(file) + "] Removing all occurances of single line comments")
             text = re.sub(re.compile("//.*?\n" ), "", text) 
             text = re.sub(re.compile("#.*?\n" ), "", text)
 
-        # remove block line comments such as (/*COMMENT */, ''' COMMENT ''') if user wants to
+        # remove block line comments such as (/*COMMENT */, ''' COMMENT ''') if user wants to (only applicable for C/C++/Java/Python files)
         if self.rm_block_comments:
             self.logger.info("[" + str(file) + "] Removing all occurances of block line comments")
             text = re.sub(re.compile("/\*.*?\*/",re.DOTALL ) ,"" ,text) 
@@ -65,15 +67,16 @@ class Anonymizer():
         return text
 
     def getHash(self, word):
-        hash_object = hashlib.sha256(word.encode('utf-8'))
+        salt = uuid.uuid4().hex
+        hash_object = hashlib.sha256((salt + word).encode('utf-8'))
         hex_dig = " " + hash_object.hexdigest()[:16]
         return hex_dig
 
-    def replace_all(self, text: str, matchs: Iterable[str], file: str) -> str:
+    def replace_all(self, text: str, matches: Iterable[str], file: str) -> str:
         '''
         Replace all occurance in matchs in text with a hash
         '''
-        for match in matchs:
+        for match in matches:
             hash = self.getHash(match)
             self.logger.info("[" + str(file) + "] Replacing `" + match + "` with hash `" + hash + "`")
             text = text.replace(match, hash)
@@ -86,16 +89,18 @@ class Anonymizer():
         '''
         regex = re.compile(regex, re.IGNORECASE)
         self.logger.info("[" + str(file) + "] Finding all occurances of " + type + " anoymizer type")
-        matchs = re.findall(regex, text)
-        return self.replace_all(text, matchs, file)
+        matches = re.findall(regex, text)
+        return self.replace_all(text, matches, file)
 
 def main():
 
     # parser options
-    parser = argparse.ArgumentParser(description="Anonymizer")
+    parser = argparse.ArgumentParser(description="Anonymize the students submission by replacing sensitive text with hash")
     parser.add_argument("--add", nargs='+', default="all", help="Add anonymizer types")
     parser.add_argument("--rm_single_comments", default=False, help="Remove all the single line comments", type=bool)
     parser.add_argument("--rm_block_comments", default=False, help="Remove all the block comments", type=bool)
+    parser.add_argument("--file", default="Test", help="Add folder path of files", type=str, required=False)
+    parser.add_argument("--version", action='version', version="Anonymizer v" + __version__, help="print version number and exit")
     args = parser.parse_args()
 
     # initalize logger
@@ -120,7 +125,9 @@ def main():
 
     # obtain files from test dir
     test_dir = Path("Test").rglob("*")
-
+    if (args.file):
+        test_dir = Path(args.file).rglob("*")
+        
     for file in test_dir:
         logger.info("Opening " + str(file))
         readFile = open(file, 'r')

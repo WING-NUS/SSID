@@ -5,17 +5,18 @@ This is a text anonymization app for users to anonymize different parts of a tex
 ## Usage
 
 1. Ensure that all the files to be anonymized are placed under the `Test` folder. 
-
 2. Then, enter the below command:
 
-<pre> python main.py --add [ANONYMIZER_TYPES] --rm_single_comments [BOOLEAN_OPTION] --rm_block_comments [BOOLEAN_OPTION] </pre>
+<pre> python main.py --add [ANONYMIZER_TYPES] --rm_single_comments [BOOLEAN_OPTION] --rm_block_comments [BOOLEAN_OPTION] --file [FILEPATH] </pre>
 
 - --add ANONYMIZER_TYPES refers to the anonymizer types that you would like the application to detect and then replace such occurances. If you want to include all the anonymizer types that this application can detect, simply enter `--add all`. Else, if you want to selectively add anonymizer types, refer to the below section.
 
-- --rm_single_comments indicates whether do you want the app to remove all single line comments from the given input files (to be placed under `Test` folder as written above). If you want the app to remove all single line comments, enter `--rm_single_comments yes`. Otherwise, enter `--rm_single_comments no`.
+- --rm_single_comments indicates whether do you want the app to remove all single line comments from the given input files (to be placed under `Test` folder as written above). Please note that this feature can only be applied for C/C++/Java/Python files. If you want the app to remove all single line comments, enter `--rm_single_comments yes`. Otherwise, enter `--rm_single_comments no`. 
 
-- --rm_block_comments indicates whether do you want the app to remove all block line comments from the given input files (to be placed under `Test` folder as written above). If you want the app to remove all block line comments, enter `--rm_block_comments yes`. Otherwise, enter `--rm_block_comments no`.
+- --rm_block_comments indicates whether do you want the app to remove all block line comments from the given input files (to be placed under `Test` folder as written above). Please note that this feature can only be applied for C/C++/Java/Python files. If you want the app to remove all block line comments, enter `--rm_block_comments yes`. Otherwise, enter `--rm_block_comments no`.
 
+- --file [FILEPATH] indicates the path of folder from which to recursively search for files to do anonymization. You can ignore this if the files are under the `Test` directory as stated above in (1).
+ 
 ## Anonymizer Type Options
 - `mac`: anonymizes all occurances of any MAC address
 - `phone`: anonymizes all occurances of any Singapore registered phone number
