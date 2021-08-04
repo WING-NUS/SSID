@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_19_090223) do
+ActiveRecord::Schema.define(version: 2021_06_13_072330) do
 
   create_table "announcements", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
     t.string "title"
@@ -44,6 +44,15 @@ ActiveRecord::Schema.define(version: 2021_05_19_090223) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["code", "academic_year", "semester"], name: "index_courses_on_code_and_academic_year_and_semester", unique: true
+  end
+
+  create_table "guest_users_details", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "course_id"
+    t.integer "assignment_id"
+    t.string "hash_string"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "submission_cluster_groups", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
@@ -152,7 +161,7 @@ ActiveRecord::Schema.define(version: 2021_05_19_090223) do
   create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
     t.string "name"
     t.string "full_name"
-    t.string "password_digest", default: "$2a$12$6ONW8hZL3q2oOABLut6NOO4cDU9uULpu0If1OVVsfTgaURpk5SCAW"
+    t.string "password_digest", default: "$2a$12$BEjX4o6KQ8HsgdP7JV6NEuVygw6U5kaKQrvxk9U3xtotcS92.0BlG"
     t.boolean "is_admin", default: false, null: false
     t.string "id_string"
     t.datetime "created_at", precision: 6, null: false

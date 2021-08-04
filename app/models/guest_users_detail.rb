@@ -1,0 +1,2 @@
+class GuestUsersDetail < ApplicationRecord
+end

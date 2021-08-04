@@ -28,7 +28,7 @@
         <% if admin == @user %>
           <td><%= link_to "Settings", edit_user_url(@user), class: "last" %></td>
         <% else %>
-          <td><%= link_to "Edit", edit_admin_user_url(admin) %> <%= link_to "Delete", admin_user_url(admin), method: "delete", confirm: "Delete admin?", class: "last" %></td>
+          <td><%= link_to "Edit", edit_admin_user_url(admin) %> <%= link_to "Delete", admin_user_url(admin), method: "delete", data: {confirm: "Confirm delete admin?"}, class: "last" %></td>
         <% end %>
       </tr>
     <% } %>
@@ -47,22 +47,34 @@
       <tr>
         <th>Full Name</th>
         <th class="id_col">Login</th>
-        <th class="id_col">ID</th>
+        <th class="id_col">ID/ Hash</th>
         <th class="role_col">Role</th>
         <th class="actions_col">Actions</th>
       </tr>
     </thead>
     <tbody>
-      <% (@staff[course.id] + @teaching_assistants[course.id] + @students[course.id]).each { |user| %>
+      <% (@staff[course.id] + @teaching_assistants[course.id] + @students[course.id] + @guests[course.id]).each { |user| %>
         <tr>
-          <td><%= user.full_name || "--" %></td>
-          <td><%= user.name %></td>
+          <td> 
+            <% if course.membership_for_user(user).role == UserCourseMembership::ROLE_GUEST %> 
+              <%= "--" %> 
+            <% else %> 
+              <%= user.full_name || "--" %>
+            <% end %>
+          </td>
+          <td>
+            <% if course.membership_for_user(user).role == UserCourseMembership::ROLE_GUEST %> 
+              <%= "--" %> 
+            <% else %> 
+              <%= user.name || "--" %>
+            <% end %>
+          </td>
           <td><%= user.id_string %></td>
           <td><%= course.role_string_for_user(user) %></td>
           <% if course.membership_for_user(user).role == UserCourseMembership::ROLE_STUDENT %>
             <td><%= link_to "Edit", edit_admin_user_url(user)+"?course_id=#{course.id}" %></td>
           <% else %>
-            <td><%= link_to "Edit", edit_admin_user_url(user)+"?course_id=#{course.id}" %> <%= link_to "Remove", admin_user_url(user)+"?course_id=#{course.id}", method: "delete", confirm: "Remove user from course?", class: "last" %></td>
+            <td><%= link_to "Edit", edit_admin_user_url(user)+"?course_id=#{course.id}" %> <%= link_to "Remove", admin_user_url(user)+"?course_id=#{course.id}", method: "delete", data: {confirm: "Do you want to confirm remove user from course?"}, class: "last" %></td>
           <% end %>
         </tr>
       <% } %>
@@ -80,9 +92,9 @@
   <table>
     <thead>
       <tr>
-        <th>Full Name</th>
-        <th class="id_col">Login</th>
-        <th class="id_col">ID</th>
+        <th>Full Name/ Hash</th>
+        <th class="id_col">Login/ Hash</th>
+        <th class="id_col">ID/ Hash</th>
         <th class="actions_col">Actions</th>
       </tr>
     </thead>
@@ -92,7 +104,7 @@
           <td><%= user.full_name || "--" %></td>
           <td><%= user.name %></td>
           <td><%= user.id_string %></td>
-          <td><%= link_to "Edit", edit_admin_user_url(user) %> <%= link_to "Delete", admin_user_url(user), method: "delete", confirm: "Delete user?", class: "last" %></td>
+          <td><%= link_to "Edit", edit_admin_user_url(user) %> <%= link_to "Delete", admin_user_url(user), method: "delete", data: {confirm: "Do you want to confirm remove the user?"}, class: "last" %></td>
         </tr>
       <% } %>
     </tbody>

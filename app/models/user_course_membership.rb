@@ -21,10 +21,12 @@ class UserCourseMembership < ActiveRecord::Base
   ROLE_TEACHING_STAFF = 0
   ROLE_TEACHING_ASSISTANT = 1
   ROLE_STUDENT = 2
+  ROLE_GUEST = 3
   ROLE_STRINGS = [
     "Teaching Staff",
     "Teaching Assistant",
-    "Student"
+    "Student",
+    "Guest"
   ]
 
   belongs_to :user
