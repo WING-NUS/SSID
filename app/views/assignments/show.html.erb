@@ -19,31 +19,67 @@ NGram Size: <%= @assignment.ngram_size%>
 
 <%= form_for([@course, @assignment]) do |f| %>
   <div>
-    <%= f.label :file, "Student submissions (zip) [?]", title: "The zip file should contain one folder for each student's code files; folders are named according to student ID; Name your folder as \"skeleton\" for the codes you wish to exclude from the system" %>
-    <%= f.file_field :file %>
+  <%= f.label :file_structure, "File Structure \u24D8", title: "This refers to the way the files are arranged in your zip folder. \n\nTo recursively search for all files in the provided directories and compare every file with each other file, select \"By Files\". \n\nInstead, if you don't want to compare files in the same leaf directory (for example, if the zip file is split into per-student directories and you don't care about self plagiarism, select \"By Directory\"" %>
+  <%= f.select :file_structure, Assignment.options_for_file_structure %>
+  </div>
+  <div>
+    <%= f.label :file, "Student submissions (zip) \u24D8", title: "The zip file should contain files according to the way you selected the \"File Structure \" option above. \n\nIf you selected \"By Files\", then, all the files in the zip folder will be compared with each other. Name your file as \"skeleton \" for the codes you wish to exclude from the system  \n\nIf you selected the other option (\"By Directory\"), ensure that the zip file contains one folder for each student's code files. Ensure that the folders are named according to student ID and name your folder as \"skeleton\" for the codes you wish to exclude from the system" %>
+    <%= f.file_field :file, direct_upload: true %>
   </div>
 
+  
   <div>
-  <%= f.label :mapbox, "Upload map file?" %>
+  <%= f.label :mapbox, "Add more options? \u24D8", title: "Check the box to show additional options"%>
   <%= f.check_box :mapbox,{}, "Yes", "No"%>
   </div>
   <div id="map_file_details" style="display:none;">
-  <%= f.label :mapfile, "Mapping file (csv) [?]", title: "The zip file should contain one folder for each student's code files; folders are named according to student ID; Name your folder as \"skeleton\" for the codes you wish to exclude from the system" %>
-  <%= f.file_field :mapfile %>
+  <%= f.label :mapfile, "Mapping file (csv) \u24D8", title: "If you have a map file that maps the filenames to other attributes such as student's names, github handle etc, upload the file here. Ensure that the file is a csv file and follows the conventions according to the user guide." %>
+  <%= f.file_field :mapfile, accept: '.csv' %>
+  </div>
+  <div id="file_to_ignore_details" style="display:none;">
+  <%= f.label :filesIgnore, "Files to be ignored \u24D8" , title: "If you want to ignore certain files from the uploaded zip file, add those filenames under here. \n\nIf you want to ignore filenames that exactly match a certain filename, enter the filename as it is. For instance, entering \"question1\", will mean that all the filenames that are named as \"question1\" (irrespective of their file extensions) will all be ignored. \n\nIf you want to ignore filenames that partially contain a substring, add \"/ \" in front of the filename. For instance, if you enter, \"/question1\", filenames such as \"alice_question1.py\", \"bob_question1Test.c\", \"question1_charlie.java\" will all get ignored. \n\nIf you need to add muliple regex, leave a space in between them. For instance, if you enter \"question1 /question2 \", filesnames that either exactly match \"question1 \" or contain the substring \"question2 \" will all get ignored"  %>
+  <%= f.text_field :filesIgnore %>
+  </div>
+  <div id="file_to_process_details" style="display:none;">
+  <%= f.label :filesProcess, "Files to be only processed \u24D8" , title: "If you want to process and compare only certain files from the uploaded zip file, add those filenames under here. \n\nIf you want to process filenames that exactly match a certain filename, enter the filename as it is. For instance, entering \"question1\", will mean that all the filenames that are named as \"question1\" (irrespective of their file extensions) will all be processed and the rest will be ignored. \n\nIf you want to only process filenames that partially contain a substring, add \"/ \" in front of the filename. For instance, if you enter, \"/question1\", filenames such as \"alice_question1.py\", \"bob_question1Test.c\", \"question1_charlie.java\" will all get processed and the rest that does not contain the substring will all get ignored. \n\nIf you need to add muliple regex, leave a space in between them. For instance, if you enter \"question1 /question2 \", filesnames that either exactly match \"question1 \" or contain the substring \"question2 \" will all get processed."  %>
+  <%= f.text_field :filesProcess %>
+  </div>
+  <div id="ref_dir_details" style="display:none;">
+    <%= f.label :refDir, "Reference Directory (zip) \u24D8", title: "If you have additional files that you want to compare, but do not want to check for plagiarism (for example, if you want to also compare submissions from previous semesters), zip those files and upload it here." %>
+    <%= f.file_field :refDir %>
+  </div>
+  <div id="email_details" style="display:none;">
+  <%= f.label :email, "Send email upon completion \u24D8" , title: "If you want to receive an email to notify you after the assignment has been processed, enter the email here. Ensure that you enter a valid email." %>
+  <%= f.text_field :email %>
   </div>
   <div>
-    <%= f.submit class: "submit" %>
+    <%= f.submit 'Create Assignment', name: 'create' %>
+    <%= f.submit 'Preview Uploaded Code Files', name: 'preview' %>
   </div>
 <% end %>
 
 <script type="text/javascript">
   var checkbox = document.getElementById('assignment_mapbox');
-  var details_div = document.getElementById('map_file_details');
+  var map_details_div = document.getElementById('map_file_details');
+  var files_ignore_details_div = document.getElementById('file_to_ignore_details');
+  var files_process_details_div = document.getElementById('file_to_process_details');
+  var ref_dir_details_div = document.getElementById('ref_dir_details');
+  var email_details_div = document.getElementById('email_details');
   checkbox.onchange = function() {
      if(this.checked) {
-       details_div.style['display'] = 'block';
+       map_details_div.style['display'] = 'block';
+       files_ignore_details_div.style['display'] = 'block';
+       files_process_details_div.style['display'] = 'block';
+       ref_dir_details_div.style['display'] = 'block';
+       email_details.style['display'] = 'block';
      } else {
-       details_div.style['display'] = 'none';
+       map_details_div.style['display'] = 'none';
+       files_ignore_details_div.style['display'] = 'none';
+       files_process_details_div.style['display'] = 'none';
+       ref_dir_details_div.style['display'] = 'none';
+       email_details.style['display'] = 'none';
      }
   };
 </script>
+
+

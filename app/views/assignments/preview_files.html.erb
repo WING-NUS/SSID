@@ -1,41 +1,77 @@
-<%= form_for([@course, @assignment]) do |f| %>
-  <% if @assignment.errors.any? %>
-    <div id="error_explanation">
-      <h3><%= pluralize(@assignment.errors.count, "error") %> prohibited this assignment from being saved:</h3>
-      <ul>
-      <% @assignment.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-  <p> Hover over ⓘ for more details about any terminology.</p>
-  <div>
-    <%= f.label :title %>
-    <%= f.text_field :title %>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>jQuery UI Dialog - Modal message</title>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <style>
+   h1 { font-size: 1.2em; margin: .6em 0; }
+   div#users-contain { width: 600px; margin: 20px 0; }
+   div#users-contain table { margin: 1em 0; border-collapse: collapse; width: 100%; }
+   div#users-contain table td, div#users-contain table th { border: 1px solid #eee; padding: .6em 10px; text-align: left; }
+   .ui-dialog .ui-state-error { padding: .3em; }
+   .validateTips { border: 1px solid transparent; padding: 0.3em; }
+  </style>
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script>
+  $( function() {
+    $( "#dialog-message" ).dialog({
+      modal: true,
+      height: 700,
+      width: 700,
+      buttons: {
+        'Reupload New Code Zip File': function() {
+          $( this ).dialog( "close" );
+        },
+        'Create Assignment': function() { 
+          $("#form").submit(); 
+        }
+      }
+    });
+    
+    var cal = document.getElementById('myHeader').innerText;
+    console.log(cal)
+
+    $(".ui-dialog-buttonpane button:contains('Create Assignment')")
+       .button((cal == "SSID cannot process the assignment due to empty/insufficient files to compare") ? "disable" : "enable");
+
+  
+  } );
+  </script>
+</head>
+<body>
+
+<h2>Assignment title: <%= @assignment.title %></h2>
+
+<pre>
+Language: <%= @assignment.language%>
+Min Match Length: <%= @assignment.min_match_length%>
+NGram Size: <%= @assignment.ngram_size%>
+</pre>
+
+<% if @assignment.errors.any? %>
+  <div id="error_explanation">
+    <h3><%= pluralize(@assignment.errors.count, "error") %> prohibited this assignment from being saved:</h3>
+    <ul>
+    <% @assignment.errors.full_messages.each do |msg| %>
+      <li><%= msg %></li>
+    <% end %>
+    </ul>
   </div>
-  <div>
-    <%= f.label :language %>
-    <%= f.select :language, Assignment.options_for_languages %>
-  </div>
-  <div>
-    <%= f.label :min_match_length, "Minimum Match Length \u24D8" , title: "The least number of contiguous identical statements required to flag a match." %>
-    <%= f.text_field :min_match_length %>
-  </div>
-  <div>
-    <%= f.label :ngram_size, "Size of n-gram \u24D8", title: "An n-gram is a contiguous subsequence of n tokens of a given sequence." %>
-    <%= f.text_field :ngram_size %>
-  </div>
+<% end %>
+
+<%= form_for([@course, @assignment], :id => 'form') do |f| %>
   <div>
   <%= f.label :file_structure, "File Structure \u24D8", title: "This refers to the way the files are arranged in your zip folder. \n\nTo recursively search for all files in the provided directories and compare every file with each other file, select \"By Files\". \n\nInstead, if you don't want to compare files in the same leaf directory (for example, if the zip file is split into per-student directories and you don't care about self plagiarism, select \"By Directory\"" %>
   <%= f.select :file_structure, Assignment.options_for_file_structure %>
   </div>
   <div>
-    <%= f.label :file, "Student submissions (zip) \u24D8", title: "The zip file should contain files according to the way you selected the \"File Structure \" option above. \n\nIf you selected \"By Files\", then, all the files in the zip folder will be compared with each other. Name your file as \"skeleton \" for the codes you wish to exclude from the system  \n\nIf you selected the other option (\"By Directory\"), ensure that the zip file contains one folder for each student's code files. Ensure that the folders are named according to student ID and name your folder as \"skeleton\" for the codes you wish to exclude from the system" %>
+    <%= f.label :file, "Student submissions (zip) [?]", title: "The zip file should contain one folder for each student's code files; folders are named according to student ID; Name your folder as \"skeleton\" for the codes you wish to exclude from the system" %>
     <%= f.file_field :file %>
   </div>
 
-  
   <div>
   <%= f.label :mapbox, "Add more options? \u24D8", title: "Check the box to include additional optional options"%>
   <%= f.check_box :mapbox,{}, "Yes", "No"%>
@@ -46,11 +82,11 @@
   </div>
   <div id="file_to_ignore_details" style="display:none;">
   <%= f.label :filesIgnore, "Files to be ignored \u24D8" , title: "If you want to ignore certain files from the code zip file that you uploaded, add those filenmes under here. \n\nIf you want to ignore filenames that exactly match a certain filename, enter the filename as it is. For instance, entering \"question1\", will mean that all the filenames that are named as \"question1\" (irrespective of their file extensions) will all be ignored. \n\nIf you want to ignore filenames that partially contain a substring, add \"/ \" in front of the filename. For instance, if you enter, \"/question1\", filenames such as \"alice_question1.py\", \"bob_question1Test.c\", \"question1_charlie.java\" will all get ignored. \n\nIf you need to add muliple regex, leave a space in between them. For instance, if you enter \"question1 /question2 \", filesnames that either exactly match \"question1 \" or contain the substring \"question2 \" will all get ignored"  %>
-  <%= f.text_field :filesIgnore %>
+  <%= f.text_field :filesIgnore, {:value => @assignment.filesIgnore} %>
   </div>
   <div id="file_to_process_details" style="display:none;">
   <%= f.label :filesProcess, "Files to be only processed \u24D8" , title: "If you want to process and compare only certain files from the code zip file that you uploaded, add those filenmes under here. \n\nIf you want to process filenames that exactly match a certain filename, enter the filename as it is. For instance, entering \"question1\", will mean that all the filenames that are named as \"question1\" (irrespective of their file extensions) will all be processed and the rest will be ignored. \n\nIf you want to only process filenames that partially contain a substring, add \"/ \" in front of the filename. For instance, if you enter, \"/question1\", filenames such as \"alice_question1.py\", \"bob_question1Test.c\", \"question1_charlie.java\" will all get processed and the rest that does not contain the substring will all get ignored. \n\nIf you need to add muliple regex, leave a space in between them. For instance, if you enter \"question1 /question2 \", filesnames that either exactly match \"question1 \" or contain the substring \"question2 \" will all get processed."  %>
-  <%= f.text_field :filesProcess %>
+  <%= f.text_field :filesProcess, {:value => @assignment.filesProcess} %>
   </div>
   <div id="ref_dir_details" style="display:none;">
     <%= f.label :refDir, "Reference Directory (zip) \u24D8", title: "If you have additional files that you want to compare, but do not want to check for plagiarism (for example, if you want to also compare submissions from previous semesters), zip those files and upload it here." %>
@@ -58,7 +94,7 @@
   </div>
   <div id="email_details" style="display:none;">
   <%= f.label :email, "Send email upon completion \u24D8" , title: "If you want to receive an email to notify you after the assignment has been processed, enter the email here. Ensure that you enter a valid email." %>
-  <%= f.text_field :email %>
+  <%= f.text_field :email, {:value => @assignment.email} %>
   </div>
   <div>
     <%= f.submit 'Create Assignment', name: 'create' %>
@@ -89,4 +125,43 @@
      }
   };
 </script>
+
+
+
+
+<div id="dialog-message" title="Uploaded File Preview">
+    <div id="users-contain" class="ui-widget">
+    <h1 id="myHeader"> <%= @statusStatement %> </h1>
+    <h1 id="myHeader2"> <%= @previewStatement %> </h1>
+    <p>
+    Under "File Structure", if you have clicked "By Directory", please ensure that the zip file contains 1 root folder for each students' code. Otherwise, if you want to recursively search and compare the files with each other, please click "By Files" under "File Drectory"
+    </p>
+    <table id="users" class="ui-widget ui-widget-content">
+    <thead>
+        <tr class="ui-widget-header ">
+        <th> <%= @column1Title %> </th>
+        <th> <%= @column2Title %> </th>
+        </tr>
+    </thead>
+    <tbody>
+        <% @dirHash.each { |key, value| %>
+        <tr>
+        <td><%= key %></td>
+        <td>
+            <ul>
+                <% value.each do |val| %>
+                    <li><%= val %></li>
+                <% end %>
+            </ul>
+        </td>
+        </tr>
+    <% } %>
+    </tbody>
+    </table>
+    </div>
+</div>
+
+
+</body>
+</html>
 

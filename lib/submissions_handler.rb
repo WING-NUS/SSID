@@ -58,8 +58,25 @@ module SubmissionsHandler
   MAX_DATA_CHAR_SIZE = 64000
   DATA_TRUNCATE_MSG = "... (Data  got truncated)"
 
-  def self.process_upload(file, isMapEnabled, mapfile, assignment)
-    upload_dir = File.join(".", "upload", assignment.id.to_s)
+  def self.extract_upload(
+    file, isMapFileUploaded, mapFile, assignment, isCodeFileUpload, type
+    ) 
+    
+    filesToBeIgnored = assignment.filesIgnore
+    filesToBeOnlyProcessed = assignment.filesProcess
+    hasFilesToIgnore = (filesToBeIgnored == "")? false : true
+    hasFilesToAdd = (filesToBeOnlyProcessed == "")? false : true
+    
+    filesToBeIgnoredArr = []
+    filesToBeOnlyProcessedArr = []
+
+    # append the filenames accordingly to the sets
+    if (isCodeFileUpload)
+      filesToBeIgnoredArr = filesToBeIgnored.split
+      filesToBeOnlyProcessedArr = filesToBeOnlyProcessed.split
+    end
+  
+    upload_dir = File.join(".", "upload", assignment.id.to_s, type)
 
     # Clear upload dir if exists
     FileUtils.remove_dir upload_dir if File.exist? upload_dir
@@ -80,12 +97,14 @@ module SubmissionsHandler
 
     # Add filters for file types
     accepted_formats = [".py",".java", ".cpp", ".c", ".h", ".scala", ".m", ".ml", ".mli", ".r"]
+    non_accepted_formats = [".pdf",".ppt", ".pptx", ".doc", ".docx", ".xlsx", ".xlsm", ".jpeg", ".png", ".gif", ".raw"]
 
     # Extract submissions into dir
     Zip::File.open(upload_file) { |zip_file|
       zip_file.each { |f|
-      # isdirectory or filter by accepted file extension
-      if File.directory?(f.name) or accepted_formats.include? File.extname(f.name)
+      # filter by accepted file extension or if it is a directory
+      if ((accepted_formats.include? File.extname(f.name)) || 
+        (!f.file? && !(non_accepted_formats.include? File.extname(f.name))))
         upload_log << %Q{[#{Time.now.in_time_zone}] Extracting #{f.name}}
         # Obtain File Path
         f_path = File.join(upload_dir, f.name)
@@ -94,56 +113,67 @@ module SubmissionsHandler
         # Extract files into the file path
         zip_file.extract(f, f_path) unless File.exist?(f_path)
 
-        # Reject files that passed the extension test but might be a binary file in disguise
-        # if f.file? filepath
-        #   upload_log << %Q{[#{Time.now.in_time_zone}] Detected binary file, deleting #{f.name}}
-        #   FileUtils.rm filepath
-        # end
+        # Reject files that passed the extension test but do not meet the regex
+        if f.file? 
+          if (hasFilesToIgnore)
+            filesToBeIgnoredArr.each do |ignorefilename|
+              if (((ignorefilename.start_with? '/') && (File.basename(f_path,  ".*").include?(ignorefilename[1..]))) || (File.basename(f_path,  ".*") == ignorefilename))
+                upload_log << %Q{[#{Time.now.in_time_zone}] Detected file to be ignored, deleting #{f.name}}
+                FileUtils.rm f_path if File.exist? f_path
+              end
+            end
+          end
+
+          fileToBeRemoved = false
+          if (hasFilesToAdd)
+            filesToBeOnlyProcessedArr.each do |addfilename|
+              if (((addfilename.start_with? '/') && (File.basename(f_path,  ".*").include?(addfilename[1..]))) || (File.basename(f_path,  ".*") == addfilename))  
+              fileToBeRemoved = false
+              break
+              else  
+                fileToBeRemoved = true
+              end
+            end
+          end
+
+          if (fileToBeRemoved)
+            upload_log << %Q{[#{Time.now.in_time_zone}] Detected file to be ignored, deleting #{f.name}}
+            FileUtils.rm f_path if File.exist? f_path
+          end
+
+        end
       else
         upload_log << %Q{[#{Time.now.in_time_zone}] Invalid file type, Ignoring #{f.name} with extension #{File.extname(f.name)}}
       end
       }
     }
-    
+
     upload_log << %Q{[#{Time.now.in_time_zone}] Checking for empty directories}
     bot = ReorgBot.new(upload_dir)
     upload_log << bot.remove_empty_dirs
 
     # Move map file (if uploaded by user) into dir	
-    if (isMapEnabled)		
+    if (isMapFileUploaded)		
       upload_map_file = File.join(upload_dir, "mapfile.csv")	
       FileUtils.copy_entry(mapfile.path, upload_map_file)	
     end	
 	  
-
     # Save log
     upload_log << %Q{[#{Time.now.in_time_zone}] Unzip complete}
-    assignment.upload_log = upload_log.join("\n")
-    assignment.save
+    #assignment.upload_log = upload_log.join("\n")
+    #assignment.save
 
     # Remove zip file
     FileUtils.rm upload_file, force: true
 
     # Return path to dir
     upload_dir
+
   end
+  
 
-  def self.process_submissions(path, assignment, isMapEnabled)
-    # Create directory for code comparison, delete first if necessary
-    compare_dir = File.join(path, "_compare")
-    FileUtils.rm(compare_dir, force: true) if File.exist? compare_dir
-    FileUtils.mkdir_p(File.join(path, "_compare"))
-    
-    # For each student submission, combine the code files into one
-    Dir.glob(File.join(path, "*")).each { |subpath|
-      next if subpath == compare_dir || (File.file?(subpath) && subpath.split('.').last.to_s.downcase == 'csv')
-
-      # Combine code files and write into compare dir as new file with same name, remove ext if any
-      File.open(File.join(compare_dir, File.basename(subpath, File.extname(subpath))), 'w') { |f|
-        f.puts string_from_combined_files(subpath)
-      }
-    }
-
+  def self.process_submissions(compare_dir, assignment, isMapEnabled)
+  
     # Read database configuration
 	  config   = Rails.configuration.database_configuration
 	  host     = config[Rails.env]["host"]
@@ -156,13 +186,22 @@ module SubmissionsHandler
               %Q{#{assignment.id} #{compare_dir} #{assignment.language.downcase} } +
               %Q{#{assignment.min_match_length} #{assignment.ngram_size} } +
               %Q{#{host} #{database} #{username} #{password} #{isMapEnabled}}
+
+
     # Fork to run java program in background
     ruby_pid = Process.fork do
       java_log = ""
       java_status = nil
       Open3.popen2e({ "LD_LIBRARY_PATH" => Rails.application.config.ld_library_path }, command) { |i,o,t|
-        java_log << o.gets until o.eof?
+      begin
+        Timeout.timeout(1800) do # timeout set accordingly
+          java_log << o.gets until o.eof?
+          java_status = t.value
+        end
+      rescue Timeout::Error
+        java_log = "Assignment processing failed due to timeout failure"
         java_status = t.value
+      end
       }
 
       # Update log
