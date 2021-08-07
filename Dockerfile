@@ -1,7 +1,6 @@
 # Need this specific version
 FROM ruby:2.6.6
 
-
 # Need this specific version
 RUN gem install bundler:2.2.17
 
@@ -10,13 +9,14 @@ RUN chmod 1777 /tmp
 RUN apt-get update
 RUN apt-get install -y nodejs
 
+# Copy just enough to run the bundle installation
 COPY Gemfile .
 COPY Gemfile.lock .
 
-# Install all gems
+# Install all gems -- this takes the longest amount of time
 RUN bundle install
 
-# Add docker-compose-wait tool -------------------
+# Add docker-compose-wait tool to wait for DB (during docker-compose) before starting
 ENV WAIT_VERSION 2.7.2
 ADD https://github.com/ufoscout/docker-compose-wait/releases/download/$WAIT_VERSION/wait /wait
 RUN chmod +x /wait
