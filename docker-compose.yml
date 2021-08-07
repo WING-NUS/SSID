@@ -1,0 +1,39 @@
+# Use root/example as user/password credentials
+version: '3.1'
+
+services:
+
+  # Actual service
+  ssid:
+    depends_on:
+      - db
+    build: .
+    # Just to wait for the database to be setup
+    environment:
+      - WAIT_HOSTS=db:3306
+      - WAIT_HOSTS_TIMEOUT=300
+      - WAIT_SLEEP_INTERVAL=5
+      - WAIT_HOST_CONNECT_TIMEOUT=5
+    # Run the wait helper script and then execute the RUN command for the app container
+    # -b 0.0.0.0 necessary for the server to expose port 3000 to the outside
+    command: sh -c "/wait && rake db:create db:schema:dump db:migrate RAILS_ENV=development && rake db:seed && RAILS_ENV=development rails server -b 0.0.0.0"
+    ports:
+      - 3000:3000
+
+  # Standard mysql DB 
+  db:
+    image: mysql:8
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - 3306:3306
+
+  # Mysql DB admin page accessible at localhost:8080
+  dbadmin:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+

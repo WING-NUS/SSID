@@ -9,9 +9,9 @@ development:
   reconnect: false
   database: ssid_development
   pool: 5
-  host: 127.0.0.1
-  username: ssid
-  password: ssid123
+  host: db
+  username: root
+  password: root
   # socket: /var/lib/mysql/mysql.sock
 
 # Warning: The database defined as "test" will be erased and
@@ -23,18 +23,7 @@ test:
   reconnect: false
   database: ssid_test
   pool: 5
-  host: 127.0.0.1
-  username: ssid
-  password: ssid123
-  socket: /var/lib/mysql/mysql.sock
-
-production:
-  adapter: mysql2
-  encoding: utf8
-  reconnect: false
-  database: ssid_production
-  pool: 5
-  host: 127.0.0.1
-  username: ssid
-  password: ssid123
+  host: db
+  username: root
+  password: root
   socket: /var/lib/mysql/mysql.sock

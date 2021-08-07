@@ -1,0 +1,5 @@
+- `docker-compose build`
+- `docker-compose up`
+- Go to 127.0.0.1:8080 (mysql admin)
+- Change users admin password to `$2a$10$qaE15ap7xgQZ.JEDOZaKv.D/fBmc8mPwSWXT4343kE4WNVbaFuxI6` (bcrypt hash of `admin`)
+- Now you can login to admin with username and password both as `admin`
