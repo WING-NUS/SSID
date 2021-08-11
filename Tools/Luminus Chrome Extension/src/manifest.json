@@ -1,0 +1,22 @@
+{
+    "manifest_version": 1,
+    "name": "SSID Luminus Support",
+    "description": "Send files directly to SSID for plagiarism check and detection",
+    "version": "1.0",
+    "icons": {
+      "96": "icon96.png"
+    },
+  
+    "update_url": "https://raw.githubusercontent.com/hidingmode/luminus-filetree/master/chrome-update-manifest.xml",
+    "permissions": [
+      "activeTab",
+      "webRequest",
+      "webRequestBlocking",
+      "storage",
+      "*://luminus.nus.edu.sg/modules/*",
+      "*://luminus.azure-api.net/*"
+    ],
+    "background": {
+      "scripts": ["browser-polyfill.min.js", "background.js"]
+    }
+  }
