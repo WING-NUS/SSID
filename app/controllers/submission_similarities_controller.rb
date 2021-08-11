@@ -16,7 +16,6 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
 class SubmissionSimilaritiesController < ApplicationController
-  
   before_action { |controller|
     @course = nil
     if params[:assignment_id]
@@ -30,75 +29,15 @@ class SubmissionSimilaritiesController < ApplicationController
       controller.send :authenticate_actions_for_role, UserCourseMembership::ROLE_STUDENT,
                                                       course: @course,
                                                       only: [ ]
-      controller.send :authenticate_actions_for_role, UserCourseMembership::ROLE_GUEST,
-                                                      course: @course,
-                                                      only: [ :index, :show ]
     end
   }
 
   # GET /assignments/1/submission_similarities
   def index
-    # obtain parameters (if any)
-    @hashed_url = session[:hashed_url]
-    @displayDialog = session[:displayDialog]
-    session[:displayDialog] = false
- 
+    @var = 'Test11'
     @submission_similarities = SubmissionSimilarity.where(
       assignment_id: @assignment.id 
     ).order('similarity desc').paginate(page: params[:page], per_page: 20)
-  end
-
-  def create_guest_user
-    @user = User.find_by_id(session[:user_id]) 
-    @guest_user = GuestUsersDetail.find_by_user_id(@user.id)
-    # do not allow to create a sharable link if user is a guest user
-    if (@guest_user)
-      redirect_to assignment_submission_similarities_url(params[:id]), notice: 'You cannot create a sharable link as you are using SSID as a guest user. To create a sharable link and/or use other features, log in to SSID.'
-    else
-      # create a secure hash
-      hash_string = SecureRandom.urlsafe_base64(9).gsub(/-|_/,('a'..'z').to_a[rand(26)])
-      
-      # hashed public url
-      @hashed_url = request.base_url + "/guest_user/" + hash_string
-      
-      # create the user in database
-      @guest_user = User.new { |u|
-        u.name = hash_string
-        u.full_name = hash_string
-        u.id_string = hash_string
-        u.password_digest = BCrypt::Password.create("password")
-      }
-     
-      # create a entry under other tables in database
-      @assignment = Assignment.find(params[:id])
-      @course = @assignment.course
-      @guest_user.transaction do
-        if @guest_user.save and @course
-          # create entry under membership
-          membership = UserCourseMembership.new { |m|
-            m.role = 3
-            m.user = @guest_user
-            m.course = @course
-          }
-          raise ActiveRecord::Rollback unless membership.save
-
-          # create entry under guest user
-          guest = GuestUsersDetail.new { |m|
-            m.user_id = @guest_user.id
-            m.course_id = @course.id
-            m.hash_string = hash_string
-            m.assignment_id = @assignment.id
-          }
-          raise ActiveRecord::Rollback unless guest.save
-
-        end
-      end
-      
-      # save the parameters and redirect
-      session[:hashed_url] = @hashed_url
-      session[:displayDialog] = true
-      redirect_to assignment_submission_similarities_url(params[:id])
-    end
   end
 
   # GET /assignments/1/submission_similarities/1
@@ -139,6 +78,28 @@ class SubmissionSimilaritiesController < ApplicationController
         sl.submission = @submission_similarity.submission2
         sl.marker = @user
         sl.log_type = SubmissionLog::TYPE_PAIR_CONFIRM_AS_PLAGIARISM
+      }
+    end
+    redirect_to assignment_submission_similarity_url(@assignment, @submission_similarity)
+  end
+  
+  def confirm_as_not_plagiarism
+    @submission_similarity = SubmissionSimilarity.find(params["submission_similarity_id"])
+    @submission_similarity.status = SubmissionSimilarity::STATUS_CONFIRMED_AS_NOT_PLAGIARISM
+    if @submission_similarity.save
+      mark_student_as_not_guilty(@submission_similarity.submission1, @submission_similarity)
+      mark_student_as_not_guilty(@submission_similarity.submission2, @submission_similarity)
+      SubmissionLog.create { |sl|
+        sl.submission_similarity = @submission_similarity
+        sl.submission = @submission_similarity.submission1
+        sl.marker = @user
+        sl.log_type = SubmissionLog::TYPE_PAIR_CONFIRM_AS_NOT_PLAGIARISM
+      }
+      SubmissionLog.create { |sl|
+        sl.submission_similarity = @submission_similarity
+        sl.submission = @submission_similarity.submission2
+        sl.marker = @user
+        sl.log_type = SubmissionLog::TYPE_PAIR_CONFIRM_AS_NOT_PLAGIARISM
       }
     end
     redirect_to assignment_submission_similarity_url(@assignment, @submission_similarity)
@@ -204,4 +165,8 @@ class SubmissionSimilaritiesController < ApplicationController
       }
     end
   end
+
+  
+
+
 end
