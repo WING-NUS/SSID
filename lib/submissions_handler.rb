@@ -229,6 +229,23 @@ module SubmissionsHandler
 
       comment_symbol = '#' # # is the comment symbol for Python.
       # We should make it a variable to adapt to different languages. 
+
+      # Creating a ruby hash that stores the mapping between file prefix and the comment symbol
+      suffix_dictionary = {
+        'py' => '#',
+        'c' => '//',
+        'cpp' => '//',
+        'java' => '//',
+        'm' => '%',
+        'mat' => '%'
+      }
+
+      file_suffix = path.split('.')[-1]
+      if suffix_dictionary.key?(file_suffix)
+        comment_symbol = suffix_dictionary[file_suffix]
+      else
+        comment_symbol = '#' # We still use "#" as the default 
+        puts('Unknown file format!')
       
       start_string = comment_symbol + path + ' --- SSID_BEGIN_FILE'
       boundary_string = comment_symbol + ' SSID_FILE_BOUNDARY'
