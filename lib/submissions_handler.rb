@@ -1,16 +1,13 @@
 =begin
 This file is part of SSID.
-
 SSID is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
-
 SSID is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU Lesser General Public License for more details.
-
 You should have received a copy of the GNU Lesser General Public License
 along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
@@ -140,11 +137,11 @@ module SubmissionsHandler
     }
 
     # Read database configuration
-	  config   = Rails.configuration.database_configuration
-	  host     = config[Rails.env]["host"]
-	  database = config[Rails.env]["database"]
-	  username = config[Rails.env]["username"]
-	  password = config[Rails.env]["password"]
+    config   = Rails.configuration.database_configuration
+    host     = config[Rails.env]["host"]
+    database = config[Rails.env]["database"]
+    username = config[Rails.env]["username"]
+    password = config[Rails.env]["password"]
 
     # Run the java program and get its pid
     command = %Q{java -Xmx1024M -jar "#{Rails.application.config.plagiarism_detection_path}" } + 
@@ -196,11 +193,11 @@ module SubmissionsHandler
     assignment = cluster_group.assignment
 
     # Read database configuration
-	  config   = Rails.configuration.database_configuration
-	  host     = config[Rails.env]["host"]
-	  database = config[Rails.env]["database"]
-	  username = config[Rails.env]["username"]
-	  password = config[Rails.env]["password"]
+    config   = Rails.configuration.database_configuration
+    host     = config[Rails.env]["host"]
+    database = config[Rails.env]["database"]
+    username = config[Rails.env]["username"]
+    password = config[Rails.env]["password"]
 
     # Run the java program and get its pid
     command = %Q{java -Xmx1024M -jar "#{Rails.application.config.submissions_clustering_path}" } + 
@@ -231,14 +228,7 @@ module SubmissionsHandler
       # We should make it a variable to adapt to different languages. 
 
       # Creating a ruby hash that stores the mapping between file prefix and the comment symbol
-      filename_dictionary = {
-        'py' => '#',
-        'c' => '//',
-        'cpp' => '//',
-        'java' => '//',
-        'm' => '%',
-        'mat' => '%'
-      }
+      filename_dictionary = {"py" => "#", "c" => "//", "cpp" => "//", "java" => "//", "m" => "%", "mat" => "%"}
 
       filename_extension = path.split('.')[-1]
       if filename_dictionary.key?(filename_extension)
