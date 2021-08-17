@@ -237,6 +237,7 @@ module SubmissionsHandler
       else
         comment_symbol = '#' # We still use "#" as the default 
         puts('Unknown file format!')
+      end
       
       start_string = comment_symbol + path + ' --- SSID_BEGIN_FILE'
       boundary_string = comment_symbol + ' SSID_FILE_BOUNDARY'
