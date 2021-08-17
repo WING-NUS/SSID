@@ -231,7 +231,7 @@ module SubmissionsHandler
       # We should make it a variable to adapt to different languages. 
 
       # Creating a ruby hash that stores the mapping between file prefix and the comment symbol
-      suffix_dictionary = {
+      filename_dictionary = {
         'py' => '#',
         'c' => '//',
         'cpp' => '//',
@@ -240,9 +240,10 @@ module SubmissionsHandler
         'mat' => '%'
       }
 
-      file_suffix = path.split('.')[-1]
-      if suffix_dictionary.key?(file_suffix)
-        comment_symbol = suffix_dictionary[file_suffix]
+      filename_extension = path.split('.')[-1]
+      if filename_dictionary.key?(filename_extension)
+        comment_symbol = filename_dictionary[filename_extension]
+        puts('known file format')
       else
         comment_symbol = '#' # We still use "#" as the default 
         puts('Unknown file format!')
