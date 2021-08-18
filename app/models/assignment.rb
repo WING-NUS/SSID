@@ -52,6 +52,7 @@ class Assignment < ActiveRecord::Base
     ocaml: "ocaml"
   }
 
+  # enum to store whether plagiarism detection needs to recursively look at files or folders
   FILE_STRUCTURES = {
     all: "By Files",
     dir: "By Directory"
