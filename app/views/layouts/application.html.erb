@@ -30,7 +30,7 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
     <% if @user.is_admin %>
       <li<%= highlight_if_current admin_users_url %>><%= link_to "Users", admin_users_url %></li>
     <% end %>
-    <% if @user.is_admin || @membership.role != 3 %>
+    <% if @user.is_admin || (@membership.present? && @membership.role != 3) %>
     <li<%= highlight_if_current edit_user_url(@user) %>><%= link_to "Settings", edit_user_url(@user) %></li>
     <% end %>
     <li<%= highlight_if_current guide_url %>><%= link_to "User Guide", guide_url %></li>

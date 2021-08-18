@@ -20,7 +20,7 @@
         <td><%= user.full_name || "--" %></td>
         <td><%= user.id_string %></td>
         <td><%= @course.role_string_for_user(user) %></td>
-        <% if @course.role_string_for_user(user) != "Student" %>
+        <% if ((@course.role_string_for_user(user) != "Student") && (@course.role_string_for_user(user) != "Teaching Staff")) %>
         <td><%= link_to "Remove", admin_user_url(user)+"?course_id=#{@course.id}", method: "delete", data: {confirm: "Do you want to confirm remove user from course?"}, class: "last" %></td>
         <% end %>
       </tr>
