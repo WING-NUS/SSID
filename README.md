@@ -25,7 +25,7 @@ SSID works with lexers based on [ANTLR4 Grammars](https://github.com/antlr/gramm
 
 ## Setup and Configuration
 
-Before following the below instructions, please ensure that you have met all the prerequesties listed. Alternatively, you can also setup the application via docker by clicking on the docker setup documentation below.
+Before following the below instructions, please ensure that you have met all the prerequesties listed
 
 1. Clone SSID's source code onto your computer
 	<pre>git clone https://github.com/WING-NUS/SSID.git</pre>

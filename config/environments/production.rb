@@ -70,6 +70,4 @@ SSID::Application.configure do
 
   # Set time zone
   config.time_zone = "Singapore"
-
-  config.eager_load = true
 end
