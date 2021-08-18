@@ -47,11 +47,8 @@ class AssignmentsController < ApplicationController
     # check whether is it a guest user 
     @user = User.find_by_id(session[:user_id]) 
     @guest_user = GuestUsersDetail.find_by_user_id(@user.id)
-    
     # obtain assignment to be shown if is a guest user
-    if (@guest_user)
-      @assignment_to_be_shown = @guest_user.assignment_id
-    end
+    @assignment_to_be_shown = @guest_user.assignment_id
     
     @assignments = @course.assignments
     @empty_assignments = @course.empty_assignments
