@@ -22,12 +22,14 @@ class SubmissionLog < ActiveRecord::Base
   TYPE_PAIR_UNMARK_AS_PLAGIARISM = 2
   TYPE_STUDENT_MARK_AS_GUILTY = 3
   TYPE_STUDENT_MARK_AS_NOT_GUILTY = 4
+  TYPE_PAIR_CONFIRM_AS_NOT_PLAGIARISM = 5
   TYPE_TEMPLATE_STRINGS = [
     "Suspected as plagiarism with submission by ",
     "Confirmed as plagiarism with submission by ",
     "Unmarked as plagiarism with submission by ",
     "Marked as guilty of plagiarism of submission by ",
-    "Unmarked as guilty of plagiarism of submission by "
+    "Unmarked as guilty of plagiarism of submission by ",
+    "Marked as checked with no plagiarism with submission by "
   ]
 
   belongs_to :marker, class_name: "User"
