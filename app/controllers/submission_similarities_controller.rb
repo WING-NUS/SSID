@@ -144,6 +144,28 @@ class SubmissionSimilaritiesController < ApplicationController
     redirect_to assignment_submission_similarity_url(@assignment, @submission_similarity)
   end
 
+   # PUT /students/1/submission_similarities/1/confirm_as_not_plagiarism
+  def confirm_as_not_plagiarism
+    @submission_similarity = SubmissionSimilarity.find(params["submission_similarity_id"])
+    @submission_similarity.status = SubmissionSimilarity::STATUS_CONFIRMED_AS_NOT_PLAGIARISM
+    if @submission_similarity.save
+      mark_student_as_not_guilty(@submission_similarity.submission1, @submission_similarity)
+      mark_student_as_not_guilty(@submission_similarity.submission2, @submission_similarity)
+      SubmissionLog.create { |sl|
+        sl.submission_similarity = @submission_similarity
+        sl.submission = @submission_similarity.submission1
+        sl.marker = @user
+        sl.log_type = SubmissionLog::TYPE_PAIR_CONFIRM_AS_NOT_PLAGIARISM
+      }
+      SubmissionLog.create { |sl|
+        sl.submission_similarity = @submission_similarity
+        sl.submission = @submission_similarity.submission2
+        sl.marker = @user
+        sl.log_type = SubmissionLog::TYPE_PAIR_CONFIRM_AS_NOT_PLAGIARISM
+      }
+    end
+    redirect_to assignment_submission_similarity_url(@assignment, @submission_similarity)
+  end
   # PUT /students/1/submission_similarities/1/suspect_as_plagiarism
   def suspect_as_plagiarism
     @submission_similarity = SubmissionSimilarity.find(params["submission_similarity_id"])

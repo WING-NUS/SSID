@@ -20,10 +20,12 @@ class SubmissionSimilarity < ActiveRecord::Base
   STATUS_NOT_PLAGIARISM = 0
   STATUS_CONFIRMED_AS_PLAGIARISM = 1
   STATUS_SUSPECTED_AS_PLAGIARISM = 2
+  STATUS_CONFIRMED_AS_NOT_PLAGIARISM = 3
   STATUS_STRINGS = [
     "",
     "Confirmed Plagiarism",
-    "Suspected of Plagiarism"
+    "Suspected of Plagiarism",
+    "Checked as not plagiarism"
   ]
 
   belongs_to :assignment
