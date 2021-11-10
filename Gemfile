@@ -44,6 +44,8 @@ gem 'will_paginate', '~> 3.3'
 
 gem 'jquery-rails', '~> 4.4'
 
+gem 'bootstrap', '~> 5.1.3'
+
 group :assets do
   gem 'sass-rails', '~> 6.0'
   gem 'coffee-rails', '~> 5.0'
