@@ -14,19 +14,23 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 %>
-<h2>Welcome to SSID</h2>
+
+<main class="site">
 <%= form_tag do %>
+  <%= image_tag("plagiarism_checker.png", size: "64", alt: "Plagiarism Checker", :class => "site_icon") %>
+  <h1 class="site_header">Welcome to SSID</h1>
   <fieldset>
-    <div>
-      <%= label_tag :name, "Name:" %>
-      <%= text_field_tag :name, params[:name] %>
+    <div class="form-floating">
+      <%= text_field_tag :name, params[:name], placeholder: 'Name', :class => "form-control" %>
+      <%= label_tag 'name' %>
     </div>
-    <div>
-      <%= label_tag :password, "Password:" %>
-      <%= password_field_tag :password, params[:password] %>
+    <div class="form-floating mb-3">
+      <%= password_field_tag :password, params[:password], placeholder: 'Password', :class => "form-control" %>
+      <%= label_tag 'password' %>
+
     </div>
     <span>
-      <%= submit_tag "Login" %>
+      <%= submit_tag "Login", :class => "site_login" %>
     </span>
   </fieldset>
   <% if flash[:alert] %>
@@ -35,4 +39,6 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
   <% if flash[:notice] %>
     <div class="notice"><%= flash[:notice] %></div>
   <% end %>
+  <p class="site_copyright">&copy; 2009–2021 Web Information Retrieval and Natural Language Processing Group</p>
 <% end %>
+</main>

@@ -12,6 +12,7 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with SSID.  If not, see <http://www.gnu.org/licenses/>.
+@import "bootstrap";
 
 body {
   margin: 0;
@@ -25,6 +26,34 @@ body {
 
 h2, h3 {
   color: rgb(0, 0, 128);
+}
+
+.site {
+  @extend .text-center;
+}
+
+.site_header {
+  color: rgb(0, 0, 128);
+  @extend .h5;
+  @extend .mb-3;
+  @extend .fw-normal;
+}
+
+.site_icon {
+  @extend .mt-3;
+  @extend .mb-4;
+}
+
+.site_copyright {
+  @extend .mt-5;
+  @extend .mb-3;
+  @extend .text-muted;
+}
+
+.site_login {
+  @extend .w-100;
+  @extend .btn;
+  @extend .btn-primary;
 }
 
 p.none_created {
@@ -43,8 +72,8 @@ table {
 #top_banner {
   display: block;
   margin: 0;
-  height: 40px;
-  padding: 50px 15px 0;
+  height: 75%;
+  padding: 50px 15px 10px;
   font-size: 24px;
   background-image: url('orangeE.jpg');
   background-repeat: repeat-x;
@@ -55,7 +84,7 @@ table {
   margin: 0;
   background-color: rgb(255, 108, 0);
   display: block;
-  height: 22px;
+  height: 1.8rem;
   overflow: auto;
   padding: 0;
   display: flex;
@@ -65,8 +94,7 @@ table {
   li {
     list-style: none;
     float: left;
-    width: 20%;
-    height: 25px;
+    height: 1.5rem;
     text-align: center;
 
     a {
@@ -76,7 +104,7 @@ table {
         color: rgb(255, 255, 255);
         text-decoration: none;
         background-color: rgb(255,108,0);
-        height: 25px;
+        height: 1.5rem;
       }
       &:hover {
         color: rgb(255, 108,0);
@@ -90,10 +118,6 @@ table {
     }
 
   }
-}
-
-#menu.admin li {
-  width: 16.6666666%;
 }
 
 #content {
