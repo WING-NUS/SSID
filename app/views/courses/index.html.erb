@@ -14,7 +14,13 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 %>
-<h2>Courses</h2>
+<header class="course_header">
+  <h2>Courses</h2>
+  <% if @user.is_admin %>
+    <%= link_to image_tag("plus-circle.svg", size: "28", alt: "New Course"), new_course_url, {'data-toggle' => 'tooltip', 'data-placement' => 'bottom', 'title' => 'New Course'} %>
+  <% end %>  
+</header>
+
 <% if flash[:notice] %>
   <div class="notice">
     <%= flash[:notice] %>
@@ -30,10 +36,11 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
       <th class="role_col">Your Role</th>
       <% unless @user.is_admin %>
         <th class="assignments_col">Assignments</th>
-      <% else %>
-        <th class="edit_col">Actions</th>
       <% end %>
       <th class="action_col">View</th>
+      <% if @user.is_admin %>
+        <th class="edit_col">Actions</th>
+      <% end %>      
     </tr>
   </thead>
   <tbody>
@@ -50,24 +57,29 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
     <td><%= course.role_string_for_user(@user) %></td>
     <% unless @user.is_admin %>
       <td><%= course.assignments.size %></td>
-    <% else %>
-      <td>
-        <%= link_to "Edit", edit_course_url(course) %>
-        <%= link_to "Delete", course_url(course), method: "delete", data: {confirm: "This module will be permanently deleted and cannot be recovered. Are you sure?"}, class: "last" %> 
-        </td>
     <% end %>
     <td>
-      <%= link_to "Assignments", course_assignments_url(course) %>
-      <%= link_to "Users", course_users_url(course) %>
-      <%= link_to "Visuals", course_visualize_url(course), class: "last" %>
+      <%= link_to image_tag("assignment_black_24dp.svg", alt: "Assignments"), course_assignments_url(course), { :class => 'tooltips', 'data-toggle' => 'tooltip', 'data-placement' => 'bottom', 'title' => 'Assignments' } %>
+      <%= link_to image_tag("people_black_24dp.svg", alt: "Users"), course_users_url(course), {'data-toggle' => 'tooltip', 'data-placement' => 'bottom', 'title' => 'Users'} %>
+      <%= link_to image_tag("show_chart_black_24dp.svg", alt: "Visuals"), course_visualize_url(course), {'data-toggle' => 'tooltip', 'data-placement' => 'bottom', 'title' => 'Visuals'} %>
     </td>
+    <% if @user.is_admin %>   
+      <td>
+        <div class="dropdown">
+          <a data-toggle="dropdown" id="courseDropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+            <%= image_tag("more_vert_black_24dp.svg", alt: "Course Menu Dropdown")%>
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="courseDropdownMenuLink"> 
+            <li><%= link_to "Edit", edit_course_url(course), :class => 'course_menu_item' %></li>
+            <li><%= link_to "Delete", course_url(course), method: "delete", data: {confirm: "This module will be permanently deleted and cannot be recovered. Are you sure?"}, :class => 'course_menu_item' %></li>
+          </ul> 
+        </div>
+
+      </td>
+    <% end %>
+
   </tr>
   <% } %>
 <% end %>
   </tbody>
 </table>
-
-<% if @user.is_admin %>
-  <hr />
-  <%= link_to "New Course", new_course_url %>
-<% end %>

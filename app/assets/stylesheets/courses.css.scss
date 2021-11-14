@@ -12,51 +12,71 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with SSID.  If not, see <http://www.gnu.org/licenses/>.
+@import "bootstrap";
 
 body.courses_index {
+  .course_header {
+    @extend .d-flex;
+    @extend .flex-row;
+    @extend .justify-content-start;
+    @extend .mt-3;
+    @extend .mb-3;
+  }
+
+  h2 {
+    @extend .h5;
+    @extend .fw-normal;
+    margin-right: 1.5rem;
+    font-size: 1.25rem;
+
+  }
+
   table {
-    border-spacing: 0;
-    border-collapse: collapse;
-    width: 100%;
-    margin-bottom: 20px;
+    @extend .table;
+    @extend .table-bordered;
 
-    th {
-      border: 1px solid rgb(0, 0, 0);
-      background-color: rgb(231, 134, 13);
-      color: rgb(255, 255, 255);
-      font-weight: bold;
-      text-transform: uppercase;
-      padding: 3px 10px;
-      text-align: left;
-    }
-    
-    th.year_sem_col {
-      width: 220px;
-    }
+    // border-spacing: 0;
+    // border-collapse: collapse;
+    // width: 100%;
+    // margin-bottom: 20px;
 
-    th.edit_col {
-      width: 100px;
-    }
+    // th {
+    //   border: 1px solid rgb(0, 0, 0);
+    //   background-color: rgb(231, 134, 13);
+    //   color: rgb(255, 255, 255);
+    //   font-weight: normal;
+    //   padding: 3px 10px;
+    //   text-align: left;
+    // }
 
-    th.action_col {
-      width: 220px;
-    }
+    // td {
+    //   border: 1px dotted #bbb;
+    //   padding: 3px 10px;
 
-    td {
-      border: 1px dotted #bbb;
-      padding: 3px 10px;
+    //   a {
+    //     &, &:hover, &:visited {
+    //       margin-right: 20px;
+    //     }
+    //     &:hover {
+    //       color: rgb(255, 108, 0);
+    //     }
+    //   }
 
-      a {
-        &, &:hover, &:visited {
-          margin-right: 20px;
-        }
-        &:hover {
-          color: rgb(255, 108, 0);
-        }
-      }
+    //   a.last {
+    //       margin-right: 0;
+    //   }
+    // }
+  }
 
-      a.last {
-          margin-right: 0;
+  #courseDropdownMenuLink {
+    text-decoration: none;
+  }
+
+  ul {
+    li {
+      a.course_menu_item {
+        @extend .dropdown-item;
+        margin-right: 0.5rem;
       }
     }
   }
