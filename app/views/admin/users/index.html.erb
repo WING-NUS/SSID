@@ -10,7 +10,11 @@
   </div>
 <% end %>
 
+<div class="admin_users_section"> 
+<header class="user_header">
 <h3>Admins</h3>
+<%= link_to image_tag("person_add_black_24dp.svg", size: "28", alt: "New Admin"), new_admin_user_url, {'data-toggle' => 'tooltip', 'data-placement' => 'bottom', 'title' => 'New Admin'} %>
+</header>
 
 <table>
   <thead>
@@ -25,23 +29,37 @@
       <tr>
         <td><%= admin.full_name || "--" %><%= " <em>(This is you)</em>".html_safe if @user == admin %></td>
         <td><%= admin.name %></td>
-        <% if admin == @user %>
-          <td><%= link_to "Settings", edit_user_url(@user), class: "last" %></td>
-        <% else %>
-          <td><%= link_to "Edit", edit_admin_user_url(admin) %> <%= link_to "Delete", admin_user_url(admin), method: "delete", data: {confirm: "Confirm delete admin?"}, class: "last" %></td>
-        <% end %>
+        <td>
+          <div class="dropdown">
+            <a data-toggle="dropdown" id="adminUserDropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+              <%= image_tag("more_vert_black_24dp.svg", alt: "Admin User Menu Dropdown")%>            
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="adminUserDropdownMenuLink">
+              <% if admin == @user %>
+                <li><%= link_to "Settings", edit_user_url(@user), class: "dropdown-item" %></li>
+              <% else %>
+                <li><%= link_to "Edit", edit_admin_user_url(admin), class: "dropdown-item" %></li>
+                <li><%= link_to "Delete", admin_user_url(admin), method: "delete", data: {confirm: "Confirm delete admin?"}, class: "dropdown-item" %></li>
+              <% end %>
+            </ul>
+          </div>
+        </td>
       </tr>
     <% } %>
   </tbody>
 </table>
 
-<div class="new_user"><%= link_to "New Admin", new_admin_user_url %></div>
+
+</div>
 
 <% @courses.each { |course| %>
-  <hr />
+<div class="course_users_section">
+  <header>
+    <h3><%= course.code %> <%= course.name %></h3>
+    <%= link_to image_tag("person_add_black_24dp.svg", size: "28", alt: "Add #{course.code} User"), new_admin_user_url+"?course_id=#{course.id}", { 'data-toggle' => 'tooltip', 'data-placement' => 'bottom', 'title' => "Add #{course.code} User" } %>
+  </header>
 
-  <h3><%= course.code %> <%= course.name %></h3>
-
+  <% unless (@staff[course.id] + @teaching_assistants[course.id] + @students[course.id] + @guests[course.id]).empty? %>
   <table>
     <thead>
       <tr>
@@ -71,21 +89,31 @@
           </td>
           <td><%= user.id_string %></td>
           <td><%= course.role_string_for_user(user) %></td>
-          <% if course.membership_for_user(user).role == UserCourseMembership::ROLE_STUDENT %>
-            <td><%= link_to "Edit", edit_admin_user_url(user)+"?course_id=#{course.id}" %></td>
-          <% else %>
-            <td><%= link_to "Edit", edit_admin_user_url(user)+"?course_id=#{course.id}" %> <%= link_to "Remove", admin_user_url(user)+"?course_id=#{course.id}", method: "delete", data: {confirm: "Do you want to confirm remove user from course?"}, class: "last" %></td>
-          <% end %>
+          <td>
+            <div class="dropdown">
+              <a data-toggle="dropdown" id="userDropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                <%= image_tag("more_vert_black_24dp.svg", alt: "User Menu Dropdown")%>        
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="userDropdownMenuLink">
+                <li><%= link_to "Edit", edit_admin_user_url(user)+"?course_id=#{course.id}", class: "dropdown-item" %></li>
+                <% if course.membership_for_user(user).role != UserCourseMembership::ROLE_STUDENT %>
+                  <li><%= link_to "Remove", admin_user_url(user)+"?course_id=#{course.id}", method: "delete", data: {confirm: "Do you want to confirm remove user from course?"}, class: "dropdown-item" %></li>
+                <% end %>
+              </ul>
+            </div>
+          </td>
         </tr>
       <% } %>
     </tbody>
   </table>
+  <% end %>
 
-  <div class="new_user"><%= link_to "Add #{course.code} User", new_admin_user_url+"?course_id=#{course.id}" %></div>
+
+</div>
 <% } %>
 
 <% unless @loners.empty? %>
-  <hr />
+<div class="lone_users_section">
 
   <h3>Users With No Course Membership</h3>
 
@@ -104,9 +132,20 @@
           <td><%= user.full_name || "--" %></td>
           <td><%= user.name %></td>
           <td><%= user.id_string %></td>
-          <td><%= link_to "Edit", edit_admin_user_url(user) %> <%= link_to "Delete", admin_user_url(user), method: "delete", data: {confirm: "Do you want to confirm remove the user?"}, class: "last" %></td>
+          <td>
+            <div class="dropdown">
+              <a data-toggle="dropdown" id="loneUserDropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                <%= image_tag("more_vert_black_24dp.svg", alt: "Lone Users Menu Dropdown")%>        
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="loneUserDropdownMenuLink">
+                <li><%= link_to "Edit", edit_admin_user_url(user), class: 'dropdown-item' %></li>
+                <li><%= link_to "Delete", admin_user_url(user), method: "delete", data: {confirm: "Do you want to confirm remove the user?"}, class: "dropdown-item" %></li>
+              </ul>
+            </div>
+          </td>          
         </tr>
       <% } %>
     </tbody>
   </table>
+</div>
 <% end %>
