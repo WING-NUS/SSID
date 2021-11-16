@@ -12,17 +12,25 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with SSID.  If not, see <http://www.gnu.org/licenses/>.
+@import "bootstrap";
 
 body {
   background-color: #fff;
   color: #333;
   font-family: verdana, arial, helvetica, sans-serif;
-  font-size: 13px;
-  line-height: 18px; }
+  font-size: 14px;
+  line-height: 18px; 
+
+  input.submit {
+    @extend .btn;
+    @extend .btn-primary;
+    @extend .mt-3;
+  }
+}
 
 p, ol, ul, td {
   font-family: verdana, arial, helvetica, sans-serif;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 18px; }
 
 pre {
@@ -44,10 +52,9 @@ div {
 #notice {
   color: green; }
 
-.field_with_errors {
-  padding: 2px;
-  background-color: red;
-  display: table; }
+div.field_with_errors .form-control {
+  border-color: #ff0000;
+}
 
 #error_explanation {
   width: 450px;
