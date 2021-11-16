@@ -11,33 +11,34 @@
     </div>
   <% end %>
   <div>
-    <%= f.label :full_name %>:
-    <%= f.text_field :full_name %>
+    <%= f.label :full_name, class: "form-label" %>
+    <%= f.text_field :full_name, class: "form-control" %>
   </div>
   <% if @course %>
     <div>
       <%= hidden_field_tag :user_course_id, @course.id, name: "user[course_id]" %>
-      <%= f.label :id_string, "ID" %>:
-      <%= f.text_field :id_string %>
+      <%= f.label :id_string, "ID", class: "form-label" %>
+      <%= f.text_field :id_string, class: "form-control" %>
     </div>
     <% unless @membership.role == UserCourseMembership::ROLE_STUDENT %>
       <div>
-        <%= f.label :course_role %>:
-        <%= select_tag "user_course_role", options_for_select(UserCourseMembership.options_for_non_student_roles, @membership.role ), name: "user[course_role]" %>
+        <%= f.label :course_role, class: "form-label" %>
+        <%= select_tag "user_course_role", options_for_select(UserCourseMembership.options_for_non_student_roles, @membership.role ), name: "user[course_role]", class: "form-select" %>
       </div>
     <% end %>
   <% end %>
   <div>
-    <%= f.label :name, "Login" %>:
-    <%= f.text_field :name %>
+    <%= f.label :name, "Login", class: "form-label" %>
+    <%= f.text_field :name, class: "form-control" %>
   </div>
   <div>
-    <%= f.label :new_password %>:
-    <%= f.password_field :new_password %> (<em>Leave blank to keep unchanged</em>)
+    <%= f.label :new_password, class: "form-label" %>
+    <%= f.password_field :new_password, class: "form-control" %> 
+    <small class="text-muted">Leave blank to keep unchanged</small>
   </div>
   <div>
-    <%= f.label :confirm_new_password %>:
-    <%= f.password_field :confirm_new_password %> 
+    <%= f.label :confirm_new_password, class: "form-label" %>
+    <%= f.password_field :confirm_new_password, class: "form-control" %> 
   </div>
   <div>
     <%= f.submit class: "submit" %>
