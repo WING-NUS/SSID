@@ -31,6 +31,16 @@ body.courses_index {
 
   }
 
+  h3 {
+    @extend .h6;
+    @extend .fw-normal;
+  }
+
+  h5, h6 {
+    color: rgb(0, 0, 128);
+    margin-right: 1.5rem;
+  }
+
   table {
     @extend .table;
     @extend .table-bordered;
@@ -83,6 +93,11 @@ body.courses_index {
 }
 
 body.courses {
+  h5, h6 {
+    color: rgb(0, 0, 128);
+    margin-right: 2rem;
+  }
+
   label {
     width: 200px;
     margin-top: 5px;
@@ -90,11 +105,19 @@ body.courses {
   }
 
   input.submit {
-    margin-top: 15px;
+    @extend .btn;
+    @extend .btn-primary;
+    @extend .mt-3;
+
   }
 
-  div.field_with_errors {
-    display: inline-table;
+  // div.field_with_errors {
+  //   display: inline-table;
+  //   padding: 0;
+  // }
+
+  div.field_with_errors .form-control {
+    border-color: #ff0000;
     padding: 0;
   }
 
@@ -102,4 +125,8 @@ body.courses {
     color: rgb(0, 160, 0);
     margin-bottom: 15px;
   }
+}
+
+body.edit_course {
+  background-color: rgb(0, 160, 0);
 }
