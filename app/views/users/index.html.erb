@@ -1,4 +1,9 @@
-<h2><%= @course.code %> Users</h2>
+<div class="course_users_section">
+<header>
+  <h2><%= @course.code %> Users</h2>
+  <%= link_to image_tag("person_add_black_24dp.svg", size: "28", alt: "Add #{@course.code} User"), new_admin_user_url+"?course_id=#{@course.id}", { 'data-toggle' => 'tooltip', 'data-placement' => 'bottom', 'title' => "Add #{@course.code} User" } %>
+</header>
+
 <% if flash[:notice] %>
   <div class="notice">
     <%= flash[:notice] %>
@@ -21,12 +26,20 @@
         <td><%= user.id_string %></td>
         <td><%= @course.role_string_for_user(user) %></td>
         <% if @course.role_string_for_user(user) != "Student" %>
-        <td><%= link_to "Remove", admin_user_url(user)+"?course_id=#{@course.id}", method: "delete", data: {confirm: "Do you want to confirm remove user from course?"}, class: "last" %></td>
+        <td>
+          <div class="dropdown">
+            <a data-toggle="dropdown" id="userDropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+              <%= image_tag("more_vert_black_24dp.svg", alt: "User Menu Dropdown")%>                  
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="userDropdownMenuLink">
+              <li><%= link_to "Remove", admin_user_url(user)+"?course_id=#{@course.id}", method: "delete", data: {confirm: "Do you want to confirm remove user from course?"}, class: "dropdown-item" %></li>
+            </ul>
+          </div>
+        </td>
         <% end %>
       </tr>
     <% } %>
   </tbody>
 </table>
 
-<div class="new_user"><%= link_to "Add #{@course.code} User", new_admin_user_url+"?course_id=#{@course.id}" %></div>
-
+</div>
