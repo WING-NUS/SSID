@@ -90,7 +90,7 @@
           <th class="suspected_cases_col">Suspected Plagiarism Cases</th>
           <th class="marked_cases_col">Confirmed Plagiarism Cases</th>
           <th class="action_col">View</th>
-          <th class="delete_col"></th>
+          <th class="delete_col">Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -102,12 +102,19 @@
         <td><%= a.suspected_plagiarism_cases.size %></td>
         <td><%= a.confirmed_plagiarism_cases.size %></td>
         <td>
-          <%= link_to "Submission similarities", assignment_submission_similarities_url(a) %>
-          <%= link_to "Similarity groups", assignment_cluster_groups_url(a) %>
-          <%= link_to "Upload log", course_assignment_log_url(@course, a), class: "last" %>
+          <%= link_to image_tag("plagiarism_black_24dp.svg", alt: "Submission similarities"), assignment_submission_similarities_url(a), { 'data-toggle' => 'tooltip', 'data-placement' => 'bottom', 'title' => 'Submission similarities' } %>
+          <%= link_to image_tag("scatter_plot_black_24dp.svg", alt: "Similarity groups"), assignment_cluster_groups_url(a), { 'data-toggle' => 'tooltip', 'data-placement' => 'bottom', 'title' => 'Similarity groups'} %>
+          <%= link_to image_tag("description_black_24dp.svg", alt: "Upload log"), course_assignment_log_url(@course, a), { 'data-toggle' => 'tooltip', 'data-placement' => 'bottom', 'title' => 'Upload log' } %>
         </td>
         <td>
-          <%= link_to "Delete", course_assignment_url(@course, a), method: "delete", class: "last", data: {confirm: "This assignment will be permanently deleted and cannot be recovered. Are you sure?"} %>
+          <div class="dropdown">
+            <a data-toggle="dropdown" id="assignmentDropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+              <%= image_tag("more_vert_black_24dp.svg", alt: "Assignment Menu Dropdown")%>      
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="assignmentDropdownMenuLink">
+              <li><%= link_to "Delete", course_assignment_url(@course, a), method: "delete", data: {confirm: "This assignment will be permanently deleted and cannot be recovered. Are you sure?"}, class: "dropdown-item" %></li>
+            </ul>
+          </div>
         </td>
       </tr>
       <% } %>
