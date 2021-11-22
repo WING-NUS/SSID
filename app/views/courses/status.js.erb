@@ -6,7 +6,8 @@
           <th>Title</th>
           <th class="lang_col">Language</th>
           <th class="submitted_on_col">Submitted On</th>
-          <th class="action_col">Action</th>
+          <th>View</th>
+          <th class="action_col">Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -15,9 +16,18 @@
         <td><%= a.title %></td>
         <td><%= a.language_string %></td>
         <td><%= a.submission_similarity_process.created_at.in_time_zone %></td>
+        <td> 
+          <%= link_to image_tag("description_black_24dp.svg", alt: "Upload log"), course_assignment_log_url(@course, a), { 'data-toggle' => 'tooltip', 'data-placement' => 'bottom', 'title' => 'Upload log' } %>
+        </td>
         <td>
-          <%= link_to "View upload log", course_assignment_log_url(@course, a) %>
-          <%= link_to "Delete", course_assignment_url(@course, a), method: "delete", class: "last", data: {confirm: "This assignment will be permanently deleted and cannot be recovered. Are you sure?"}%>
+          <div class="dropdown">
+            <a data-toggle="dropdown" id="erroneousAssignmentDropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+              <%= image_tag("more_vert_black_24dp.svg", alt: "Erroneous Assignment Menu Dropdown")%>      
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="erroneousAssignmentDropdownMenuLink">
+              <li><%= link_to "Delete", course_assignment_url(@course, a), method: "delete", data: {confirm: "This assignment will be permanently deleted and cannot be recovered. Are you sure?"}, class: "dropdown-item" %></li>
+            </ul>
+          </div>        
         </td>
       </tr>
       <% } %>
@@ -33,7 +43,7 @@
           <th>Title</th>
           <th class="lang_col">Language</th>
           <th class="submitted_on_col">Submitted On</th>
-          <th class="action_col">Action</th>
+          <th class="action_col">Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -43,8 +53,15 @@
           <td><%= a.language_string %></td>
           <td><%= a.created_at.in_time_zone %></td>
           <td>
-            <%= link_to "Upload submission", course_assignment_url(@course, a) %>
-            <%= link_to "Delete", course_assignment_url(@course, a), method: "delete", class: "last", data: {confirm: "This assignment will be permanently deleted and cannot be recovered. Are you sure?"} %>
+            <div class="dropdown">
+              <a data-toggle="dropdown" id="emptyAssignmentDropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                <%= image_tag("more_vert_black_24dp.svg", alt: "Empty Assignment Menu Dropdown")%>                      
+              </a>
+              <ul class="dropdown-menu">
+                <li><%= link_to "Upload submission", course_assignment_url(@course, a), class: "dropdown-item" %></li>
+                <li><%= link_to "Delete", course_assignment_url(@course, a), method: "delete", class: "last", data: {confirm: "This assignment will be permanently deleted and cannot be recovered. Are you sure?"}, class: "dropdown-item" %></li>
+              </ul>
+            </div>
           </td>
         </tr>
       <% } %>
@@ -81,16 +98,16 @@
     <% unless @erroneous_assignments.empty? and @processing_assignments.empty? %>
       <h3>Processed:</h3>
     <% end %>
-    <table class="processed_assignments">
+    <table class="processed_assignments col-9">
       <thead>
         <tr>
-          <th>Title</th>
-          <th class="lang_col">Language</th>
-          <th class="submissions_col">Submissions</th>
-          <th class="suspected_cases_col">Suspected Plagiarism Cases</th>
-          <th class="marked_cases_col">Confirmed Plagiarism Cases</th>
-          <th class="action_col">View</th>
-          <th class="delete_col">Actions</th>
+          <th class="col-2">Title</th>
+          <th class="lang_col col-1">Language</th>
+          <th class="submissions_col col-1">Submissions</th>
+          <th class="suspected_cases_col col-1">Suspected Plagiarism Cases</th>
+          <th class="marked_cases_col col-1">Confirmed Plagiarism Cases</th>
+          <th class="action_col col-2">View</th>
+          <th class="delete_col col-1">Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -108,10 +125,10 @@
         </td>
         <td>
           <div class="dropdown">
-            <a data-toggle="dropdown" id="assignmentDropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+            <a data-toggle="dropdown" id="processedAssignmentDropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
               <%= image_tag("more_vert_black_24dp.svg", alt: "Assignment Menu Dropdown")%>      
             </a>
-            <ul class="dropdown-menu" aria-labelledby="assignmentDropdownMenuLink">
+            <ul class="dropdown-menu" aria-labelledby="processedAssignmentDropdownMenuLink">
               <li><%= link_to "Delete", course_assignment_url(@course, a), method: "delete", data: {confirm: "This assignment will be permanently deleted and cannot be recovered. Are you sure?"}, class: "dropdown-item" %></li>
             </ul>
           </div>

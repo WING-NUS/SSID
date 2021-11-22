@@ -12,6 +12,7 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with SSID.  If not, see <http://www.gnu.org/licenses/>.
+@import "bootstrap";
 
 body.assignments_index {
   h3 {
@@ -30,45 +31,46 @@ body.assignments_index {
   }
 
   table {
-    border-spacing: 0;
-    border-collapse: collapse;
-    width: 100%;
-    margin-bottom: 20px;
+    @extend .table;
+    @extend .table-bordered;
+    // border-spacing: 0;
+    // border-collapse: collapse;
+    // width: 100%;
+    // margin-bottom: 20px;
 
-    th {
-      border: 1px solid rgb(0, 0, 0);
-      background-color: rgb(231, 134, 13);
-      color: rgb(255, 255, 255);
-      font-weight: bold;
-      text-transform: uppercase;
-      padding: 3px 10px;
-      text-align: left;
-    }
+    // th {
+    //   border: 1px solid rgb(0, 0, 0);
+    //   background-color: rgb(231, 134, 13);
+    //   color: rgb(255, 255, 255);
+    //   font-weight: bold;
+    //   padding: 3px 10px;
+    //   text-align: left;
+    // }
 
-    th.submitted_on_col {
-      width: 200px;
-    }
-    th.lang_col {
-      width: 90px;
-    }
+    // th.submitted_on_col {
+    //   width: 200px;
+    // }
+    // th.lang_col {
+    //   width: 90px;
+    // }
     
-    td {
-      border: 1px dotted #bbb;
-      padding: 3px 10px;
+    // td {
+    //   border: 1px dotted #bbb;
+    //   padding: 3px 10px;
 
-      a {
-        &, &:hover, &:visited {
-          margin-right: 20px;
-        }
-        &:hover {
-          color: rgb(255, 108, 0);
-        }
-      }
+    //   a {
+    //     &, &:hover, &:visited {
+    //       margin-right: 20px;
+    //     }
+    //     &:hover {
+    //       color: rgb(255, 108, 0);
+    //     }
+    //   }
 
-      a.last {
-          margin-right: 0;
-      }
-    }
+    //   a.last {
+    //       margin-right: 0;
+    //   }
+    // }
   }
 
   table.erroneous_assignments, table.processing_assignments, table.empty_assignments {
@@ -81,24 +83,24 @@ body.assignments_index {
     }
   }
 
-  table.processed_assignments {
-    th.submissions_col {
-      width: 100px;
-    }
-    th.suspected_cases_col {
-      width: 100px;
-    }
-    th.marked_cases_col {
-      width: 100px;
-    }
+  // table.processed_assignments {
+  //   th.submissions_col {
+  //     width: 100px;
+  //   }
+  //   th.suspected_cases_col {
+  //     width: 100px;
+  //   }
+  //   th.marked_cases_col {
+  //     width: 100px;
+  //   }
 
-    th.action_col {
-      width: 400px;
-    }
-    th.delete_col {
-      width: 50px;
-    }
-  }
+  //   th.action_col {
+  //     width: 400px;
+  //   }
+  //   th.delete_col {
+  //     width: 50px;
+  //   }
+  // }
 
   div.notice {
     margin-bottom: 15px;
