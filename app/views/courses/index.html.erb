@@ -91,13 +91,4 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
   <%= render partial: "site/modal", locals: { modal: @modal }%>
 </div>
 
-<script>
-  $('.dropdown-item').click((event) => {
-    if ($(event.target).is('[data-bs-toggle=modal]')) {
-      var modal = $(event.target);
-      var url = $(modal).data('bs-url');
-      $('.modal-footer > .button_to').attr('action', url);
-    }
-
-  })
-</script>
+<%= javascript_include_tag "site_modal.js" %>

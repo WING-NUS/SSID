@@ -39,7 +39,9 @@
                 <li><%= link_to "Settings", edit_user_url(@user), class: "dropdown-item" %></li>
               <% else %>
                 <li><%= link_to "Edit", edit_admin_user_url(admin), class: "dropdown-item" %></li>
-                <li><%= link_to "Delete", admin_user_url(admin), method: "delete", data: {confirm: "Confirm delete admin?"}, class: "dropdown-item" %></li>
+                <li>
+                  <%= button_tag 'Delete', class: "dropdown-item", data: { 'bs-toggle' => "modal", 'bs-target' => "#deleteUserModal", 'bs-url' => "#{admin_user_url(admin)}" } %>
+                </li>
               <% end %>
             </ul>
           </div>
@@ -48,7 +50,6 @@
     <% } %>
   </tbody>
 </table>
-
 
 </div>
 
@@ -98,6 +99,10 @@
                 <li><%= link_to "Edit", edit_admin_user_url(user)+"?course_id=#{course.id}", class: "dropdown-item" %></li>
                 <% if course.membership_for_user(user).role != UserCourseMembership::ROLE_STUDENT %>
                   <li><%= link_to "Remove", admin_user_url(user)+"?course_id=#{course.id}", method: "delete", data: {confirm: "Do you want to confirm remove user from course?"}, class: "dropdown-item" %></li>
+                <li>
+                  <% url = admin_user_url(user)+"?course_id=#{course.id}" %>
+                  <%= button_tag 'Remove', class: "dropdown-item", data: { 'bs-toggle' => "modal", 'bs-target' => "#removeUserModal", 'bs-url' => "#{url}" } %>
+                </li>                
                 <% end %>
               </ul>
             </div>
@@ -139,7 +144,9 @@
               </a>
               <ul class="dropdown-menu" aria-labelledby="loneUserDropdownMenuLink">
                 <li><%= link_to "Edit", edit_admin_user_url(user), class: 'dropdown-item' %></li>
-                <li><%= link_to "Delete", admin_user_url(user), method: "delete", data: {confirm: "Do you want to confirm remove the user?"}, class: "dropdown-item" %></li>
+                <li>
+                  <%= button_tag 'Delete', class: "dropdown-item", data: { 'bs-toggle' => "modal", 'bs-target' => "#deleteUserModal", 'bs-url' => "#{admin_user_url(user)}" } %>
+                </li>
               </ul>
             </div>
           </td>          
@@ -149,3 +156,15 @@
   </table>
 </div>
 <% end %>
+
+<div class="modal fade" id="deleteUserModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <% @modal = SiteModal.new("Delete User?", "The user will be permanently deleted. Are you sure?") %>
+  <%= render partial: "site/modal", locals: { modal: @modal }%>
+</div>
+
+<div class="modal fade" id="removeUserModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <% @modal = SiteModal.new("Remove User?", "The user will be removed from the course. Are you sure?") %>
+  <%= render partial: "site/modal", locals: { modal: @modal }%>
+</div>
+
+<%= javascript_include_tag "site_modal.js" %>

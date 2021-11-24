@@ -13,3 +13,14 @@
     </div>
   </div>
 </div>
+
+<script>
+  /* Remove action url when cancel action is triggered */
+  $(".btn-close").click((event) => {
+    $(".modal-footer > .button_to").attr("action", "");
+  })
+
+  $(".btn-secondary").click((event) => {
+    $(".modal-footer > .button_to").attr("action", "");
+  })
+</script>
