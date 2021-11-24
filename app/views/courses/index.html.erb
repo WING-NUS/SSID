@@ -70,8 +70,10 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
             <%= image_tag("more_vert_black_24dp.svg", alt: "Course Menu Dropdown")%>
           </a>
           <ul class="dropdown-menu" aria-labelledby="courseDropdownMenuLink"> 
-            <li><%= link_to "Edit", edit_course_url(course), :class => 'course_menu_item' %></li>
-            <li><%= link_to "Delete", course_url(course), method: "delete", data: {confirm: "This module will be permanently deleted and cannot be recovered. Are you sure?"}, :class => 'course_menu_item' %></li>
+            <li><%= link_to "Edit", edit_course_url(course), :class => 'dropdown-item' %></li>
+            <li>
+              <%= button_tag 'Delete', class: "dropdown-item", data: { 'bs-toggle' => "modal", 'bs-target' => "#deleteCourseModal", 'bs-url' => "#{course_url(course)}" } %>
+            </li>
           </ul> 
         </div>
 
@@ -83,3 +85,19 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 <% end %>
   </tbody>
 </table>
+
+<div class="modal fade" id="deleteCourseModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <% @modal = SiteModal.new("Delete Module?", "This module will be permanently deleted and cannot be recovered. Are you sure?") %>
+  <%= render partial: "site/modal", locals: { modal: @modal }%>
+</div>
+
+<script>
+  $('.dropdown-item').click((event) => {
+    if ($(event.target).is('[data-bs-toggle=modal]')) {
+      var modal = $(event.target);
+      var url = $(modal).data('bs-url');
+      $('.modal-footer > .button_to').attr('action', url);
+    }
+
+  })
+</script>
