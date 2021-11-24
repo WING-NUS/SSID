@@ -25,7 +25,9 @@
               <%= image_tag("more_vert_black_24dp.svg", alt: "Erroneous Assignment Menu Dropdown")%>      
             </a>
             <ul class="dropdown-menu" aria-labelledby="erroneousAssignmentDropdownMenuLink">
-              <li><%= link_to "Delete", course_assignment_url(@course, a), method: "delete", data: {confirm: "This assignment will be permanently deleted and cannot be recovered. Are you sure?"}, class: "dropdown-item" %></li>
+              <li>
+                <%= button_tag 'Delete', class: "dropdown-item", data: { 'bs-toggle' => "modal", 'bs-target' => "#deleteAssignmentModal", 'bs-url' => "#{course_assignment_url(@course, a)}" } %>
+              </li>
             </ul>
           </div>        
         </td>
@@ -59,7 +61,9 @@
               </a>
               <ul class="dropdown-menu">
                 <li><%= link_to "Upload submission", course_assignment_url(@course, a), class: "dropdown-item" %></li>
-                <li><%= link_to "Delete", course_assignment_url(@course, a), method: "delete", class: "last", data: {confirm: "This assignment will be permanently deleted and cannot be recovered. Are you sure?"}, class: "dropdown-item" %></li>
+                <li>
+                  <%= button_tag 'Delete', class: "dropdown-item", data: { 'bs-toggle' => "modal", 'bs-target' => "#deleteAssignmentModal", 'bs-url' => "#{course_assignment_url(@course, a)}" } %>
+                </li>
               </ul>
             </div>
           </td>
@@ -129,7 +133,9 @@
               <%= image_tag("more_vert_black_24dp.svg", alt: "Assignment Menu Dropdown")%>      
             </a>
             <ul class="dropdown-menu" aria-labelledby="processedAssignmentDropdownMenuLink">
-              <li><%= link_to "Delete", course_assignment_url(@course, a), method: "delete", data: {confirm: "This assignment will be permanently deleted and cannot be recovered. Are you sure?"}, class: "dropdown-item" %></li>
+              <li>
+                <%= button_tag 'Delete', class: "dropdown-item", data: { 'bs-toggle' => "modal", 'bs-target' => "#deleteAssignmentModal", 'bs-url' => "#{course_assignment_url(@course, a)}" } %>
+              </li>
             </ul>
           </div>
         </td>
@@ -137,5 +143,21 @@
       <% } %>
       </tbody>
     </table>
+
+  <div class="modal fade" id="deleteAssignmentModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <% @modal = SiteModal.new("Delete Assignment?", "This assignment will be permanently deleted and cannot be recovered. Are you sure?") %>
+    <%= render partial: "site/modal", locals: { modal: @modal }%>
+  </div>
     
   <% end %>
+
+  <script>
+    $('.dropdown-item').click((event) => {
+      if ($(event.target).is('[data-bs-toggle=modal]')) {
+        var modal = $(event.target);
+        var url = $(modal).data('bs-url');
+        $('.modal-footer > .button_to').attr('action', url);
+      }
+ 
+    })
+  </script>
