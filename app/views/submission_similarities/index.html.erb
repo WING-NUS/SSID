@@ -94,7 +94,7 @@
   </tbody>
 </table>
 
-<%= will_paginate @submission_similarities %>
+<%= will_paginate(@submission_similarities, :renderer => SiteLinkRenderer) %>
 
 <div id="isDialogDisplay" data-user-id="<%= @displayDialog %>"></div>
 
