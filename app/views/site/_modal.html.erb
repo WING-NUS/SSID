@@ -1,13 +1,13 @@
 <div class="modal-dialog modal-dialog-centered" role="document">
-  <div class="modal-content">
-    <div class="modal-header">
+  <div class="modal-content rounded-4">
+    <div class="modal-header border-bottom-0">
       <h5 class="modal-title" id="modalTitle"><%= @modal.title %></h5>
       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
     </div>
-    <div class="modal-body">
+    <div class="modal-body pt-0">
       <%= @modal.supporting_text %>
     </div>
-    <div class="modal-footer">
+    <div class="modal-footer pt-0 border-top-0">
       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
       <%= button_to "OK", "", :method => :delete, :class => "btn btn-primary" %>
     </div>
