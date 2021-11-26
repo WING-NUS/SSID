@@ -63,11 +63,11 @@
   </div>
 <% end %>
 
-<ul>
+<ul class="table_note">
   <li>Similarity values are not symmetric so we display both the maximum and average values in the table</li>
   <li>To analyze these similarities, <%= link_to "view", assignment_cluster_groups_url(@assignment) %> / <%= link_to "create", new_assignment_cluster_group_url(@assignment) %> submission cluster groups or <%= link_to "use the course visualizations", course_visualize_url(@course) %></li>
   <li>To allow non-SSID users to view and analyse the results, <%= link_to "create", guest_user_create_path(:id => @assignment) %> a sharable link </li> 
-  </ul>
+</ul>
 
 <table>
   <thead>
@@ -77,7 +77,7 @@
       <th class="similarity_col">Maximum Similarity</th>
       <th class="similarity_col">Average Similarity</th>
       <th>Remarks</th>
-      <th class="action_col"></th>
+      <th class="action_col">Actions</th>
     </tr>
   </thead>
   <tbody>
@@ -88,7 +88,16 @@
         <td><%= ss.similarity %>%</td>
         <td><%= ss.average_similarity %>%</td>
         <td><%= ss.status_string.html_safe %></td>
-        <td><%= link_to "View Submissions", assignment_submission_similarity_url(@assignment, ss) %></td>
+        <td>
+          <div class="dropdown">
+            <a data-toggle="dropdown" id="submissionSimilaritiesDropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+              <%= image_tag("more_vert_black_24dp.svg", alt: "Submission Similarities Menu Dropdown")%>                 
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="submissionSimilaritiesDropdownMenuLink">
+              <li><%= link_to "View Submissions", assignment_submission_similarity_url(@assignment, ss), class: "dropdown-item"%></li>
+            </ul> 
+          </div>
+        </td>
       </tr>
     <% end %>
   </tbody>

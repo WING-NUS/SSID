@@ -12,40 +12,56 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with SSID.  If not, see <http://www.gnu.org/licenses/>.
+@import "bootstrap";
 
 body.submission_similarities_index {
   table {
-    border-spacing: 0;
-    border-collapse: collapse;
-    width: 100%;
-    margin-bottom: 20px;
+    @extend .table;
+    @extend .table-bordered;
+    @extend .table-hover;
+    // border-spacing: 0;
+    // border-collapse: collapse;
+    // width: 100%;
+    // margin-bottom: 20px;
 
-    th {
-      border: 1px solid rgb(0, 0, 0);
-      background-color: rgb(231, 134, 13);
-      color: rgb(255, 255, 255);
-      font-weight: bold;
-      text-transform: uppercase;
-      padding: 3px 10px;
-      text-align: left;
-    }
+    // th {
+    //   border: 1px solid rgb(0, 0, 0);
+    //   background-color: rgb(231, 134, 13);
+    //   color: rgb(255, 255, 255);
+    //   font-weight: bold;
+    //   text-transform: uppercase;
+    //   padding: 3px 10px;
+    //   text-align: left;
+    // }
 
-    th.student_col, th.similarity_col {
-      width: 90px;
-    }
+    // th.student_col, th.similarity_col {
+    //   width: 90px;
+    // }
 
-    th.action_col {
-      width: 120px;
-    }
+    // th.action_col {
+    //   width: 120px;
+    // }
     
-    td {
-      border: 1px dotted #bbb;
-      padding: 3px 10px;
+    // td {
+    //   border: 1px dotted #bbb;
+    //   padding: 3px 10px;
 
-      a:hover {
-        color: rgb(255, 108, 0);
-      }
-    }
+    //   a:hover {
+    //     color: rgb(255, 108, 0);
+    //   }
+    // }
+  }
+
+  ul.table_note {
+    margin-bottom: 1rem;
+  }
+
+  ul.table_note > li {
+    margin-bottom: 0.25rem;
+  }
+
+  ul.table_note > li > a {
+    color: #0a58ca;
   }
 
   div.pagination {
