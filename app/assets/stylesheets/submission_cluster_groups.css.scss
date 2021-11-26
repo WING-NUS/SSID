@@ -12,6 +12,7 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with SSID.  If not, see <http://www.gnu.org/licenses/>.
+@import "bootstrap";
 
 body.submission_cluster_groups_index {
   h3 {
@@ -30,42 +31,45 @@ body.submission_cluster_groups_index {
   }
 
   table {
-    border-spacing: 0;
-    border-collapse: collapse;
-    width: 100%;
-    margin-bottom: 20px;
+    @extend .table;
+    @extend .table-bordered;
+    @extend .table-hover; 
+    // border-spacing: 0;
+    // border-collapse: collapse;
+    // width: 100%;
+    // margin-bottom: 20px;
 
-    th {
-      border: 1px solid rgb(0, 0, 0);
-      background-color: rgb(231, 134, 13);
-      color: rgb(255, 255, 255);
-      font-weight: bold;
-      text-transform: uppercase;
-      padding: 3px 10px;
-      text-align: left;
-    }
+    // th {
+    //   border: 1px solid rgb(0, 0, 0);
+    //   background-color: rgb(231, 134, 13);
+    //   color: rgb(255, 255, 255);
+    //   font-weight: bold;
+    //   text-transform: uppercase;
+    //   padding: 3px 10px;
+    //   text-align: left;
+    // }
 
-    th.submitted_on_col {
-      width: 200px;
-    }
+    // th.submitted_on_col {
+    //   width: 200px;
+    // }
     
-    td {
-      border: 1px dotted #bbb;
-      padding: 3px 10px;
+    // td {
+    //   border: 1px dotted #bbb;
+    //   padding: 3px 10px;
 
-      a {
-        &, &:hover, &:visited {
-          margin-right: 20px;
-        }
-        &:hover {
-          color: rgb(255, 108, 0);
-        }
-      }
+    //   a {
+    //     &, &:hover, &:visited {
+    //       margin-right: 20px;
+    //     }
+    //     &:hover {
+    //       color: rgb(255, 108, 0);
+    //     }
+    //   }
 
-      a.last {
-          margin-right: 0;
-      }
-    }
+    //   a.last {
+    //       margin-right: 0;
+    //   }
+    // }
   }
 
   div.notice {
