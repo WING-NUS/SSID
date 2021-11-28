@@ -9,7 +9,7 @@
     </div>
     <div class="modal-footer pt-0 border-top-0">
       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-      <%= button_to "OK", "", :method => :delete, :class => "btn btn-primary" %>
+      <%= button_to @modal.primary_action[:name], "", :method => @modal.primary_action[:method], :class => "btn btn-primary" %>
     </div>
   </div>
 </div>

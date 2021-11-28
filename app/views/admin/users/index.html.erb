@@ -158,12 +158,12 @@
 <% end %>
 
 <div class="modal fade" id="deleteUserModal" tabindex="-1" role="dialog" aria-hidden="true">
-  <% @modal = SiteModal.new("Delete User?", "The user will be permanently deleted. Are you sure?") %>
+  <% @modal = SiteModal.new("Delete User?", "The user will be permanently deleted. Are you sure?", { :name => "OK", :method => :delete }) %>
   <%= render partial: "site/modal", locals: { modal: @modal }%>
 </div>
 
 <div class="modal fade" id="removeUserModal" tabindex="-1" role="dialog" aria-hidden="true">
-  <% @modal = SiteModal.new("Remove User?", "The user will be removed from the course. Are you sure?") %>
+  <% @modal = SiteModal.new("Remove User?", "The user will be removed from the course. Are you sure?", { :name => "OK", :method => :delete }) %>
   <%= render partial: "site/modal", locals: { modal: @modal }%>
 </div>
 

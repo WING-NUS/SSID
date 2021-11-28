@@ -87,7 +87,7 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 </table>
 
 <div class="modal fade" id="deleteCourseModal" tabindex="-1" role="dialog" aria-hidden="true">
-  <% @modal = SiteModal.new("Delete Module?", "This module will be permanently deleted and cannot be recovered. Are you sure?") %>
+  <% @modal = SiteModal.new("Delete Module?", "This module will be permanently deleted and cannot be recovered. Are you sure?", { :name => "OK", :method => :delete }) %>
   <%= render partial: "site/modal", locals: { modal: @modal }%>
 </div>
 

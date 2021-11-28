@@ -46,7 +46,7 @@
   </table>
 
   <div class="modal fade" id="deleteClusterGroupModal" tabindex="-1" role="dialog" aria-hidden="true">
-    <% @modal = SiteModal.new("Delete Cluster Group", "This cluster group will be permanently deleted and cannot be recovered. Are you sure?") %>
+    <% @modal = SiteModal.new("Delete Cluster Group", "This cluster group will be permanently deleted and cannot be recovered. Are you sure?", { :name => "OK", :method => :delete }) %>
     <%= render partial: "site/modal", locals: { modal: @modal }%>
   </div>
 <% end %>

@@ -145,7 +145,7 @@
     </table>
 
   <div class="modal fade" id="deleteAssignmentModal" tabindex="-1" role="dialog" aria-hidden="true">
-    <% @modal = SiteModal.new("Delete Assignment?", "This assignment will be permanently deleted and cannot be recovered. Are you sure?") %>
+    <% @modal = SiteModal.new("Delete Assignment?", "This assignment will be permanently deleted and cannot be recovered. Are you sure?", { :name => "OK", :method => :delete }) %>
     <%= render partial: "site/modal", locals: { modal: @modal }%>
   </div>
     
