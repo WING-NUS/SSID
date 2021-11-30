@@ -19,12 +19,12 @@ module SubmissionClustersHelper
   LEGEND_SIMILARITY_VALUES = (40..90).step(10).to_a.reverse
   LEGEND_COLORS_FOR_SIMILARITY_VALUES = Hash[
     LEGEND_SIMILARITY_VALUES.zip(
-      %w{#CB0034 #FF6501 #F5D800 #377FC7 #00ECEC #01A64D}
+      %w{#dc3545 #fd7e14 #ffc107 #0d6efd #0dcaf0 #01A64D}
     )
   ]
   LEGEND_WEIGHTS_FOR_SIMILARITY_VALUES = Hash[
     LEGEND_SIMILARITY_VALUES.zip(
-      %w{11 9 7 5 3 1}
+      %w{5 5 5 5 5 5}
     )
   ]
 
