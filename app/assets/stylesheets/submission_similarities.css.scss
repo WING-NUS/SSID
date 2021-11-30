@@ -80,6 +80,12 @@ body.submission_similarities_show {
     top:250px;
   }
   
+  table {
+    @extend .table;
+    @extend .table-bordered;
+    @extend .table-hover;
+  }
+
   div.button{
     color: #FFFFFF;
     font-weight: bold;
@@ -95,6 +101,7 @@ body.submission_similarities_show {
   }
   
   div.submissions {
+    @extend .mt-5;
     overflow-y: auto;
     width: 100%;
 
@@ -113,27 +120,25 @@ body.submission_similarities_show {
     }
 
     div {
-      overflow-x: scroll;
+      overflow-x: auto;
     }
 
     div.submission1 {
       float: left;
-      width: 45%;
-      margin-left: 100px;
+      width: 50%;
       overflow-y: auto;
       height: 700px;
     }
 
     div.submission2 {
       float: left;
-      width: 45%;
+      width: 50%;
       overflow-y: auto;
       height: 700px;
     }
   }
 
   div.options {
-    text-align: center;
 
     div {
       margin-bottom: 15px;
