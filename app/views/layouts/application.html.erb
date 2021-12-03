@@ -14,29 +14,33 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 <!DOCTYPE html>
 <html>
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Student Submissions Integrity Diagnosis (SSID) System</title>
   <%= stylesheet_link_tag    "application", :media => "all" %>
   <%= javascript_include_tag "application" %>
   <%= yield :head %>
   <%= csrf_meta_tags %>
 </head>
-<body class="<%= controller_name %> <%= controller_name %>_<%= action_name %>">
+<body class="container <%= controller_name %> <%= controller_name %>_<%= action_name %>">
   <%= javascript_tag "if (window.#{controller_name.singularize.camelize} && #{controller_name.singularize.camelize}.onLoad) { #{controller_name.singularize.camelize}.onLoad(); };" %>
-  <h1 id="top_banner">Student Submissions Integrity Diagnosis (SSID) System</h1>
-  <ul id="menu"<%= %Q{ class="admin"}.html_safe if @user and @user.is_admin %>>
-<% if @user %>
-    <li<%= highlight_if_current root_url %>><%= link_to "Home", root_url %></li>
-    <li<%= highlight_if_current courses_url %>><%= link_to "Courses", courses_url %></li>
-    <% if @user.is_admin %>
-      <li<%= highlight_if_current admin_users_url %>><%= link_to "Users", admin_users_url %></li>
-    <% end %>
-    <% if @user.is_admin || @membership.role != 3 %>
-    <li<%= highlight_if_current edit_user_url(@user) %>><%= link_to "Settings", edit_user_url(@user) %></li>
-    <% end %>
-    <li<%= highlight_if_current guide_url %>><%= link_to "User Guide", guide_url %></li>
-    <li<%= highlight_if_current logout_url %>><%= link_to "Log Out", logout_url, :method => :delete, confirm: "Log out of SSID?" %></li>
-<% end %>
-  </ul>
+  <div class="d-flex flex-column">
+    <h1 id="top_banner">Student Submissions Integrity Diagnosis (SSID) System</h1>
+    <ul id="menu" class="nav"<%= %Q{ class="admin"}.html_safe if @user and @user.is_admin %>>
+  <% if @user %>
+      <li class="nav-item px-3 py-1" <%= highlight_if_current root_url %>><%= link_to "Home", root_url %></li>
+      <li class="nav-item px-3 py-1" <%= highlight_if_current courses_url %>><%= link_to "Courses", courses_url %></li>
+      <% if @user.is_admin %>
+        <li class="nav-item px-3 py-1" <%= highlight_if_current admin_users_url %>><%= link_to "Users", admin_users_url %></li>
+      <% end %>
+      <% if @user.is_admin || (@membership && @membership.role != 3) %>
+      <li class="nav-item px-3 py-1" <%= highlight_if_current edit_user_url(@user) %>><%= link_to "Settings", edit_user_url(@user) %></li>
+      <% end %>
+      <li class="nav-item px-3 py-1" <%= highlight_if_current guide_url %>><%= link_to "User Guide", guide_url %></li>
+      <li class="nav-item px-3 py-1" <%= highlight_if_current logout_url %>><%= link_to "Log Out", logout_url, :method => :delete, confirm: "Log out of SSID?" %></li>
+  <% end %>
+    </ul>
+    
+  </div>
 
   <div id="content">
     <%= render partial: "site/breadcrumb", locals: { course: @course, assignment: @assignment, submission: @submission, submission_similarity: @submission_similarity } unless @course.nil? or controller_path == "admin/users" %>
