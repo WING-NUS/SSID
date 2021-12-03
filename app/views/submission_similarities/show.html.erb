@@ -1,8 +1,8 @@
 <h2>Submission Similarities for Students <%= @submission_similarity.student1.id_string %> and <%= @submission_similarity.student2.id_string %> (<%= @submission_similarity.similarity %>%)</h2>
 <div class="test_out_new_design mt-5">
   <div>
-    <%= link_to "Show matching statements", "#matchingStatementsTable", data: { "bs-toggle" => "collapse" }, :"aria-expanded" => "false", :"aria-controls" => "matchingStatementsTable" %>
-    <div class="dropdown">
+    <%= link_to "Show matching statements", "#matchingStatementsTable", data: { "bs-toggle" => "collapse" }, :"aria-expanded" => "false", :"aria-controls" => "matchingStatementsTable", class: "d-inline pr-2" %>
+    <div class="dropdown d-inline p-2">
       <a data-toggle="dropdown" id="actionsDropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
         <%= image_tag("more_vert_black_24dp.svg", alt: "Actions taken on submission similarities menu dropdown")%>                 
       </a>
@@ -29,7 +29,7 @@
       </ul>
     </div>
   </div>
-  <table id="matchingStatementsTable" class="lines">
+  <table id="matchingStatementsTable" class="lines mt-3">
     <thead>
       <tr>
         <th class="lines_col">Submission by <%= @student1.id_string %></th>
