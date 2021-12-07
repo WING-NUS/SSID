@@ -106,7 +106,9 @@ class AnnouncementsController < ApplicationController
     end
   
     # Check content
-    @announcement.errors.add_on_blank :html_content
+    if @announcement.html_content.nil? or @announcement.html_content.empty? 
+      @announcement.errors.add :html_content, "must be not blank"
+    end
 
     if @announcement.errors.empty? and @announcement.save
       redirect_to announcements_url, notice: 'Announcement was successfully updated.'
