@@ -20,7 +20,12 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
   </div>
 <% end %>
 
+<header>
 <h2>Announcements</h2>
+<p>
+<%= link_to image_tag("plus-circle.svg", size: "28", alt: "New announcement"), new_announcement_url, { "data-toggle" => "tooltip", "data-placement" => "bottom", "title" => "New Announcement" } if @user.is_some_staff? %>
+</p>
+</header>
 
 <% if flash[:notice] %>
   <div class="notice">
@@ -32,19 +37,34 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
   <div class="announcement">No announcements</div>
 <% else %>
   <% @announcements.each { |a| %>
-    <div class="announcement">
-      <h3><%= a.title + " " if a.title %></h3>
-      <div><%= a.html_content.html_safe %></div>
+    <div class="card announcement rounded mb-3">
+      <div class="card-header d-flex justify-content-between">
+        <strong class="d-inline"><%= a.title + " " if a.title %></strong>
+        <% if @user.is_some_staff? %>
+          <div class="dropdown d-inline">
+            <a data-toggle="dropdown" id="announcementDropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+              <%= image_tag("more_vert_black_24dp.svg", alt: "Announcement Menu Dropdown")%>      
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="announcementDropdownMenuLink">
+              <li><%= link_to "Edit", edit_announcement_url(a), class: "dropdown-item" %></li>
+              <li>
+                <%= button_tag 'Delete', class: "dropdown-item", data: { 'bs-toggle' => "modal", 'bs-target' => "#deleteAnnouncementModal", 'bs-url' => "#{announcement_url(a)}" } %>
+              </li>
+            </ul>
+          </div>  
+        <% end %>
+      </div>
+      <div class="card-body"><%= a.html_content.html_safe %></div>
       <span><%= a.updated_at.in_time_zone %></span> 
-      <% if @user.is_some_staff? %>
-        <div class="actions"><%= link_to "Edit", edit_announcement_url(a) %> <%= link_to "Delete", announcement_url(a), method: "delete", confirm: "Delete announcement?" %></div>
-      <% end %>
+
     </div>
   <% } %>
+
 <% end %>
 
-<hr />
+<div class="modal fade" id="deleteAnnouncementModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <% @modal = SiteModal.new("Delete Announcement", "This announcement will be permanently deleted. Are you sure?", { :name => "OK", :method => :delete }) %>
+  <%= render partial: "site/modal", locals: { modal: @modal }%>
+</div>
 
-<p>
-<%= link_to "New announcement", new_announcement_url if @user.is_some_staff? %>
-</p>
+<%= javascript_include_tag "site_modal.js" %>
