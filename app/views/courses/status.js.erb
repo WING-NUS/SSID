@@ -1,4 +1,4 @@
-<% unless @erroneous_assignments.empty? %>
+  <% unless @erroneous_assignments.empty? %>
     <h3>Erroneous:</h3>
     <table class="erroneous_assignments">
       <thead>
@@ -143,12 +143,11 @@
       <% } %>
       </tbody>
     </table>
+  <% end %>
 
   <div class="modal fade" id="deleteAssignmentModal" tabindex="-1" role="dialog" aria-hidden="true">
     <% @modal = SiteModal.new("Delete Assignment?", "This assignment will be permanently deleted and cannot be recovered. Are you sure?", { :name => "OK", :method => :delete }) %>
     <%= render partial: "site/modal", locals: { modal: @modal }%>
   </div>
     
-  <% end %>
-
   <%= javascript_include_tag "site_modal.js" %>
