@@ -24,7 +24,13 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 <body class="container <%= controller_name %> <%= controller_name %>_<%= action_name %>">
   <%= javascript_tag "if (window.#{controller_name.singularize.camelize} && #{controller_name.singularize.camelize}.onLoad) { #{controller_name.singularize.camelize}.onLoad(); };" %>
   <div class="d-flex flex-column">
-    <h1 id="top_banner">Student Submissions Integrity Diagnosis (SSID) System</h1>
+    <header class="site_header d-flex flex-row">
+      <% if controller_name == "sessions" %>
+        <%= image_tag("logo.png", height: "68", width: "140", alt: "NUS logo", class: "p-2")%>
+      <% end %>
+      <h3 id="site_banner">Student Submissions Integrity Diagnosis (SSID) System</h3>
+    </header>
+    
     <ul id="menu" class="nav"<%= %Q{ class="admin"}.html_safe if @user and @user.is_admin %>>
   <% if @user %>
       <li class="nav-item px-3 py-1" <%= highlight_if_current root_url %>><%= link_to "Home", root_url %></li>

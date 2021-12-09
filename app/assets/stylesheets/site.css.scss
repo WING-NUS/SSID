@@ -25,7 +25,7 @@ body {
 }
 
 h2, h3 {
-  color: rgb(0, 0, 128);
+  color: #003d7c;
 }
 
 .site {
@@ -33,11 +33,15 @@ h2, h3 {
 }
 
 .site_header {
-  color: rgb(0, 0, 128);
-  @extend .h5;
-  @extend .mt-5;
+  @extend .mt-3;
+  @extend .mb-3;
+}
+
+.login_helper_text {
+  @extend .mt-3;
   @extend .mb-3;
   @extend .fw-normal;
+  color: #003d7c;
 }
 
 .site_icon {
@@ -70,20 +74,19 @@ table {
   }
 }
 
-#top_banner {
+#site_banner {
   display: block;
   margin: 0;
   height: 75%;
-  padding: 50px 15px 10px;
-  font-size: 24px;
-  background-image: url('orangeE.jpg');
-  background-repeat: repeat-x;
-  color: rgb(0, 0, 128);
+  padding: 1rem 0.5rem;
+  font-size: 2rem;
+  font-weight: 400;
+  color: #003d7c;
 }
 
 #menu {
   margin: 0;
-  background-color: rgb(255, 108, 0);
+  // background-color: rgb(255, 108, 0);
   display: block;
   height: 1.8rem;
   overflow: auto;
