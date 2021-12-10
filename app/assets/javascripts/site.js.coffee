@@ -35,3 +35,8 @@ Site.registerHighlightRowMethodsForLink = (link) ->
       return
   )
   return
+
+$(document).ready ->
+  if $("ul#menu").length > 0
+    $(".site_header").addClass("site_header_background");
+  return

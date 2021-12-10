@@ -33,8 +33,15 @@ h2, h3 {
 }
 
 .site_header {
-  @extend .mt-3;
   @extend .mb-3;
+}
+
+.site_header_background {
+  background-color: var(--bs-gray-200);
+}
+
+.site_logo {
+  padding: 1.25rem 0.5rem;
 }
 
 .login_helper_text {
@@ -42,11 +49,6 @@ h2, h3 {
   @extend .mb-3;
   @extend .fw-normal;
   color: #003d7c;
-}
-
-.site_icon {
-  @extend .mt-3;
-  @extend .mb-4;
 }
 
 .site_copyright {
@@ -74,8 +76,17 @@ table {
   }
 }
 
+#site_banner_login {
+  margin: 0;
+  height: 75%;
+  padding: 1.25rem 0.5rem;
+  font-size: 2rem;
+  font-weight: 400;
+  color: #003d7c;
+}
+
 #site_banner {
-  display: block;
+  @extend .order-0; 
   margin: 0;
   height: 75%;
   padding: 1rem 0.5rem;
@@ -85,12 +96,10 @@ table {
 }
 
 #menu {
+  @extend .order-1;
   margin: 0;
-  // background-color: rgb(255, 108, 0);
-  display: block;
-  height: 1.8rem;
-  overflow: auto;
-  padding: 0;
+  height: 2rem;
+  padding: 1.25rem 0.5rem;
   display: flex;
   align-items: stretch; /* Default */
   justify-content: space-between;
@@ -105,14 +114,13 @@ table {
       &, &:visited {
         display: inline-block;
         width: 100%;
-        color: rgb(255, 255, 255);
+        color: #212529;
         text-decoration: none;
-        background-color: rgb(255,108,0);
-        height: 1.5rem;
+        height: 2rem;
+        font-size: 1rem;
       }
       &:hover {
-        color: rgb(255, 108,0);
-        background-color: rgb(252, 228, 77);
+        color: #003d7c;
       }
     }
 
@@ -125,7 +133,7 @@ table {
 }
 
 #content {
-  margin: 0 15px 15px;
+  margin: 0 1rem 1rem;
 }
 
 div.breadcrumb {

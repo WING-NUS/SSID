@@ -21,37 +21,39 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
   <%= yield :head %>
   <%= csrf_meta_tags %>
 </head>
-<body class="container <%= controller_name %> <%= controller_name %>_<%= action_name %>">
+<body class="<%= controller_name %> <%= controller_name %>_<%= action_name %>">
   <%= javascript_tag "if (window.#{controller_name.singularize.camelize} && #{controller_name.singularize.camelize}.onLoad) { #{controller_name.singularize.camelize}.onLoad(); };" %>
-  <div class="d-flex flex-column">
-    <header class="site_header d-flex flex-row">
-      <% if controller_name == "sessions" %>
-        <%= image_tag("logo.png", height: "68", width: "140", alt: "NUS logo", class: "p-2")%>
+  <header class="site_header">
+    <div class="container d-flex flex-row">
+      <% unless @user %>
+        <%= image_tag("logo.png", height: "100", width: "150", alt: "NUS logo", class: "site_logo")%>
+        <h3 id="site_banner_login">Student Submissions Integrity Diagnosis (SSID) System</h3>
+      <% else %> 
+        <h3 id="site_banner">SSID</h3>  
+        <ul id="menu" <%= %Q{ class="admin"}.html_safe if @user and @user.is_admin %>>
+          <% if @user %>
+            <li class="nav-item px-3 py-1" <%= highlight_if_current root_url %>><%= link_to "Home", root_url %></li>
+            <li class="nav-item px-3 py-1" <%= highlight_if_current courses_url %>><%= link_to "Courses", courses_url %></li>
+            <% if @user.is_admin %>
+              <li class="nav-item px-3 py-1" <%= highlight_if_current admin_users_url %>><%= link_to "Users", admin_users_url %></li>
+            <% end %>
+            <% if @user.is_admin || (@membership && @membership.role != 3) %>
+              <li class="nav-item px-3 py-1" <%= highlight_if_current edit_user_url(@user) %>><%= link_to "Settings", edit_user_url(@user) %></li>
+            <% end %>
+            <li class="nav-item px-3 py-1" <%= highlight_if_current guide_url %>><%= link_to "User Guide", guide_url %></li>
+            <li class="nav-item px-3 py-1" <%= highlight_if_current logout_url %>><%= link_to "Log Out", logout_url, :method => :delete, confirm: "Log out of SSID?" %></li>
+          <% end %>
+        </ul>
       <% end %>
-      <h3 id="site_banner">Student Submissions Integrity Diagnosis (SSID) System</h3>
-    </header>
-    
-    <ul id="menu" class="nav"<%= %Q{ class="admin"}.html_safe if @user and @user.is_admin %>>
-  <% if @user %>
-      <li class="nav-item px-3 py-1" <%= highlight_if_current root_url %>><%= link_to "Home", root_url %></li>
-      <li class="nav-item px-3 py-1" <%= highlight_if_current courses_url %>><%= link_to "Courses", courses_url %></li>
-      <% if @user.is_admin %>
-        <li class="nav-item px-3 py-1" <%= highlight_if_current admin_users_url %>><%= link_to "Users", admin_users_url %></li>
-      <% end %>
-      <% if @user.is_admin || (@membership && @membership.role != 3) %>
-      <li class="nav-item px-3 py-1" <%= highlight_if_current edit_user_url(@user) %>><%= link_to "Settings", edit_user_url(@user) %></li>
-      <% end %>
-      <li class="nav-item px-3 py-1" <%= highlight_if_current guide_url %>><%= link_to "User Guide", guide_url %></li>
-      <li class="nav-item px-3 py-1" <%= highlight_if_current logout_url %>><%= link_to "Log Out", logout_url, :method => :delete, confirm: "Log out of SSID?" %></li>
-  <% end %>
-    </ul>
-    
-  </div>
+    </div>
+  </header>
 
-  <div id="content">
-    <%= render partial: "site/breadcrumb", locals: { course: @course, assignment: @assignment, submission: @submission, submission_similarity: @submission_similarity } unless @course.nil? or controller_path == "admin/users" %>
-<%= yield :pre_content %>
-<%= yield %>
-  </div>
+  <main class="container">
+    <div id="content">
+      <%= render partial: "site/breadcrumb", locals: { course: @course, assignment: @assignment, submission: @submission, submission_similarity: @submission_similarity } unless @course.nil? or controller_path == "admin/users" %>
+      <%= yield :pre_content %>
+      <%= yield %>
+    </div>
+  </main>
 </body>
 </html>
