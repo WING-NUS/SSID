@@ -32,16 +32,16 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
         <h3 id="site_banner">SSID</h3>  
         <ul id="menu" <%= %Q{ class="admin"}.html_safe if @user and @user.is_admin %>>
           <% if @user %>
-            <li class="nav-item px-3 py-1" <%= highlight_if_current root_url %>><%= link_to "Home", root_url %></li>
-            <li class="nav-item px-3 py-1" <%= highlight_if_current courses_url %>><%= link_to "Courses", courses_url %></li>
+            <li <%= highlight_if_current root_url %>><%= link_to "Home", root_url %></li>
+            <li <%= highlight_if_current courses_url %>><%= link_to "Courses", courses_url %></li>
             <% if @user.is_admin %>
-              <li class="nav-item px-3 py-1" <%= highlight_if_current admin_users_url %>><%= link_to "Users", admin_users_url %></li>
+              <li <%= highlight_if_current admin_users_url %>><%= link_to "Users", admin_users_url %></li>
             <% end %>
             <% if @user.is_admin || (@membership && @membership.role != 3) %>
-              <li class="nav-item px-3 py-1" <%= highlight_if_current edit_user_url(@user) %>><%= link_to "Settings", edit_user_url(@user) %></li>
+              <li <%= highlight_if_current edit_user_url(@user) %>><%= link_to "Settings", edit_user_url(@user) %></li>
             <% end %>
-            <li class="nav-item px-3 py-1" <%= highlight_if_current guide_url %>><%= link_to "User Guide", guide_url %></li>
-            <li class="nav-item px-3 py-1" <%= highlight_if_current logout_url %>><%= link_to "Log Out", logout_url, :method => :delete, confirm: "Log out of SSID?" %></li>
+            <li <%= highlight_if_current guide_url %>><%= link_to "User Guide", guide_url %></li>
+            <li <%= highlight_if_current logout_url %>><%= link_to "Log Out", logout_url, :method => :delete, confirm: "Log out of SSID?" %></li>
           <% end %>
         </ul>
       <% end %>

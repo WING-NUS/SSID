@@ -104,6 +104,7 @@ table {
   @extend .flex-wrap;
 
   li {
+    @extend .nav-item;
     @extend .px-2;
     @extend .py-1;
 
