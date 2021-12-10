@@ -17,21 +17,21 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 
 window.Site ||= {}
 
-Site.highlightRowOfLink = (link) ->
-  $(link).closest("tr").addClass("highlight")
+Site.highlightLink = (link, parentElement) ->
+  $(link).closest(parentElement).addClass("highlight")
   return
 
-Site.unhighlightRowOfLink = (link) ->
-  $(link).closest("tr").removeClass("highlight")
+Site.unhighlightLink = (link, parentElement) ->
+  $(link).closest(parentElement).removeClass("highlight")
   return
 
-Site.registerHighlightRowMethodsForLink = (link) ->
+Site.registerHighlightLink = (link, parentElement) ->
   $(link).hover(
     ->
-      Site.highlightRowOfLink(this)
+      Site.highlightLink(this, parentElement)
       return
     ->
-      Site.unhighlightRowOfLink(this)
+      Site.unhighlightLink(this, parentElement)
       return
   )
   return

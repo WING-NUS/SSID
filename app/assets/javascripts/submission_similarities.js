@@ -112,7 +112,7 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
     SubmissionSimilarity.onLoad = function() {
       return $(function() {
         $("body.submission_similarities_index table a").each(function() {
-          Site.registerHighlightRowMethodsForLink(this);
+          Site.registerHighlightLink(this, "tr");
         });
         prettyPrint();
 

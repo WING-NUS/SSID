@@ -23,3 +23,9 @@ Course.onLoad = ->
       # Site.registerHighlightRowMethodsForLink(this)
       # return
     return
+  
+  $ -> 
+    $("ul#menu li a").each ->
+      Site.registerHighlightLink(this, "li");
+      return
+    return

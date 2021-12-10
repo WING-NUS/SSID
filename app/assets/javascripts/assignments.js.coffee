@@ -20,7 +20,7 @@ window.Assignment ||= {}
 Assignment.onLoad = ->
   $ ->
     $("table a").each ->
-      Site.registerHighlightRowMethodsForLink(this)
+      Site.registerHighlightLink(this, "tr");
       return
     return
   
