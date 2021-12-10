@@ -20,7 +20,7 @@ body {
   min-width: 800px;
 
   div.alert {
-    color: rgb(255, 0, 0);
+    color: var(--bs-red);
   }
 }
 
@@ -74,7 +74,7 @@ table {
   tr.highlight td {
     background-color: yellow;
   }
-}
+} 
 
 #site_banner_login {
   margin: 0;
@@ -97,38 +97,29 @@ table {
 
 #menu {
   @extend .order-1;
-  margin: 0;
-  height: 2rem;
-  padding: 1.25rem 0.5rem;
-  display: flex;
-  align-items: stretch; /* Default */
-  justify-content: space-between;
+  @extend .ms-md-auto;
+  padding: 0.5rem;
+  @extend .navbar-nav;
+  flex-direction: row;
+  @extend .flex-wrap;
 
   li {
-    list-style: none;
-    float: left;
-    height: 1.5rem;
-    text-align: center;
+    @extend .px-2;
+    @extend .py-1;
 
     a {
       &, &:visited {
-        display: inline-block;
-        width: 100%;
-        color: #212529;
-        text-decoration: none;
-        height: 2rem;
-        font-size: 1rem;
+        @extend .nav-link;
+        color: var(--bs-gray-600);
       }
       &:hover {
         color: #003d7c;
       }
     }
 
-    &.highlight, &.highlight a {
-      color: rgb(255, 108,0);
-      background-color: rgb(252, 228, 77);
+    &.highlight a {
+      border-bottom: 3px solid #ef7c00;
     }
-
   }
 }
 
