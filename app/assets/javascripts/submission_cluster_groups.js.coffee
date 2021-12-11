@@ -28,6 +28,6 @@ SubmissionClusterGroup.enableUserDefinedTextField = ->
 SubmissionClusterGroup.onLoad = ->
   $ ->
     $("table a").each ->
-      Site.registerHighlightLink(this, "tr");
+      Site.registerHighlightRowMethodsForLink(this)
       return
     return
