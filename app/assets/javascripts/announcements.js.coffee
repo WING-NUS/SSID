@@ -19,7 +19,6 @@ window.Announcement ||= {}
 
 Announcement.onLoad = -> 
   $ -> 
-    $("ul#menu li a").each ->
-      Site.registerHighlightLink(this, "li");
-      return
-    return
+    Site.registerDefaultActiveNavigationLink()
+
+  return

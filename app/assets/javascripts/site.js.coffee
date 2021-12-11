@@ -36,6 +36,10 @@ Site.registerHighlightRowMethodsForLink = (link) ->
   )
   return
 
+Site.registerDefaultActiveNavigationLink = () -> 
+  $("ul#menu li a:first").closest("li").addClass("active_menu_item");
+  return
+
 $(document).ready ->
   if $("ul#menu").length > 0
     $(".site_header").addClass("site_header_background");

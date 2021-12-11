@@ -17,9 +17,3 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 
 window.User ||= {}
 
-User.onLoad = ->
-  $ -> 
-    $("ul#menu li a").each ->
-      Site.registerHighlightLink(this, "li");
-      return
-    return

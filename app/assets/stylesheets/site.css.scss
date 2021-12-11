@@ -119,7 +119,8 @@ table {
       }
     }
 
-    &.highlight a {
+    &.active_menu_item a {
+      color: #003d7c;
       border-bottom: 3px solid #ef7c00;
     }
   }
