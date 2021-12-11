@@ -36,8 +36,13 @@ Site.registerHighlightRowMethodsForLink = (link) ->
   )
   return
 
-Site.registerDefaultActiveNavigationLink = () -> 
-  $("ul#menu li a:first").closest("li").addClass("active_menu_item");
+Site.registerActiveNavigationLink = (page) ->
+  currentLocation = $(page)[0].location.href
+  navigationLinks = $(page).find("ul#menu li")
+  for link in navigationLinks
+    if link.children[0].href == currentLocation
+      $(link).addClass("active_menu_item")   
+      break  
   return
 
 $(document).ready ->

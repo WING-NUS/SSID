@@ -18,8 +18,6 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 window.Course ||= {}
 
 Course.onLoad = ->
-  $ ->
-    $("table a").each ->
-      # Site.registerHighlightRowMethodsForLink(this)
-      # return
-    return
+  $ -> 
+    Site.registerActiveNavigationLink($(this))
+  return

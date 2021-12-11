@@ -19,6 +19,5 @@ window.Announcement ||= {}
 
 Announcement.onLoad = -> 
   $ -> 
-    Site.registerDefaultActiveNavigationLink()
-
+    Site.registerActiveNavigationLink($(this))
   return
