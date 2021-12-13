@@ -12,20 +12,28 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with SSID.  If not, see <http://www.gnu.org/licenses/>.
-@import "bootstrap";
+@import "bootstrap/functions";
+@import "bootstrap/variables";
+@import "bootstrap/mixins";
+@import "bootstrap/utilities";
+
+@import "bootstrap/reboot";
+@import "bootstrap/type";
+@import "bootstrap/tables";
+@import "bootstrap/dropdown";
 
 body.courses_index {
   .course_header {
-    @extend .d-flex;
-    @extend .flex-row;
-    @extend .justify-content-start;
-    @extend .mt-3;
-    @extend .mb-3;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
   }
 
   h2 {
     @extend .h5;
-    @extend .fw-normal;
+    font-weight: 400;
     margin-right: 1.5rem;
     font-size: 1.25rem;
 
@@ -33,7 +41,7 @@ body.courses_index {
 
   h3 {
     @extend .h6;
-    @extend .fw-normal;
+    font-weight: 400;
   }
 
   h5, h6 {
@@ -103,13 +111,6 @@ body.courses {
     width: 200px;
     margin-top: 5px;
     display: inline-block;
-  }
-
-  input.submit {
-    @extend .btn;
-    @extend .btn-primary;
-    @extend .mt-3;
-
   }
 
   // div.field_with_errors {
