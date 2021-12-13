@@ -2,6 +2,8 @@
 @import "bootstrap/functions";
 
 // Include any default variable overrides here
+$breadcrumb-font-size: 0.9375rem;
+$breadcrumb-divider: quote(">");
 
 // Include remainder of Bootstrap configuration
 @import "bootstrap/variables";

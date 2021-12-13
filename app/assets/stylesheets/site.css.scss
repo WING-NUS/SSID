@@ -130,19 +130,18 @@ table {
   margin: 0 1rem 1rem;
 }
 
-div.breadcrumb {
-  padding-top: 10px;
-  font-size: 11px;
+ol.breadcrumb {
+  padding-top: 0.5rem;
   color: rgb(51, 51, 51);
 
-  a {
+  li a {
     &, &:hover, &:visited {
       background-color: rgb(255, 255, 255);
       color: rgb(51, 51, 51);
       text-decoration: none;
     }
     &:hover {
-      color: rgb(255, 108, 0);
+      color: #ef7c00;
     }
   }
 }
