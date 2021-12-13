@@ -14,4 +14,16 @@
  *= require_self
  */
  // Custom bootstrap variables must be set or imported *before* bootstrap.
-@import "bootstrap";
+ @import "bootstrap_custom";
+//  @import "announcements";
+//  @import "assignments";
+//  @import "courses.css";
+//  @import "scaffolds.css";
+//  @import "sessions.css";
+//  @import "site.css";
+//  @import "submission_cluster_groups.css";
+ 
+//  @import "submission_clusters";
+//  @import "submission_logs.css";
+//  @import "submission_similarities.css";
+//  @import "users.css";
