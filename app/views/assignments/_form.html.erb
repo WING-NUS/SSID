@@ -1,7 +1,7 @@
 <%= form_for([@course, @assignment]) do |f| %>
   <% if @assignment.errors.any? %>
     <div id="error_explanation">
-      <h3><%= pluralize(@assignment.errors.count, "error") %> prohibited this assignment from being saved:</h3>
+      <h6><%= pluralize(@assignment.errors.count, "error") %> prohibited this assignment from being saved:</h6>
       <ul>
       <% @assignment.errors.full_messages.each do |msg| %>
         <li><%= msg %></li>
@@ -33,7 +33,7 @@
   </div>
   
   <div class="col-12">
-  <%= f.label :mapbox, "Upload map file?", class: 'form-check-label' %>
+  <%= f.label :mapbox, "Upload map file?" %>
   <%= f.check_box :mapbox, { :class => 'form-check-input' }, "Yes", "No" %>
   </div>
   <div id="map_file_details" style="display:none;" class="col-12">
