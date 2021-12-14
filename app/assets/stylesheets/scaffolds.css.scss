@@ -59,7 +59,7 @@ div {
   color: green; }
 
 div.field_with_errors .form-control {
-  border-color: #ff0000;
+  border-color: $red-400;
 }
 
 #error_explanation {
