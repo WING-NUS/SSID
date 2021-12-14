@@ -23,17 +23,13 @@ body.users {
   form {
     label {
       width: 200px;
-      margin-top: 5px;
+      margin-top: $spacer * 0.5;
       display: inline-block;
-    }
-
-    input.submit {
-      margin-top: 15px;
     }
   }
 
   div.notice {
-    margin-bottom: 15px;
+    margin-bottom: $spacer;
     color: rgb(0, 160, 0);
   }
 
@@ -52,52 +48,36 @@ body.users {
 }
 
 body.users_index {
+  h4 {
+    margin-top: $spacer * 1.25;
+  }
+
+  .user_header, .course_user_header {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    margin-bottom: $spacer * 0.5;
+  }
+
+  .user_header {
+    margin-top: $spacer * 0.75;
+  }
+
+  h5 {
+    margin-right: $spacer * 1.5;
+  }
+
   table {
     @extend .table;
     @extend .table-bordered;
-    // border-spacing: 0;
-    // border-collapse: collapse;
-    // width: 100%;
-
-    // th {
-    //   border: 1px solid rgb(0, 0, 0);
-    //   background-color: rgb(231, 134, 13);
-    //   color: rgb(255, 255, 255);
-    //   font-weight: bold;
-    //   padding: 3px 10px;
-    //   text-align: left;
-
-    //   &.role_col {
-    //     width: 125px;
-    //   }
-
-    //   &.id_col {
-    //     width: 125px;
-    //   }
-    // }
-
-    // th.actions_col {
-    //   width: 110px;
-    // }
-    
-    // td {
-    //   border: 1px dotted #bbb;
-    //   padding: 3px 10px;
-
-    //   a {
-    //     &, &:hover, &:visited {
-    //       margin-right: 20px;
-    //     }
-    //     &:hover {
-    //       color: rgb(255, 108, 0);
-    //     }
-    //   }
-    //   a.last {
-    //       margin-right: 0;
-    //   }
-    // }
+    @extend .table-hover;
   }
-  .admin_users_section, .course_users_section, .lone_users_section {
+
+  .admin_users_section, .course_users_section {
     margin-bottom: $spacer * 3;
+  }
+
+  .lone_users_section {
+    margin-bottom: $spacer * 5;
   }
 }

@@ -1,4 +1,4 @@
-<h2>Users</h2>
+<h4>Users</h4>
 <% if flash[:notice] %>
   <div class="notice">
     <%= flash[:notice] %>
@@ -12,8 +12,8 @@
 
 <div class="admin_users_section"> 
 <header class="user_header">
-<h3>Admins</h3>
-<%= link_to image_tag("person_add_black_24dp.svg", size: "28", alt: "New Admin"), new_admin_user_url, {'data-toggle' => 'tooltip', 'data-placement' => 'bottom', 'title' => 'New Admin'} %>
+<h5>Admins</h5>
+<%= link_to image_tag("person_add_blue_24dp.svg", size: "28", alt: "New Admin"), new_admin_user_url, {'data-toggle' => 'tooltip', 'data-placement' => 'bottom', 'title' => 'New Admin' } %>
 </header>
 
 <table>
@@ -55,9 +55,9 @@
 
 <% @courses.each { |course| %>
 <div class="course_users_section">
-  <header>
-    <h3><%= course.code %> <%= course.name %></h3>
-    <%= link_to image_tag("person_add_black_24dp.svg", size: "28", alt: "Add #{course.code} User"), new_admin_user_url+"?course_id=#{course.id}", { 'data-toggle' => 'tooltip', 'data-placement' => 'bottom', 'title' => "Add #{course.code} User" } %>
+  <header class="course_user_header">
+    <h5><%= course.code %> <%= course.name %></h5>
+    <%= link_to image_tag("person_add_blue_24dp.svg", size: "28", alt: "Add #{course.code} User"), new_admin_user_url+"?course_id=#{course.id}", { 'data-toggle' => 'tooltip', 'data-placement' => 'bottom', 'title' => "Add #{course.code} User" } %>
   </header>
 
   <% unless (@staff[course.id] + @teaching_assistants[course.id] + @students[course.id] + @guests[course.id]).empty? %>
@@ -98,11 +98,10 @@
               <ul class="dropdown-menu" aria-labelledby="userDropdownMenuLink">
                 <li><%= link_to "Edit", edit_admin_user_url(user)+"?course_id=#{course.id}", class: "dropdown-item" %></li>
                 <% if course.membership_for_user(user).role != UserCourseMembership::ROLE_STUDENT %>
-                  <li><%= link_to "Remove", admin_user_url(user)+"?course_id=#{course.id}", method: "delete", data: {confirm: "Do you want to confirm remove user from course?"}, class: "dropdown-item" %></li>
-                <li>
-                  <% url = admin_user_url(user)+"?course_id=#{course.id}" %>
-                  <%= button_tag 'Remove', class: "dropdown-item", data: { 'bs-toggle' => "modal", 'bs-target' => "#removeUserModal", 'bs-url' => "#{url}" } %>
-                </li>                
+                  <li>
+                    <% url = admin_user_url(user)+"?course_id=#{course.id}" %>
+                    <%= button_tag 'Remove', class: "dropdown-item", data: { 'bs-toggle' => "modal", 'bs-target' => "#removeUserModal", 'bs-url' => "#{url}" } %>
+                  </li>                
                 <% end %>
               </ul>
             </div>
@@ -120,7 +119,7 @@
 <% unless @loners.empty? %>
 <div class="lone_users_section">
 
-  <h3>Users With No Course Membership</h3>
+  <h5>Users With No Course Membership</h5>
 
   <table>
     <thead>
@@ -158,12 +157,12 @@
 <% end %>
 
 <div class="modal fade" id="deleteUserModal" tabindex="-1" role="dialog" aria-hidden="true">
-  <% @modal = SiteModal.new("Delete User?", "The user will be permanently deleted. Are you sure?", { :name => "OK", :method => :delete }) %>
+  <% @modal = SiteModal.new("Delete User", "The user will be permanently deleted. Are you sure?", { :name => "OK", :method => :delete }) %>
   <%= render partial: "site/modal", locals: { modal: @modal }%>
 </div>
 
 <div class="modal fade" id="removeUserModal" tabindex="-1" role="dialog" aria-hidden="true">
-  <% @modal = SiteModal.new("Remove User?", "The user will be removed from the course. Are you sure?", { :name => "OK", :method => :delete }) %>
+  <% @modal = SiteModal.new("Remove User", "The user will be removed from the course. Are you sure?", { :name => "OK", :method => :delete }) %>
   <%= render partial: "site/modal", locals: { modal: @modal }%>
 </div>
 
