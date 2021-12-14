@@ -20,17 +20,22 @@
 @import "bootstrap/tables";
 
 body.assignments_index {
-  h3 {
-    margin-bottom: 5px;
+  .assignment_header {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    margin-top: $spacer * 1.25;
+    margin-bottom: $spacer * 0.5;
+  }
+
+  h4 {
+    margin-right: $spacer * 1.5;
   }
 
   div.actions {
     a {
       &, &:hover, &:visited {
-        margin-right: 20px;
-      }
-      &:hover {
-        color: rgb(255, 108, 0);
+        margin-right: $spacer * 0.75;
       }
     }
   }
@@ -38,77 +43,27 @@ body.assignments_index {
   table {
     @extend .table;
     @extend .table-bordered;
-    // border-spacing: 0;
-    // border-collapse: collapse;
-    // width: 100%;
-    // margin-bottom: 20px;
-
-    // th {
-    //   border: 1px solid rgb(0, 0, 0);
-    //   background-color: rgb(231, 134, 13);
-    //   color: rgb(255, 255, 255);
-    //   font-weight: bold;
-    //   padding: 3px 10px;
-    //   text-align: left;
-    // }
-
-    // th.submitted_on_col {
-    //   width: 200px;
-    // }
-    // th.lang_col {
-    //   width: 90px;
-    // }
-    
-    // td {
-    //   border: 1px dotted #bbb;
-    //   padding: 3px 10px;
-
-    //   a {
-    //     &, &:hover, &:visited {
-    //       margin-right: 20px;
-    //     }
-    //     &:hover {
-    //       color: rgb(255, 108, 0);
-    //     }
-    //   }
-
-    //   a.last {
-    //       margin-right: 0;
-    //   }
-    // }
+    @extend .table-hover;
   }
 
   table.erroneous_assignments, table.processing_assignments, table.empty_assignments {
-    th.action_col {
-      width: 250px;
-    }
-
     td.processing {
       color: rgb(51, 51, 51);
     }
+    margin-bottom: $spacer * 3;
   }
 
-  // table.processed_assignments {
-  //   th.submissions_col {
-  //     width: 100px;
-  //   }
-  //   th.suspected_cases_col {
-  //     width: 100px;
-  //   }
-  //   th.marked_cases_col {
-  //     width: 100px;
-  //   }
-
-  //   th.action_col {
-  //     width: 400px;
-  //   }
-  //   th.delete_col {
-  //     width: 50px;
-  //   }
-  // }
+  table.processed_assignments {
+    .assignment_view_actions {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+    }
+    margin-bottom: $spacer * 5;
+  }
 
   div.notice {
-    margin-bottom: 15px;
+    margin-bottom: $spacer;
     color: rgb(0, 160, 0);
   }
 }

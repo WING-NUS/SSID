@@ -1,5 +1,5 @@
   <% unless @erroneous_assignments.empty? %>
-    <h3>Erroneous:</h3>
+    <h5>Erroneous</h5>
     <table class="erroneous_assignments">
       <thead>
         <tr>
@@ -38,7 +38,7 @@
   <% end %>
   
   <% unless @empty_assignments.empty? %>
-    <h3>Empty (yet to submit file for uploading):</h3>
+    <h5>Empty (yet to submit file for uploading)</h5>
     <table class="empty_assignments">
       <thead>
         <tr>
@@ -74,7 +74,7 @@
   <% end %>
   
   <% unless @processing_assignments.empty? %>
-    <h3>Processing:</h3>
+    <h5>Processing</h5>
     <table class="processing_assignments">
       <thead>
         <tr>
@@ -100,18 +100,18 @@
 
   <% unless @processed_assignments.empty? %>
     <% unless @erroneous_assignments.empty? and @processing_assignments.empty? %>
-      <h3>Processed:</h3>
+      <h5>Processed</h5>
     <% end %>
-    <table class="processed_assignments col-9">
+    <table class="processed_assignments">
       <thead>
         <tr>
-          <th class="col-2">Title</th>
+          <th class="col-3">Title</th>
           <th class="lang_col col-1">Language</th>
           <th class="submissions_col col-1">Submissions</th>
-          <th class="suspected_cases_col col-1">Suspected Plagiarism Cases</th>
-          <th class="marked_cases_col col-1">Confirmed Plagiarism Cases</th>
-          <th class="action_col col-2">View</th>
-          <th class="delete_col col-1">Actions</th>
+          <th class="suspected_cases_col col-2">Suspected Cases</th>
+          <th class="marked_cases_col col-2">Confirmed Cases</th>
+          <th class="col-2">View</th>
+          <th class="assignment_other_actions col-1">Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -122,7 +122,7 @@
         <td><%= a.submissions.size %></td>
         <td><%= a.suspected_plagiarism_cases.size %></td>
         <td><%= a.confirmed_plagiarism_cases.size %></td>
-        <td>
+        <td class="assignment_view_actions">
           <%= link_to image_tag("plagiarism_black_24dp.svg", alt: "Submission similarities"), assignment_submission_similarities_url(a), { 'data-toggle' => 'tooltip', 'data-placement' => 'bottom', 'title' => 'Submission similarities' } %>
           <%= link_to image_tag("scatter_plot_black_24dp.svg", alt: "Similarity groups"), assignment_cluster_groups_url(a), { 'data-toggle' => 'tooltip', 'data-placement' => 'bottom', 'title' => 'Similarity groups'} %>
           <%= link_to image_tag("description_black_24dp.svg", alt: "Upload log"), course_assignment_log_url(@course, a), { 'data-toggle' => 'tooltip', 'data-placement' => 'bottom', 'title' => 'Upload log' } %>

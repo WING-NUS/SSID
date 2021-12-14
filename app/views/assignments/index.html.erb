@@ -2,10 +2,10 @@
   statusURL = "<%= course_status_url(@course)%>";
 <% end %>
 
-<header>
-<h2><%= @course.code %> Assignments</h2>
+<header class="assignment_header">
+<h4><%= @course.code %> Assignments</h4>
 <div class="actions">
-  <%= link_to image_tag("plus-circle.svg", size: "28", alt: "New Assignment"), new_course_assignment_url(@course), { 'data-toggle' => 'tooltip', 'data-placement' => 'bottom', 'title' => 'New Assignment'} %>
+  <%= link_to image_tag("add_circle_outline_blue_24dp.svg", size: "28", alt: "New Assignment"), new_course_assignment_url(@course), { 'data-toggle' => 'tooltip', 'data-placement' => 'bottom', 'title' => 'New Assignment'} %>
   <%= link_to image_tag("show_chart_blue_24dp.svg", size: "28", alt: "View Visuals"), course_visualize_url(@course), { 'data-toggle' => 'tooltip', 'data-placement' => 'bottom', 'title' => 'View Visuals' } %>
 </div>
 </header>
@@ -18,7 +18,7 @@
 <% if @assignments.empty? %>
   <p class="none_created">No Assignment has been created.</p>
 <% elsif @guest_user %>
-  <h3>Processed:</h3>
+  <h5>Processed:</h5>
   <table class="processed_assignments">
     <thead>
       <tr>
