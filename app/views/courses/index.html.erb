@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 %>
 <header class="course_header">
-  <h2>Courses</h2>
+  <h4>Courses</h4>
   <% if @user.is_admin %>
     <%= link_to image_tag("plus-circle.svg", size: "28", alt: "New Course"), new_course_url, {'data-toggle' => 'tooltip', 'data-placement' => 'bottom', 'title' => 'New Course'} %>
   <% end %>  
@@ -30,16 +30,16 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 <table>
   <thead>
     <tr>
-      <th class="code_col">Code</th>
-      <th class="name_col">Name</th>
-      <th class="year_sem_col">Academic Year (Semester)</th>
-      <th class="role_col">Your Role</th>
+      <th class="course_code">Code</th>
+      <th class="course_name">Name</th>
+      <th class="course_year_sem">Academic Year (Semester)</th>
+      <th class="course_role">Your Role</th>
       <% unless @user.is_admin %>
-        <th class="assignments_col">Assignments</th>
+        <th class="course_assignments_col">Assignments</th>
       <% end %>
-      <th class="action_col">View</th>
+      <th class="course_view_actions">View</th>
       <% if @user.is_admin %>
-        <th class="edit_col">Actions</th>
+        <th class="course_other_actions">Actions</th>
       <% end %>      
     </tr>
   </thead>
@@ -58,7 +58,7 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
     <% unless @user.is_admin %>
       <td><%= course.assignments.size %></td>
     <% end %>
-    <td>
+    <td class="course_view_actions">
       <%= link_to image_tag("assignment_black_24dp.svg", alt: "Assignments"), course_assignments_url(course), { :class => 'tooltips', 'data-toggle' => 'tooltip', 'data-placement' => 'bottom', 'title' => 'Assignments' } %>
       <%= link_to image_tag("people_black_24dp.svg", alt: "Users"), course_users_url(course), {'data-toggle' => 'tooltip', 'data-placement' => 'bottom', 'title' => 'Users'} %>
       <%= link_to image_tag("show_chart_black_24dp.svg", alt: "Visuals"), course_visualize_url(course), {'data-toggle' => 'tooltip', 'data-placement' => 'bottom', 'title' => 'Visuals'} %>
