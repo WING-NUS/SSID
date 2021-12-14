@@ -21,7 +21,7 @@
 
 body {
   background-color: #fff;
-  color: #333;
+  color: var(--bs-body-color);
   font-family: var(--bs-font-sans-serif);
   font-size: var(--bs-body-font-size);
   font-weight: var(--bs-body-font-weight);
@@ -62,22 +62,22 @@ div.field_with_errors .form-control {
   border-color: $red-400;
 }
 
-#error_explanation {
-  width: 450px;
-  border: 2px solid red;
-  padding: 7px;
-  padding-bottom: 0;
-  margin-bottom: 20px;
-  background-color: #f0f0f0;
-  h2 {
-    text-align: left;
-    font-weight: bold;
-    padding: 5px 5px 5px 15px;
-    font-size: 12px;
-    margin: -7px;
-    margin-bottom: 0px;
-    background-color: #c00;
-    color: #fff; }
-  ul li {
-    font-size: 12px;
-    list-style: square; } }
+// #error_explanation {
+//   width: 450px;
+//   border: 2px solid red;
+//   padding: 7px;
+//   padding-bottom: 0;
+//   margin-bottom: 20px;
+//   background-color: #f0f0f0;
+//   h2 {
+//     text-align: left;
+//     font-weight: bold;
+//     padding: 5px 5px 5px 15px;
+//     font-size: 12px;
+//     margin: -7px;
+//     margin-bottom: 0px;
+//     background-color: #c00;
+//     color: #fff; }
+//   ul li {
+//     font-size: 12px;
+//     list-style: square; } }

@@ -31,13 +31,8 @@ body.courses_index {
     margin-bottom: $spacer * 0.5;
 
     h4 {
-      margin-right: $spacer * 2;
+      margin-right: $spacer * 1.5;
     }
-  }
-
-  h5, h6 {
-    color: rgb(0, 0, 128);
-    margin-right: 1.5rem;
   }
 
   table {
@@ -67,14 +62,9 @@ body.courses_index {
 }
 
 body.courses {
-  h5, h6 {
-    color: rgb(0, 0, 128);
-    margin-right: 2rem;
-  }
-
   label {
     width: 200px;
-    margin-top: 5px;
+    margin-top: $spacer * 0.5;
     display: inline-block;
   }
 
@@ -85,10 +75,6 @@ body.courses {
 
   div.notice {
     color: rgb(0, 160, 0);
-    margin-bottom: 15px;
+    margin-bottom: $spacer;
   }
-}
-
-body.edit_course {
-  background-color: rgb(0, 160, 0);
 }

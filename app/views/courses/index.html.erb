@@ -17,7 +17,7 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 <header class="course_header">
   <h4>Courses</h4>
   <% if @user.is_admin %>
-    <%= link_to image_tag("plus-circle.svg", size: "28", alt: "New Course"), new_course_url, {'data-toggle' => 'tooltip', 'data-placement' => 'bottom', 'title' => 'New Course'} %>
+    <%= link_to image_tag("add_circle_outline_blue_24dp.svg", size: "28", alt: "New Course"), new_course_url, {'data-toggle' => 'tooltip', 'data-placement' => 'bottom', 'title' => 'New Course'} %>
   <% end %>  
 </header>
 
