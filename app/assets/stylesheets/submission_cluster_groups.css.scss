@@ -20,61 +20,22 @@
 @import "bootstrap/tables";
 
 body.submission_cluster_groups_index {
-  h3 {
-    margin-bottom: 5px;
+  .submission_cluster_group_header {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    margin-top: $spacer * 1.25;
+    margin-bottom: $spacer * 0.5;
   }
 
-  div.actions {
-    a {
-      &, &:hover, &:visited {
-        margin-right: 20px;
-      }
-      &:hover {
-        color: rgb(255, 108, 0);
-      }
-    }
+  h4 {
+    margin-right: $spacer * 1.5;
   }
 
   table {
     @extend .table;
     @extend .table-bordered;
     @extend .table-hover; 
-    // border-spacing: 0;
-    // border-collapse: collapse;
-    // width: 100%;
-    // margin-bottom: 20px;
-
-    // th {
-    //   border: 1px solid rgb(0, 0, 0);
-    //   background-color: rgb(231, 134, 13);
-    //   color: rgb(255, 255, 255);
-    //   font-weight: bold;
-    //   text-transform: uppercase;
-    //   padding: 3px 10px;
-    //   text-align: left;
-    // }
-
-    // th.submitted_on_col {
-    //   width: 200px;
-    // }
-    
-    // td {
-    //   border: 1px dotted #bbb;
-    //   padding: 3px 10px;
-
-    //   a {
-    //     &, &:hover, &:visited {
-    //       margin-right: 20px;
-    //     }
-    //     &:hover {
-    //       color: rgb(255, 108, 0);
-    //     }
-    //   }
-
-    //   a.last {
-    //       margin-right: 0;
-    //   }
-    // }
   }
 
   div.notice {
@@ -97,9 +58,9 @@ body.submission_cluster_groups {
   input.submit {
     margin-top: 15px;
   }
-  div.field_with_errors {
-    display: inline-table;
-  }
+  // div.field_with_errors {
+  //   display: inline-table;
+  // }
   div.note {
     font-size: 11px;
   }

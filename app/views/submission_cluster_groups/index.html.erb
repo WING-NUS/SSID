@@ -1,6 +1,8 @@
-<h2>Assignment: <%= @assignment.title %> Submission Cluster Groups</h2>
+<div class="submission_cluster_group_header">
+<h4>Assignment: <%= @assignment.title %> Submission Cluster Groups</h4>
 <div class="actions">
-  <%= link_to image_tag("plus-circle.svg", size: "28", alt: "New Cluster Group"), new_assignment_cluster_group_url(@assignment), { "data-toggle" => "tooltip", "data-placement" => "bottom", "title" => "New Cluster Group" } %>
+  <%= link_to image_tag("add_circle_outline_blue_24dp.svg", size: "28", alt: "New Cluster Group"), new_assignment_cluster_group_url(@assignment), { "data-toggle" => "tooltip", "data-placement" => "bottom", "title" => "New Cluster Group" } %>
+</div>
 </div>
 <% if flash[:notice] %>
   <div class="notice">
