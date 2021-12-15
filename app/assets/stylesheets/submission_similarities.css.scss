@@ -53,6 +53,12 @@ body.submission_similarities_show {
     @extend .table-bordered;
     @extend .table-hover;
   }
+
+  p.check_boxes {
+    label {
+      margin-right: $spacer;
+    }
+  }
   
   div.submissions {
     margin-top: $spacer * 3;
