@@ -21,9 +21,15 @@
 @import "bootstrap/tables";
 
 body.submission_logs {
+  h4 {
+    margin-bottom: $spacer;
+  }
+
   table {
     @extend .table;
     @extend .table-bordered;
     @extend .table-hover;
+
+    margin-bottom: $spacer * 3;
   }
 }
