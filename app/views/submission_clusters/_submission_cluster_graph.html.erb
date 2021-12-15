@@ -1,8 +1,8 @@
 <% cluster_id = cluster_id || nil %>
 <% submission_student_ids = submission_student_ids || nil %>
-<h3>Cluster Group from Students: <span><%= submission_student_ids.join(", ") if submission_student_ids %></span></h3>
+<h5>Cluster Group from Students: <span><%= submission_student_ids.join(", ") if submission_student_ids %></span></h5>
 <div class="legend">
-  <h5>Similarity</h5>
+  <h6>Similarity</h6>
   <% SubmissionClustersHelper::LEGEND_SIMILARITY_VALUES.each { |val| %>
     <% if val >= 50 %>
       <div class="legend_<%= val %>"><span>&nbsp;</span> &#8805; <%= val %>%</div>

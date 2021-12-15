@@ -24,14 +24,18 @@ body.submission_clusters_index {
     }
   }
 
+  div#clusters {
+    margin-top: $spacer * 1.5;
+  }
+
   div.cluster {
     border: 1px solid var(--bs-gray-600);
-    margin-bottom: 20px;
+    margin-bottom: $spacer * 3;
     position: relative;
     height: 600px;
 
-    h3 {
-      margin: 10px;
+    h5 {
+      margin: $spacer * 0.5;
     }
 
     div.legend {
@@ -41,10 +45,10 @@ body.submission_clusters_index {
       left: 10px;
       background-color: rgb(255, 255, 255);
 
-      h5 {
+      h6 {
         text-align: center;
         margin: 3px;
-        color: #000080;
+        color: #003d7c;
       }
 
       div {
