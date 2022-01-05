@@ -1,7 +1,7 @@
 <%= form_for([@assignment, @submission_cluster_group], url: assignment_cluster_groups_path) do |f| %>
   <% if @submission_cluster_group.errors.any? %>
     <div id="error_explanation">
-      <h3><%= pluralize(@submission_cluster_group.errors.count, "error") %> prohibited this submission cluster group from being saved:</h3>
+      <h5><%= pluralize(@submission_cluster_group.errors.count, "error") %> prohibited this submission cluster group from being saved:</h5>
       <ul>
       <% @submission_cluster_group.errors.full_messages.each do |msg| %>
         <li><%= msg %></li>

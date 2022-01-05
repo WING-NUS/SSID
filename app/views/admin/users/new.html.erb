@@ -1,7 +1,9 @@
+<div class="col-md-6">
 <% if @course.nil? %>
-<h2>New Admin User</h2>
+<h4>New Admin User</h4>
 <% else %>
-<h2>Add <%= @course.code %> User</h2>
+<h4>Add <%= @course.code %> User</h4>
 <% end %>
 
 <%= render 'form' %>
+</div>

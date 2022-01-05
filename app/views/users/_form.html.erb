@@ -1,7 +1,7 @@
 <%= form_for(@user) do |f| %>
   <% if @user.errors.any? %>
     <div id="error_explanation">
-      <h2><%= pluralize(@user.errors.count, "error") %> prohibited these user settings from being saved:</h2>
+      <h6><%= pluralize(@user.errors.count, "error") %> prohibited these user settings from being saved:</h6>
 
       <ul>
       <% @user.errors.full_messages.each do |msg| %>
@@ -12,28 +12,30 @@
   <% end %>
   <% if @user.is_admin %>
     <div>
-      <%= f.label :full_name %>:
-      <%= f.text_field :full_name %>
+      <%= f.label :full_name, class: "form-label" %>
+      <%= f.text_field :full_name, class: "form-control" %>
     </div>
     <div>
-      <%= f.label :name, "Login" %>:
-      <%= f.text_field :name %>
+      <%= f.label :name, "Login", class: "form-label" %>
+      <%= f.text_field :name, class: "form-control" %>
     </div>
   <% end %>
   <% unless @user.is_admin %>
     <div>
-      <%= f.label :old_password %>:
-      <%= f.password_field :old_password %>
+      <%= f.label :old_password, class: "form-label" %>
+      <%= f.password_field :old_password, class: "form-control" %>
     </div>
   <% end %>
   <div>
-    <%= f.label :new_password %>:
-    <%= f.password_field :new_password %>
-    <%= "(<em>Leave blank to keep unchanged</em>)".html_safe if @user.is_admin %>
+    <%= f.label :new_password, class: "form-label" %>
+    <%= f.password_field :new_password, class: "form-control" %>
+    <% if @user.is_admin %>
+      <small class="text-muted">Leave blank to keep unchanged</small>
+    <% end %>
   </div>
   <div>
-    <%= f.label :confirm_new_password %>:
-    <%= f.password_field :confirm_new_password %>
+    <%= f.label :confirm_new_password, class: "form-label" %>
+    <%= f.password_field :confirm_new_password, class: "form-control" %>
   </div>
   <div>
     <%= f.submit "Update Settings", class: "submit" %>

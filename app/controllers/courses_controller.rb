@@ -55,6 +55,9 @@ class CoursesController < ApplicationController
   # GET /courses/new
   def new
     @course = Course.new
+    expiry_time = Time.now.getutc
+    expiry_date = expiry_time.to_date
+    @course.expiry = DateTime.new(expiry_date.year + 1, expiry_date.month, expiry_time.mday, expiry_time.hour, expiry_time.min)
   end
 
   # POST /courses
@@ -64,11 +67,10 @@ class CoursesController < ApplicationController
       c.name = params[:course]["name"]
       c.academic_year = params[:course]["academic_year"]
       c.semester = params[:course]["semester"]
-      c.expiry = Time.zone.local_to_utc(DateTime.new(params[:course]["expiry(1i)"].to_i,
-                                                     params[:course]["expiry(2i)"].to_i,
-                                                     params[:course]["expiry(3i)"].to_i,
-                                                     params[:course]["expiry(4i)"].to_i,
-                                                     params[:course]["expiry(5i)"].to_i))
+
+      expiry_time = DateTime.parse(params[:course]["expiry"])
+      expiry_date = expiry_time.to_date
+      c.expiry = Time.zone.local_to_utc(DateTime.new(expiry_date.year, expiry_date.month, expiry_date.mday, expiry_time.hour, expiry_time.min))
     }
     
     if @course.errors.empty? and @course.save
@@ -90,11 +92,10 @@ class CoursesController < ApplicationController
     @course.name = params[:course]["name"]
     @course.academic_year = params[:course]["academic_year"]
     @course.semester = params[:course]["semester"]
-    @course.expiry = Time.zone.local_to_utc(DateTime.new(params[:course]["expiry(1i)"].to_i,
-                                                         params[:course]["expiry(2i)"].to_i,
-                                                         params[:course]["expiry(3i)"].to_i,
-                                                         params[:course]["expiry(4i)"].to_i,
-                                                         params[:course]["expiry(5i)"].to_i))
+
+    expiry_time = DateTime.parse(params[:course]["expiry"])
+    expiry_date = expiry_time.to_date
+    @course.expiry = Time.zone.local_to_utc(DateTime.new(expiry_date.year, expiry_date.month, expiry_date.mday, expiry_time.hour, expiry_time.min))
     
     if @course.errors.empty? and @course.save
       redirect_to courses_url, notice: 'Course was successfully updated.'

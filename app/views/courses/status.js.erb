@@ -1,12 +1,13 @@
-<% unless @erroneous_assignments.empty? %>
-    <h3>Erroneous:</h3>
+  <% unless @erroneous_assignments.empty? %>
+    <h5>Erroneous</h5>
     <table class="erroneous_assignments">
       <thead>
         <tr>
           <th>Title</th>
           <th class="lang_col">Language</th>
           <th class="submitted_on_col">Submitted On</th>
-          <th class="action_col">Action</th>
+          <th>View</th>
+          <th class="action_col">Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -15,9 +16,20 @@
         <td><%= a.title %></td>
         <td><%= a.language_string %></td>
         <td><%= a.submission_similarity_process.created_at.in_time_zone %></td>
+        <td> 
+          <%= link_to image_tag("description_black_24dp.svg", alt: "Upload log"), course_assignment_log_url(@course, a), { 'data-toggle' => 'tooltip', 'data-placement' => 'bottom', 'title' => 'Upload log' } %>
+        </td>
         <td>
-          <%= link_to "View upload log", course_assignment_log_url(@course, a) %>
-          <%= link_to "Delete", course_assignment_url(@course, a), method: "delete", class: "last", data: {confirm: "This assignment will be permanently deleted and cannot be recovered. Are you sure?"}%>
+          <div class="dropdown">
+            <a data-toggle="dropdown" id="erroneousAssignmentDropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+              <%= image_tag("more_vert_black_24dp.svg", alt: "Erroneous Assignment Menu Dropdown")%>      
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="erroneousAssignmentDropdownMenuLink">
+              <li>
+                <%= button_tag 'Delete', class: "dropdown-item", data: { 'bs-toggle' => "modal", 'bs-target' => "#deleteAssignmentModal", 'bs-url' => "#{course_assignment_url(@course, a)}" } %>
+              </li>
+            </ul>
+          </div>        
         </td>
       </tr>
       <% } %>
@@ -26,14 +38,14 @@
   <% end %>
   
   <% unless @empty_assignments.empty? %>
-    <h3>Empty (yet to submit file for uploading):</h3>
+    <h5>Empty (yet to submit file for uploading)</h5>
     <table class="empty_assignments">
       <thead>
         <tr>
           <th>Title</th>
           <th class="lang_col">Language</th>
           <th class="submitted_on_col">Submitted On</th>
-          <th class="action_col">Action</th>
+          <th class="action_col">Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -43,8 +55,17 @@
           <td><%= a.language_string %></td>
           <td><%= a.created_at.in_time_zone %></td>
           <td>
-            <%= link_to "Upload submission", course_assignment_url(@course, a) %>
-            <%= link_to "Delete", course_assignment_url(@course, a), method: "delete", class: "last", data: {confirm: "This assignment will be permanently deleted and cannot be recovered. Are you sure?"} %>
+            <div class="dropdown">
+              <a data-toggle="dropdown" id="emptyAssignmentDropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                <%= image_tag("more_vert_black_24dp.svg", alt: "Empty Assignment Menu Dropdown")%>                      
+              </a>
+              <ul class="dropdown-menu">
+                <li><%= link_to "Upload submission", course_assignment_url(@course, a), class: "dropdown-item" %></li>
+                <li>
+                  <%= button_tag 'Delete', class: "dropdown-item", data: { 'bs-toggle' => "modal", 'bs-target' => "#deleteAssignmentModal", 'bs-url' => "#{course_assignment_url(@course, a)}" } %>
+                </li>
+              </ul>
+            </div>
           </td>
         </tr>
       <% } %>
@@ -53,7 +74,7 @@
   <% end %>
   
   <% unless @processing_assignments.empty? %>
-    <h3>Processing:</h3>
+    <h5>Processing</h5>
     <table class="processing_assignments">
       <thead>
         <tr>
@@ -79,18 +100,18 @@
 
   <% unless @processed_assignments.empty? %>
     <% unless @erroneous_assignments.empty? and @processing_assignments.empty? %>
-      <h3>Processed:</h3>
+      <h5>Processed</h5>
     <% end %>
     <table class="processed_assignments">
       <thead>
         <tr>
-          <th>Title</th>
-          <th class="lang_col">Language</th>
-          <th class="submissions_col">Submissions</th>
-          <th class="suspected_cases_col">Suspected Plagiarism Cases</th>
-          <th class="marked_cases_col">Confirmed Plagiarism Cases</th>
-          <th class="action_col">View</th>
-          <th class="delete_col"></th>
+          <th class="col-3">Title</th>
+          <th class="lang_col col-1">Language</th>
+          <th class="submissions_col col-1">Submissions</th>
+          <th class="suspected_cases_col col-2">Suspected Cases</th>
+          <th class="marked_cases_col col-2">Confirmed Cases</th>
+          <th class="col-2">View</th>
+          <th class="assignment_other_actions col-1">Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -101,17 +122,32 @@
         <td><%= a.submissions.size %></td>
         <td><%= a.suspected_plagiarism_cases.size %></td>
         <td><%= a.confirmed_plagiarism_cases.size %></td>
-        <td>
-          <%= link_to "Submission similarities", assignment_submission_similarities_url(a) %>
-          <%= link_to "Similarity groups", assignment_cluster_groups_url(a) %>
-          <%= link_to "Upload log", course_assignment_log_url(@course, a), class: "last" %>
+        <td class="assignment_view_actions">
+          <%= link_to image_tag("plagiarism_black_24dp.svg", alt: "Submission similarities"), assignment_submission_similarities_url(a), { 'data-toggle' => 'tooltip', 'data-placement' => 'bottom', 'title' => 'Submission similarities' } %>
+          <%= link_to image_tag("scatter_plot_black_24dp.svg", alt: "Similarity groups"), assignment_cluster_groups_url(a), { 'data-toggle' => 'tooltip', 'data-placement' => 'bottom', 'title' => 'Similarity groups'} %>
+          <%= link_to image_tag("description_black_24dp.svg", alt: "Upload log"), course_assignment_log_url(@course, a), { 'data-toggle' => 'tooltip', 'data-placement' => 'bottom', 'title' => 'Upload log' } %>
         </td>
         <td>
-          <%= link_to "Delete", course_assignment_url(@course, a), method: "delete", class: "last", data: {confirm: "This assignment will be permanently deleted and cannot be recovered. Are you sure?"} %>
+          <div class="dropdown">
+            <a data-toggle="dropdown" id="processedAssignmentDropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+              <%= image_tag("more_vert_black_24dp.svg", alt: "Assignment Menu Dropdown")%>      
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="processedAssignmentDropdownMenuLink">
+              <li>
+                <%= button_tag 'Delete', class: "dropdown-item", data: { 'bs-toggle' => "modal", 'bs-target' => "#deleteAssignmentModal", 'bs-url' => "#{course_assignment_url(@course, a)}" } %>
+              </li>
+            </ul>
+          </div>
         </td>
       </tr>
       <% } %>
       </tbody>
     </table>
-    
   <% end %>
+
+  <div class="modal fade" id="deleteAssignmentModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <% @modal = SiteModal.new("Delete Assignment", "This assignment will be permanently deleted and cannot be recovered. Are you sure?", { :name => "OK", :method => :delete }) %>
+    <%= render partial: "site/modal", locals: { modal: @modal }%>
+  </div>
+    
+  <%= javascript_include_tag "site_modal.js" %>

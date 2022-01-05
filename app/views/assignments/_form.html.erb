@@ -1,7 +1,7 @@
 <%= form_for([@course, @assignment]) do |f| %>
   <% if @assignment.errors.any? %>
     <div id="error_explanation">
-      <h3><%= pluralize(@assignment.errors.count, "error") %> prohibited this assignment from being saved:</h3>
+      <h6><%= pluralize(@assignment.errors.count, "error") %> prohibited this assignment from being saved:</h6>
       <ul>
       <% @assignment.errors.full_messages.each do |msg| %>
         <li><%= msg %></li>
@@ -9,38 +9,41 @@
       </ul>
     </div>
   <% end %>
-  <div>
-    <%= f.label :title %>
-    <%= f.text_field :title %>
+  <%= hidden_field_tag "which_form", (@assignment.id ? "update_assignment" : "new_assignment"), { :id => "which-form" } %>
+  <div class="row">
+  <div class="col-12">  
+    <%= f.label :title, class: "form-label" %>
+    <%= f.text_field :title, class: "form-control" %>
   </div>
-  <div>
-    <%= f.label :language %>
-    <%= f.select :language, Assignment.options_for_languages %>
+  <div class="col-12">
+    <%= f.label :language, class: "form-label" %>
+    <%= f.select :language, Assignment.options_for_languages, {}, { :class => 'form-select' } %>
   </div>
-  <div>
-    <%= f.label :min_match_length, "Minimum Match Length [?]" , title: "For Java, only '.java' files will be processed." %>
-    <%= f.text_field :min_match_length %>
+  <div class="col-sm-6">  
+    <%= f.label :min_match_length, "Minimum Match Length [?]" , title: "For Java, only '.java' files will be processed.", class: 'form-label' %>
+    <%= f.text_field :min_match_length, class: 'form-control' %>
   </div>
-  <div>
-    <%= f.label :ngram_size, "Size of n-gram [?]", title: "An n-gram is a contiguous subsequence of n tokens of a given sequence." %>
-    <%= f.text_field :ngram_size %>
+  <div class="col-sm-6">
+    <%= f.label :ngram_size, "Size of n-gram [?]", title: "An n-gram is a contiguous subsequence of n tokens of a given sequence.", class: 'form-label' %>
+    <%= f.text_field :ngram_size, class: 'form-control' %>
   </div>
-  <div>
-    <%= f.label :file, "Student submissions (zip) [?]", title: "The zip file should contain one folder for each student's code files; folders are named according to student ID; Name your folder as \"skeleton\" for the codes you wish to exclude from the system" %>
-    <%= f.file_field :file %>
+  <div class="col-12">
+    <%= f.label :file, "Student submissions (zip) [?]", title: "The zip file should contain one folder for each student's code files; folders are named according to student ID; Name your folder as \"skeleton\" for the codes you wish to exclude from the system", class: 'form-label' %>
+    <%= f.file_field :file, class: 'form-control' %>
   </div>
   
-  <div>
+  <div class="col-12">
   <%= f.label :mapbox, "Upload map file?" %>
-  <%= f.check_box :mapbox,{}, "Yes", "No"%>
+  <%= f.check_box :mapbox, { :class => 'form-check-input' }, "Yes", "No" %>
   </div>
-  <div id="map_file_details" style="display:none;">
-  <%= f.label :mapfile, "Mapping file (csv) [?]", title: "The zip file should contain one folder for each student's code files; folders are named according to student ID; Name your folder as \"skeleton\" for the codes you wish to exclude from the system" %>
-  <%= f.file_field :mapfile, accept: '.csv' %>
+  <div id="map_file_details" style="display:none;" class="col-12">
+  <%= f.label :mapfile, "Mapping file (csv) [?]", title: "The zip file should contain one folder for each student's code files; folders are named according to student ID; Name your folder as \"skeleton\" for the codes you wish to exclude from the system", class: 'form-label' %>
+  <%= f.file_field :mapfile, accept: '.csv', class: 'form-control' %>
 
   </div>
   <div>
     <%= f.submit class: "submit" %>
+  </div>
   </div>
 <% end %>
 
@@ -54,5 +57,14 @@
        details_div.style['display'] = 'none';
      }
   };
+  window.addEventListener('DOMContentLoaded', () => {
+    console.log($('which-form').val());
+    if ($('#which-form').val() === "update_assignment") {
+      document.querySelector('#assignment_title').disabled = true;
+      document.querySelector('#assignment_language').disabled = true;
+      document.querySelector('#assignment_min_match_length').disabled = true;
+      document.querySelector('#assignment_ngram_size').disabled = true;
+    }
+  })
 </script>
 

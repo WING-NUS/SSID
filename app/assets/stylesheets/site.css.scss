@@ -12,6 +12,7 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with SSID.  If not, see <http://www.gnu.org/licenses/>.
+@import "bootstrap_custom";
 
 body {
   margin: 0;
@@ -19,16 +20,51 @@ body {
   min-width: 800px;
 
   div.alert {
-    color: rgb(255, 0, 0);
+    color: var(--bs-red);
   }
 }
 
-h2, h3 {
-  color: rgb(0, 0, 128);
+h2, h3, h4, h5, h6 {
+  color: #003d7c;
+}
+
+.site {
+  @extend .text-center;
+}
+
+.site_header {
+  @extend .mb-3;
+}
+
+.site_header_background {
+  background-color: var(--bs-gray-200);
+}
+
+.site_logo {
+  padding: 1.25rem 0.5rem;
+}
+
+.login_helper_text {
+  @extend .mt-3;
+  @extend .mb-3;
+  @extend .fw-normal;
+  color: #003d7c;
+}
+
+.site_copyright {
+  @extend .mt-5;
+  @extend .mb-3;
+  @extend .text-muted;
+}
+
+.site_login {
+  @extend .w-100;
+  @extend .btn;
+  @extend .btn-primary;
 }
 
 p.none_created {
-  border: 1px dashed black;
+
   padding: 5px;
   text-align: center;
   font-style: italic;
@@ -38,81 +74,74 @@ table {
   tr.highlight td {
     background-color: yellow;
   }
+} 
+
+#site_banner_login {
+  margin: 0;
+  height: 75%;
+  padding: 1.25rem 0.5rem;
+  font-size: 2rem;
+  font-weight: 400;
+  color: #003d7c;
 }
 
-#top_banner {
-  display: block;
+#site_banner {
+  @extend .order-0; 
   margin: 0;
-  height: 40px;
-  padding: 50px 15px 0;
-  font-size: 24px;
-  background-image: url('orangeE.jpg');
-  background-repeat: repeat-x;
-  color: rgb(0, 0, 128);
+  height: 75%;
+  padding: 1rem 0.5rem;
+  font-size: 2rem;
+  font-weight: 400;
+  color: #003d7c;
 }
 
 #menu {
-  margin: 0;
-  background-color: rgb(255, 108, 0);
-  display: block;
-  height: 22px;
-  overflow: auto;
-  padding: 0;
-  display: flex;
-  align-items: stretch; /* Default */
-  justify-content: space-between;
+  @extend .order-1;
+  @extend .ms-md-auto;
+  padding: 0.5rem;
+  @extend .navbar-nav;
+  flex-direction: row;
+  @extend .flex-wrap;
 
   li {
-    list-style: none;
-    float: left;
-    width: 20%;
-    height: 25px;
-    text-align: center;
+    @extend .nav-item;
+    @extend .px-2;
+    @extend .py-1;
 
     a {
       &, &:visited {
-        display: inline-block;
-        width: 100%;
-        color: rgb(255, 255, 255);
-        text-decoration: none;
-        background-color: rgb(255,108,0);
-        height: 25px;
+        @extend .nav-link;
+        color: var(--bs-gray-600);
       }
       &:hover {
-        color: rgb(255, 108,0);
-        background-color: rgb(252, 228, 77);
+        color: #003d7c;
+        border-bottom: 3px solid #ef7c00;
       }
     }
 
-    &.highlight, &.highlight a {
-      color: rgb(255, 108,0);
-      background-color: rgb(252, 228, 77);
+    &.active_menu_item a {
+      color: #003d7c;
+      border-bottom: 3px solid #ef7c00;
     }
-
   }
 }
 
-#menu.admin li {
-  width: 16.6666666%;
-}
-
 #content {
-  margin: 0 15px 15px;
+  margin: 0 1rem 1rem;
 }
 
-div.breadcrumb {
-  padding-top: 10px;
-  font-size: 11px;
+ol.breadcrumb {
+  padding-top: 0.5rem;
   color: rgb(51, 51, 51);
 
-  a {
+  li a {
     &, &:hover, &:visited {
       background-color: rgb(255, 255, 255);
       color: rgb(51, 51, 51);
       text-decoration: none;
     }
     &:hover {
-      color: rgb(255, 108, 0);
+      color: #ef7c00;
     }
   }
 }

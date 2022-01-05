@@ -12,44 +12,30 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with SSID.  If not, see <http://www.gnu.org/licenses/>.
+@import "bootstrap/functions";
+@import "bootstrap/variables";
+@import "bootstrap/mixins";
+@import "bootstrap/utilities";
+
+@import "bootstrap/tables";
 
 body.submission_similarities_index {
   table {
-    border-spacing: 0;
-    border-collapse: collapse;
-    width: 100%;
-    margin-bottom: 20px;
-
-    th {
-      border: 1px solid rgb(0, 0, 0);
-      background-color: rgb(231, 134, 13);
-      color: rgb(255, 255, 255);
-      font-weight: bold;
-      text-transform: uppercase;
-      padding: 3px 10px;
-      text-align: left;
-    }
-
-    th.student_col, th.similarity_col {
-      width: 90px;
-    }
-
-    th.action_col {
-      width: 120px;
-    }
-    
-    td {
-      border: 1px dotted #bbb;
-      padding: 3px 10px;
-
-      a:hover {
-        color: rgb(255, 108, 0);
-      }
-    }
+    @extend .table;
+    @extend .table-bordered;
+    @extend .table-hover;
   }
 
-  div.pagination {
-    text-align: center;
+  ul.table_note {
+    margin-bottom: 1rem;
+  }
+
+  ul.table_note > li {
+    margin-bottom: 0.25rem;
+  }
+
+  ul.table_note > li > a {
+    color: #0a58ca;
   }
 
   div.notice {
@@ -58,29 +44,32 @@ body.submission_similarities_index {
 }
 
 body.submission_similarities_show {
-  div.slideleft{
-    position:absolute;
-    left: 0px;
-    top:250px;
+  .submission_similarity_header {
+    margin-top: $spacer * 0.75;
+    margin-bottom: $spacer * 0.5;
   }
   
-  div.button{
-    color: #FFFFFF;
-    font-weight: bold;
-    padding: 3px 5px;
-    background-color:#e7860d;
-    height:36px;
-    vertical-align: middle;
-    border-top: solid thin #000000;
-    border-right: solid thin #000000;
-    border-bottom: solid thin #000000;
-    
-    float: right;
+  table {
+    @extend .table;
+    @extend .table-bordered;
+    @extend .table-hover;
+  }
+
+  p.check_boxes {
+    label {
+      margin-right: $spacer;
+    }
   }
   
   div.submissions {
+    margin-top: $spacer * 3;
     overflow-y: auto;
     width: 100%;
+
+    h5 {
+      text-align: center;
+      margin-bottom: $spacer * 0.75;
+    }
 
     pre {
       margin-top: 0px;
@@ -91,97 +80,24 @@ body.submission_similarities_show {
       }
     }
 
-    h3 {
-      text-align: center;
-      margin-bottom: 5px;
-    }
-
     div {
-      overflow-x: scroll;
+      overflow-x: auto;
     }
 
     div.submission1 {
       float: left;
-      width: 45%;
-      margin-left: 100px;
+      width: 50%;
       overflow-y: auto;
       height: 700px;
+      margin-bottom: $spacer * 3;
     }
 
     div.submission2 {
       float: left;
-      width: 45%;
+      width: 50%;
       overflow-y: auto;
       height: 700px;
-    }
-  }
-
-  div.options {
-    text-align: center;
-
-    div {
-      margin-bottom: 15px;
-
-      p {
-        margin: 0;
-
-        label {
-          margin: 0 20px 0;
-        }
-      }
-
-      p.check_boxes {
-        margin-top: 2px;
-      }
-    }
-
-    table {
-      border-spacing: 0;
-      border-collapse: collapse;
-      width: 490px;
-      text-align: left;
-
-      th {
-        border: 1px solid rgb(0, 0, 0);
-        background-color: rgb(231, 134, 13);
-        color: rgb(255, 255, 255);
-        font-weight: bold;
-        text-transform: uppercase;
-        padding: 3px 10px;
-        text-align: left;
-      }
-
-      th.check_box_col {
-        width: 15px;
-      }
-
-      th.lines_col {
-        width: 120px;
-      }
-
-      tr.highlight td {
-        background-color: rgb(255, 255, 140);
-        cursor: default;
-      }
-      
-      td {
-        border: 1px dotted #bbb;
-        padding: 3px 10px;
-        background-color: #FFFFFF;
-
-        a {
-          &, &:hover, &:visited {
-            background-color: rgb(255, 255, 255);
-          }
-          &:hover {
-            color: rgb(255, 108, 0);
-          }
-        }
-      }
-
-      td.num_statements_cell {
-        text-align: center;
-      }
+      margin-bottom: $spacer * 3;
     }
   }
 }

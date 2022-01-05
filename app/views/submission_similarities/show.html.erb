@@ -1,9 +1,35 @@
-<h2>Submission Similarities for Students <%= @submission_similarity.student1.id_string %> and <%= @submission_similarity.student2.id_string %> (<%= @submission_similarity.similarity %>%)</h2>
-<div class="options">
-  Highlight similarities found in:
-  <div class='slideleft'>
-  <div class='button'>HIDE</div>
-  <table class="lines">
+<h4>Submission Similarities for Students <%= @submission_similarity.student1.id_string %> and <%= @submission_similarity.student2.id_string %> (<%= @submission_similarity.similarity %>%)</h4>
+<div class="submission_similarity_header">
+  <div>
+    <%= link_to "Show matching statements", "#matchingStatementsTable", data: { "bs-toggle" => "collapse" }, :"aria-expanded" => "false", :"aria-controls" => "matchingStatementsTable", class: "d-inline pr-2" %>
+    <div class="dropdown d-inline p-2">
+      <a data-toggle="dropdown" id="actionsDropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+        <%= image_tag("more_vert_black_24dp.svg", alt: "Actions taken on submission similarities menu dropdown")%>                 
+      </a>
+      <ul class="dropdown-menu" aria-labelledby="actionsDropdownMenuLink">
+        <% if @submission_similarity.status == SubmissionSimilarity::STATUS_NOT_PLAGIARISM %>
+          <li>
+            <%= button_tag "Confirm plagiarism", class: "dropdown-item", data: { "bs-toggle" => "modal", "bs-target" => "#confirmPlagiarismModal", "bs-url" => "#{assignment_submission_similarity_confirm_as_plagiarism_url(@assignment, @submission_similarity)}" } %>
+          </li>
+          <li>
+            <%= button_tag "Mark as suspicious", class: "dropdown-item", data: { "bs-toggle" => "modal", "bs-target" => "#markAsSuspiciousModal", "bs-url" => "#{assignment_submission_similarity_suspect_as_plagiarism_url(@assignment, @submission_similarity)}" } %>
+          </li>
+        <% elsif @submission_similarity.status == SubmissionSimilarity::STATUS_SUSPECTED_AS_PLAGIARISM %>
+          <li>
+            <%= button_tag "Remove suspicion", class: "dropdown-item", data: { "bs-toggle" => "modal", "bs-target" => "#removeSuspicionModal", "bs-url" => "#{assignment_submission_similarity_unmark_as_plagiarism_url(@assignment, @submission_similarity)}" } %>
+          </li>
+          <li>
+            <%= button_tag "Confirm plagiarism", class: "dropdown-item", data: { "bs-toggle" => "modal", "bs-target" => "#confirmPlagiarismModal", "bs-url" => "#{assignment_submission_similarity_confirm_as_plagiarism_url(@assignment, @submission_similarity)}" } %>
+          </li>        
+        <% elsif %>
+          <li>
+            <%= button_tag "Remove plagiarism", class: "dropdown-item", data: { "bs-toggle" => "modal", "bs-target" => "#removePlagiarismModal", "bs-url" => "#{assignment_submission_similarity_unmark_as_plagiarism_url(@assignment, @submission_similarity)}" } %>
+          </li>        
+        <% end %>      
+      </ul>
+    </div>
+  </div>
+  <table id="matchingStatementsTable" class="lines mt-3">
     <thead>
       <tr>
         <th class="lines_col">Submission by <%= @student1.id_string %></th>
@@ -22,30 +48,28 @@
       </tr>
       <% } %>
     </tbody>
-  </table>
-  </div>
-  <div class="mark_as_suspicious">
-    <% if @submission_similarity.status == SubmissionSimilarity::STATUS_NOT_PLAGIARISM %>
-      <%= button_to "Confirm these similarities as plagiarism", assignment_submission_similarity_confirm_as_plagiarism_url(@assignment, @submission_similarity), :method => :put, data: {confirm: "Confirm these similarities as plagiarism?"} %> <%= link_to "or mark these similarities as suspicious...", assignment_submission_similarity_suspect_as_plagiarism_url(@assignment, @submission_similarity), :method => :put, data: {confirm: "Mark these similarities as suspicious?"} %> 
-    <% elsif @submission_similarity.status == SubmissionSimilarity::STATUS_SUSPECTED_AS_PLAGIARISM %>
-      <p>These similarities were marked as suspicious. <%= button_to "Remove suspicion", assignment_submission_similarity_unmark_as_plagiarism_url(@assignment, @submission_similarity), :method => :put, data: {confirm: "Remove suspicion of plagiarism?"} %> <%= button_to "Confirm as plagiarism", assignment_submission_similarity_confirm_as_plagiarism_url(@assignment, @submission_similarity), :method => :put, data: {confirm: "Confirm these similarities as plagiarism?"} %></p>
-    <% elsif %>
-      <p>These similarities were confirmed as plagiarism. <%= link_to "Remove", assignment_submission_similarity_unmark_as_plagiarism_url(@assignment, @submission_similarity), :method => :put, data: {confirm: "Remove confirmation as plagiarism?"} %></p>
-    <% end %>
-  </div>
-  <% if @submission_similarity.status == SubmissionSimilarity::STATUS_CONFIRMED_AS_PLAGIARISM %>
-  <div>
-    <p>Mark student(s) as guilty for plagiarism:</p>
-    <p class="check_boxes">
-      <label><%= check_box_tag "toggle_guilty_#{@submission_similarity.id}_#{@submission1.id}", nil, @submission1.is_plagiarism, class: "guilty_check_box" %> Student <%= @student1.id_string %></label>
-      <label><%= check_box_tag "toggle_guilty_#{@submission_similarity.id}_#{@submission2.id}", nil, @submission2.is_plagiarism, class: "guilty_check_box" %> Student <%= @student2.id_string %></label>
-    </p>
-  </div>
-  <% end %>
+  </table>   
 </div>
+
+<% if @submission_similarity.status == SubmissionSimilarity::STATUS_CONFIRMED_AS_PLAGIARISM %>
+<div>
+  <p>These similarities were confirmed as plagiarism. Mark student(s) as guilty:</p>
+  <p class="check_boxes">
+    <label><%= check_box_tag "toggle_guilty_#{@submission_similarity.id}_#{@submission1.id}", nil, @submission1.is_plagiarism, class: "guilty_check_box" %> Student <%= @student1.id_string %></label>
+    <label><%= check_box_tag "toggle_guilty_#{@submission_similarity.id}_#{@submission2.id}", nil, @submission2.is_plagiarism, class: "guilty_check_box" %> Student <%= @student2.id_string %></label>
+  </p>
+</div>
+<% end %>
+
+<% if @submission_similarity.status == SubmissionSimilarity::STATUS_SUSPECTED_AS_PLAGIARISM %>
+<div>
+  <p>These similarities were marked as suspicious.</p>
+</div>
+<% end %>
+
 <div class="submissions">
   <div class="submission1">
-    <h3>Submission by <%= @student1.id_string %> (<%= link_to "Log", assignment_submission_log_url(@assignment, @submission1) %>)</h3>
+    <h5>Submission by <%= @student1.id_string %> (<%= link_to "Log", assignment_submission_log_url(@assignment, @submission1) %>)</h5>
     <pre class="prettyprint linenums <%= @assignment.prettify_js_lang %>">
     <% @submission1.lines.each { |line| %>
       <%= line %>
@@ -53,7 +77,7 @@
     </pre>
   </div>
   <div class="submission2">
-    <h3>Submission by <%= @student2.id_string %> (<%= link_to "Log", assignment_submission_log_url(@assignment, @submission2) %>)</h3>
+    <h5>Submission by <%= @student2.id_string %> (<%= link_to "Log", assignment_submission_log_url(@assignment, @submission2) %>)</h5>
     <pre class="prettyprint linenums <%= @assignment.prettify_js_lang %>">
     <% @submission2.lines.each { |line| %>
       <%= line %>
@@ -61,3 +85,25 @@
     </pre>
   </div>
 </div>
+
+<div class="modal fade" id="confirmPlagiarismModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <% @modal = SiteModal.new("Confirm Plagiarism", "These similarities will be confirmed as plagiarism. Are you sure?", { :name => "OK", :method => :put }) %>
+  <%= render partial: "site/modal", locals: { modal: @modal }%>
+</div>
+
+<div class="modal fade" id="markAsSuspiciousModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <% @modal = SiteModal.new("Mark as Suspicious", "These similarities will be marked as suspicious. Are you sure?", { :name => "OK", :method => :put }) %>
+  <%= render partial: "site/modal", locals: { modal: @modal }%>
+</div>
+
+<div class="modal fade" id="removeSuspicionModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <% @modal = SiteModal.new("Remove suspicion", "The suspicion of plagiarism will be removed. Are you sure?", { :name => "OK", :method => :put }) %>
+  <%= render partial: "site/modal", locals: { modal: @modal }%>
+</div>
+
+<div class="modal fade" id="removePlagiarismModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <% @modal = SiteModal.new("Remove plagiarism", "The confirmation of plagiarism will be removed. Are you sure?", { :name => "OK", :method => :put }) %>
+  <%= render partial: "site/modal", locals: { modal: @modal }%>  
+</div>
+
+<%= javascript_include_tag "site_modal.js" %>

@@ -151,21 +151,5 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
           SubmissionSimilarity.toggleGuilty(this);
         });
       });
-    };
-  
-    $(document).ready(function() {
-      return $(".slideleft .button").click(function() {
-        var $lefty;
-        $lefty = $(this).parent();
-        if (parseInt($lefty.css("left"), 10) === 0) {
-          $(this).text("SHOW");
-        } else {
-          $(this).text("HIDE");
-        }
-        return $lefty.animate({
-          left: (parseInt($lefty.css("left"), 10) === 0 ? 100 - $lefty.outerWidth() : 0)
-        });
-      });
-    });
-  
+    }; 
   }).call(this);
