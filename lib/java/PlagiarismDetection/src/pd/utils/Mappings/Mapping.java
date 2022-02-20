@@ -33,37 +33,73 @@ public class Mapping {
 		return startIndex1;
 	}
 
+	public void setStartIndex1(int startIndex1) {
+		this.startIndex1 = startIndex1;
+	}
+
 	public int getEndIndex1() {
 		return endIndex1;
+	}
+
+	public void setEndIndex1(int endIndex1) {
+		this.endIndex1 = endIndex1;
 	}
 
 	public int getStartIndex2() {
 		return startIndex2;
 	}
 
+	public void setStartIndex2(int startIndex2) {
+		this.startIndex2 = startIndex2;
+	}
+
 	public int getEndIndex2() {
 		return endIndex2;
+	}
+
+	public void setEndIndex2(int endIndex2) {
+		this.endIndex2 = endIndex2;
 	}
 
 	public int getStartLine1() {
 		return startLine1;
 	}
 
+	public void setStartLine1(int startLine1) {
+		this.startLine1 = startLine1;
+	}
+
 	public int getEndLine1() {
 		return endLine1;
+	}
+
+	public void setEndLine1(int endLine1) {
+		this.endLine1 = endLine1;
 	}
 
 	public int getStartLine2() {
 		return startLine2;
 	}
 
+	public void setStartLine2(int startLine2) {
+		this.startLine2 = startLine2;
+	}
+
 	public int getEndLine2() {
 		return endLine2;
+	}
+
+	public void setEndLine2(int endLine2) {
+		this.endLine2 = endLine2;
 	}
 
 	public int getMappedCountableStmtCount() {
 		return mappedCountableStatement;
 	}
+
+	public void setMappedCountableStmtCount(int mappedCountableStatement) {
+		this.mappedCountableStatement = mappedCountableStatement;
+	}	
 
 	public int getMappedNonCountableStmtCount() {
 		return mappedNonCountableStatement;
@@ -98,4 +134,17 @@ public class Mapping {
 		this.mappedNonCountableStatement = mappedNonCountableStatement;
 		this.isPlagMapping = isPlagMapping;
 	}
+
+	@Override
+	public String toString() {
+		String mapping = "";
+		mapping = mapping + String.format("Start idx 1: %d, end idx 1: %d || Start idx 2: %d, end idx 2: %d %n ", startIndex1, endIndex1, startIndex2, endIndex2);
+		mapping = mapping + String.format("Start line 1: %d, End line 1: %d || Start line 2: %d, end line 2: %d %n ", startLine1, endLine1, startLine2, endLine2);
+		mapping = mapping + String.format("Mapped countable stmt: %d %n", mappedCountableStatement);
+		mapping = mapping + String.format("Mapped NON-countable stmt: %d %n", mappedNonCountableStatement);
+		mapping = mapping + String.format("isPlagMapping: %s %n", isPlagMapping);
+		return mapping;
+	}
+
+	
 }
