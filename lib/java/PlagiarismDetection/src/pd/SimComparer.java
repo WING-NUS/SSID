@@ -358,7 +358,9 @@ public final class SimComparer {
 				m.setIsPlagMapping(true);
 			}
 
-			tokenMappings.add(m);
+			if (m.isPlagMapping()) {
+				tokenMappings.add(m);
+			}
 		}
 	}
 }
