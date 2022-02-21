@@ -289,6 +289,7 @@ public final class SimComparer {
 			TokenList bTokens,
 			HashMap<NGram, ArrayList<Integer>> bNGramIndices, int minMatch,
 			ArrayList<Mapping> tokenMappings) {
+		System.out.println("**************************************************************************************");
 
 		NGramList s1RegionNGrams;
 		TokenList s1RegionTokens;
@@ -338,11 +339,27 @@ public final class SimComparer {
 						bTokens, null, minMatch, bMappings);
 				mappedCountableStmt = m.getMappedCountableStmtCount();
 
+				System.out.println("Mapping is: " + m.toString());
 				for (Mapping b : bMappings) {
 					mappedCountableStmt -= b.getMappedCountableStmtCount();
+					System.out.println("Skeleton mapping is: " + b.toString());
 				}
 
 				if (mappedCountableStmt >= minMatch) {
+					// To exclude tokens found in skeleton code from similarity percentage later on
+					for (Mapping b : bMappings) {
+						int startIdxOfSkeletonInS1 = b.getStartIndex1() + m.getStartIndex1();
+						int endIdxOfSkeletonInS1 = b.getEndIndex1() + m.getStartIndex1();
+						int startIdxOfSkeletonInS2 = b.getStartIndex1() + m.getStartIndex2();
+						int endIdxOfSkeletonInS2 = b.getEndIndex1() + m.getStartIndex2();
+						s1Tokens.baseMarkRange(startIdxOfSkeletonInS1, endIdxOfSkeletonInS1);
+						s2Tokens.baseMarkRange(startIdxOfSkeletonInS2, endIdxOfSkeletonInS2);
+
+						System.out.println("Test skeleton mapping in S2: ");
+						System.out.println(String.format("Start line S2: %d || End line S2: %d", s2Tokens.get(startIdxOfSkeletonInS2).getCodeLine(), s2Tokens.get(endIdxOfSkeletonInS2).getCodeLine()));
+					}
+
+					m.setMappedCountableStmtCount(mappedCountableStmt);
 					s1Tokens.markRange(s1StartIndex, s1EndIndex);
 					s2Tokens.markRange(s2StartIndex, s2EndIndex);
 					m.setIsPlagMapping(true);
