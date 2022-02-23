@@ -89,8 +89,36 @@ public final class SimComparer {
 
 	private void computeSims(TokenList s1Tokens, TokenList s2Tokens,
 			Result result) {
-		result.setSim2To1((float) s2Tokens.getMarkCount() / s2Tokens.size());
-		result.setSim1To2((float) s1Tokens.getMarkCount() / s1Tokens.size());
+		System.out.println("Test whether marking skeleton tokens has overlap");
+
+		if (s1Tokens.getMarkedBaseTokens() != null && s2Tokens.getMarkedBaseTokens() != null) {
+			int S1_countFromArray = 0;
+			int S2_countFromArray = 0;
+			for (Boolean b : s1Tokens.getMarkedBaseTokens()) {
+				if (b != null && b.equals(Boolean.TRUE)) {
+					S1_countFromArray++;
+				}
+			}
+
+			for (Boolean b : s2Tokens.getMarkedBaseTokens()) {
+				if (b != null && b.equals(Boolean.TRUE)) {
+					S2_countFromArray++;
+				}
+			}
+			// System.out.println(String.format("S1 array count: %d, S1 own count: %d", S1_countFromArray, s1Tokens.getBaseCount()));
+			// System.out.println(String.format("S2 array count: %d, S2 own count: %d", S2_countFromArray, s2Tokens.getBaseCount()));
+		}
+
+		if (s1Tokens.size() == s1Tokens.getBaseCount() || s2Tokens.size() == s2Tokens.getBaseCount()) {
+			System.out.println(String.format("One of the submission is same with skeleton, and ids: %s %s", result.getS1().getID(), result.getS2().getID()));
+			result.setSim2To1(0f);
+			result.setSim1To2(0f);
+			return;
+		} 
+
+		result.setSim2To1((float) s2Tokens.getMarkCount() / (s2Tokens.size() - s2Tokens.getBaseCount()));
+		result.setSim1To2((float) s1Tokens.getMarkCount() / (s1Tokens.size() - s1Tokens.getBaseCount()));
+
 	}
 
 	private Submission getSkeletonCode(ArrayList<Submission> submissions) {
