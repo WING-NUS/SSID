@@ -17,6 +17,8 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
  
 package pd.utils.Mappings;
 
+import java.util.List;
+
 public class Mapping {
 
 	private int startIndex1, endIndex1, startIndex2, endIndex2;
@@ -24,6 +26,8 @@ public class Mapping {
 	private boolean isPlagMapping;
 
 	private int mappedCountableStatement, mappedNonCountableStatement;
+
+	private List<SkeletonMapping> skeletonMappings;
 
 	public boolean isPlagMapping() {
 		return isPlagMapping;
@@ -107,6 +111,14 @@ public class Mapping {
 
 	public void setIsPlagMapping(boolean value) {
 		isPlagMapping = value;
+	}
+
+	public List<SkeletonMapping> getSkeletonMappings() {
+		return skeletonMappings;
+	}
+
+	public void setSkeletonMappings(List<SkeletonMapping> skeletonMappings) {
+		this.skeletonMappings = skeletonMappings;
 	}
 
 	public Mapping(int startIndex1, int endIndex1, int startIndex2,
