@@ -48,7 +48,7 @@ body.submission_similarities_show {
     margin-top: $spacer * 0.75;
     margin-bottom: $spacer * 0.5;
   }
-  
+ 
   table {
     @extend .table;
     @extend .table-bordered;
@@ -76,7 +76,11 @@ body.submission_similarities_show {
       border: 1px solid grey;
 
       ol.linenums li.highlight {
-        background-color: rgb(255, 255, 140);
+        background-color: rgb(255, 254, 85);
+      }
+
+      ol.linenums li.skeleton-highlight {
+        background-color: rgb(255, 255, 194);
       }
     }
 
