@@ -72,6 +72,14 @@
 <% end %>
 
 <div class="submissions">
+  <div class="submissions-legend">
+    <strong>Line colors</strong>
+    <br>
+    <ul>
+      <li><%= image_tag("square_01.svg", size: "16", alt: "Skeleton code color")%> Skeleton code</li>
+      <li><%= image_tag("square_02.svg", size: "16", alt: "Submission code color")%> Submission code</li>
+    </ul>
+  </div>
   <div class="submission1">
     <h5>Submission by <%= @student1.id_string %> (<%= link_to "Log", assignment_submission_log_url(@assignment, @submission1) %>)</h5>
     <pre class="prettyprint linenums <%= @assignment.prettify_js_lang %>">
