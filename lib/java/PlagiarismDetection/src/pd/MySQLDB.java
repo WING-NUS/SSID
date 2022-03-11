@@ -222,7 +222,6 @@ public final class MySQLDB {
 			stmt.setString(7, dateTime);
 			stmt.setString(8, dateTime);
 
-			// System.out.println("SQL query: " + stmt.toString());
 			stmt.addBatch();
 		}
 		stmt.executeBatch();
@@ -286,7 +285,6 @@ public final class MySQLDB {
 						bMappingStatement.setString(6, dateTime);
 						bMappingStatement.setString(7, dateTime);
 
-						System.out.println("SQL query: " + bMappingStatement.toString());
 						bMappingStatement.addBatch();
 					}	
 				}

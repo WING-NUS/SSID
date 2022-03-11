@@ -70,18 +70,6 @@ public final class SimComparer {
 					computeSims(s2Tokens, s1Tokens, result);
 				}
 
-				System.out.println("DEBUG 03: " + s1.getID() + ", " + s2.getID());
-				List<Mapping> mappings = result.getTokenIndexMappings();
-				if (mappings != null) {
-					for(Mapping m : mappings) {
-						List<SkeletonMapping> bMappings = m.getSkeletonMappings();
-						if (bMappings != null) {
-							for(SkeletonMapping bMapping : bMappings) {
-								System.out.println("Skeleton mapping: " + bMapping.getStartLine1() + ", " + bMapping.getEndLine1() + " || " + bMapping.getStartLine2() + ", " + bMapping.getEndLine2());
-							}
-						}
-					}
-				}
 				results.add(result);
 
 				unmarkTokens(s1Tokens, s2Tokens, bTokens);
@@ -101,28 +89,8 @@ public final class SimComparer {
 
 	private void computeSims(TokenList s1Tokens, TokenList s2Tokens,
 			Result result) {
-		System.out.println("Test whether marking skeleton tokens has overlap");
-
-		if (s1Tokens.getMarkedBaseTokens() != null && s2Tokens.getMarkedBaseTokens() != null) {
-			int S1_countFromArray = 0;
-			int S2_countFromArray = 0;
-			for (Boolean b : s1Tokens.getMarkedBaseTokens()) {
-				if (b != null && b.equals(Boolean.TRUE)) {
-					S1_countFromArray++;
-				}
-			}
-
-			for (Boolean b : s2Tokens.getMarkedBaseTokens()) {
-				if (b != null && b.equals(Boolean.TRUE)) {
-					S2_countFromArray++;
-				}
-			}
-			// System.out.println(String.format("S1 array count: %d, S1 own count: %d", S1_countFromArray, s1Tokens.getBaseCount()));
-			// System.out.println(String.format("S2 array count: %d, S2 own count: %d", S2_countFromArray, s2Tokens.getBaseCount()));
-		}
 
 		if (s1Tokens.size() == s1Tokens.getBaseCount() || s2Tokens.size() == s2Tokens.getBaseCount()) {
-			System.out.println(String.format("One of the submission is same with skeleton, and ids: %s %s", result.getS1().getID(), result.getS2().getID()));
 			result.setSim2To1(0f);
 			result.setSim1To2(0f);
 			return;
@@ -333,7 +301,6 @@ public final class SimComparer {
 			TokenList bTokens,
 			HashMap<NGram, ArrayList<Integer>> bNGramIndices, int minMatch,
 			ArrayList<Mapping> tokenMappings) {
-		System.out.println("**************************************************************************************");
 
 		NGramList s1RegionNGrams;
 		TokenList s1RegionTokens;
@@ -383,11 +350,9 @@ public final class SimComparer {
 						bTokens, null, minMatch, bMappings);
 				mappedCountableStmt = m.getMappedCountableStmtCount();
 
-				System.out.println("Mapping is: " + m.toString());
 				List<SkeletonMapping> skeletonMappings = new ArrayList<>();
 				for (Mapping b : bMappings) {
 					mappedCountableStmt -= b.getMappedCountableStmtCount();
-					System.out.println("Skeleton mapping is: " + b.toString());
 
 					int startIdxOfSkeletonInS1 = b.getStartIndex1() + m.getStartIndex1();
 					int endIdxOfSkeletonInS1 = b.getEndIndex1() + m.getStartIndex1();
@@ -405,9 +370,6 @@ public final class SimComparer {
 					skeletonMapping.setEndLine2(s2Tokens.get(endIdxOfSkeletonInS2).getCodeLine());
 
 					skeletonMappings.add(skeletonMapping);
-
-					System.out.println("Test skeleton mapping in S2: ");
-					System.out.println(String.format("Start line S2: %d || End line S2: %d", s2Tokens.get(startIdxOfSkeletonInS2).getCodeLine(), s2Tokens.get(endIdxOfSkeletonInS2).getCodeLine()));
 				}
 
 				m.setMappedCountableStmtCount(mappedCountableStmt);
