@@ -35,13 +35,8 @@ class Admin::UsersController < ApplicationController
 
   # GET /admin/users
   def index
-    @courses = Course.all
     @admins = User.where(is_admin: true)
-    @staff = Hash[@courses.collect { |c| [c.id, c.staff] }]
-    @teaching_assistants = Hash[@courses.collect { |c| [c.id, c.teaching_assistants] }]
-    @students = Hash[@courses.collect { |c| [c.id, c.students] }]
-    @loners = User.all - UserCourseMembership.all.collect { |m| m.user } - @admins
-    @guests = Hash[@courses.collect { |c| [c.id, c.guests] }]
+    @loners = User.all - User.joins(:memberships) - @admins
   end
 
   # GET /admin/users/new
