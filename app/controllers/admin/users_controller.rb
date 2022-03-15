@@ -118,8 +118,8 @@ class Admin::UsersController < ApplicationController
 
     # Check for errors and render view
     if @the_user.errors.empty? and @the_user.save
-      if @existing_user
-        redirect_to admin_users_url, notice: "User was successfully added 
+      if @existing_user or not @course.nil?
+        redirect_to course_users_url(@course), notice: "User was successfully added 
         to #{@course.code}."
       else 
         redirect_to admin_users_url, notice: 'User was successfully created.'
