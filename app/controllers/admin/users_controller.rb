@@ -35,13 +35,10 @@ class Admin::UsersController < ApplicationController
 
   # GET /admin/users
   def index
-    @courses = Course.all
     @admins = User.where(is_admin: true)
-    @staff = Hash[@courses.collect { |c| [c.id, c.staff] }]
-    @teaching_assistants = Hash[@courses.collect { |c| [c.id, c.teaching_assistants] }]
-    @students = Hash[@courses.collect { |c| [c.id, c.students] }]
-    @loners = User.all - UserCourseMembership.all.collect { |m| m.user } - @admins
-    @guests = Hash[@courses.collect { |c| [c.id, c.guests] }]
+
+    # users don't belong to any course
+    @loners = User.all - User.joins(:memberships) - @admins
   end
 
   # GET /admin/users/new
@@ -123,8 +120,8 @@ class Admin::UsersController < ApplicationController
 
     # Check for errors and render view
     if @the_user.errors.empty? and @the_user.save
-      if @existing_user
-        redirect_to admin_users_url, notice: "User was successfully added 
+      if @existing_user or not @course.nil?
+        redirect_to course_users_url(@course), notice: "User was successfully added 
         to #{@course.code}."
       else 
         redirect_to admin_users_url, notice: 'User was successfully created.'
