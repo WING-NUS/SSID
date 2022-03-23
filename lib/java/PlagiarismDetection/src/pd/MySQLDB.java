@@ -286,7 +286,6 @@ public final class MySQLDB {
 						bMappingStatement.setString(6, dateTime);
 						bMappingStatement.setString(7, dateTime);
 
-						System.out.println("SQL query: " + bMappingStatement.toString());
 						bMappingStatement.addBatch();
 					}	
 				}
