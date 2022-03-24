@@ -89,6 +89,13 @@ public final class SimComparer {
 
 	private void computeSims(TokenList s1Tokens, TokenList s2Tokens,
 			Result result) {
+		if (s1Tokens.size() == s1Tokens.getBaseCount() || s2Tokens.size() == s2Tokens.getBaseCount()) {
+			System.out.println("One of the submissions is the same as base code: " + result.getS1().getID() + ", " + result.getS2().getID());
+			result.setSim2To1(0f);
+			result.setSim1To2(0f);
+			return;
+		} 		
+
 		result.setSim2To1((float) s2Tokens.getMarkCount() / (s2Tokens.size() - s2Tokens.getBaseCount()));
 		result.setSim1To2((float) s1Tokens.getMarkCount() / (s1Tokens.size() - s1Tokens.getBaseCount()));
 
