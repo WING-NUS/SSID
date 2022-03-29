@@ -152,7 +152,7 @@ module SubmissionsHandler
 	  password = config[Rails.env]["password"]
 
     # Run the java program and get its pid
-    command = %Q{java -Xmx1024M -Dlog4j2.configurationFile="#{Rails.application.config.plagiarism_detection_log_configuration_path}" -jar "#{Rails.application.config.plagiarism_detection_path}" } + 
+    command = %Q{java -Xmx2048M -Dlog4j2.configurationFile="#{Rails.application.config.plagiarism_detection_log_configuration_path}" -jar "#{Rails.application.config.plagiarism_detection_path}" } + 
               %Q{#{assignment.id} #{compare_dir} #{assignment.language.downcase} } +
               %Q{#{assignment.min_match_length} #{assignment.ngram_size} } +
               %Q{#{host} #{database} #{username} #{password} #{isMapEnabled}}
