@@ -89,8 +89,16 @@ public final class SimComparer {
 
 	private void computeSims(TokenList s1Tokens, TokenList s2Tokens,
 			Result result) {
-		result.setSim2To1((float) s2Tokens.getMarkCount() / s2Tokens.size());
-		result.setSim1To2((float) s1Tokens.getMarkCount() / s1Tokens.size());
+		if (s1Tokens.size() == s1Tokens.getBaseCount() || s2Tokens.size() == s2Tokens.getBaseCount()) {
+			System.out.println("One of the submissions is the same as base code: " + result.getS1().getID() + ", " + result.getS2().getID());
+			result.setSim2To1(0f);
+			result.setSim1To2(0f);
+			return;
+		} 		
+
+		result.setSim2To1((float) s2Tokens.getMarkCount() / (s2Tokens.size() - s2Tokens.getBaseCount()));
+		result.setSim1To2((float) s1Tokens.getMarkCount() / (s1Tokens.size() - s1Tokens.getBaseCount()));
+
 	}
 
 	private Submission getSkeletonCode(ArrayList<Submission> submissions) {
@@ -146,14 +154,18 @@ public final class SimComparer {
 			s2StartToken = s2Tokens.get(m.getStartIndex2());
 			s2EndToken = s2Tokens.get(m.getEndIndex2());
 
-			codeMappings.add(new Mapping(s1StartToken.getCodeStartIndex(),
-					s1EndToken.getCodeEndIndex(), s2StartToken
-							.getCodeStartIndex(), s2EndToken.getCodeEndIndex(),
-					s1StartToken.getCodeLine(), s1EndToken.getCodeLine(),
-					s2StartToken.getCodeLine(), s2EndToken.getCodeLine(), m
-							.getMappedCountableStmtCount(), m
-							.getMappedNonCountableStmtCount(), m
-							.isPlagMapping()));
+			Mapping mapping = new Mapping(s1StartToken.getCodeStartIndex(),
+			s1EndToken.getCodeEndIndex(), s2StartToken
+					.getCodeStartIndex(), s2EndToken.getCodeEndIndex(),
+			s1StartToken.getCodeLine(), s1EndToken.getCodeLine(),
+			s2StartToken.getCodeLine(), s2EndToken.getCodeLine(), m
+					.getMappedCountableStmtCount(), m
+					.getMappedNonCountableStmtCount(), m
+					.isPlagMapping());
+					
+			mapping.setSkeletonMappings(m.getSkeletonMappings());
+
+			codeMappings.add(mapping);
 		}
 
 		Collections.sort(codeMappings, MappingComparator.getInstance());
@@ -338,19 +350,37 @@ public final class SimComparer {
 						bTokens, null, minMatch, bMappings);
 				mappedCountableStmt = m.getMappedCountableStmtCount();
 
+				List<SkeletonMapping> skeletonMappings = new ArrayList<>();
 				for (Mapping b : bMappings) {
 					mappedCountableStmt -= b.getMappedCountableStmtCount();
+
+					int startIdxOfSkeletonInS1 = b.getStartIndex1() + m.getStartIndex1();
+					int endIdxOfSkeletonInS1 = b.getEndIndex1() + m.getStartIndex1();
+					int startIdxOfSkeletonInS2 = b.getStartIndex1() + m.getStartIndex2();
+					int endIdxOfSkeletonInS2 = b.getEndIndex1() + m.getStartIndex2();
+
+					// To exclude tokens found in skeleton code from similarity percentage later on
+					s1Tokens.baseMarkRange(startIdxOfSkeletonInS1, endIdxOfSkeletonInS1);
+					s2Tokens.baseMarkRange(startIdxOfSkeletonInS2, endIdxOfSkeletonInS2);
+
+					SkeletonMapping skeletonMapping = new SkeletonMapping();
+					skeletonMapping.setStartLine1(s1Tokens.get(startIdxOfSkeletonInS1).getCodeLine());
+					skeletonMapping.setStartLine2(s2Tokens.get(startIdxOfSkeletonInS2).getCodeLine());
+					skeletonMapping.setEndLine1(s1Tokens.get(endIdxOfSkeletonInS1).getCodeLine());
+					skeletonMapping.setEndLine2(s2Tokens.get(endIdxOfSkeletonInS2).getCodeLine());
+
+					skeletonMappings.add(skeletonMapping);
+
 				}
 
-				if (mappedCountableStmt >= minMatch) {
-					s1Tokens.markRange(s1StartIndex, s1EndIndex);
-					s2Tokens.markRange(s2StartIndex, s2EndIndex);
-					m.setIsPlagMapping(true);
-				} else {
-					s1Tokens.baseMarkRange(s1StartIndex, s1EndIndex);
-					s2Tokens.baseMarkRange(s2StartIndex, s2EndIndex);
-					m.setIsPlagMapping(false);
-				}
+				m.setMappedCountableStmtCount(mappedCountableStmt);
+				m.setSkeletonMappings(skeletonMappings);
+
+				s1Tokens.markRange(s1StartIndex, s1EndIndex);
+				s2Tokens.markRange(s2StartIndex, s2EndIndex);
+				
+				boolean isPlagMapping = (mappedCountableStmt >= minMatch) ? true : false;
+				m.setIsPlagMapping(isPlagMapping);
 
 			} else { // No skeleton, directly treated as plag matching
 				s1Tokens.markRange(s1StartIndex, s1EndIndex);

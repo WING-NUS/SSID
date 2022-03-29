@@ -39,12 +39,16 @@
       </tr>
     </thead>
     <tbody>
-      <% @submission_similarity.mappings.sort_by { |m| m.start_line1 }.each { |mapping| %>
+      <% @submission_similarity.similarity_mappings.sort_by { |m| m.start_line1 }.each { |mapping| %>
       <tr>
         <td>Lines <%= mapping.line_range1_string %></td>
         <td>Lines <%= mapping.line_range2_string %></td>
         <td class="num_statements_cell"><%= mapping.statement_count %></td>
-        <td><%= check_box_tag nil, mapping.line_ranges_html_value, false %></td>
+        <td><%= check_box_tag nil, mapping.line_ranges_html_value, false, { :class => "checkbox" } %></td>
+        <%= hidden_field_tag "skeleton_lines", mapping.submission_similarity_skeleton_mappings.collect { |s_mapping| 
+          s_mapping.start_line1.to_s + "_" + s_mapping.end_line1.to_s + "_" + s_mapping.start_line2.to_s + "_" + s_mapping.end_line2.to_s
+        }, { :class => "skeleton-lines" } 
+        %>
       </tr>
       <% } %>
     </tbody>
@@ -68,6 +72,14 @@
 <% end %>
 
 <div class="submissions">
+  <div class="submissions-legend">
+    <strong>Line colors</strong>
+    <br>
+    <ul>
+      <li><%= image_tag("square_01.svg", size: "16", alt: "Skeleton code color")%> Skeleton code</li>
+      <li><%= image_tag("square_02.svg", size: "16", alt: "Submission code color")%> Submission code</li>
+    </ul>
+  </div>
   <div class="submission1">
     <h5>Submission by <%= @student1.id_string %> (<%= link_to "Log", assignment_submission_log_url(@assignment, @submission1) %>)</h5>
     <pre class="prettyprint linenums <%= @assignment.prettify_js_lang %>">

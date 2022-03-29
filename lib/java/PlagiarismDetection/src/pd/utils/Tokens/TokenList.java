@@ -23,8 +23,10 @@ public class TokenList extends ArrayList<TokenSSID> {
 
 	private static final long serialVersionUID = 1791998687760639392L;
 	private boolean[] markedTokens = null;
+	private Boolean[] markedBaseTokens = null;
 	private ArrayList<Integer> startOfStmtTokenIndices = new ArrayList<Integer>();
 	private int markedTokenCount = 0;
+	private int baseTokenCount = 0; // number of skeleton code tokens
 
 	public void markRange(int start, int end) {
 		if (start >= size()) {
@@ -61,8 +63,14 @@ public class TokenList extends ArrayList<TokenSSID> {
 			markedTokens = new boolean[size()];
 		}
 
+		if (markedBaseTokens == null) {
+			markedBaseTokens = new Boolean[size()];
+		}
+
 		for (int i = start; i <= end; i++) {
 			markedTokens[i] = true;
+			markedBaseTokens[i] = Boolean.TRUE;
+			baseTokenCount++;
 		}
 	}
 
@@ -84,6 +92,14 @@ public class TokenList extends ArrayList<TokenSSID> {
 		return markedTokenCount;
 	}
 
+	public int getBaseCount() {
+		return baseTokenCount;
+	}
+
+	public Boolean[] getMarkedBaseTokens() {
+		return markedBaseTokens;
+	}
+
 	public boolean isTokenMarked(int index) {
 		if (markedTokens == null) {
 			return false;
@@ -93,6 +109,17 @@ public class TokenList extends ArrayList<TokenSSID> {
 
 	public void unmarkAll() {
 		markedTokens = null;
+		markedBaseTokens = null;
 		markedTokenCount = 0;
+		baseTokenCount = 0;
+	}
+
+	@Override
+	public String toString() {
+		String tokenList = "";
+		for (int i = 0; i < this.size(); i++) {
+			tokenList = tokenList + this.get(i) + " ";
+		} 
+		return tokenList;
 	}
 }

@@ -17,6 +17,7 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 
 class SubmissionSimilarityMapping < ActiveRecord::Base
   belongs_to :submission_similarity
+  has_many :submission_similarity_skeleton_mappings, :dependent => :delete_all, class_name: "SubmissionSimilaritySkeletonMapping"
 
   def line_range1
     (self.start_line1)..(self.end_line1)

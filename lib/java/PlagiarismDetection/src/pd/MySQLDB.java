@@ -36,7 +36,9 @@ public final class MySQLDB {
 	private static final String STUDENT_SELECT = "SELECT id FROM users WHERE id_string = ?";
 	private static final String RESULT_INSERT = "INSERT INTO submission_similarities(assignment_id, submission1_id, submission2_id, similarity_1_to_2, similarity_2_to_1, similarity, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 	private static final String CODE_INSERT = "INSERT INTO submissions(`lines`, assignment_id, student_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?)";
-	private static final String MAPPING_INSERT = "INSERT INTO submission_similarity_mappings(submission_similarity_id, start_index1, end_index1, start_index2, end_index2, start_line1, end_line1, start_line2, end_line2, statement_count, is_plagiarism, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	private static final String MAPPING_INSERT = "INSERT INTO submission_similarity_mappings(id, submission_similarity_id, start_index1, end_index1, start_index2, end_index2, start_line1, end_line1, start_line2, end_line2, statement_count, is_plagiarism, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	private static final String MAPPING_MAX_ID_SELECT = "SELECT max(id) FROM submission_similarity_mappings";
+	private static final String SKELETON_MAPPING_INSERT = "INSERT INTO submission_similarity_skeleton_mappings(submission_similarity_mapping_id, start_line1, end_line1, start_line2, end_line2, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)";
 	private static MySQLDB instance = new MySQLDB();
 	private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	private Connection con;
@@ -219,6 +221,8 @@ public final class MySQLDB {
 			stmt.setFloat(6, Math.max(sim1To2, sim2To1));
 			stmt.setString(7, dateTime);
 			stmt.setString(8, dateTime);
+
+			// System.out.println("SQL query: " + stmt.toString());
 			stmt.addBatch();
 		}
 		stmt.executeBatch();
@@ -239,36 +243,73 @@ public final class MySQLDB {
 			ArrayList<Result> results) throws Exception {
 		String dateTime = dateFormat.format(new java.util.Date());
 		PreparedStatement stmt = con.prepareStatement(MAPPING_INSERT);
+		PreparedStatement bMappingStatement = con.prepareStatement(SKELETON_MAPPING_INSERT);
 
 		Iterator<Integer> idIterator = genIds.iterator();
 		Iterator<Result> resultIterator = results.iterator();
 
 		ArrayList<Mapping> mappings;
-		int id;
+		long mappingId = getCurrentMaxMappingId();
+		int submissionSimilarityId;;
 		while (idIterator.hasNext() || resultIterator.hasNext()) {
 
-			id = idIterator.next();
+			submissionSimilarityId = idIterator.next();
 			mappings = resultIterator.next().getCodeIndexMappings();
+			mappingId += 1;
 
 			for (Mapping m : mappings) {
-				stmt.setInt(1, id);
-				stmt.setInt(2, m.getStartIndex1());
-				stmt.setInt(3, m.getEndIndex1());
-				stmt.setInt(4, m.getStartIndex2());
-				stmt.setInt(5, m.getEndIndex2());
-				stmt.setInt(6, m.getStartLine1());
-				stmt.setInt(7, m.getEndLine1());
-				stmt.setInt(8, m.getStartLine2());
-				stmt.setInt(9, m.getEndLine2());
-				stmt.setInt(10, m.getMappedCountableStmtCount());
-				stmt.setBoolean(11, m.isPlagMapping());
-        stmt.setString(12, dateTime);
+				stmt.setLong(1, mappingId);
+				stmt.setInt(2, submissionSimilarityId);
+				stmt.setInt(3, m.getStartIndex1());
+				stmt.setInt(4, m.getEndIndex1());
+				stmt.setInt(5, m.getStartIndex2());
+				stmt.setInt(6, m.getEndIndex2());
+				stmt.setInt(7, m.getStartLine1());
+				stmt.setInt(8, m.getEndLine1());
+				stmt.setInt(9, m.getStartLine2());
+				stmt.setInt(10, m.getEndLine2());
+				stmt.setInt(11, m.getMappedCountableStmtCount());
+				stmt.setBoolean(12, m.isPlagMapping());
         stmt.setString(13, dateTime);
+        stmt.setString(14, dateTime);
 				stmt.addBatch();
+
+				// Update submissionSimilarityMappingId in skeleton mappings
+				List<SkeletonMapping> skeletonMappings = m.getSkeletonMappings();
+				if (skeletonMappings != null && skeletonMappings.size() > 0) {
+					for (SkeletonMapping bMapping : skeletonMappings) {
+						bMappingStatement.setLong(1, mappingId);
+						bMappingStatement.setInt(2, bMapping.getStartLine1());
+						bMappingStatement.setInt(3, bMapping.getEndLine1());
+						bMappingStatement.setInt(4, bMapping.getStartLine2());
+						bMappingStatement.setInt(5, bMapping.getEndLine2());
+						bMappingStatement.setString(6, dateTime);
+						bMappingStatement.setString(7, dateTime);
+
+						bMappingStatement.addBatch();
+					}	
+				}
+
+				mappingId += 1;
 			}
 		}
 		stmt.executeBatch();
 		stmt.close();
+
+		bMappingStatement.executeBatch();
+		bMappingStatement.close();
+	}
+
+	private long getCurrentMaxMappingId() throws Exception {
+		long maxMappingId = 1L;
+		PreparedStatement statement = con.prepareStatement(MAPPING_MAX_ID_SELECT);
+		ResultSet resultSet = statement.executeQuery();
+		if (resultSet != null && resultSet.next()) {
+			maxMappingId = resultSet.getLong(1);
+		}
+
+		statement.close();
+		return maxMappingId;
 	}
 
 	private void connectionDB() throws Exception {

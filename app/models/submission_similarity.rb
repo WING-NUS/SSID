@@ -55,4 +55,8 @@ class SubmissionSimilarity < ActiveRecord::Base
   def other_submission(student)
     (student == submission1.student) ? submission2 : submission1
   end
+
+  def similarity_mappings
+    SubmissionSimilarityMapping.where("submission_similarity_id = ? AND statement_count > 0", self.id)
+  end
 end

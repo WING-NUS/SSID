@@ -48,7 +48,7 @@ body.submission_similarities_show {
     margin-top: $spacer * 0.75;
     margin-bottom: $spacer * 0.5;
   }
-  
+ 
   table {
     @extend .table;
     @extend .table-bordered;
@@ -71,12 +71,31 @@ body.submission_similarities_show {
       margin-bottom: $spacer * 0.75;
     }
 
+    div.submissions-legend {
+      margin-bottom: $spacer * 0.5;
+
+      ul {
+        list-style: none;
+        margin: $spacer*0.5 0;
+        padding: 0px;
+
+        li {
+          display: inline-block;
+          padding-left: $spacer * 0.5;
+        }
+      }
+    }
+
     pre {
       margin-top: 0px;
       border: 1px solid grey;
 
       ol.linenums li.highlight {
-        background-color: rgb(255, 255, 140);
+        background-color: rgb(255, 254, 85);
+      }
+
+      ol.linenums li.skeleton-highlight {
+        background-color: rgb(211, 211, 211);
       }
     }
 
