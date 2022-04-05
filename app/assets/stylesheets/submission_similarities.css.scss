@@ -48,7 +48,12 @@ body.submission_similarities_show {
     margin-top: $spacer * 0.75;
     margin-bottom: $spacer * 0.5;
   }
- 
+  
+  .table-container {
+    height: 12rem;
+    overflow-y: scroll;
+  }
+
   table {
     @extend .table;
     @extend .table-bordered;
