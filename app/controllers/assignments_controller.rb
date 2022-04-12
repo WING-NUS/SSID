@@ -111,7 +111,6 @@ class AssignmentsController < ApplicationController
         # Don't process the file and show error if the mapping was enabled but no mapping file was uploaded
         if (is_valid_map_or_no_map?(isMapEnabled, params[:assignment]["mapfile"])) 
           self.start_upload(@assignment, params[:assignment]["file"], isMapEnabled, params[:assignment]["mapfile"])
-          redirect_to course_assignments_url(@course), notice: 'Assignment was successfully created. Please refresh this page after a few minutes to view the similarity results.'
         # Don't process the file and show error if the mapping was enabled but no mapping file was uploaded
         elsif (isMapEnabled && params[:assignment]["mapfile"].nil?)
           @assignment.errors.add(:mapfile, "containing mapped student names need to be uploaded if the 'Upload map file' box is ticked")
@@ -155,7 +154,6 @@ class AssignmentsController < ApplicationController
       # Don't process the file and show error if the mapping was enabled but no mapping file was uploaded
       if (is_valid_map_or_no_map?(isMapEnabled, params[:assignment]["mapfile"])) 
         self.start_upload(@assignment, params[:assignment]["file"], isMapEnabled, params[:assignment]["mapfile"])
-        redirect_to course_assignments_url(@course), notice: 'SSID will start to process the assignment now. Please refresh this page after a few minutes to view the similarity results.'
       # Don't process the file and show error if the mapping was enabled but no mapping file was uploaded
       elsif (isMapEnabled && params[:assignment]["mapfile"].nil?)
         @assignment.errors.add(:mapfile, "containing mapped student names need to be uploaded if the 'Upload map file' box is ticked")
@@ -190,9 +188,15 @@ class AssignmentsController < ApplicationController
 
       # Process upload file
       submissions_path = SubmissionsHandler.process_upload(submissionFile, isMapEnabled, mapFile, assignment)
+      if submissions_path
+        # Launch java program to process submissions
+        SubmissionsHandler.process_submissions(submissions_path, assignment, isMapEnabled)
+        redirect_to course_assignments_url(@course), notice: 'SSID will start to process the assignment now. Please refresh this page after a few minutes to view the similarity results.'
+      else
+        assignment.errors.add "Submission zip file", ": SSID supports both directory-based and file-based submissions. Please select the submissions you want to evaluate and compress." 
+        return render action: "show"
+      end
 
-      # Launch java program to process submissions
-      SubmissionsHandler.process_submissions(submissions_path, assignment, isMapEnabled)
   end
 
   # Responsible for verifying whether a uploaded file is zip by checking its mime type and/or whether can it be extracted by the zip library.

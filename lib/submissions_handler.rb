@@ -81,9 +81,30 @@ module SubmissionsHandler
     # Add filters for file types
     accepted_formats = [".py",".java", ".cpp", ".c", ".h", ".scala", ".m", ".ml", ".mli", ".r"]
 
+    # check zip file from Mac
+    zip_from_Mac = false
+    has_entry_same_name_with_upload_file = false
+    upload_file_without_ext = File.basename(upload_file, ".zip") + File::SEPARATOR
+
     # Extract submissions into dir
     Zip::File.open(upload_file) { |zip_file|
       zip_file.each { |f|
+
+      file_entry_names = zip_file.entries.collect {|file| file.name}
+      file_entry_names.each { |file_name|
+        if (file_name.eql?(upload_file_without_ext)) 
+          has_entry_same_name_with_upload_file = true
+        end
+
+        if (file_name.include?("__MACOSX")) 
+          zip_from_Mac = true
+        end
+      }
+
+      if (zip_from_Mac and has_entry_same_name_with_upload_file) 
+        return false
+      end
+
       # isdirectory or filter by accepted file extension
       if File.directory?(f.name) or accepted_formats.include? File.extname(f.name)
         upload_log << %Q{[#{Time.now.in_time_zone}] Extracting #{f.name}}
