@@ -18,6 +18,10 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 class SessionsController < ApplicationController
   skip_before_action :authorize
 
+  def index
+    render "layouts/cover"
+  end
+
   def new
   end
   #orRgKyGUs7cz

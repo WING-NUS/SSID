@@ -21,6 +21,7 @@ SSID::Application.routes.draw do
   get 'assignments/:id/submission_similarities/guest_user' => 'submission_similarities#create_guest_user', :as => 'guest_user_create'
   get 'guest_user/:id' => "sessions#check_hash"
 
+  get "cover" => "sessions#index"
   # Login/Logout routes
   get "login" => "sessions#new"
   post "login" => "sessions#create"
