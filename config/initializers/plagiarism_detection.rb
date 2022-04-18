@@ -18,4 +18,5 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 # Be sure to restart your server when you modify this file.
 
 SSID::Application.config.plagiarism_detection_path = File.join(".", "lib", "java", "jar", "PlagiarismDetection.jar")
+SSID::Application.config.plagiarism_detection_log_configuration_path = File.join(".", "lib", "java", "PlagiarismDetection", "log4j2.xml")
 SSID::Application.config.ld_library_path = "/usr/local/lib";

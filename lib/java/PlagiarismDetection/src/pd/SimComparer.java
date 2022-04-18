@@ -23,10 +23,13 @@ import java.util.*;
 import pd.utils.*;
 import pd.utils.Tokens.*;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 public final class SimComparer {
 
 	private static SimComparer instance = new SimComparer();
 	private static final String SKELETON = "skeleton";
+	private static Logger logger = LogManager.getLogger();
 
 	@SuppressWarnings("unused")
 	private boolean debugMode = false;
@@ -58,6 +61,7 @@ public final class SimComparer {
 					continue;
 				}
 
+				logger.info("Start comparing submissions: {} vs {}", s1.getID(), s2.getID());
 				s1Tokens = s1.getCodeTokens();
 				s2Tokens = s2.getCodeTokens();
 				if (s1Tokens.size() < s2Tokens.size()) {
@@ -89,8 +93,10 @@ public final class SimComparer {
 
 	private void computeSims(TokenList s1Tokens, TokenList s2Tokens,
 			Result result) {
+		logger.info("S1: {} {} {}, S2: {} {} {}", s1Tokens.size(), s1Tokens.getMarkCount(), s1Tokens.getBaseCount(), s2Tokens.size(), s2Tokens.getMarkCount(), s2Tokens.getBaseCount());
+		
 		if (s1Tokens.size() == s1Tokens.getBaseCount() || s2Tokens.size() == s2Tokens.getBaseCount()) {
-			System.out.println("One of the submissions is the same as base code: " + result.getS1().getID() + ", " + result.getS2().getID());
+			logger.debug("One of the submissions is the same as base code: S1 = {}, S2 = {}", result.getS1().getID(), result.getS2().getID());
 			result.setSim2To1(0f);
 			result.setSim1To2(0f);
 			return;
@@ -349,10 +355,12 @@ public final class SimComparer {
 				gst(s1RegionNGrams, bNGramIndices, null, s1RegionTokens,
 						bTokens, null, minMatch, bMappings);
 				mappedCountableStmt = m.getMappedCountableStmtCount();
+				logger.debug("Mapping is: {} ", m.toString());
 
 				List<SkeletonMapping> skeletonMappings = new ArrayList<>();
 				for (Mapping b : bMappings) {
 					mappedCountableStmt -= b.getMappedCountableStmtCount();
+					logger.debug("Skeleton mapping is: {} ", b.toString());					
 
 					int startIdxOfSkeletonInS1 = b.getStartIndex1() + m.getStartIndex1();
 					int endIdxOfSkeletonInS1 = b.getEndIndex1() + m.getStartIndex1();
