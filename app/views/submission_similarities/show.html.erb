@@ -29,30 +29,32 @@
       </ul>
     </div>
   </div>
-  <table id="matchingStatementsTable" class="lines mt-3">
-    <thead>
-      <tr>
-        <th class="lines_col">Submission by <%= @student1.id_string %></th>
-        <th class="lines_col">Submission by <%= @student2.id_string %></th>
-        <th>Num of Matching Statements</th>
-        <th class="check_box_col"><%= check_box_tag nil, nil, false %></th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @submission_similarity.similarity_mappings.sort_by { |m| m.start_line1 }.each { |mapping| %>
-      <tr>
-        <td>Lines <%= mapping.line_range1_string %></td>
-        <td>Lines <%= mapping.line_range2_string %></td>
-        <td class="num_statements_cell"><%= mapping.statement_count %></td>
-        <td><%= check_box_tag nil, mapping.line_ranges_html_value, false, { :class => "checkbox" } %></td>
-        <%= hidden_field_tag "skeleton_lines", mapping.submission_similarity_skeleton_mappings.collect { |s_mapping| 
-          s_mapping.start_line1.to_s + "_" + s_mapping.end_line1.to_s + "_" + s_mapping.start_line2.to_s + "_" + s_mapping.end_line2.to_s
-        }, { :class => "skeleton-lines" } 
-        %>
-      </tr>
-      <% } %>
-    </tbody>
-  </table>   
+  <div class="table-container mt-3">
+    <table id="matchingStatementsTable" class="lines">
+      <thead>
+        <tr>
+          <th class="lines_col">Submission by <%= @student1.id_string %></th>
+          <th class="lines_col">Submission by <%= @student2.id_string %></th>
+          <th>Num of Matching Statements</th>
+          <th class="check_box_col"><%= check_box_tag nil, nil, false %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @submission_similarity.similarity_mappings.sort_by { |m| m.start_line1 }.each { |mapping| %>
+        <tr>
+          <td>Lines <%= mapping.line_range1_string %></td>
+          <td>Lines <%= mapping.line_range2_string %></td>
+          <td class="num_statements_cell"><%= mapping.statement_count %></td>
+          <td><%= check_box_tag nil, mapping.line_ranges_html_value, false, { :class => "checkbox" } %></td>
+          <%= hidden_field_tag "skeleton_lines", mapping.submission_similarity_skeleton_mappings.collect { |s_mapping| 
+            s_mapping.start_line1.to_s + "_" + s_mapping.end_line1.to_s + "_" + s_mapping.start_line2.to_s + "_" + s_mapping.end_line2.to_s
+          }, { :class => "skeleton-lines" } 
+          %>
+        </tr>
+        <% } %>
+      </tbody>
+    </table>   
+  </div>
 </div>
 
 <% if @submission_similarity.status == SubmissionSimilarity::STATUS_CONFIRMED_AS_PLAGIARISM %>
