@@ -22,9 +22,13 @@ import java.text.*;
 import pd.utils.*;
 import pd.*;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 public class Main {
 
 	public static final String SKELETON = "skeleton";
+
+	private static Logger logger = LogManager.getLogger();
 
 	// static final int KGRAM_SIZE = 3;
 
@@ -100,10 +104,22 @@ public class Main {
 			
 			System.out.println("[" + dateFormat.format(new java.util.Date()) + "] Starting upload to database...");
 
+			long beforeInsertDB = System.nanoTime();
+
+			long countCodeMappings = 0L;
+			for (Result result : simResults) {
+			  long nbrOfCodeMappings = result.getCodeIndexMappings().size();
+				countCodeMappings += nbrOfCodeMappings;
+			}
+			logger.info("Before saving result to db: assignmentId = {}, nbr of submissions = {}, nbr of code mappings = {}", aId, submissions.size(), countCodeMappings);
+
 			MySQLDB.getMySQLDB().insertIntoDB(aId, submissions, simResults);
 			
 			System.out.println("[" + dateFormat.format(new java.util.Date()) 
           + "] Plagarism detection completed upload to database");
+
+			long afterInsertDB = System.nanoTime();
+			logger.info("Saving to DB took: {}s", (afterInsertDB - beforeInsertDB) / Math.pow(10, 9)); 
 		  
 		} catch (Exception ex) {
 			System.out.println(ex.getMessage());

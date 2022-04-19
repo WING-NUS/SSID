@@ -22,6 +22,8 @@ import pd.utils.*;
 import pd.utils.Mappings.*;
 import java.sql.*;
 import java.text.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public final class MySQLDB {
 
@@ -39,6 +41,9 @@ public final class MySQLDB {
 	private static final String MAPPING_INSERT = "INSERT INTO submission_similarity_mappings(id, submission_similarity_id, start_index1, end_index1, start_index2, end_index2, start_line1, end_line1, start_line2, end_line2, statement_count, is_plagiarism, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	private static final String MAPPING_MAX_ID_SELECT = "SELECT max(id) FROM submission_similarity_mappings";
 	private static final String SKELETON_MAPPING_INSERT = "INSERT INTO submission_similarity_skeleton_mappings(submission_similarity_mapping_id, start_line1, end_line1, start_line2, end_line2, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)";
+	private static final int BATCH_SIZE = 65536; 
+	
+	private static Logger logger = LogManager.getLogger();
 	private static MySQLDB instance = new MySQLDB();
 	private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	private Connection con;
@@ -47,7 +52,7 @@ public final class MySQLDB {
     public static void setProperties(String dbAddr, String dbName, String user, String pwd) {    	
     	USER_ID = user;
     	USER_PASSWORD = pwd;
-    	MYSQL_URL = "jdbc:mysql://" + dbAddr + ":3306/" + dbName;
+    	MYSQL_URL = "jdbc:mysql://" + dbAddr + ":3306/" + dbName + "?rewriteBatchedStatements=true";
     }
 	
 	public static MySQLDB getMySQLDB() {
@@ -251,6 +256,7 @@ public final class MySQLDB {
 		ArrayList<Mapping> mappings;
 		long mappingId = getCurrentMaxMappingId();
 		int submissionSimilarityId;;
+		int count = 1;
 		while (idIterator.hasNext() || resultIterator.hasNext()) {
 
 			submissionSimilarityId = idIterator.next();
@@ -258,6 +264,10 @@ public final class MySQLDB {
 			mappingId += 1;
 
 			for (Mapping m : mappings) {
+				if (count % BATCH_SIZE == 0) {
+					processBatchInsert("MAPPING_INSERT", stmt, count);
+					processBatchInsert("SKELETON_MAPPING_INSERT", bMappingStatement, count);
+				}
 				stmt.setLong(1, mappingId);
 				stmt.setInt(2, submissionSimilarityId);
 				stmt.setInt(3, m.getStartIndex1());
@@ -291,13 +301,25 @@ public final class MySQLDB {
 				}
 
 				mappingId += 1;
+				count += 1;
 			}
 		}
-		stmt.executeBatch();
+		processBatchInsert("MAPPING_INSERT", stmt, count);
 		stmt.close();
 
-		bMappingStatement.executeBatch();
+		processBatchInsert("SKELETON_MAPPING_INSERT", bMappingStatement, count);
 		bMappingStatement.close();
+	}
+
+	private void processBatchInsert(String statementType, PreparedStatement statement, int count) throws Exception {
+		int[] executionStatuses = statement.executeBatch();
+		int round = (int) Math.round(count * 1.0 / BATCH_SIZE);
+		for (int i = 0; i < executionStatuses.length; i++) {
+			if (executionStatuses[i] == Statement.EXECUTE_FAILED) {
+				logger.error("Failed to execute statement: type = {}, index = {}, round = {} ", statementType, i, round);
+			}
+		}
+		statement.clearBatch();
 	}
 
 	private long getCurrentMaxMappingId() throws Exception {
