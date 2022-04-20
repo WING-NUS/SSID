@@ -69,7 +69,7 @@ Before following the below instructions, please ensure that you have met all the
 ## Site Map
 - [Adding support for new language in SSID](doc/add_support_for_new_language.md)
 - [Deploying SSID app on a Linux/Unix production server](doc/deploying_rails_on_linux.md)
-- [User Guide](doc/SSID_User%20Guide_V1.pdf)
+- [User Guide](doc/SSID_User%20Guide_V2.pdf)
 
 ## License
 
