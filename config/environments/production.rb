@@ -72,6 +72,8 @@ SSID::Application.configure do
   # whitelist attributes for mass-assignment
   config.active_record.whitelist_attributes = true
 
+  config.eager_load = true
+  
   # Set time zone
   config.time_zone = "Singapore"
   config.eager_load = true  
