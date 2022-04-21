@@ -34,6 +34,10 @@ h2, h3, h4, h5, h6 {
 
 .site_header {
   @extend .mb-3;
+
+  .site-login {
+    padding: 1.25rem 0.5rem;
+  }
 }
 
 .site_header_background {

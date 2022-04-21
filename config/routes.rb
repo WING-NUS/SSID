@@ -23,6 +23,7 @@ SSID::Application.routes.draw do
 
   get "cover" => "sessions#index"
   # Login/Logout routes
+  get "cover" => "sessions#index"
   get "login" => "sessions#new"
   post "login" => "sessions#create"
   delete "logout" => "sessions#destroy"
