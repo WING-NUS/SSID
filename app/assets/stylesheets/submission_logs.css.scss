@@ -31,5 +31,14 @@ body.submission_logs {
     @extend .table-hover;
 
     margin-bottom: $spacer * 3;
+
+    td.view-similarity {
+      align-content: center;
+
+      img {
+        display: block;
+        margin: auto;
+      }
+    }
   }
 }
