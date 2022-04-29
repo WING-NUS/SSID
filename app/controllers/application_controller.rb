@@ -80,13 +80,31 @@ class ApplicationController < ActionController::Base
       course = opts[:course]
   
       # Get current user's role
-      current_role = course.membership_for_user(@user).role
+      membership = course.membership_for_user(@user)
+
+
+      if membership.nil?
+        redirect_to( { controller: "announcements", action: "index" }, alert: "You do not have access to the url \"#{request.env['REQUEST_URI']}\". Please contact the administrator for more information.") and return
+      end
       
       # Check if we need to authenticate
-      if current_role == role
+      if membership and membership.role == role
         unless opts[:only].include? action_name.intern
           redirect_to( { controller: "announcements", action: "index" }, alert: "You do not have access to the url \"#{request.env['REQUEST_URI']}\". Please contact the administrator for more information.")
         end
+      end
+    end
+
+    def authenticate_custom_actions_for_teaching_staff(opts)
+      return if @user.is_admin
+
+      # Sanitize
+      raise unless opts[:only]
+
+      is_staff_or_ta = UserCourseMembership.where(["user_id = ? AND role IN (?, ?)", @user.id, 0, 1])
+      unless is_staff_or_ta and opts[:only].include? action_name.intern
+        redirect_to( { controller: "announcements", action: "index" }, alert: "You do not have access to the url \"#{request.env['REQUEST_URI']}\". Please contact the administrator for more information.")
+        return
       end
     end
   
