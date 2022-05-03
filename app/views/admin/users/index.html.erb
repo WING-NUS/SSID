@@ -1,4 +1,4 @@
-<h2>Users</h2>
+<h4>Users</h4>
 <% if flash[:notice] %>
   <div class="notice">
     <%= flash[:notice] %>
@@ -10,7 +10,11 @@
   </div>
 <% end %>
 
-<h3>Admins</h3>
+<div class="admin_users_section"> 
+<header class="user_header">
+<h5>Admins</h5>
+<%= link_to image_tag("person_add_blue_24dp.svg", size: "28", alt: "New Admin"), new_admin_user_url, {'data-toggle' => 'tooltip', 'data-placement' => 'bottom', 'title' => 'New Admin' } %>
+</header>
 
 <table>
   <thead>
@@ -25,69 +29,34 @@
       <tr>
         <td><%= admin.full_name || "--" %><%= " <em>(This is you)</em>".html_safe if @user == admin %></td>
         <td><%= admin.name %></td>
-        <% if admin == @user %>
-          <td><%= link_to "Settings", edit_user_url(@user), class: "last" %></td>
-        <% else %>
-          <td><%= link_to "Edit", edit_admin_user_url(admin) %> <%= link_to "Delete", admin_user_url(admin), method: "delete", data: {confirm: "Confirm delete admin?"}, class: "last" %></td>
-        <% end %>
+        <td>
+          <div class="dropdown">
+            <a data-toggle="dropdown" id="adminUserDropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+              <%= image_tag("more_vert_black_24dp.svg", alt: "Admin User Menu Dropdown")%>            
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="adminUserDropdownMenuLink">
+              <% if admin == @user %>
+                <li><%= link_to "Settings", edit_user_url(@user), class: "dropdown-item" %></li>
+              <% else %>
+                <li><%= link_to "Edit", edit_admin_user_url(admin), class: "dropdown-item" %></li>
+                <li>
+                  <%= button_tag 'Delete', class: "dropdown-item", data: { 'bs-toggle' => "modal", 'bs-target' => "#deleteUserModal", 'bs-url' => "#{admin_user_url(admin)}" } %>
+                </li>
+              <% end %>
+            </ul>
+          </div>
+        </td>
       </tr>
     <% } %>
   </tbody>
 </table>
 
-<div class="new_user"><%= link_to "New Admin", new_admin_user_url %></div>
-
-<% @courses.each { |course| %>
-  <hr />
-
-  <h3><%= course.code %> <%= course.name %></h3>
-
-  <table>
-    <thead>
-      <tr>
-        <th>Full Name</th>
-        <th class="id_col">Login</th>
-        <th class="id_col">ID/ Hash</th>
-        <th class="role_col">Role</th>
-        <th class="actions_col">Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% (@staff[course.id] + @teaching_assistants[course.id] + @students[course.id] + @guests[course.id]).each { |user| %>
-        <tr>
-          <td> 
-            <% if course.membership_for_user(user).role == UserCourseMembership::ROLE_GUEST %> 
-              <%= "--" %> 
-            <% else %> 
-              <%= user.full_name || "--" %>
-            <% end %>
-          </td>
-          <td>
-            <% if course.membership_for_user(user).role == UserCourseMembership::ROLE_GUEST %> 
-              <%= "--" %> 
-            <% else %> 
-              <%= user.name || "--" %>
-            <% end %>
-          </td>
-          <td><%= user.id_string %></td>
-          <td><%= course.role_string_for_user(user) %></td>
-          <% if course.membership_for_user(user).role == UserCourseMembership::ROLE_STUDENT %>
-            <td><%= link_to "Edit", edit_admin_user_url(user)+"?course_id=#{course.id}" %></td>
-          <% else %>
-            <td><%= link_to "Edit", edit_admin_user_url(user)+"?course_id=#{course.id}" %> <%= link_to "Remove", admin_user_url(user)+"?course_id=#{course.id}", method: "delete", data: {confirm: "Do you want to confirm remove user from course?"}, class: "last" %></td>
-          <% end %>
-        </tr>
-      <% } %>
-    </tbody>
-  </table>
-
-  <div class="new_user"><%= link_to "Add #{course.code} User", new_admin_user_url+"?course_id=#{course.id}" %></div>
-<% } %>
+</div>
 
 <% unless @loners.empty? %>
-  <hr />
+<div class="lone_users_section">
 
-  <h3>Users With No Course Membership</h3>
+  <h5>Users With No Course Membership</h5>
 
   <table>
     <thead>
@@ -104,9 +73,30 @@
           <td><%= user.full_name || "--" %></td>
           <td><%= user.name %></td>
           <td><%= user.id_string %></td>
-          <td><%= link_to "Edit", edit_admin_user_url(user) %> <%= link_to "Delete", admin_user_url(user), method: "delete", data: {confirm: "Do you want to confirm remove the user?"}, class: "last" %></td>
+          <td>
+            <div class="dropdown">
+              <a data-toggle="dropdown" id="loneUserDropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                <%= image_tag("more_vert_black_24dp.svg", alt: "Lone Users Menu Dropdown")%>        
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="loneUserDropdownMenuLink">
+                <li><%= link_to "Edit", edit_admin_user_url(user), class: 'dropdown-item' %></li>
+                <li>
+                  <%= button_tag 'Delete', class: "dropdown-item", data: { 'bs-toggle' => "modal", 'bs-target' => "#deleteUserModal", 'bs-url' => "#{admin_user_url(user)}" } %>
+                </li>
+              </ul>
+            </div>
+          </td>          
         </tr>
       <% } %>
     </tbody>
   </table>
+</div>
 <% end %>
+
+<div class="modal fade" id="deleteUserModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <% @modal = SiteModal.new("Delete User", "The user will be permanently deleted. Are you sure?", { :name => "OK", :method => :delete }) %>
+  <%= render partial: "site/modal", locals: { modal: @modal }%>
+</div>
+
+
+<%= javascript_include_tag "site_modal.js" %>

@@ -1,49 +1,5 @@
-<h2>Assignment title: <%= @assignment.title %></h2>
+<div class="col-md-6">
+<h4>Assignment title: <%= @assignment.title %></h4>
 
-<pre>
-Language: <%= @assignment.language%>
-Min Match Length: <%= @assignment.min_match_length%>
-NGram Size: <%= @assignment.ngram_size%>
-</pre>
-
-<% if @assignment.errors.any? %>
-  <div id="error_explanation">
-    <h3><%= pluralize(@assignment.errors.count, "error") %> prohibited this assignment from being saved:</h3>
-    <ul>
-    <% @assignment.errors.full_messages.each do |msg| %>
-      <li><%= msg %></li>
-    <% end %>
-    </ul>
-  </div>
-<% end %>
-
-<%= form_for([@course, @assignment]) do |f| %>
-  <div>
-    <%= f.label :file, "Student submissions (zip) [?]", title: "The zip file should contain one folder for each student's code files; folders are named according to student ID; Name your folder as \"skeleton\" for the codes you wish to exclude from the system" %>
-    <%= f.file_field :file %>
-  </div>
-
-  <div>
-  <%= f.label :mapbox, "Upload map file?" %>
-  <%= f.check_box :mapbox,{}, "Yes", "No"%>
-  </div>
-  <div id="map_file_details" style="display:none;">
-  <%= f.label :mapfile, "Mapping file (csv) [?]", title: "The zip file should contain one folder for each student's code files; folders are named according to student ID; Name your folder as \"skeleton\" for the codes you wish to exclude from the system" %>
-  <%= f.file_field :mapfile %>
-  </div>
-  <div>
-    <%= f.submit class: "submit" %>
-  </div>
-<% end %>
-
-<script type="text/javascript">
-  var checkbox = document.getElementById('assignment_mapbox');
-  var details_div = document.getElementById('map_file_details');
-  checkbox.onchange = function() {
-     if(this.checked) {
-       details_div.style['display'] = 'block';
-     } else {
-       details_div.style['display'] = 'none';
-     }
-  };
-</script>
+<%= render 'form' %>
+</div>

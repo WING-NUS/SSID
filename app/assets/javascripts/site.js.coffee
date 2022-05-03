@@ -35,3 +35,17 @@ Site.registerHighlightRowMethodsForLink = (link) ->
       return
   )
   return
+
+Site.registerActiveNavigationLink = (page) ->
+  currentLocation = $(page)[0].location.href
+  navigationLinks = $(page).find("ul#menu li")
+  for link in navigationLinks
+    if link.children[0].href == currentLocation
+      $(link).addClass("active_menu_item")   
+      break  
+  return
+
+$(document).ready ->
+  if $("ul#menu").length > 0
+    $(".site_header").addClass("site_header_background");
+  return

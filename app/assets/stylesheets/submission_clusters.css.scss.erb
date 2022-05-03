@@ -12,6 +12,10 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with SSID.  If not, see <http://www.gnu.org/licenses/>.
+@import "bootstrap/functions";
+@import "bootstrap/variables";
+@import "bootstrap/mixins";
+@import "bootstrap/utilities";
 
 body.submission_clusters_index {
   ul {
@@ -20,26 +24,31 @@ body.submission_clusters_index {
     }
   }
 
+  div#clusters {
+    margin-top: $spacer * 1.5;
+  }
+
   div.cluster {
-    border: 1px solid #000;
-    margin-bottom: 20px;
+    border: 1px solid var(--bs-gray-600);
+    margin-bottom: $spacer * 3;
     position: relative;
     height: 600px;
 
-    h3 {
-      margin: 10px;
+    h5 {
+      margin: $spacer * 0.5;
     }
 
     div.legend {
-      border: 1px solid #000;
+      border: 1px solid var(--bs-gray-300);
       position: absolute;
-      top: 10px;
-      right: 10px;
+      bottom: 10px;
+      left: 10px;
       background-color: rgb(255, 255, 255);
 
-      h3 {
+      h6 {
         text-align: center;
         margin: 3px;
+        color: #003d7c;
       }
 
       div {

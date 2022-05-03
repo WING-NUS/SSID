@@ -1,46 +1,46 @@
-<div class="breadcrumb">
-  <%= link_to "Courses", courses_path %> 
+<ol class="breadcrumb">
+  <li class="breadcrumb-item"><%= link_to "Courses", courses_path %></li> 
   <% if controller_name == "courses" %>
     <% if action_name == "new" or action_name == "create" %>
-      &gt; New Course
+      <li class="breadcrumb-item">New Course</li>
     <% elsif action_name == "edit" or action_name == "update" %>
-      &gt; Edit Course
+      <li class="breadcrumb-item">Edit Course</li>
     <% end %>
   <% elsif controller_name == "users" and action_name == "index" %>
-    &gt; <%= link_to "#{course.code} Users", course_users_url(course) %>
+      <li class="breadcrumb-item"><%= link_to "#{course.code} Users", course_users_url(course) %></li>
   <% elsif controller_name == "visualize" %>
-    &gt; <%= link_to "#{course.code} Visualizations", course_visualize_url(course) %>
+      <li class="breadcrumb-item"><%= link_to "#{course.code} Visualizations", course_visualize_url(course) %></li>
     <% if action_name != "index" %>
-      &gt; <%= action_name.humanize.titleize %>
+      <li class="breadcrumb-item"><%= action_name.humanize.titleize %></li>
     <% end %>
   <% elsif course  %>
-    &gt; <%= link_to "#{course.code} Assignments", course_assignments_url(course) %>
+    <li class="breadcrumb-item"><%= link_to "#{course.code} Assignments", course_assignments_url(course) %></li>
   <% end %>
   <% if assignment %>
     <% if controller_name == "assignments" %>
       <% if action_name == "new" or action_name == "create" %>
-        &gt; New Assignment
+        <li class="breadcrumb-item">New Assignment</li>
       <% elsif action_name == "edit" or action_name == "update" %>
-        &gt; Edit Assignment
+        <li class="breadcrumb-item">Edit Assignment</li>
       <% elsif action_name == "show_log" %>
-        &gt; <%= %Q{Assignment: #{assignment.title} Upload Log} %>
+        <li class="breadcrumb-item"><%= %Q{Assignment: #{assignment.title} Upload Log} %></li>
       <% end %>
     <% elsif controller_name == "submission_similarities" %>
-      &gt; <%= link_to %Q{Assignment: #{assignment.title} Submission Similarities}, assignment_submission_similarities_url(assignment) %>
+      <li class="breadcrumb-item"><%= link_to %Q{Assignment: #{assignment.title} Submission Similarities}, assignment_submission_similarities_url(assignment) %></li>
       <% if action_name == "show" %>
-        &gt; Submissions from Student <%= submission_similarity.student1.id_string %> and <%= submission_similarity.student2.id_string %>
+      <li class="breadcrumb-item">Submissions from Student <%= submission_similarity.student1.id_string %> and <%= submission_similarity.student2.id_string %></li>
       <% end %>
     <% elsif controller_name == "submission_logs" %>
-      &gt; <%= %Q{Assignment: #{assignment.title} Submission Log for Student #{submission.student_id_string}} %>
+      <li class="breadcrumb-item"><%= %Q{Assignment: #{assignment.title} Submission Log for Student #{submission.student_id_string}} %></li>
     <% end %>
   <% end %>
   <% if controller_name == "submission_cluster_groups" or controller_name == "submission_clusters" %>
-    &gt; <%= link_to "Assignment: #{assignment.title} Submission Cluster Groups", assignment_cluster_groups_url(@assignment) %> 
+    <li class="breadcrumb-item"><%= link_to "Assignment: #{assignment.title} Submission Cluster Groups", assignment_cluster_groups_url(@assignment) %></li>
     <% if action_name == "new" or action_name == "create" %>
-      &gt; New Submission Cluster Group
+      <li class="breadcrumb-item">New Submission Cluster Group</li>
     <% end %>
   <% end %>
   <% if controller_name == "submission_clusters" %>
-    &gt; Cluster Group (Cut-Off Criterion = <%= @submission_cluster_group.cut_off_criterion %>%)
+    <li class="breadcrumb-item">Cluster Group (Cut-Off Criterion = <%= @submission_cluster_group.cut_off_criterion %>%)</li>
   <% end %>
-</div>
+</ol>

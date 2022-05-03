@@ -8,7 +8,7 @@ gem 'rails', '~> 6.0.3', '>= 6.0.3.2'
 # Use mysql as the database for Active Record
 gem 'mysql2', '~> 0.5.3'
 # Use Puma as the app server
-gem 'puma', '~> 4.1'
+gem 'puma', '~> 4.3'
 # Use SCSS for stylesheets
 # gem 'sass-rails', '>= 6'
 # Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker
@@ -43,6 +43,8 @@ gem 'will_paginate', '~> 3.3'
 # pretty print
 
 gem 'jquery-rails', '~> 4.4'
+
+gem 'bootstrap', '~> 5.1.3'
 
 group :assets do
   gem 'sass-rails', '~> 6.0'
