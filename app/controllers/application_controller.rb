@@ -81,17 +81,11 @@ class ApplicationController < ActionController::Base
   
       # Get current user's role
       membership = course.membership_for_user(@user)
-
-
-      if membership.nil?
-        redirect_to( { controller: "announcements", action: "index" }, alert: "You do not have access to the url \"#{request.env['REQUEST_URI']}\". Please contact the administrator for more information.") and return
-      end
       
       # Check if we need to authenticate
-      if membership and membership.role == role
-        unless opts[:only].include? action_name.intern
-          redirect_to( { controller: "announcements", action: "index" }, alert: "You do not have access to the url \"#{request.env['REQUEST_URI']}\". Please contact the administrator for more information.")
-        end
+      if membership.nil? or (membership and membership.role == role and !opts[:only].include? action_name.intern)
+        redirect_to( { controller: "announcements", action: "index" }, alert: "You do not have access to the url \"#{request.env['REQUEST_URI']}\". Please contact the administrator for more information.")
+        return
       end
     end
 
