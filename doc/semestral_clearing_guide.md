@@ -22,7 +22,7 @@ This guide will list the steps required to configure and re-setup SSID in the re
 
 1. All the code files uploaded by users are stored under the respective dedicated assignment number under the `upload` folder. In order to extract the files, firstly, create a new terminal and do not login to the server with SSH. Instead simply enter the below command:
     
-    <pre> scp -r sadm@ssidi.comp.nus.edu.sg:/var/www/ssid/code/upload/[ASSIGNMENT_NO]/[DESTINATION_FOLDER] </pre>
+    <pre> scp -r sadm@ssid-i.comp.nus.edu.sg:/var/www/ssid/code/upload/[ASSIGNMENT_NO]/ [DESTINATION_FOLDER] </pre>
     
     * replace [ASSIGNMENT_NO] with the assignment number and [DESTINATION_FOLDER] with your destination folder. 
    
@@ -59,4 +59,4 @@ This guide will list the steps required to configure and re-setup SSID in the re
 
 4. Finally, restart application (so that the updates take effect).
 
-    <pre>bundle exec passenger-config restart-app $(pwd)</pre>
+    <pre>passenger-config restart-app $(pwd)</pre>
