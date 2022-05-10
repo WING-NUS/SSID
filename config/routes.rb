@@ -25,6 +25,9 @@ SSID::Application.routes.draw do
   get "cover" => "sessions#index"
   get "login" => "sessions#new"
   post "login" => "sessions#create"
+  get "forget_password" => "sessions#forget_password"
+  post "forget_password" => "sessions#send_password_reset_link"
+
   delete "logout" => "sessions#destroy"
   
   get "guide" => "users#guide"
