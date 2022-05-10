@@ -39,7 +39,7 @@
               <% if @user.is_admin %>
                 <li><%= link_to "Edit", edit_admin_user_url(user)+"?course_id=#{@course.id}", class: "dropdown-item" %></li>
               <% end %>                  
-              <% if @course.membership_for_user(user).role != UserCourseMembership::ROLE_STUDENT %>
+              <% if @course.membership_for_user(user).role != UserCourseMembership::ROLE_STUDENT and @course.membership_for_user(user).role != UserCourseMembership::ROLE_TEACHING_STAFF %>
                 <li> 
                   <% url = admin_user_url(user)+"?course_id=#{@course.id}" %>
                   <%= button_tag 'Remove', class: "dropdown-item", data: { 'bs-toggle' => "modal", 'bs-target' => "#removeUserModal", 'bs-url' => "#{url}" } %>
