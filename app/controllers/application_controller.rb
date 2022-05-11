@@ -95,8 +95,7 @@ class ApplicationController < ActionController::Base
       # Sanitize
       raise unless opts[:only]
 
-      is_staff_or_ta = UserCourseMembership.where(["user_id = ? AND role IN (?, ?)", @user.id, 0, 1])
-      unless is_staff_or_ta and opts[:only].include? action_name.intern
+      unless @user.is_staff_or_ta? and opts[:only].include? action_name.intern
         redirect_to( { controller: "announcements", action: "index" }, alert: "You do not have access to the url \"#{request.env['REQUEST_URI']}\". Please contact the administrator for more information.")
         return
       end

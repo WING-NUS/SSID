@@ -24,6 +24,7 @@ class Course < ActiveRecord::Base
   has_many :staff_memberships, -> { where  role: UserCourseMembership::ROLE_TEACHING_STAFF }, class_name: "UserCourseMembership"
   has_many :teaching_assistant_memberships, -> { where role: UserCourseMembership::ROLE_TEACHING_ASSISTANT }, class_name: "UserCourseMembership"
   has_many :guest_memberships, -> { where role: UserCourseMembership::ROLE_GUEST }, class_name: "UserCourseMembership"
+  has_many :guest_users_detail, :dependent => :delete_all, class_name: "GuestUsersDetail"
 
   validates_presence_of :code
   validates_presence_of :name
@@ -120,6 +121,10 @@ class Course < ActiveRecord::Base
     (starting_year..(starting_year+5)).to_a.collect { |y|
       "#{y}/#{y+1}"
     }
+  end
+
+  def find_guest_user_details(user_id)
+    GuestUsersDetail.where("user_id = ? AND course_id = ? ", user_id, self.id)
   end
 
   private

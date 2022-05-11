@@ -37,17 +37,22 @@ class SubmissionLogsController < ApplicationController
     @submission_logs = @submission.logs
   end
 
-  # 
+  # GET /assignments/1/submission_similarities/1/guest_user
   def view_similarity
     @assignment = Assignment.find(params[:assignment_id])
 
     unless @user.is_admin
       course = @assignment.course
       membership = course.membership_for_user(@user)
+      has_guest_detail = GuestUsersDetail.find_by_user_id_and_assignment_id(@user.id, @assignment.id)
 
-      unless membership
-        # Create a guest entry for current user
-        SubmissionSimilaritiesService.create_guest_entry(@assignment, @user)      
+      if membership.nil?
+        # Create a guest membership for current user
+        CoursesService.create_guest_membership(course, @user)    
+      end
+
+      if @membership.role == UserCourseMembership::ROLE_GUEST && has_guest_detail.nil?
+        CoursesService.create_guest_detail_entry(@assignment, @user)
       end
     end
 

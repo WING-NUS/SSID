@@ -19,6 +19,7 @@ class User < ActiveRecord::Base
   MIN_PASSWORD_LENGTH = 6
 
   has_many :memberships , class_name: "UserCourseMembership", :dependent => :delete_all
+  has_many :guest_users_detail, class_name: "GuestUsersDetail", :dependent => :delete_all
   has_many :courses, -> { distinct }, :through => :memberships
   has_many :assignments, -> { distinct }, :through => :courses
   has_many :submissions, foreign_key: "student_id"
@@ -32,6 +33,10 @@ class User < ActiveRecord::Base
 
   def is_some_staff?
     self.courses.any? { |c| c.membership_for_user(self).role == UserCourseMembership::ROLE_TEACHING_STAFF }
+  end
+
+  def is_staff_or_ta?
+    UserCourseMembership.where(["user_id = ? AND role IN (?, ?)", self.id, 0, 1])
   end
 
   def full_name
