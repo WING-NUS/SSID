@@ -30,9 +30,9 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
           <%= image_tag("logo.png", height: "100", width: "150", alt: "NUS logo", class: "site_logo")%>
         </div>
         <h3 id="site-banner-login">Student Submissions Integrity Diagnosis System</h3>
-        <!-- <div class="site-login w-20">
+        <div class="site-login w-20">
           <span><%= link_to "Login", login_path %></span>
-        </div> -->
+        </div>
       <% else %> 
         <h3 id="site_banner">SSID</h3>  
         <ul id="menu" <%= %Q{ class="admin"}.html_safe if @user and @user.is_admin %>>
