@@ -72,6 +72,10 @@ Before following the below instructions, please ensure that you have met all the
 - [Guide for semestral clearing of courses and submissions](doc/semestral_clearing_guide.md)
 - [User Guide](doc/SSID_User%20Guide_V2.pdf)
 
+## Contact
+
+To request features, you may want to log an issue on [Github](https://github.com/WING-NUS/SSID/issues)
+For other inquiries, please [contact us](mailto:wing.nus@gmail.com) with subject starting with `[SSID]`
 
 ## License
 
