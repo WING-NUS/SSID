@@ -38,6 +38,12 @@ h2, h3, h4, h5, h6 {
   .site-login {
     padding: 1.25rem 0.5rem;
     margin-left: auto;
+
+    span {
+      a {
+        text-decoration: none;
+      }
+    }
   }
 
   .site-login-hidden {
