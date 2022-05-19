@@ -22,6 +22,7 @@ SSID::Application.routes.draw do
   get 'guest_user/:id' => "sessions#check_hash"
 
   # Login/Logout routes
+  get "cover" => "sessions#index"
   get "login" => "sessions#new"
   post "login" => "sessions#create"
   delete "logout" => "sessions#destroy"

@@ -24,10 +24,15 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 <body class="<%= controller_name %> <%= controller_name %>_<%= action_name %>">
   <%= javascript_tag "if (window.#{controller_name.singularize.camelize} && #{controller_name.singularize.camelize}.onLoad) { #{controller_name.singularize.camelize}.onLoad(); };" %>
   <header class="site_header">
-    <div class="container d-flex flex-row">
+    <div class="container d-flex flex-row w-100">
       <% unless @user %>
-        <%= image_tag("logo.png", height: "100", width: "150", alt: "NUS logo", class: "site_logo")%>
-        <h3 id="site_banner_login">Student Submissions Integrity Diagnosis (SSID) System</h3>
+        <div class="w-20">
+          <%= image_tag("logo.png", height: "100", width: "150", alt: "NUS logo", class: "site_logo")%>
+        </div>
+        <h3 id="site-banner-login">Student Submissions Integrity Diagnosis System</h3>
+        <div class="site-login w-20">
+          <span><%= link_to "Login", login_path %></span>
+        </div>
       <% else %> 
         <h3 id="site_banner">SSID</h3>  
         <ul id="menu" <%= %Q{ class="admin"}.html_safe if @user and @user.is_admin %>>

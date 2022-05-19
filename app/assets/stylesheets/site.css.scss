@@ -34,6 +34,21 @@ h2, h3, h4, h5, h6 {
 
 .site_header {
   @extend .mb-3;
+
+  .site-login {
+    padding: 1.25rem 0.5rem;
+    margin-left: auto;
+
+    span {
+      a {
+        text-decoration: none;
+      }
+    }
+  }
+
+  .site-login-hidden {
+    display: none;
+  }
 }
 
 .site_header_background {
@@ -43,6 +58,74 @@ h2, h3, h4, h5, h6 {
 .site_logo {
   padding: 1.25rem 0.5rem;
 }
+
+.site-introduction {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  margin-bottom: $spacer * 2;
+
+  .site-motto {
+    width: 40%;
+    font-size: 1.25rem;
+    font-weight: 500;
+    font-style: italic;
+    padding: 0.5rem 0 0 0.5rem;
+  }
+
+  div.site-clip {
+    width: 60%;
+
+    iframe {
+      width: 100%;
+      height: 100%;
+    }
+  }
+}
+
+.site-features-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+
+  .site-statistics {
+    width: 50%;
+  }
+
+  .site-features {
+    width: 50%;
+  }
+}
+
+.site-footer {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+
+  span {
+    width: 50%;
+    margin: 0 0 1rem;
+    @extend .text-muted;
+  }
+
+  ul {
+    width: 50%;
+    height: fit-content;
+    list-style: none;
+    text-align: right;
+    padding: 0 1rem 0 2rem;
+
+    li {
+      display: inline-block;
+      a {
+        text-decoration: none;
+      }
+    }
+  }
+}
+
+
+
 
 .login_helper_text {
   @extend .mt-3;
@@ -76,12 +159,13 @@ table {
   }
 } 
 
-#site_banner_login {
+#site-banner-login {
   margin: 0;
   height: 75%;
+  width: 60%;
   padding: 1.25rem 0.5rem;
   font-size: 2rem;
-  font-weight: 400;
+  font-weight: 500;
   color: #003d7c;
 }
 

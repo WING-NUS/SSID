@@ -45,7 +45,17 @@ Site.registerActiveNavigationLink = (page) ->
       break  
   return
 
+Site.setClipHeight = (page) -> 
+  divSiteClip = $(page).find("div.site-clip")
+  clipWidth = $(divSiteClip).width();
+  $(divSiteClip).css('height', 9*clipWidth/16.0);
+  return
+
 $(document).ready ->
   if $("ul#menu").length > 0
     $(".site_header").addClass("site_header_background");
+  Site.setClipHeight($(this));
+
+  if (window.location.pathname && window.location.pathname.includes('login'))
+    $(".site-login").addClass("site-login-hidden")
   return
