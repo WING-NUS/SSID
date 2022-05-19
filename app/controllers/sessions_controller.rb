@@ -54,7 +54,7 @@ class SessionsController < ApplicationController
   end
 
   def send_password_reset_link
-    UserMailer.password_reset(params[:user_email]).deliver_now
+    UserMailer.password_reset(params["user_email"]).deliver_now
   end
 
   def destroy
