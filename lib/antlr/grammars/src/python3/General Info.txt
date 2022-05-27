@@ -1,5 +1,0 @@
-Version of grammar in antlr/grammars-v4 commit history:
-commit bd7e16faaca0a1de5db7b8b298ef475621c7ec67
-
-Source:
-https://github.com/antlr/grammars-v4/blob/bd7e16faaca0a1de5db7b8b298ef475621c7ec67/python/python3/Python3.g4

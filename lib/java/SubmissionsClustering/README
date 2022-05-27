@@ -1,3 +1,0 @@
-The build.xml file can be used by Apache Ant to build the jar file
-and install it in the appropriate directory (./../jar).
-To do so, simply run "ant"
