@@ -122,26 +122,42 @@ cd /var/www/SSID/code
 
 Note that unless stated otherwise, all commands should be run on the server, not on your local computer!
 
-1. Go to your application's code directory on the server, then use Git to pull the latest code:
+Currently SSID server uses Passenger integrated with Nginx.
+
+1. Access /var/log/nginx/access.log to check connections to the app. Turn on maintenance mode.
+
+<pre>cd /var/www/ssid/code/tmp
+touch maintenance.txt</pre>
+
+2. Check db to see any assignments are processed currently. Table `submission_similarity_processes` with status 1 (running process).
+
+3. Wait for these active processes to be completed (usually less than 30 minutes) before pulling code changes and running db migrations.
+
+4. Go to your application's code directory on the server, then use Git to pull the latest code:
 
 <pre>
 cd /var/www/ssid/code
 git pull
 </pre>
 
-2. If the application's gem dependencies have changed, install any updated gem dependencies. 
+5. If the application's gem dependencies have changed, install any updated gem dependencies. 
 
 <pre>
 bundle install --deployment --without development test
 </pre>
 
-3. Compile Rails assets and run database migrations.
+6. Compile Rails assets and run database migrations.
 <pre>
 bundle exec rake assets:precompile db:migrate RAILS_ENV=production
 </pre>
 
-4. Finally, restart application (so that the updates take effect).
+7. Finally, restart application (so that the updates take effect).
 
 <pre>
-bundle exec passenger-config restart-app $(pwd)
+passenger-config restart-app $(pwd)
 </pre>
+
+8. Remove maintenance mode.
+
+<pre>cd /var/www/ssid/code/tmp
+rm maintenance.txt</pre>

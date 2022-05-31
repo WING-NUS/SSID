@@ -36,10 +36,32 @@ This guide will list the steps required to configure and re-setup SSID in the re
 
 1. Ensure you have no connections to db (rails server, sql client..). Else, the db won't drop.
 
-2. Run the below command to recreate database and the seeds:
-    <pre>rake db:drop db:create db:migrate db:seed: loads from migrations </pre>
+2. Run the below command to recreate database and the seeds.
+
+    2.1. For `development env`
+    <pre>rake db:drop db:create db:migrate db:seed</pre> 
+    ( loads from migrations )
+
+    2.2. **Use with caution** for production env
+
+    - Login to mysql with db root access. Enter the password given when required.
     
-3. Run the below command to see the current state of the database:
+        <pre>mysql -u root -p</pre>
+
+    - View current databases available
+
+        <pre>show databases;</pre>
+
+    - Drop the db you wish
+
+        <pre>drop database if exists ssid_production;</pre>
+
+    - Exit mysql
+
+3. `production env` Run the below command to recreate database and the seeds:
+    <pre>rake db:create db:migrate db:seed RAILS_ENV=production</pre>
+    
+4. Run the below command to see the current state of the database:
     <pre>rake db:schema:dump </pre>
 
 ## Pulling any new code changes and deploying those changes 
