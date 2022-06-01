@@ -20,7 +20,7 @@ require 'digest'
 module PasswordResetsHelper
   private
 
-  def self.generate_password_reset_token
+  def self.generate_reset_token
     random_input = SecureRandom.base64()
     hash = Digest::SHA512.hexdigest(random_input)
   end

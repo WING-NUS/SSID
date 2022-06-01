@@ -12,7 +12,7 @@ class PasswordResetsController < ApplicationController
 
     @user = User.find_by_email(@user_email)
 
-    token = UsersHelper.generate_password_reset_token()
+    token = PasswordResetsHelper.generate_reset_token()
     if @user
       password_reset = PasswordReset.find_by_user_id(@user.id)
 
@@ -22,6 +22,7 @@ class PasswordResetsController < ApplicationController
           pw.token = token
         }
       else
+        # In case user makes another request to reset password, update token and send email again.
         password_reset.token = token
       end
 
