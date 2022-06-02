@@ -64,6 +64,10 @@ class PasswordResetsController < ApplicationController
     @user.password_digest = BCrypt::Password.create(params["new_password"]) if @user.errors.empty?
 
     if @user.errors.empty? && @user.save
+      # Remove token record in db upon updating user successfully
+      password_reset = PasswordReset.find_by_user_id(@user.id)
+      password_reset.destroy
+      
       redirect_to login_url, notice: 'User password was successfully reset.'
     else
       redirect_to login_url, alert: 'Failed to reset the password.'
