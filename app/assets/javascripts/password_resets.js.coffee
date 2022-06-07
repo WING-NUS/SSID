@@ -4,7 +4,7 @@
 
 window.PasswordReset ||= {}
 
-$(document).ready ->
+PasswordReset.validatePassword = -> 
   $("form#reset-password").submit (event) ->
     if ($("div.new-password > input").val().length == 0)
       $("div.new-password > p").text("New password cannot be blank").show();
@@ -17,9 +17,22 @@ $(document).ready ->
       $("div.confirm-new-password > p").text("Confirm new password does not match new password").show(); 
       event.preventDefault();
     return
+  return 
 
+PasswordReset.resetForm = -> 
   $("div.new-password > input").keyup (event) -> 
     $("input.submit").removeAttr('disabled');
     $("div.new-password > p").hide();
     $("div.confirm-new-password > p").hide(); 
-  return
+
+  $("div.confirm-new-password > input").keyup (event) -> 
+    $("input.submit").removeAttr('disabled');
+    $("div.new-password > p").hide();
+    $("div.confirm-new-password > p").hide(); 
+  return 
+
+$(document).ready ->
+  $ ->
+    PasswordReset.validatePassword()
+    PasswordReset.resetForm()
+    return
