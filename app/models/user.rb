@@ -22,6 +22,7 @@ class User < ActiveRecord::Base
   has_many :courses, -> { distinct }, :through => :memberships
   has_many :assignments, -> { distinct }, :through => :courses
   has_many :submissions, foreign_key: "student_id"
+  has_many :password_resets, class_name: "PasswordReset"
 
   validates :name, :password_digest, presence: true
   validates :name, :id_string, uniqueness: true

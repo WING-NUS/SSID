@@ -1,6 +1,12 @@
 SSID::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
+  Rails.logger = Logger.new('./log/log.txt', 'daily')
+  config.logger = ActiveSupport::Logger.new("log/#{Rails.env}.log")
 
+  config.log_level = :debug
+  config.consider_all_requests_local = true
+  config.eager_load = true
+  
   # Code is not reloaded between requests
   config.cache_classes = true
 
@@ -74,4 +80,6 @@ SSID::Application.configure do
 
   # Set time zone
   config.time_zone = "Singapore"
+  
+  config.host = "https://ssid.comp.nus.edu.sg"
 end

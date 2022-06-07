@@ -51,4 +51,6 @@ SSID::Application.configure do
 
   # Set time zone
   config.time_zone = "Singapore"
+
+  config.host = "http://localhost:3000"
 end

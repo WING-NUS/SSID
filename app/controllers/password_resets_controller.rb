@@ -1,13 +1,11 @@
 class PasswordResetsController < ApplicationController
-  HOST = "http://localhost:3000"
-
   skip_before_action :authorize
 
   def forget_password
-    render 'forget_password'
   end
 
   def send_password_reset_link
+    host = Rails.application.config.host
     @user_email = params["user_email"]
 
     @user = User.find_by_email(@user_email)
@@ -29,7 +27,7 @@ class PasswordResetsController < ApplicationController
       if password_reset.valid?
         password_reset.save
 
-        reset_link = "#{HOST}/reset_password/#{token}"
+        reset_link = "#{host}/reset_password/#{token}"
         begin
           UserMailer.password_reset(@user_email, reset_link).deliver_now
         rescue => exception
@@ -43,19 +41,13 @@ class PasswordResetsController < ApplicationController
   end
 
   def reset_password
-    @valid_token = false
-
     @user_token = params["token"]
-    now = Time.now.getutc
-
-    password_resets = PasswordReset.where(["token = ? AND updated_at > ? AND updated_at < ? ", @user_token, now - 30.minutes, now])
-    @valid_token = password_resets.length > 0 ? true : @valid_token
-    @user_id = @valid_token ? password_resets.first.user_id : nil   
-
+    @valid_token = is_valid_token(@user_token)
   end
 
   def update_password
-    @user = User.find_by_id(params["user_id"])
+    user_token = params["user_token"]
+    @user = User.joins(:password_resets).where(:password_resets => {:token => user_token}).first
 
     @user.errors.add :new_password, "cannot be blank" if params["new_password"].empty?
     @user.errors.add :new_password, "must be at least #{User::MIN_PASSWORD_LENGTH} characters long" if params["new_password"].length < User::MIN_PASSWORD_LENGTH
@@ -70,7 +62,17 @@ class PasswordResetsController < ApplicationController
       
       redirect_to login_url, notice: 'User password was successfully reset.'
     else
-      redirect_to login_url, alert: 'Failed to reset the password.'
+      redirect_to login_url, notice: 'User password failed to be reset.'
     end
   end
+
+  private
+
+  def is_valid_token(token)
+    now = Time.now.getutc
+    password_resets = PasswordReset.where(["token = ? AND updated_at > ? AND updated_at < ? ", @user_token, now - 30.minutes, now])
+    return password_resets.length > 0
+  end
+
+  
 end
