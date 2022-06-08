@@ -29,7 +29,7 @@ class PasswordResetsController < ApplicationController
 
         reset_link = "#{host}/reset_password/#{token}"
         begin
-          UserMailer.password_reset(@user_email, reset_link).deliver_now
+          UserMailer.reset_link(@user_email, reset_link).deliver_now
         rescue => exception
           logger.error("Failed to deliver password reset link to: #{@user_email}")
         end
@@ -59,10 +59,13 @@ class PasswordResetsController < ApplicationController
       # Remove token record in db upon updating user successfully
       password_reset = PasswordReset.find_by_user_id(@user.id)
       password_reset.destroy
-      
+
+      reset_time = Time.now
+      UserMailer.password_reset(@user.email, reset_time).deliver_now
+     
       redirect_to login_url, notice: 'User password was successfully reset.'
     else
-      redirect_to login_url, notice: 'User password failed to be reset.'
+      redirect_to login_url, alert: 'User password failed to be reset.'
     end
   end
 
@@ -70,6 +73,8 @@ class PasswordResetsController < ApplicationController
 
   def is_valid_token(token)
     now = Time.now.getutc
+
+    # Token will be expired after 30 minutes counting from its creation time
     password_resets = PasswordReset.where(["token = ? AND updated_at > ? AND updated_at < ? ", @user_token, now - 30.minutes, now])
     return password_resets.length > 0
   end
