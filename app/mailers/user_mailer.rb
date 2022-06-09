@@ -6,6 +6,10 @@ class UserMailer < ApplicationMailer
     mail(to: user_email, subject: "[SSID] Reset your password")
   end
 
+  def reset_link_non_existent_account(user_email)
+    mail(to: user_email, subject: "[SSID] Reset your password")
+  end
+
   def password_reset(user_email, reset_time)
     @user_email = user_email
     @reset_time = reset_time
