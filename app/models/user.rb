@@ -27,6 +27,7 @@ class User < ActiveRecord::Base
   validates :name, :password_digest, presence: true
   validates :name, :id_string, uniqueness: true
   validates :id_string, presence: true, if: -> {is_admin == false}
+  validates :email, presence: true
 
   has_secure_password
   before_destroy :ensure_an_admin_remains
