@@ -60,6 +60,9 @@ class UsersController < ApplicationController
       @user.errors.add :new_password, "must be different from the old password" if params[:user]["new_password"] == params[:user]["old_password"] 
     end
 
+    # Check for email
+    UsersHelper.validate_email(@user, params[:user]["email"])
+
     # Update user
     unless @user.is_admin and params[:user]["new_password"].strip.empty?
       @user.password_digest = BCrypt::Password.create(params[:user]["new_password"]) if @user.errors.empty?
