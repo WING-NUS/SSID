@@ -8,15 +8,15 @@ class PasswordResetsController < ApplicationController
     host = Rails.application.config.host
     @user_email = params["user_email"]
 
-    @user = User.find_by_email(@user_email)
+    user = User.find_by_email(@user_email)
 
     token = PasswordResetsHelper.generate_reset_token()
-    if @user
-      password_reset = PasswordReset.find_by_user_id(@user.id)
+    if user
+      password_reset = PasswordReset.find_by_user_id(user.id)
 
       if password_reset.nil?
         password_reset = PasswordReset.new { |pw|
-          pw.user_id = @user.id
+          pw.user_id = user.id
           pw.token = token
         }
       else
@@ -32,7 +32,7 @@ class PasswordResetsController < ApplicationController
     end
       
     begin
-      if @user
+      if user
         UserMailer.reset_link(@user_email, reset_link).deliver_now
       elsif UsersHelper.is_valid_email?(@user_email)
         UserMailer.reset_link_non_existent_account(@user_email).deliver_now
