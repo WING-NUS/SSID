@@ -49,9 +49,7 @@ class UsersController < ApplicationController
 
     # Check for new password unless admin and do not wish to change password
     unless @user.is_admin and params[:user]["new_password"].strip.empty?
-      @user.errors.add :new_password, "cannot be blank" if params[:user]["new_password"].empty?
-      @user.errors.add :new_password, "must be at least #{User::MIN_PASSWORD_LENGTH} characters long" if params[:user]["new_password"].length < User::MIN_PASSWORD_LENGTH
-      @user.errors.add :confirm_new_password, "does not match new password" if params[:user]["new_password"] != params[:user]["confirm_new_password"]
+      UsersHelper.validate_password(@user, params[:user]["new_password"], params[:user]["confirm_new_password"])
     end
 
     # Check for old password

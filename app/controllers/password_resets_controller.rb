@@ -57,9 +57,7 @@ class PasswordResetsController < ApplicationController
     user_token = params["user_token"]
     @user = User.joins(:password_resets).where(:password_resets => {:token => user_token}).first
 
-    @user.errors.add :new_password, "cannot be blank" if params["new_password"].empty?
-    @user.errors.add :new_password, "must be at least #{User::MIN_PASSWORD_LENGTH} characters long" if params["new_password"].length < User::MIN_PASSWORD_LENGTH
-    @user.errors.add :confirm_new_password, "does not match new password" if params["new_password"] != params["confirm_new_password"]
+    UsersHelper.validate_password(@user, params["new_password"], params["confirm_new_password"])
 
     @user.password_digest = BCrypt::Password.create(params["new_password"]) if @user.errors.empty?
 

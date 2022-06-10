@@ -9,9 +9,18 @@ PasswordReset.validatePassword = ->
     if ($("div.new-password > input").val().length == 0)
       $("div.new-password > p").text("New password cannot be blank").show();
       event.preventDefault();
-    else if ($("div.new-password > input").val().length < 6)
-      $("div.new-password > p").text("New password must be at least 6 characters long").show();
+    else if ($("div.new-password > input").val().length < 8)
+      $("div.new-password > p").text("New password must be at least 8 characters long").show();
       event.preventDefault();
+    else if ($("div.new-password > input").val().match(/[a-z]+/) == null)
+      $("div.new-password > p").text("New password must contain at least 1 lower case character").show();
+      event.preventDefault();    
+    else if ($("div.new-password > input").val().match(/[A-Z]+/) == null)
+      $("div.new-password > p").text("New password must contain at least 1 upper case character").show();
+      event.preventDefault();   
+    else if ($("div.new-password > input").val().match(/[0-9~!@#$%^&*()+=|]+/) == null)
+      $("div.new-password > p").text("New password must contain at least 1 digit or special character").show();
+      event.preventDefault();      
     
     if ($("div.new-password > input").val() != $("div.confirm-new-password > input").val())
       $("div.confirm-new-password > p").text("Confirm new password does not match new password").show(); 
