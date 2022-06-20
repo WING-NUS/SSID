@@ -16,6 +16,7 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
 class UsersController < ApplicationController
+  skip_before_action :authorize, only: [:new]
   before_action { |controller|
     if params[:course_id]
       @course = Course.find(params[:course_id])
@@ -27,6 +28,11 @@ class UsersController < ApplicationController
                                                       only: [ ]
     end
   }
+
+  # GET /users/new
+  def new
+    @user = User.new
+  end
 
   # GET /courses/1/users
   def index
