@@ -25,18 +25,22 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
   <%= javascript_tag "if (window.#{controller_name.singularize.camelize} && #{controller_name.singularize.camelize}.onLoad) { #{controller_name.singularize.camelize}.onLoad(); };" %>
   <header class="site_header">
     <div class="container d-flex flex-row w-100">
-      <% unless @user %>
+      <% if @user == nil or @user.id == nil  %>
         <div class="w-20">
-          <%= image_tag("logo.png", height: "100", width: "150", alt: "NUS logo", class: "site_logo")%>
+          <%= link_to image_tag("logo.png", height: "100", width: "150", alt: "NUS logo", class: "site_logo"), cover_path %>
         </div>
         <h3 id="site-banner-login">Student Submissions Integrity Diagnosis System</h3>
         <div class="site-login w-20">
-          <span><%= link_to "Login", login_path %></span>
+          <ul id="menu">
+            <li><%= link_to "Login", login_path %></li>
+            <li><%= link_to "Sign Up", signup_path %></li>
+          </ul>
         </div>
+
       <% else %> 
         <h3 id="site_banner">SSID</h3>  
-        <ul id="menu" <%= %Q{ class="admin"}.html_safe if @user and @user.is_admin %>>
-          <% if @user %>
+        <ul id="menu" <%= %Q{ class="admin"}.html_safe if @user.id != nil and @user.is_admin %>>
+          <% if @user.id != nil %>
             <li <%= highlight_if_current root_url %>><%= link_to "Home", root_url %></li>
             <li <%= highlight_if_current courses_url %>><%= link_to "Courses", courses_url %></li>
             <% if @user.is_admin %>

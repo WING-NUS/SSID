@@ -30,12 +30,16 @@ SSID::Application.routes.draw do
   get "guide" => "users#guide"
   root to: "announcements#index"
 
+
+
   resources :announcements
 
   namespace :admin do
     resources :users
   end
   resources :users
+    # Signup route
+    get "signup" => "users#new"
   
   resources :courses do
     get 'status'
