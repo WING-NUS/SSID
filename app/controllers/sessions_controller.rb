@@ -49,6 +49,14 @@ class SessionsController < ApplicationController
     end
   end
 
+  def forget_password
+    render 'forget_password'
+  end
+
+  def send_password_reset_link
+    UserMailer.password_reset(params["user_email"]).deliver_now
+  end
+
   def destroy
     session[:user_id] = nil
     redirect_to login_url, notice: "Logged out"
