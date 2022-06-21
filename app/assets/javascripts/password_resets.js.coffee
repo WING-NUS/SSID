@@ -23,7 +23,7 @@ PasswordReset.validatePassword = ->
       event.preventDefault();      
     
     if ($("div.new-password > input").val() != $("div.confirm-new-password > input").val())
-      $("div.confirm-new-password > p").text("Confirm new password does not match new password").show(); 
+      $("div.confirm-new-password > p").text("The password confirmation does not match").show(); 
       event.preventDefault();
     return
   return 
