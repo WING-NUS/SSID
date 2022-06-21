@@ -18,7 +18,5 @@ module UsersHelper
   def self.is_valid_email?(email)
     email_pattern = /^[\w\.-]+@([\w-]+\.)+[\w-]{2,4}$/
     is_valid_email = (email =~ email_pattern)
-  end
-
-  
+  end  
 end

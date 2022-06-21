@@ -1,5 +1,5 @@
 class UserMailer < ApplicationMailer
-  default from: "no-reply@ssid.comp.nus.edu.sg"
+  default from: ApplicationHelper::EMAIL_DEFAULT_SENDER
 
   def reset_link(user_email, reset_link)
     @reset_link = reset_link
