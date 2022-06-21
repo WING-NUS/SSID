@@ -193,7 +193,7 @@ class Admin::UsersController < ApplicationController
     # Check for errors and render view
     if @the_user.errors.empty?
       if @course
-        redirect_to admin_users_url, notice: "#{@course.code} User was successfully updated."
+        redirect_to course_users_url(@course), notice: "#{@course.code} User was successfully updated."
       else
         redirect_to admin_users_url, notice: "Admin User was successfully updated."
       end
