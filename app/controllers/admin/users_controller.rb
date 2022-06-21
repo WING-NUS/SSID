@@ -217,10 +217,12 @@ class Admin::UsersController < ApplicationController
       
       # redirect link accordingly depending on whether user is admin or teaching staff
       @user = User.find_by_id(session[:user_id]) 
-      url = admin_users_url
-      if (!@user.is_admin)
-        url = course_users_url(course)
-      end
+      # url = admin_users_url
+
+      # if (!@user.is_admin)
+      #   url = course_users_url(course)
+      # end
+      url = course_users_url(course)
       
       if membership && membership.role == UserCourseMembership::ROLE_GUEST && guest.destroy && membership.destroy 
         redirect_to url, notice: "User was removed from #{course.code}."
@@ -231,7 +233,7 @@ class Admin::UsersController < ApplicationController
       end
     else
       if @the_user.destroy
-        redirect_to admin_users_url, notice: 'User was successfully deleted.'
+        redirect_to url, notice: 'User was successfully deleted.'
       else
         redirect_to admin_users_url, alert: @the_user.errors.to_a.join(", ")
       end
