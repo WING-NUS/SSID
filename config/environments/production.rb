@@ -75,5 +75,6 @@ SSID::Application.configure do
   # Set time zone
   config.time_zone = "Singapore"
   
-  config.host = "https://ssid.comp.nus.edu.sg"
+  config.host = "ssid.comp.nus.edu.sg"
+  config.protocol = "https"
 end

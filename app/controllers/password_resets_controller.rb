@@ -5,7 +5,6 @@ class PasswordResetsController < ApplicationController
   end
 
   def send_password_reset_link
-    host = Rails.application.config.host
     @user_email = params["user_email"]
 
     user = User.find_by_email(@user_email)
@@ -27,7 +26,8 @@ class PasswordResetsController < ApplicationController
       if password_reset.valid?
         password_reset.save
 
-        reset_link = "#{host}/reset_password/#{token}"
+        reset_link = (Rails.env == "production" ? url_for(:protocol => "#{Rails.application.config.protocol}", :host => "#{Rails.application.config.host}", :action => "reset_password", :token => "#{token}").to_s
+                                                : url_for(:protocol => "#{Rails.application.config.protocol}", :host => "#{Rails.application.config.host}", :port => "3000", :action => "reset_password", :token => "#{token}").to_s)
       end
     end
       
@@ -40,7 +40,7 @@ class PasswordResetsController < ApplicationController
         # do nothing
       end
     rescue => exception
-      logger.error("Failed to deliver password reset link to: #{@user_email} with message: #{exception.message}")
+      logger.error("Failed to deliver mail to: #{@user_email} with message: #{exception.message}")
       trace = exception.backtrace.join("\n")
       logger.error(trace)
     end  
