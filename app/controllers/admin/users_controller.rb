@@ -215,13 +215,7 @@ class Admin::UsersController < ApplicationController
       membership = course.membership_for_user(@the_user)
       guest = course.guest_user_finder(@the_user)
       
-      # redirect link accordingly depending on whether user is admin or teaching staff
-      @user = User.find_by_id(session[:user_id]) 
-      # url = admin_users_url
-
-      # if (!@user.is_admin)
-      #   url = course_users_url(course)
-      # end
+      # Redirect current user back to the course users page
       url = course_users_url(course)
       
       if membership && membership.role == UserCourseMembership::ROLE_GUEST && guest.destroy && membership.destroy 
