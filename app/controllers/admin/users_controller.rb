@@ -226,10 +226,17 @@ class Admin::UsersController < ApplicationController
         redirect_to url, alert: "Error removing user"
       end
     else
-      if @the_user.destroy
-        redirect_to url, notice: 'User was successfully deleted.'
+      if @the_user.is_admin
+        if @the_user.destroy
+          redirect_to admin_users_url, notice: 'User was successfully deleted.'
+        else
+          redirect_to admin_users_url, alert: @the_user.errors.to_a.join(", ")
+        end
       else
-        redirect_to admin_users_url, alert: @the_user.errors.to_a.join(", ")
+        if @the_user.destroy
+          redirect_to url, notice: 'User was successfully deleted.'
+        end
+        redirect_to url, alert: @the_user.errors.to_a.join(", ")
       end
     end
   end
