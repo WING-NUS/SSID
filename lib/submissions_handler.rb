@@ -128,22 +128,7 @@ module SubmissionsHandler
     upload_dir
   end
 
-  def self.process_submissions(path, assignment, isMapEnabled)
-    # Create directory for code comparison, delete first if necessary
-    compare_dir = File.join(path, "_compare")
-    FileUtils.rm(compare_dir, force: true) if File.exist? compare_dir
-    FileUtils.mkdir_p(File.join(path, "_compare"))
-    
-    # For each student submission, combine the code files into one
-    Dir.glob(File.join(path, "*")).each { |subpath|
-      next if subpath == compare_dir || (File.file?(subpath) && subpath.split('.').last.to_s.downcase == 'csv')
-
-      # Combine code files and write into compare dir as new file with same name, remove ext if any
-      File.open(File.join(compare_dir, File.basename(subpath, File.extname(subpath))), 'w') { |f|
-        f.puts string_from_combined_files(subpath)
-      }
-    }
-
+  def self.process_submissions(compare_dir, assignment, isMapEnabled)
     # Read database configuration
 	  config   = Rails.configuration.database_configuration
 	  host     = config[Rails.env]["host"]

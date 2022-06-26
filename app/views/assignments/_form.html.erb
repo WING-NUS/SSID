@@ -28,6 +28,10 @@
     <%= f.label :ngram_size, "Size of n-gram \u24D8", title: "An n-gram is a contiguous subsequence of n tokens of a given sequence.", class: 'form-label' %>
     <%= f.text_field :ngram_size, class: 'form-control' %>
   </div>
+  <div class="col-sm-6">
+    <%= f.label :fileStructure, "File Structure \u24D8", title: "This refers to the way the files are arranged in your zip folder. \n\nTo recursively search for all files in the provided directories and compare every file with each other file, select \"By Files\". \n\nInstead, if you don't want to compare files in the same leaf directory (for example, if the zip file is split into per-student directories and you don't care about self plagiarism, select \"By Directory\"", class: 'form-label' %>
+    <%= f.select :fileStructure, Assignment.options_for_file_structure, {}, { :class => 'form-select' } %>
+  </div>
   <div class="col-12">
     <%= f.label :file, "Student submissions (zip) \u24D8", title: "The zip file should contain one folder for each student's code files; folders are named according to student ID; Name your folder as \"skeleton\" for the codes you wish to exclude from the system", class: 'form-label' %>
     <%= f.file_field :file, class: 'form-control' %>

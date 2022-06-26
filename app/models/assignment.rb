@@ -51,8 +51,18 @@ class Assignment < ActiveRecord::Base
     ocaml: "ocaml"
   }
 
+  # enum to store whether plagiarism detection needs to recursively look at files or folders
+  FILE_STRUCTURES = {
+    all: "By Files",
+    dir: "By Directory"
+  }
+
   def self.options_for_languages
     LANGUAGES.to_a.collect { |pair| pair.reverse }
+  end
+
+  def self.options_for_file_structure
+    FILE_STRUCTURES.to_a.collect { |pair| pair.reverse }
   end
 
   def prettify_js_lang
