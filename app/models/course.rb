@@ -15,6 +15,14 @@ You should have received a copy of the GNU Lesser General Public License
 along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
+class TimeValidator < ActiveModel::EachValidator
+  def validate_each(record, attribute, value)
+    if Time.parse(value.to_s).to_i <= Time.now.to_i
+      record.errors[attribute] << (options[:message] || "should be in the future")
+    end
+  end
+end
+
 class Course < ActiveRecord::Base
   has_many :announcements, -> {  order "updated_at DESC" }, :as => :announceable
   has_many :assignments, :dependent => :delete_all
@@ -27,6 +35,7 @@ class Course < ActiveRecord::Base
 
   validates_presence_of :code
   validates_presence_of :name
+  validates :expiry, time: true
   validates :code, uniqueness: { :scope => [ :academic_year, :semester ] }
   before_save :upcase_code
 
