@@ -1,0 +1,2 @@
+class MaintenanceMailer < ApplicationMailer
+end
