@@ -93,17 +93,10 @@ public final class SimComparer {
 
 	private void computeSims(TokenList s1Tokens, TokenList s2Tokens,
 			Result result) {
-		logger.info("S1: {} {} {}, S2: {} {} {}", s1Tokens.size(), s1Tokens.getMarkCount(), s1Tokens.getBaseCount(), s2Tokens.size(), s2Tokens.getMarkCount(), s2Tokens.getBaseCount());
-		
-		if (s1Tokens.size() == s1Tokens.getBaseCount() || s2Tokens.size() == s2Tokens.getBaseCount()) {
-			logger.debug("One of the submissions is the same as base code: S1 = {}, S2 = {}", result.getS1().getID(), result.getS2().getID());
-			result.setSim2To1(0f);
-			result.setSim1To2(0f);
-			return;
-		} 		
+		logger.info("S1: {} {} {}, S2: {} {} {}", s1Tokens.size(), s1Tokens.getMarkCount(), s1Tokens.getBaseCount(), s2Tokens.size(), s2Tokens.getMarkCount(), s2Tokens.getBaseCount());	
 
-		result.setSim2To1((float) s2Tokens.getMarkCount() / (s2Tokens.size() - s2Tokens.getBaseCount()));
-		result.setSim1To2((float) s1Tokens.getMarkCount() / (s1Tokens.size() - s1Tokens.getBaseCount()));
+		result.setSim2To1((float) s2Tokens.getMarkCount() / s2Tokens.size());
+		result.setSim1To2((float) s1Tokens.getMarkCount() / s1Tokens.size());
 
 	}
 
