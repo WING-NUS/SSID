@@ -32,9 +32,20 @@ Refer to the guide [_Setting up and getting started_](SettingUp.md).
 ---
 
 
-### Architecture
+## Architecture
 
 This program is created as a standard Ruby on Rails project following the Model Controller View (MCV) architecture.
+
+---
+
+
+## **Documentation, logging, testing, configuration, dev-ops**
+
+* [Documentation guide](https://ay2122s1-cs2103-w14-1.github.io/tp/Documentation.html)
+* [Testing guide](https://ay2122s1-cs2103-w14-1.github.io/tp/Testing.html)
+* [Logging guide](https://ay2122s1-cs2103-w14-1.github.io/tp/Logging.html)
+* [Configuration guide](https://ay2122s1-cs2103-w14-1.github.io/tp/Configuration.html)
+* [DevOps guide](https://ay2122s1-cs2103-w14-1.github.io/tp/DevOps.html)
 
 ---
 
