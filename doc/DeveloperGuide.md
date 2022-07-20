@@ -21,7 +21,7 @@ title: Developer Guide
 
 ## **Acknowledgements**
 
-* Libraries used: 
+* Libraries used: Ruby on Rails, React
 
 ---
 
@@ -44,17 +44,17 @@ This program is created as a standard Ruby on Rails project following the Model 
 
 **Target user profile**:
 
-* Course instructors for computer sciences courses at universities.
-* Teaching assitants for computer science courses.
-* Course instructors that are concerned about plagarism within their courses.
-* Course instructors teaching computer science courses that require large number of students to submit coding assignments.
+* Course instructors for computer sciences courses.
+* Teaching assistants for computer science courses.
+* Course instructors that are concerned about plagiarism within their courses.
+* Course instructors teaching computer science courses with large number of students submitting coding assignments.
 
 **Value proposition**:
-* Provide a centralised platform for course instructors to check for plagarism among student submissions.
-* Provide ways for teaching staff to flag out and confirm cases of plagarism.
+* Provide a centralised platform for course instructors to check for plagiarism among student submissions.
+* Provide ways for teaching staff to flag out and confirm cases of plagiarism.
 
 
-With the growth of student intake in computing courses, it becomes an increasingly difficult task to ensure the academic integrity of student submissions in computing courses.  As such, an automated form of plagarism detection for large student bodies is required. Student Submission Integrity Diagnosis (SSID) aims to resolve this issue by providing an easily accessible platform for course instructors to detect prescence of plagarism.
+With the growth of student intake in computing courses, it becomes an increasingly difficult task to ensure the academic integrity of student submissions.  As such, an automated form of plagiarism detection for large student bodies is required. Student Submission Integrity Diagnosis (SSID) aims to resolve this issue by providing an easily accessible platform for course instructors to detect the presence of plagiarism.
 
 ### User stories
 
@@ -66,16 +66,16 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 | `* * *`  | course instructor      | create a new account                                                                     | gain access to SSID services                                   |
 | `* * *`  | course instructor      | login to my account                                                                      | gain access to SSID services                                        |
 | `* * *`  | course instructor      | create/view/update/delete my courses                                                     | manage my courses                 |
-| `* * *`  | course instructor      | upload student submission data                                                           | check student submissions for plagarism   |
-| `* * *`  | course instructor      | delete student submission data                                                           | delete sensative information once it is no longer required          |
-| `* * *`  | course instructor      | view the result of plagarism analysis                                                    | be updated on what are the potential cases of plagarism                                      |
-| `* * *`  | course instructor      | invite teaching assistants to join my course                                             | have more assistants helping me check for student plagarism                 |
-| `* * *`  | course instructor      | flag cases of student submissions for potential plagarism                                | separate these submissions for more detailed analysis |
-| `* * *`  | course instructor      | confirm cases of student submissions for plagarism                                       | mark cases of plagarism as closed          |
+| `* * *`  | course instructor      | upload student submission data                                                           | check student submissions for plagiarism   |
+| `* * *`  | course instructor      | delete student submission data                                                           | delete sensitive information once it is no longer required          |
+| `* * *`  | course instructor      | view the result of plagiarism analysis                                                    | be updated on what are the potential cases of plagiarism                                      |
+| `* * *`  | course instructor      | invite teaching assistants to join my course                                             | have more assistants helping me check for student plagiarism                 |
+| `* * *`  | course instructor      | flag cases of student submissions for potential plagiarism                                | separate these submissions for more detailed analysis |
+| `* * *`  | course instructor      | confirm cases of student submissions for plagiarism                                       | mark cases of plagiarism as closed          |
 | `* * *`  | teaching assistant     | create a new account                                                                     | gain access to SSID services            |
 | `* * *`  | teaching assistant     | login to my account                                                                      | gain access to SSID services                                                   |
-| `* * *`  | teaching assistant     | view the result of plagarism analysis                                                    | be updated on what are the potential cases of plagarism                                      |
-| `* * *`  | teaching assistant     | flag cases of student submissions for potential plagarism                                | separate these submissions for more detailed analysis |
+| `* * *`  | teaching assistant     | view the result of plagiarism analysis                                                    | be updated on what are the potential cases of plagiarism                                      |
+| `* * *`  | teaching assistant     | flag cases of student submissions for potential plagiarism                                | separate these submissions for more detailed analysis |
 | `* *`    | new user               | go through a tutorial at the beginning                                                   | familiarise myself with how the software works and what it can do                  |
 
 
@@ -86,9 +86,9 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 ### Non-Functional Requirements
 
 1. Should work on any _mainstream OS_.
-2. Should return result of student submission analysis of a standard course size in a reasonable timeframe.
-3. Should be secure and ensure that all sensative information are securely stored.
-8. Should be easily accessible by non expert users.
+2. Should return the result of student submission analysis of a standard course size in a reasonable timeframe.
+3. Should be secure and ensure that all sensitive information is securely stored.
+8. Should be easily accessible by non-expert users.
 
 
 ### Glossary
