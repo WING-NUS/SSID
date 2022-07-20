@@ -21,7 +21,8 @@ title: Developer Guide
 
 ## **Acknowledgements**
 
-* Libraries used: Ruby on Rails, React
+* Libraries used: Ruby on Rails
+
 
 ---
 
@@ -32,9 +33,21 @@ Refer to the guide [_Setting up and getting started_](SettingUp.md).
 ---
 
 
-## Architecture
+## **Design**
+
+### **Architecture**
 
 This program is created as a standard Ruby on Rails project following the Model Controller View (MCV) architecture.
+
+### **Security Considerations**
+
+### **Database Design**
+
+### **User roles and authorizations**
+
+
+
+
 
 ---
 
