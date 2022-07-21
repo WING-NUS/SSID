@@ -193,7 +193,7 @@ class Admin::UsersController < ApplicationController
     # Check for errors and render view
     if @the_user.errors.empty?
       if @course
-        redirect_to admin_users_url, notice: "#{@course.code} User was successfully updated."
+        redirect_to course_users_url(@course), notice: "#{@course.code} User was successfully updated."
       else
         redirect_to admin_users_url, notice: "Admin User was successfully updated."
       end
@@ -215,12 +215,8 @@ class Admin::UsersController < ApplicationController
       membership = course.membership_for_user(@the_user)
       guest = course.guest_user_finder(@the_user)
       
-      # redirect link accordingly depending on whether user is admin or teaching staff
-      @user = User.find_by_id(session[:user_id]) 
-      url = admin_users_url
-      if (!@user.is_admin)
-        url = course_users_url(course)
-      end
+      # Redirect current user back to the course users page
+      url = course_users_url(course)
       
       if membership && membership.role == UserCourseMembership::ROLE_GUEST && guest.destroy && membership.destroy 
         redirect_to url, notice: "User was removed from #{course.code}."
@@ -230,10 +226,17 @@ class Admin::UsersController < ApplicationController
         redirect_to url, alert: "Error removing user"
       end
     else
-      if @the_user.destroy
-        redirect_to admin_users_url, notice: 'User was successfully deleted.'
+      if @the_user.is_admin
+        if @the_user.destroy
+          redirect_to admin_users_url, notice: 'User was successfully deleted.'
+        else
+          redirect_to admin_users_url, alert: @the_user.errors.to_a.join(", ")
+        end
       else
-        redirect_to admin_users_url, alert: @the_user.errors.to_a.join(", ")
+        if @the_user.destroy
+          redirect_to url, notice: 'User was successfully deleted.'
+        end
+        redirect_to url, alert: @the_user.errors.to_a.join(", ")
       end
     end
   end
