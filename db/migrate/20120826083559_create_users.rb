@@ -20,11 +20,10 @@ require 'bcrypt'
 class CreateUsers < ActiveRecord::Migration[6.0]
   def change
     create_table :users do |t|
-      t.string :name, uniq: true
+      t.string :username, uniq: true
       t.string :full_name
       t.string :password_digest, default: BCrypt::Password.create('$$default_user_password$$')
       t.boolean :is_admin, default: false, null: false
-      t.string :id_string, uniq: true
 
       t.timestamps
     end

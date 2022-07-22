@@ -52,7 +52,7 @@ class UsersController < ApplicationController
   # POST /users
   def create
     @user = User.new(user_params)
-
+    # byebug
 
     if @user.save
 
@@ -98,6 +98,6 @@ class UsersController < ApplicationController
 
   private
     def user_params
-      params.require(:user).permit(:name, :email, :password, :full_name, :password_confirmation)
+      params.require(:user).permit(:username, :email, :password, :full_name, :password_confirmation)
     end
 end
