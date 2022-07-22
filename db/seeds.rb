@@ -17,9 +17,11 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 
 # Create default admin user
 admin = User.new { |user|
-  user.name = "admin"
+  user.username = "admin"
   user.full_name = "SSID Administrator"
   user.password_digest = BCrypt::Password.create('$$SSIDPassword$$')
   user.is_admin = true
+  user.last_login_time = Time.now
+  user.email = 'testemail@gmail.com'
 }
 admin.save

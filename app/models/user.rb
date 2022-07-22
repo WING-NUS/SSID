@@ -23,9 +23,8 @@ class User < ActiveRecord::Base
   has_many :assignments, -> { distinct }, :through => :courses
   has_many :submissions, foreign_key: "student_id"
 
-  validates :name, :password_digest, presence: true
-  validates :name, :id_string, uniqueness: true
-  validates :id_string, presence: true, if: -> {is_admin == false}
+  validates :username, :password_digest, :email, presence: true
+  validates :username, :email, uniqueness: true
 
   has_secure_password
   before_destroy :ensure_an_admin_remains
