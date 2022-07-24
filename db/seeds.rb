@@ -23,5 +23,6 @@ admin = User.new { |user|
   user.is_admin = true
   user.last_login_time = Time.now
   user.email = 'testemail@gmail.com'
+  user.is_admin_approved = true
 }
 admin.save

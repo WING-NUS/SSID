@@ -2,3 +2,10 @@
 <h1>Sign up</h1>
 Thank you for your interest in SSID! Please sign up below to join the waitlist!
 <%= render 'signupform' %>
+
+<% if flash[:alert] %>
+    <div class="alert"><%= flash[:alert] %></div>
+<% end %>
+<% if flash[:notice] %>
+    <div class="notice"><%= flash[:notice] %></div>
+<% end %>

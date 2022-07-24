@@ -37,8 +37,12 @@ class Admin::UsersController < ApplicationController
   def index
     @admins = User.where(is_admin: true)
 
+    # users awaiting admin approval
+    @waitlist = User.where(is_admin_approved: false)
+
     # users don't belong to any course
-    @loners = User.all - User.joins(:memberships) - @admins
+    @loners = User.all - User.joins(:memberships) - @admins - @waitlist
+
   end
 
   # GET /admin/users/new
@@ -71,12 +75,12 @@ class Admin::UsersController < ApplicationController
       else
         @the_user.full_name = params[:user]["full_name"]
         @the_user.id_string = params[:user]["id_string"]
-        @the_user.name = params[:user]["name"]
+        @the_user.username = params[:user]["name"]
       end
     else
       @the_user.is_admin = true
       @the_user.full_name = params[:user]["full_name"]
-      @the_user.name = params[:user]["name"]
+      @the_user.username = params[:user]["name"]
       @the_user.id_string = params[:user]["name"]
     end
 
@@ -160,7 +164,7 @@ class Admin::UsersController < ApplicationController
     if @course
       @the_user.full_name = params[:user]["full_name"]
       @the_user.id_string = params[:user]["id_string"]
-      @the_user.name = params[:user]["name"]
+      @the_user.username = params[:user]["name"]
 
       # Update role unless student
       @membership = @course.membership_for_user(@the_user)
@@ -169,7 +173,7 @@ class Admin::UsersController < ApplicationController
       end
     else
       @the_user.full_name = params[:user]["full_name"]
-      @the_user.name = params[:user]["name"]
+      @the_user.username = params[:user]["name"]
     end
 
     # Validate password unless blank
