@@ -23,7 +23,7 @@ class User < ActiveRecord::Base
   has_many :assignments, -> { distinct }, :through => :courses
   has_many :submissions, foreign_key: "student_id"
 
-  validates :username, :password_digest, :email, presence: true
+  validates :username, :password_digest, :email, :full_name, presence: true
   validates :username, :email, uniqueness: true
 
   has_secure_password

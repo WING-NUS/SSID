@@ -55,7 +55,8 @@ class UsersController < ApplicationController
     # byebug
 
     if @user.save
-
+      flash[:success] = "Thank you for registering, a validation email as been sent."
+      redirect_to cover_url
     else
       render 'new'
     end
