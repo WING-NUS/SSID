@@ -55,7 +55,8 @@ class UsersController < ApplicationController
     # byebug
 
     if @user.save
-
+      flash[:notice] = "Thank you for registering, a validation email as been sent."
+      redirect_to signup_url
     else
       render 'new'
     end
@@ -86,10 +87,11 @@ class UsersController < ApplicationController
     end
     if @user.is_admin
       @user.full_name = params[:user]["full_name"]
-      @user.name = params[:user]["name"]
+      @user.username = params[:user]["username"]
     end
       
     if @user.errors.empty? and @user.save
+      # flash[:success] = 'User settings were successfully updated.'
       redirect_to edit_user_url(@user), notice: 'User settings were successfully updated.'
     else
       render action: "edit"

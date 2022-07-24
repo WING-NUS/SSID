@@ -21,8 +21,8 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
   <h5 class="login_helper_text">Welcome to SSID</h5>
   <fieldset>
     <div class="form-floating">
-      <%= text_field_tag :name, params[:name], placeholder: 'Name', :class => "form-control" %>
-      <%= label_tag 'name' %>
+      <%= text_field_tag :username, params[:username], placeholder: 'Username', :class => "form-control" %>
+      <%= label_tag 'Username' %>
     </div>
     <div class="form-floating mb-3">
       <%= password_field_tag :password, params[:password], placeholder: 'Password', :class => "form-control" %>
@@ -31,6 +31,9 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
     </div>
     <span>
       <%= submit_tag "Login", :class => "site_login" %>
+    </span>
+    <span>
+      <%= link_to 'Forgot password?', forget_password_url %>
     </span>
   </fieldset>
   <% if flash[:alert] %>

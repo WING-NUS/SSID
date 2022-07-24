@@ -26,12 +26,12 @@ class SessionsController < ApplicationController
   end
   #orRgKyGUs7cz
   def create
-    user = User.find_by_name(params[:name])
-    if user and user.authenticate(params[:password])
-      session[:user_id] = user.id
-      redirect_to root_url
+    user = User.find_by_username(params[:username])
+    if user and user.authenticate(params[:password]) and user.is_admin_approved
+        session[:user_id] = user.id
+        redirect_to root_url
     else
-      redirect_to login_url, alert: "Invalid user/password combination"
+      redirect_to login_url, alert: "Invalid user/password combination or account has not been whitelisted yet"
     end
   end
 

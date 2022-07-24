@@ -28,7 +28,7 @@
     <% @admins.each { |admin| %>
       <tr>
         <td><%= admin.full_name || "--" %><%= " <em>(This is you)</em>".html_safe if @user == admin %></td>
-        <td><%= admin.name %></td>
+        <td><%= admin.username %></td>
         <td>
           <div class="dropdown">
             <a data-toggle="dropdown" id="adminUserDropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
@@ -71,8 +71,48 @@
       <% @loners.each { |user| %>
         <tr>
           <td><%= user.full_name || "--" %></td>
-          <td><%= user.name %></td>
-          <td><%= user.id_string %></td>
+          <td><%= user.username %></td>
+          <td><%= user.id %></td>
+          <td>
+            <div class="dropdown">
+              <a data-toggle="dropdown" id="loneUserDropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                <%= image_tag("more_vert_black_24dp.svg", alt: "Lone Users Menu Dropdown")%>        
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="loneUserDropdownMenuLink">
+                <li><%= link_to "Edit", edit_admin_user_url(user), class: 'dropdown-item' %></li>
+                <li>
+                  <%= button_tag 'Delete', class: "dropdown-item", data: { 'bs-toggle' => "modal", 'bs-target' => "#deleteUserModal", 'bs-url' => "#{admin_user_url(user)}" } %>
+                </li>
+              </ul>
+            </div>
+          </td>          
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>
+<% end %>
+
+<% unless @waitlist.empty? %>
+<div class="waitlist_users_section">
+
+  <h5>Users Awaiting Admin Approval</h5>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Full Name/ Hash</th>
+        <th class="id_col">Login/ Hash</th>
+        <th class="id_col">ID/ Hash</th>
+        <th class="actions_col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @waitlist.each { |user| %>
+        <tr>
+          <td><%= user.full_name || "--" %></td>
+          <td><%= user.username %></td>
+          <td><%= user.id %></td>
           <td>
             <div class="dropdown">
               <a data-toggle="dropdown" id="loneUserDropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
