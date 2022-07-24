@@ -124,7 +124,10 @@ h2, h3, h4, h5, h6 {
   }
 }
 
-.forget-password-helper-text, .login_helper_text {
+
+
+
+.login_helper_text {
   @extend .mt-3;
   @extend .mb-3;
   @extend .fw-normal;
@@ -137,7 +140,7 @@ h2, h3, h4, h5, h6 {
   @extend .text-muted;
 }
 
-.site-password-reset-link, .site_login {
+.site_login {
   @extend .w-100;
   @extend .btn;
   @extend .btn-primary;
