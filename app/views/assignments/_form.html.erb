@@ -1,3 +1,6 @@
+<% content_for :head do %>
+  <%= javascript_include_tag "jszip/jszip.min.js" %>
+<% end %>
 <%= form_for([@course, @assignment]) do |f| %>
   <% if @assignment.errors.any? %>
     <div id="error_explanation">
@@ -53,6 +56,23 @@
   </div>
 <% end %>
 
-<%= javascript_include_tag "assignments_file_upload" %>
-<%= javascript_include_tag "jszip.min" %>
-
+<script type="text/javascript">
+var checkbox = document.getElementById('assignment_mapbox');
+var details_div = document.getElementById('map_file_details');
+checkbox.onchange = function() {
+   if(this.checked) {
+     details_div.style['display'] = 'block';
+   } else {
+     details_div.style['display'] = 'none';
+   }
+};
+window.addEventListener('DOMContentLoaded', () => {
+  console.log($('which-form').val());
+  if ($('#which-form').val() === "update_assignment") {
+    document.querySelector('#assignment_title').disabled = true;
+    document.querySelector('#assignment_language').disabled = true;
+    document.querySelector('#assignment_min_match_length').disabled = true;
+    document.querySelector('#assignment_ngram_size').disabled = true;
+  }
+})
+</script>

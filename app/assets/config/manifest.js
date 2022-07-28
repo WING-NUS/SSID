@@ -3,3 +3,4 @@
 //= link_directory ../javascripts .js
 //= link explorer_canvas/excanvas.compiled.js
 //= link jit/jit-yc.js
+//= link jszip/jszip.min.js
