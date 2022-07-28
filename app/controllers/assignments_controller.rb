@@ -43,13 +43,11 @@ class AssignmentsController < ApplicationController
 
   # GET /courses/1/assignments
   def index
-    
     # check whether is it a guest user 
-    @user = User.find_by_id(session[:user_id]) 
-    @guest_user = GuestUsersDetail.find_by_user_id(@user.id)
+    @guest_details = @course.find_guest_user_details(session[:user_id])
     # obtain assignment to be shown if is a guest user
-    if (@guest_user)
-      @assignment_to_be_shown = @guest_user.assignment_id
+    if @guest_details.length > 0
+      @assignment_to_be_shown = @guest_details.map{|detail| detail.assignment_id }
     end
     
     @assignments = @course.assignments
