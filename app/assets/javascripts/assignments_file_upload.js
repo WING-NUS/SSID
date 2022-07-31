@@ -23,6 +23,9 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
             $("#assignment_file").on("change", function () {
                 Assignment.onAssignmentFileInputChange(this);
             });
+            $("#assignment_mapfile").on("change", function () {
+                Assignment.onAssignmentMapFileInputChange(this);
+            });
         });
     }
 
@@ -87,8 +90,6 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
         reader.readAsArrayBuffer(fileInput.files[0]);
     }
 
-    $("#assignment_mapfile").attr("onchange", "onAssignmentMapFileInputChange(this)");
-
     Assignment.onAssignmentMapFileInputChange = function (fileInput) {
         if (fileInput.files[0] == undefined) {
             return;
@@ -106,10 +107,6 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
         $("#map_files_list").append(
             "<li><a href=# id=preview_map_file>" + fileName + "</a></li>"
         );
-
-        reader.onload = function () {
-            callback(reader.result);
-        }
 
         reader.readAsText(fileInput.files[0]);
 
