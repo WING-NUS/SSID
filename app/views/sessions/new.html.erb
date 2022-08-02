@@ -32,6 +32,9 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
     <span>
       <%= submit_tag "Login", :class => "site_login" %>
     </span>
+    <span>
+      <%= link_to 'Forgot password?', forget_password_url %>
+    </span>
   </fieldset>
   <% if flash[:alert] %>
     <div class="alert"><%= flash[:alert] %></div>
@@ -39,6 +42,6 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
   <% if flash[:notice] %>
     <div class="notice"><%= flash[:notice] %></div>
   <% end %>
-  <p class="site_copyright">&copy; 2009–2022 Web Information Retrieval and Natural Language Processing Group</p>
+  <p class="site_copyright">&copy; <%= ApplicationHelper::COPYRIGHT_DATE_RANGE %> <%= ApplicationHelper::COPYRIGHT_HOLDER %></p>
 <% end %>
 </div>

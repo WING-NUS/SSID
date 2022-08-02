@@ -56,6 +56,6 @@ $(document).ready ->
     $(".site_header").addClass("site_header_background");
   Site.setClipHeight($(this));
 
-  # if (window.location.pathname && window.location.pathname.includes('login'))
-  #   $(".site-login").addClass("site-login-hidden")
+  if (window.location.pathname && !window.location.pathname.includes('cover'))
+    $(".site-login").addClass("site-login-hidden")
   return

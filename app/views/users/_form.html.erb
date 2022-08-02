@@ -20,6 +20,10 @@
       <%= f.text_field :username, class: "form-control" %>
     </div>
   <% end %>
+  <div>
+    <%= f.label :email, "Email", class: "form-label" %>  
+    <%= f.email_field :email, class: "form-control" %>
+  </div>
   <% unless @user.is_admin %>
     <div>
       <%= f.label :old_password, class: "form-label" %>

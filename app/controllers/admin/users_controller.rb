@@ -75,20 +75,21 @@ class Admin::UsersController < ApplicationController
       else
         @the_user.full_name = params[:user]["full_name"]
         @the_user.id_string = params[:user]["id_string"]
-        @the_user.username = params[:user]["name"]
+        @the_user.name = params[:user]["name"]
+        @the_user.email = params[:user]["email"]
       end
     else
       @the_user.is_admin = true
       @the_user.full_name = params[:user]["full_name"]
       @the_user.username = params[:user]["name"]
       @the_user.id_string = params[:user]["name"]
+      @the_user.email = params[:user]["email"]
     end
 
-    # Validate password unless its an existing user
+    # Validate password, email unless its an existing user
     unless @existing_user
-      @the_user.errors.add :password, "cannot be blank" if params[:user]["password"].empty?
-      @the_user.errors.add :password, "must be at least #{User::MIN_PASSWORD_LENGTH} characters long" if params[:user]["password"].length < User::MIN_PASSWORD_LENGTH
-      @the_user.errors.add :confirm_password, "does not match password" if params[:user]["password"] != params[:user]["confirm_password"]
+      UsersHelper.validate_password(@the_user, params[:user]["password"], params[:user]["confirm_password"])
+      UsersHelper.validate_email(@the_user, params[:user]["email"])
 
       # Set password
       @the_user.password_digest = BCrypt::Password.create(params[:user]["password"]) if @the_user.errors.empty?
@@ -164,7 +165,8 @@ class Admin::UsersController < ApplicationController
     if @course
       @the_user.full_name = params[:user]["full_name"]
       @the_user.id_string = params[:user]["id_string"]
-      @the_user.username = params[:user]["name"]
+      @the_user.name = params[:user]["name"]
+      @the_user.email = params[:user]["email"]
 
       # Update role unless student
       @membership = @course.membership_for_user(@the_user)
@@ -173,24 +175,29 @@ class Admin::UsersController < ApplicationController
       end
     else
       @the_user.full_name = params[:user]["full_name"]
-      @the_user.username = params[:user]["name"]
+      @the_user.name = params[:user]["name"]
+      @the_user.email = params[:user]["email"]
     end
 
     # Validate password unless blank
     unless params[:user]["new_password"].blank?
-      @the_user.errors.add :new_password, "must be at least #{User::MIN_PASSWORD_LENGTH} characters long" if params[:user]["new_password"].length < User::MIN_PASSWORD_LENGTH
-      @the_user.errors.add :confirm_new_password, "does not match password" if params[:user]["new_password"] != params[:user]["confirm_new_password"]
+      UsersHelper.validate_password(@the_user, params[:user]["new_password"], params[:user]["confirm_new_password"])
 
       # Set password
       @the_user.password_digest = BCrypt::Password.create(params[:user]["new_password"]) if @the_user.errors.empty?
     end
 
+    # Validate email
+    UsersHelper.validate_email(@the_user, params[:user]["email"])
+
     # Save in transaction
-    @the_user.transaction do
-      raise ActiveRecord::Rollback unless @the_user.save
-      if @membership and not @membership.save
-        @the_user.errors.add :base, @membership.errors.to_a.join(", ")
-        raise ActiveRecord::Rollback
+    if @the_user.errors.empty?
+      @the_user.transaction do
+        raise ActiveRecord::Rollback unless @the_user.save
+        if @membership and not @membership.save
+          @the_user.errors.add :base, @membership.errors.to_a.join(", ")
+          raise ActiveRecord::Rollback
+        end
       end
     end
 
@@ -202,7 +209,7 @@ class Admin::UsersController < ApplicationController
         redirect_to admin_users_url, notice: "Admin User was successfully updated."
       end
     else
-      render action: "new"
+      render action: "edit"
     end
   end
 

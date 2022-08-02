@@ -16,21 +16,29 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
 class User < ActiveRecord::Base
-  MIN_PASSWORD_LENGTH = 6
+  MIN_PASSWORD_LENGTH = 8
 
   has_many :memberships , class_name: "UserCourseMembership", :dependent => :delete_all
+  has_many :guest_users_detail, class_name: "GuestUsersDetail", :dependent => :delete_all
   has_many :courses, -> { distinct }, :through => :memberships
   has_many :assignments, -> { distinct }, :through => :courses
   has_many :submissions, foreign_key: "student_id"
+  has_many :password_resets, class_name: "PasswordReset"
 
-  validates :username, :password_digest, :email, :full_name, presence: true
-  validates :username, :email, uniqueness: true
+  validates :name, :password_digest, presence: true
+  validates :name, :id_string, uniqueness: true
+  validates :id_string, presence: true, if: -> {is_admin == false}
+  validates :email, presence: true
 
   has_secure_password
   before_destroy :ensure_an_admin_remains
 
   def is_some_staff?
     self.courses.any? { |c| c.membership_for_user(self).role == UserCourseMembership::ROLE_TEACHING_STAFF }
+  end
+
+  def is_staff_or_ta?
+    UserCourseMembership.where(["user_id = ? AND role IN (?, ?)", self.id, 0, 1])
   end
 
   def full_name
