@@ -23,7 +23,6 @@
     <% (@staff + @teaching_assistants + @students + @guests).each { |user| %>
       <tr>
         <td><%= user.full_name || "--" %></td>
-        <td><%= user.id %></td>
         <td><%= @course.role_string_for_user(user) %></td>
         <td>
           <div class="dropdown">
