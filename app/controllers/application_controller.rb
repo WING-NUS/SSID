@@ -17,16 +17,30 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 
 class ApplicationController < ActionController::Base
     protect_from_forgery
-    before_action :authorize
+    before_action :login_authorization
+    before_action :admin_authorization
     before_action :sanitize_id, only: [:index, :show, :edit, :update, :destroy]
   
     protected
   
-    def authorize
+    def login_authorization
       # get user and respective membership
       @user = User.find_by_id(session[:user_id]) 
 
       unless @user
+        # redirect_to login_url, notice: "Please log in"       
+        redirect_to cover_url
+        
+      else
+        @membership = UserCourseMembership.find_by_user_id(@user.id)
+      end
+    end
+
+    def admin_authorization
+      # get user and respective membership
+      @user = User.find_by_id(session[:user_id]) 
+
+      unless @user && @user.is_admin?
         # redirect_to login_url, notice: "Please log in"       
         redirect_to cover_url
         
