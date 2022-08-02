@@ -16,7 +16,8 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
 class Admin::UsersController < ApplicationController
-  
+  before_action :admin_authorization
+
   GUEST_USER_ROLE_ID = '3'
   
   before_action { |controller|
@@ -257,6 +258,18 @@ class Admin::UsersController < ApplicationController
   end
 
   private
+    def admin_authorization
+      # get user and respective membership
+      @user = User.find_by_id(session[:user_id]) 
+
+      unless @user && @user.is_admin?
+        redirect_to login_url, alert: "Unauthorized access"       
+        
+      else
+        @membership = UserCourseMembership.find_by_user_id(@user.id)
+      end
+    end
+
     def user_params
       params.require(:user).permit(:username, :email, :password, :full_name, :password_confirmation)
     end

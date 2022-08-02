@@ -27,26 +27,15 @@ class ApplicationController < ActionController::Base
       @user = User.find_by_id(session[:user_id]) 
 
       unless @user
-        # redirect_to login_url, notice: "Please log in"       
-        redirect_to cover_url
+        redirect_to login_url, notice: "Please log in"       
+        # redirect_to cover_url
         
       else
         @membership = UserCourseMembership.find_by_user_id(@user.id)
       end
     end
 
-    def admin_authorization
-      # get user and respective membership
-      @user = User.find_by_id(session[:user_id]) 
-
-      unless @user && @user.is_admin?
-        # redirect_to login_url, notice: "Please log in"       
-        redirect_to cover_url
-        
-      else
-        @membership = UserCourseMembership.find_by_user_id(@user.id)
-      end
-    end
+    
   
     private
   
