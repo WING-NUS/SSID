@@ -58,6 +58,10 @@ class Admin::UsersController < ApplicationController
   # POST /admin/users/
   def create
     @the_user = User.new
+
+    @user.id_string = @user.username #workaround for redundant id_string field
+
+    
     @course = nil
 
     # Check if we have a course_id
@@ -251,4 +255,9 @@ class Admin::UsersController < ApplicationController
       end
     end
   end
+
+  private
+    def user_params
+      params.require(:user).permit(:username, :email, :password, :full_name, :password_confirmation)
+    end
 end
