@@ -25,8 +25,8 @@ class User < ActiveRecord::Base
   has_many :submissions, foreign_key: "student_id"
   has_many :password_resets, class_name: "PasswordReset"
 
-  validates :name, :password_digest, presence: true
-  validates :name, :id_string, uniqueness: true
+  validates :username, :password_digest, presence: true
+  validates :username, :id_string, uniqueness: true
   validates :id_string, presence: true, if: -> {is_admin == false}
   validates :email, presence: true
 
