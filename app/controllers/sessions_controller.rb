@@ -17,7 +17,6 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 
 class SessionsController < ApplicationController
   skip_before_action :login_authorization
-  skip_before_action :admin_authorization
 
   def index
     render "layouts/cover"

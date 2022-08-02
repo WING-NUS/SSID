@@ -16,8 +16,7 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
 class UsersController < ApplicationController
-  skip_before_action :login_authorization, only: [:new_user, :create_user]
-  skip_before_action :admin_authorization, only: [:new_user, :create_user, :edit_user, :update_user, :guide]
+  skip_before_action :login_authorization, only: [:new, :create]
 
   before_action { |controller|
     if params[:course_id]
@@ -32,12 +31,12 @@ class UsersController < ApplicationController
   }
 
   # GET /users/new
-  def new_user
+  def new
     @user = User.new
   end
 
   # GET /courses/1/users
-  def course_user_index
+  def index
     @course = Course.find(params[:course_id])
     @users = @course.users
     @staff = @course.staff
@@ -47,12 +46,12 @@ class UsersController < ApplicationController
   end
 
   # GET /users/1/edit
-  def edit_user
+  def edit
     @user = User.find(params[:id])
   end
 
   # POST /users
-  def create_user
+  def create
     @user = User.new(user_params)
     # byebug
 
@@ -85,7 +84,7 @@ class UsersController < ApplicationController
   end
 
   # PUT /users/1
-  def update_user
+  def update
     @user = User.find(params[:id])
 
     # Check for new password unless admin and do not wish to change password

@@ -16,7 +16,6 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
 class CoursesController < ApplicationController
-  skip_before_action :admin_authorization, only: [:status, :cluster_students, :index, :new, :create, :edit, :update, :destroy]
   before_action { |controller|
     controller.send :authenticate_actions_for_admin, only: [ :new, :create, :edit, :update, :destroy ]
   }

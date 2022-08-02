@@ -18,7 +18,6 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 class ApplicationController < ActionController::Base
     protect_from_forgery
     before_action :login_authorization
-    before_action :admin_authorization
     before_action :sanitize_id, only: [:index, :show, :edit, :update, :destroy]
   
     protected

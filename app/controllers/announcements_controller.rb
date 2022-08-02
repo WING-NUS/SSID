@@ -16,7 +16,6 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
 class AnnouncementsController < ApplicationController
-  skip_before_action :admin_authorization, only: [:index, :new, :create, :edit, :update, :destroy]
   before_action { |controller|
     if params[:announcement] and params[:announcement]["course_id"]
       @course = Course.find(params[:announcement]["course_id"])
