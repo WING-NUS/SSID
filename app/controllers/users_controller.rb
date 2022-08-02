@@ -54,6 +54,8 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
     # byebug
 
+    @user.id_string = @user.username #workaround for redundant id_string field
+
     if @user.save
       flash[:notice] = "Thank you for registering, a validation email as been sent."
       redirect_to signup_url
