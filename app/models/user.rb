@@ -25,17 +25,19 @@ class User < ActiveRecord::Base
   has_many :submissions, foreign_key: "student_id"
   has_many :password_resets, class_name: "PasswordReset"
 
-  validates :username, :password_digest, presence: true
-  validates :username, :id_string, uniqueness: true
-  validates :id_string, presence: true, if: -> {is_admin == false}
-  validates :email, presence: true
-  # This method is used to validate the user's password during account creation and and modification.
-  # The if -> {password.present?} allows skipping of this validation other fields are chaned but the password is unchanged
-  validate :validate_password, if: -> {password.present?}
-  # This method is used to validate the user's email during account creation and and modification.
-  # The if -> {email.present?} allows skipping of this validation other fields are chaned but the email is unchanged
-  validate :validate_email, if: -> {email.present?}
 
+
+  validates :email, :full_name, :username, :password_digest, :id_string, presence: true
+  validates :email, :username, :id_string, uniqueness: true
+  # This method is used to validate the user's password during account creation and and modification.
+  # The if -> {password.present?} allows skipping of this validation other fields are changed but the password is unchanged
+  validate :validate_password_create, on: :create
+  validate :validate_password_update, on: :update
+  # This method is used to validate the user's email during account creation and and modification.
+  # The if -> {email.present?} allows skipping of this validation other fields are changed but the email is unchanged
+  validate :validate_email_create, on: :create
+  validate :validate_email_update, on: :update
+  
   has_secure_password
   before_destroy :ensure_an_admin_remains
 
@@ -65,17 +67,35 @@ class User < ActiveRecord::Base
     end
   end
 
-  def validate_password
-    errors.add :password, "cannot be blank" if password.empty?
-    errors.add :password, "must be at least #{User::MIN_PASSWORD_LENGTH} characters long" if password.length < User::MIN_PASSWORD_LENGTH
-    errors.add :password, "must contain at least 1 lower case character" if (password =~ /[a-z]+/).nil?
-    errors.add :password, "must contain at least 1 upper case character" if (password =~ /[A-Z]+/).nil?
-    errors.add :password, "must contain at least 1 digit or special character" if (password =~ /[0-9~!@#$%^&*()+=|]+/).nil?
+  def validate_password_create
+    if !password.present?
+      errors.add :password, "cannot be blank" if password.nil?
+    else
+      validate_password_update
+    end
   end
 
-  def validate_email
-    errors.add :email, "cannot be blank" if email.empty?
-    errors.add :email, "can contain alphanumeric, _ (underscore), - (hyphen), and . (dot) characters" unless is_valid_email?(email)
+  def validate_password_update
+    if password.present?
+      errors.add :password, "must be at least #{User::MIN_PASSWORD_LENGTH} characters long" if password.length < User::MIN_PASSWORD_LENGTH
+      errors.add :password, "must contain at least 1 lower case character" if (password =~ /[a-z]+/).nil?
+      errors.add :password, "must contain at least 1 upper case character" if (password =~ /[A-Z]+/).nil?
+      errors.add :password, "must contain at least 1 digit or special character" if (password =~ /[0-9~!@#$%^&*()+=|]+/).nil?
+    end    
+  end
+
+  def validate_email_create
+    if !email.present?
+      errors.add :email, "cannot be blank" if email.nil?
+    else
+      validate_email_update
+    end
+  end
+
+  def validate_email_update
+    if email.present?
+      errors.add :email, "can contain alphanumeric, _ (underscore), - (hyphen), and . (dot) characters" unless is_valid_email?(email)
+    end
   end
 
   def is_valid_email?(email)
