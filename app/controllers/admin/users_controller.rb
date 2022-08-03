@@ -55,12 +55,30 @@ class Admin::UsersController < ApplicationController
       @course = Course.find(params[:course_id])
     end
   end
-
+  
   # POST /admin/users/
   def create
+    @the_user = User.new(user_params)
+    @the_user.id_string = @the_user.username #workaround for redundant id_string field
+    @the_user.is_admin_approved = true # admin approval is not required for new admins
+    @the_user.is_admin = true # admins can create admins
+    # Checks if the newly created user is valid
+    # byebug
+    if @the_user.save
+      flash[:notice] = "New admin account created."
+      redirect_to admin_users_url
+    else
+      render action: "new"
+    end
+  end
+      
+
+
+  # POST /admin/users/
+  def create_old
     @the_user = User.new
 
-    @user.id_string = @user.username #workaround for redundant id_string field
+    @the_user.id_string = @user.username #workaround for redundant id_string field
 
     
     @course = nil
@@ -79,7 +97,6 @@ class Admin::UsersController < ApplicationController
         @the_user = @existing_user
       else
         @the_user.full_name = params[:user]["full_name"]
-        @the_user.id_string = params[:user]["id_string"]
         @the_user.name = params[:user]["name"]
         @the_user.email = params[:user]["email"]
       end
@@ -87,7 +104,6 @@ class Admin::UsersController < ApplicationController
       @the_user.is_admin = true
       @the_user.full_name = params[:user]["full_name"]
       @the_user.username = params[:user]["name"]
-      @the_user.id_string = params[:user]["name"]
       @the_user.email = params[:user]["email"]
     end
 
@@ -170,7 +186,7 @@ class Admin::UsersController < ApplicationController
     if @course
       @the_user.full_name = params[:user]["full_name"]
       @the_user.id_string = params[:user]["id_string"]
-      @the_user.name = params[:user]["name"]
+      @the_user.username = params[:user]["username"]
       @the_user.email = params[:user]["email"]
 
       # Update role unless student
@@ -180,7 +196,7 @@ class Admin::UsersController < ApplicationController
       end
     else
       @the_user.full_name = params[:user]["full_name"]
-      @the_user.name = params[:user]["name"]
+      @the_user.username = params[:user]["username"]
       @the_user.email = params[:user]["email"]
     end
 
