@@ -49,10 +49,11 @@ class SubmissionLogsController < ApplicationController
       if membership.nil?
         # Create a guest membership for current user
         CoursesService.create_guest_membership(course, @user)    
-      end
-
-      if membership && membership.role == UserCourseMembership::ROLE_GUEST && has_guest_detail.nil?
         CoursesService.create_guest_detail_entry(@assignment, @user)
+      else
+        if membership.role == UserCourseMembership::ROLE_GUEST && has_guest_detail.nil?
+          CoursesService.create_guest_detail_entry(@assignment, @user)
+        end
       end
     end
 
