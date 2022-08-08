@@ -16,7 +16,7 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
 class UsersController < ApplicationController
-  skip_before_action :login_authorization, only: [:new, :create]
+  skip_before_action :authorize, only: [:new, :create]
 
   before_action { |controller|
     if params[:course_id]

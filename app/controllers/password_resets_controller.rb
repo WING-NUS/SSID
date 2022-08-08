@@ -1,5 +1,5 @@
 class PasswordResetsController < ApplicationController
-  skip_before_action :login_authorization
+  skip_before_action :authorize
 
   def forget_password
   end

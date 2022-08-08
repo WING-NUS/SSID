@@ -17,12 +17,12 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 
 class ApplicationController < ActionController::Base
     protect_from_forgery
-    before_action :login_authorization
+    before_action :authorize
     before_action :sanitize_id, only: [:index, :show, :edit, :update, :destroy]
   
     protected
   
-    def login_authorization
+    def authorize
       # get user and respective membership
       @user = User.find_by_id(session[:user_id]) 
 
