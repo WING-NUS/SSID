@@ -56,26 +56,9 @@ class Admin::UsersController < ApplicationController
     end
   end
   
+      
   # POST /admin/users/
   def create
-    @the_user = User.new(user_params)
-    @the_user.id_string = @the_user.username #workaround for redundant id_string field
-    @the_user.is_admin_approved = true # admin approval is not required for new admins
-    @the_user.is_admin = true # admins can create admins
-    # Checks if the newly created user is valid
-    # byebug
-    if @the_user.save
-      flash[:notice] = "New admin account created."
-      redirect_to admin_users_url
-    else
-      render action: "new"
-    end
-  end
-      
-
-
-  # POST /admin/users/
-  def create_old
     @the_user = User.new
 
     @the_user.id_string = @user.username #workaround for redundant id_string field
