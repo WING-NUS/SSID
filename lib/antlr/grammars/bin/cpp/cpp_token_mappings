@@ -130,7 +130,7 @@ Semi,Symbol
 Dot,Symbol
 DotStar,Symbol
 Ellipsis,Symbol
-Identifier,Symbol
+Identifier,Variable
 Integerliteral,Constant
 Decimalliteral,Constant
 Octalliteral,Constant

@@ -35,6 +35,10 @@
     <%= f.label :name, "Login", class: "form-label" %>
     <%= f.text_field :name, class: "form-control" %>
   </div>
+  <div class="col-12">
+    <%= f.label :email, "Email", class: "form-label" %>  
+    <%= f.email_field :email, class: "form-control" %>
+  </div>
   <% if action_name == "new" || action_name == "create" %>
     <div class="col-12">
       <%= f.label :password, class: "form-label" %>

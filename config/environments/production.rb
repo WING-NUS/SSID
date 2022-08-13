@@ -1,6 +1,6 @@
 SSID::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
-
+  
   # Code is not reloaded between requests
   config.cache_classes = true
 
@@ -8,6 +8,10 @@ SSID::Application.configure do
   config.consider_all_requests_local       = false
   config.action_controller.perform_caching = true
 
+  config.action_mailer.raise_delivery_errors = true
+
+  config.action_mailer.delivery_method = :sendmail
+  
   # Disable Rails's static asset server (Apache or nginx will already do this)
   config.serve_static_assets = false
 
@@ -70,4 +74,7 @@ SSID::Application.configure do
 
   # Set time zone
   config.time_zone = "Singapore"
+  
+  config.host = "ssid.comp.nus.edu.sg"
+  config.protocol = "https"
 end
