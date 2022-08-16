@@ -27,8 +27,9 @@ namespace :SSID do
 
     @recipients = User.all
     @recipients.each do |r|
-        MaintenanceMailer.maintenance_mail(r.email, args[:start_time], args[:end_time]).deliver_now
+        if r.email != nil
+          MaintenanceMailer.maintenance_mailer(r.email, args[:start_time], args[:end_time]).deliver_now
+        end
     end
-    
   end
-  
+end
