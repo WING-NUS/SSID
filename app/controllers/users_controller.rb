@@ -65,24 +65,6 @@ class UsersController < ApplicationController
     end
   end
 
-  # POST /admin/users
-  # Creation of new admin accounts
-  # Only accessible through admin accounts
-  def create_admin
-    @user = User.new(user_params)
-    # byebug
-    @user.is_admin = true
-
-    @user.id_string = @user.username #workaround for redundant id_string field
-
-    if @user.save
-      flash[:notice] = "Thank you for registering, a validation email as been sent."
-      redirect_to signup_url
-    else
-      render 'new'
-    end
-  end
-
   # PUT /users/1
   def update
     @user = User.find(params[:id])
