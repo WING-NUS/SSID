@@ -58,52 +58,118 @@ class Admin::UsersController < ApplicationController
   
       
   # POST /admin/users/
-  def create
-    @the_user = User.new
+  # Deprecated, use new create function instead
+  # Have unknown issues during user creation
 
-    @the_user.id_string = @user.username #workaround for redundant id_string field
+  # def create
+  #   @the_user = User.new
 
-    
+  #   @the_user.id_string = @user.username #workaround for redundant id_string field
+  #   @the_user.is_admin_approved = true
+
+
+  #   # byebug
+  #   @course = nil
+
+  #   # Check if we have a course_id
+  #   if params[:user]["course_id"]
+  #     @course = Course.find(params[:user]["course_id"])  
+  #     @the_user.errors.add :base, "Course could not be found." unless @course
+  #   end
+
+  #   # Construct basic attributes for course user or for admin user
+  #   if !@course.nil?
+  #     # Check if user exists
+  #     @existing_user = User.where(id_string: params[:user]["id_string"]).first
+  #     if @existing_user
+  #       @the_user = @existing_user
+  #     else
+  #       @the_user.full_name = params[:user]["full_name"]
+  #       @the_user.username = params[:user]["username"]
+  #       @the_user.email = params[:user]["email"]
+  #     end
+  #   else
+  #     @the_user.is_admin = true
+  #     @the_user.full_name = params[:user]["full_name"]
+  #     @the_user.username = params[:user]["username"]
+  #     @the_user.email = params[:user]["email"]
+  #   end
+
+  #   # Validate password, email unless its an existing user
+  #   unless @existing_user
+  #     UsersHelper.validate_password(@the_user, params[:user]["password"], params[:user]["password_confirmation"])
+  #     UsersHelper.validate_email(@the_user, params[:user]["email"])
+
+  #     # Set password
+  #     @the_user.password_digest = BCrypt::Password.create(params[:user]["password"]) if @the_user.errors.empty?
+  #   end
+
+  #   # Before we can add membership, we need to save the user first, so we use a transaction
+  #   if @the_user.errors.empty?
+  #     @the_user.transaction do
+  #       # Add membership if @course
+  #       if @the_user.save and @course
+  #         membership = UserCourseMembership.new { |m|
+  #           m.role = params[:user]["course_role"]
+  #           m.user = @the_user
+  #           m.course = @course
+  #         }
+  #         raise ActiveRecord::Rollback unless membership.save
+          
+  #         # if user is guest, create a entry under guest database as well
+  #         if params[:user]["course_role"] == GUEST_USER_ROLE_ID 
+  #           guest = GuestUsersDetail.new { |g|
+  #             g.user_id = @the_user.id
+  #             g.course_id = @course.id
+  #             g.hash_string = params[:user]["id_string"]
+  #             g.assignment_id = 0
+  #           }
+  #           raise ActiveRecord::Rollback unless guest.save
+  #         end
+  #       end
+  #     end
+  #   end
+  #   # byebug
+  #   @user = User.find_by_id(session[:user_id]) 
+
+  #   # Check for errors and render view
+  #   if @the_user.errors.empty? and @the_user.save
+  #     if @existing_user or not @course.nil?
+  #       redirect_to course_users_url(@course), notice: "User was successfully added 
+  #       to #{@course.code}."
+  #     else 
+  #       redirect_to admin_users_url, notice: 'User was successfully created.'
+  #     end
+  #   else
+  #     render action: "new"
+  #   end
+  # end
+
+  def create # for admin users
+    @the_user = User.new(user_params)
+    @the_user.id_string = @the_user.username #workaround for redundant id_string field
+
+    @the_user.is_admin_approved = true
+    @the_user.is_admin = true
+
+
     @course = nil
+    @existing_user = nil
 
-    # Check if we have a course_id
     if params[:user]["course_id"]
       @course = Course.find(params[:user]["course_id"])  
       @the_user.errors.add :base, "Course could not be found." unless @course
-    end
-
-    # Construct basic attributes for course user or for admin user
-    if !@course.nil?
+      @the_user.is_admin = false # temporary workaround for adding users from courses
       # Check if user exists
-      @existing_user = User.where(id_string: params[:user]["id_string"]).first
+      @existing_user = User.where(username: params[:user]["username"]).first
       if @existing_user
         @the_user = @existing_user
-      else
-        @the_user.full_name = params[:user]["full_name"]
-        @the_user.name = params[:user]["name"]
-        @the_user.email = params[:user]["email"]
       end
-    else
-      @the_user.is_admin = true
-      @the_user.full_name = params[:user]["full_name"]
-      @the_user.username = params[:user]["name"]
-      @the_user.email = params[:user]["email"]
     end
-
-    # Validate password, email unless its an existing user
-    unless @existing_user
-      UsersHelper.validate_password(@the_user, params[:user]["password"], params[:user]["confirm_password"])
-      UsersHelper.validate_email(@the_user, params[:user]["email"])
-
-      # Set password
-      @the_user.password_digest = BCrypt::Password.create(params[:user]["password"]) if @the_user.errors.empty?
-    end
-
-    # Before we can add membership, we need to save the user first, so we use a transaction
-    if @the_user.errors.empty?
-      @the_user.transaction do
-        # Add membership if @course
-        if @the_user.save and @course
+    byebug
+    if not @existing_user.nil? or @the_user.save
+      # Add membership if @course
+      if @course
           membership = UserCourseMembership.new { |m|
             m.role = params[:user]["course_role"]
             m.user = @the_user
@@ -121,25 +187,17 @@ class Admin::UsersController < ApplicationController
             }
             raise ActiveRecord::Rollback unless guest.save
           end
-        end
       end
-    end
-
-    @user = User.find_by_id(session[:user_id]) 
-
-    # Check for errors and render view
-    if @the_user.errors.empty? and @the_user.save
-      if @existing_user or not @course.nil?
-        redirect_to course_users_url(@course), notice: "User was successfully added 
-        to #{@course.code}."
-      else 
-        redirect_to admin_users_url, notice: 'User was successfully created.'
-      end
+      redirect_to admin_users_url, notice: 'User was successfully created.'
     else
-      render action: "new"
+      if @course.nil?
+        render action: "new"
+      else
+        redirect_to new_admin_user_url+"?course_id=#{@course.id}"
+      end
     end
-    
   end
+    
 
   # GET /admin/users/1/edit
   # GET /admin/users/1/edit?course_id=1
