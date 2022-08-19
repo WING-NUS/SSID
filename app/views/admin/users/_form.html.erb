@@ -22,17 +22,12 @@
   </div>
   <% if @course %>
     <div class="col-12">
-      <%= hidden_field_tag :user_course_id, @course.id, name: "user[course_id]" %>
-      <%= f.label :id_string, "ID", class: "form-label" %>
-      <%= f.text_field :id_string, class: "form-control" %>
-    </div>
-    <div class="col-12">
       <%= f.label :course_role, class: "form-label" %>
       <%= select_tag "user_course_role", options_for_select(UserCourseMembership.options_for_non_student_roles), name: "user[course_role]", class: "form-select" %>
     </div>
   <% end %>
   <div class="col-12">
-    <%= f.label :username, "Login", class: "form-label" %>
+    <%= f.label :username, "Username", class: "form-label" %>
     <%= f.text_field :username, class: "form-control" %>
   </div>
   <div class="col-12">
