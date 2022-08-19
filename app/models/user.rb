@@ -29,12 +29,10 @@ class User < ActiveRecord::Base
 
   validates :email, :full_name, :username, :password_digest, :id_string, presence: true
   validates :email, :username, :id_string, uniqueness: true
-  # This method is used to validate the user's password during account creation and and modification.
-  # The if -> {password.present?} allows skipping of this validation other fields are changed but the password is unchanged
+  # These methods are used to validate the user's password during account creation and and modification.
   validate :validate_password_create, on: :create
   validate :validate_password_update, on: :update
-  # This method is used to validate the user's email during account creation and and modification.
-  # The if -> {email.present?} allows skipping of this validation other fields are changed but the email is unchanged
+  # These methods are used to validate the user's email during account creation and and modification.
   validate :validate_email_create, on: :create
   validate :validate_email_update, on: :update
   
