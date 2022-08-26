@@ -1,3 +1,6 @@
+<% content_for :head do %>
+  <%= javascript_include_tag "jszip/jszip.min.js" %>
+<% end %>
 <%= form_for([@course, @assignment]) do |f| %>
   <% if @assignment.errors.any? %>
     <div id="error_explanation">
@@ -11,61 +14,65 @@
   <% end %>
   <%= hidden_field_tag "which_form", (@assignment.id ? "update_assignment" : "new_assignment"), { :id => "which-form" } %>
   <div class="row">
-  <p> Hover over ⓘ for more details about any terminology.</p>
-  <div class="col-12">  
-    <%= f.label :title, class: "form-label" %>
-    <%= f.text_field :title, class: "form-control" %>
-  </div>
-  <div class="col-12">
-    <%= f.label :language, class: "form-label" %>
-    <%= f.select :language, Assignment.options_for_languages, {}, { :class => 'form-select' } %>
-  </div>
-  <div class="col-sm-6">  
-    <%= f.label :min_match_length, "Minimum Match Length \u24D8" , title: "The least number of contiguous identical statements required to flag a match." , class: 'form-label' %>
-    <%= f.text_field :min_match_length, class: 'form-control' %>
-  </div>
-  <div class="col-sm-6">
-    <%= f.label :ngram_size, "Size of n-gram \u24D8", title: "An n-gram is a contiguous subsequence of n tokens of a given sequence.", class: 'form-label' %>
-    <%= f.text_field :ngram_size, class: 'form-control' %>
-  </div>
-  <div class="col-12">
-    <%= f.label :file, "Student submissions (zip) \u24D8", title: "The zip file should contain one folder for each student's code files; folders are named according to student ID; Name your folder as \"skeleton\" for the codes you wish to exclude from the system", class: 'form-label' %>
-    <%= f.file_field :file, class: 'form-control' %>
-  </div>
-  
-  <div class="col-12">
-  <%= f.label :mapbox, "Upload map file?" %>
-  <%= f.check_box :mapbox, { :class => 'form-check-input' }, "Yes", "No" %>
-  </div>
-  <div id="map_file_details" style="display:none;" class="col-12">
-  <%= f.label :mapfile, "Mapping file (csv) \u24D8", title: "The zip file should contain one folder for each student's code files; folders are named according to student ID; Name your folder as \"skeleton\" for the codes you wish to exclude from the system", class: 'form-label' %>
-  <%= f.file_field :mapfile, accept: '.csv', class: 'form-control' %>
+    <p> Hover over ⓘ for more details about any terminology.</p>
+    <div class="col-12">
+      <%= f.label :title, class: "form-label" %>
+      <%= f.text_field :title, class: "form-control" %>
+    </div>
+    <div class="col-12">
+      <%= f.label :language, class: "form-label" %>
+      <%= f.select :language, Assignment.options_for_languages, {}, { :class => 'form-select' } %>
+    </div>
+    <div class="col-sm-6">
+      <%= f.label :min_match_length, "Minimum Match Length \u24D8", title: "The least number of contiguous identical statements required to flag a match.", class: 'form-label' %>
+      <%= f.text_field :min_match_length, class: 'form-control' %>
+    </div>
+    <div class="col-sm-6">
+      <%= f.label :ngram_size, "Size of n-gram \u24D8", title: "An n-gram is a contiguous subsequence of n tokens of a given sequence.", class: 'form-label' %>
+      <%= f.text_field :ngram_size, class: 'form-control' %>
+    </div>
+    <div class="col-12">
+      <%= f.label :file, "Student submissions (zip) \u24D8", title: "The zip file should contain one folder for each student's code files; folders are named according to student ID; Name your folder as \"skeleton\" for the codes you wish to exclude from the system", class: 'form-label' %>
+      <%= f.file_field :file, class: 'form-control' %>
+      <br/>
+      <p id="student_submissions_zip_files_list_label">
+      <ul id="student_submissions_zip_files_list">
+      </ul>
+    </div>
 
-  </div>
-  <div>
-    <%= f.submit class: "submit" %>
-  </div>
+    <div class="col-12">
+      <%= f.label :mapbox, "Upload map file?" %>
+      <%= f.check_box :mapbox, { :class => 'form-check-input' }, "Yes", "No" %>
+    </div>
+    <div id="map_file_details" style="display:none;" class="col-12">
+      <%= f.label :mapfile, "Mapping file (csv) \u24D8", title: "The zip file should contain one folder for each student's code files; folders are named according to student ID; Name your folder as \"skeleton\" for the codes you wish to exclude from the system", class: 'form-label' %>
+      <%= f.file_field :mapfile, accept: '.csv', class: 'form-control' %>
+      <ul id="map_files_list"></ul>
+
+    </div>
+    <div>
+      <%= f.submit class: "submit" %>
+    </div>
   </div>
 <% end %>
 
 <script type="text/javascript">
-  var checkbox = document.getElementById('assignment_mapbox');
-  var details_div = document.getElementById('map_file_details');
-  checkbox.onchange = function() {
-     if(this.checked) {
-       details_div.style['display'] = 'block';
-     } else {
-       details_div.style['display'] = 'none';
-     }
-  };
-  window.addEventListener('DOMContentLoaded', () => {
-    console.log($('which-form').val());
-    if ($('#which-form').val() === "update_assignment") {
-      document.querySelector('#assignment_title').disabled = true;
-      document.querySelector('#assignment_language').disabled = true;
-      document.querySelector('#assignment_min_match_length').disabled = true;
-      document.querySelector('#assignment_ngram_size').disabled = true;
-    }
-  })
+var checkbox = document.getElementById('assignment_mapbox');
+var details_div = document.getElementById('map_file_details');
+checkbox.onchange = function() {
+   if(this.checked) {
+     details_div.style['display'] = 'block';
+   } else {
+     details_div.style['display'] = 'none';
+   }
+};
+window.addEventListener('DOMContentLoaded', () => {
+  console.log($('which-form').val());
+  if ($('#which-form').val() === "update_assignment") {
+    document.querySelector('#assignment_title').disabled = true;
+    document.querySelector('#assignment_language').disabled = true;
+    document.querySelector('#assignment_min_match_length').disabled = true;
+    document.querySelector('#assignment_ngram_size').disabled = true;
+  }
+})
 </script>
-

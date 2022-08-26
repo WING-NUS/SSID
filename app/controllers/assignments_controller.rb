@@ -43,13 +43,11 @@ class AssignmentsController < ApplicationController
 
   # GET /courses/1/assignments
   def index
-    
     # check whether is it a guest user 
-    @user = User.find_by_id(session[:user_id]) 
-    @guest_user = GuestUsersDetail.find_by_user_id(@user.id)
+    @guest_details = @course.find_guest_user_details(session[:user_id])
     # obtain assignment to be shown if is a guest user
-    if (@guest_user)
-      @assignment_to_be_shown = @guest_user.assignment_id
+    if @guest_details.length > 0
+      @assignment_to_be_shown = @guest_details.map{|detail| detail.assignment_id }
     end
     
     @assignments = @course.assignments
@@ -113,7 +111,6 @@ class AssignmentsController < ApplicationController
         # Don't process the file and show error if the mapping was enabled but no mapping file was uploaded
         if (is_valid_map_or_no_map?(isMapEnabled, params[:assignment]["mapfile"])) 
           self.start_upload(@assignment, params[:assignment]["file"], isMapEnabled, params[:assignment]["mapfile"])
-          redirect_to course_assignments_url(@course), notice: 'Assignment was successfully created. Please refresh this page after a few minutes to view the similarity results.'
         # Don't process the file and show error if the mapping was enabled but no mapping file was uploaded
         elsif (isMapEnabled && params[:assignment]["mapfile"].nil?)
           @assignment.errors.add(:mapfile, "containing mapped student names need to be uploaded if the 'Upload map file' box is ticked")
@@ -157,7 +154,6 @@ class AssignmentsController < ApplicationController
       # Don't process the file and show error if the mapping was enabled but no mapping file was uploaded
       if (is_valid_map_or_no_map?(isMapEnabled, params[:assignment]["mapfile"])) 
         self.start_upload(@assignment, params[:assignment]["file"], isMapEnabled, params[:assignment]["mapfile"])
-        redirect_to course_assignments_url(@course), notice: 'SSID will start to process the assignment now. Please refresh this page after a few minutes to view the similarity results.'
       # Don't process the file and show error if the mapping was enabled but no mapping file was uploaded
       elsif (isMapEnabled && params[:assignment]["mapfile"].nil?)
         @assignment.errors.add(:mapfile, "containing mapped student names need to be uploaded if the 'Upload map file' box is ticked")
@@ -192,9 +188,15 @@ class AssignmentsController < ApplicationController
 
       # Process upload file
       submissions_path = SubmissionsHandler.process_upload(submissionFile, isMapEnabled, mapFile, assignment)
+      if submissions_path
+        # Launch java program to process submissions
+        SubmissionsHandler.process_submissions(submissions_path, assignment, isMapEnabled)
+        redirect_to course_assignments_url(@course), notice: 'SSID will start to process the assignment now. Please refresh this page after a few minutes to view the similarity results.'
+      else
+        assignment.errors.add "Submission zip file", ": SSID supports both directory-based and file-based submissions. Please select the submissions you want to evaluate and compress." 
+        return render action: "show"
+      end
 
-      # Launch java program to process submissions
-      SubmissionsHandler.process_submissions(submissions_path, assignment, isMapEnabled)
   end
 
   # Responsible for verifying whether a uploaded file is zip by checking its mime type and/or whether can it be extracted by the zip library.

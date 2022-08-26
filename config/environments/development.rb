@@ -16,8 +16,13 @@ SSID::Application.configure do
   config.consider_all_requests_local       = true
   config.action_controller.perform_caching = false
 
-  # Don't care if the mailer can't send
-  config.action_mailer.raise_delivery_errors = false
+  # mailer config
+  config.action_mailer.raise_delivery_errors = true
+
+  config.action_mailer.delivery_method = :file
+  config.action_mailer.file_settings = {
+    :location => Rails.root.join('tmp/mails') 
+  }
 
   # Print deprecation notices to the Rails logger
   config.active_support.deprecation = :log
@@ -46,4 +51,7 @@ SSID::Application.configure do
 
   # Set time zone
   config.time_zone = "Singapore"
+
+  config.host = "localhost"
+  config.protocol = "http"
 end

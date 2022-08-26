@@ -49,8 +49,11 @@ class SubmissionSimilaritiesController < ApplicationController
   end
 
   def create_guest_user
+    @assignment = Assignment.find(params[:id])
+    @course = @assignment.course
+
     @user = User.find_by_id(session[:user_id]) 
-    @guest_user = GuestUsersDetail.find_by_user_id(@user.id)
+    @guest_user = @course.guest_user_finder(@user)
     # do not allow to create a sharable link if user is a guest user
     if (@guest_user)
       redirect_to assignment_submission_similarities_url(params[:id]), notice: 'You cannot create a sharable link as you are using SSID as a guest user. To create a sharable link and/or use other features, log in to SSID.'
@@ -70,8 +73,6 @@ class SubmissionSimilaritiesController < ApplicationController
       }
      
       # create a entry under other tables in database
-      @assignment = Assignment.find(params[:id])
-      @course = @assignment.course
       @guest_user.transaction do
         if @guest_user.save and @course
           # create entry under membership

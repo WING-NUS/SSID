@@ -1,0 +1,16 @@
+<div>
+  <p>Hi there,</p>
+
+  <p>You have requested to reset your password.</p>
+  
+  <p>But there is no SSID account registered with this email address.</p>
+
+  <% website = (Rails.env == "production" ? url_for(:protocol => "#{Rails.application.config.protocol}", :host => "#{Rails.application.config.host}", :controller => "sessions", :action => "index")
+                                              : url_for(:protocol => "#{Rails.application.config.protocol}", :host => "#{Rails.application.config.host}", :port => "3000",:controller => "sessions", :action => "index")) %>
+  <p>You might want to take a look at <%= link_to "our website", website %> and request for an account.</p>
+  
+  <p>Thank you.</p>
+  
+  <p><%= ApplicationHelper::SSID_MAINTAINER %></p>
+  
+</div>

@@ -19,6 +19,7 @@ SSID::Application.routes.draw do
   resources :submission_logs
 
   get 'assignments/:id/submission_similarities/guest_user' => 'submission_similarities#create_guest_user', :as => 'guest_user_create'
+  get 'assignments/:assignment_id/submission_similarities/:submission_similarity_id/guest_user' => 'submission_logs#view_similarity', :as => 'guest_view_similarity'
   get 'guest_user/:id' => "sessions#check_hash"
 
   # Login/Logout routes
@@ -26,6 +27,12 @@ SSID::Application.routes.draw do
   get "login" => "sessions#new"
   post "login" => "sessions#create"
   get "signup" => "users#new"
+
+  get 'forget_password' => "password_resets#forget_password", :as => "get_forget_password"
+  post 'forget_password' => 'password_resets#send_password_reset_link'
+  get 'reset_password/:token' => "password_resets#reset_password"
+  put 'reset_password' => "password_resets#update_password"
+
   delete "logout" => "sessions#destroy"
   
   get "guide" => "users#guide"

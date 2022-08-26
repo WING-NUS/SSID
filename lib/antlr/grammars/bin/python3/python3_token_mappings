@@ -37,7 +37,7 @@ BREAK,Keyword
 ASYNC,Keyword
 AWAIT,Keyword
 NEWLINE,Ignore
-NAME,Keyword
+NAME,Variable
 STRING_LITERAL,Constant
 BYTES_LITERAL,Constant
 DECIMAL_INTEGER,Constant
