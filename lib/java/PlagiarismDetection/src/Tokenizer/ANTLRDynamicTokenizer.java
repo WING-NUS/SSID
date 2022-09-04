@@ -25,6 +25,8 @@ import Antlr4Grammars.scala.*;
 import Antlr4Grammars.matlab.*;
 import Antlr4Grammars.ocaml.*;
 import Antlr4Grammars.r.*;
+import Antlr4Grammars.haskell.*;
+import Antlr4Grammars.lang.*;
 
 import java.io.*;
 import java.util.*;
@@ -169,8 +171,20 @@ public final class ANTLRDynamicTokenizer extends Tokenizer {
       File tokenNameMappingsFile = new File(tokenNameMappingsPath);
       Scanner scanner = new Scanner(tokenNameMappingsFile);
       while (scanner.hasNext()) {
-        String[] cols = scanner.nextLine().split(",");
-        this.tokenNameMappings.put(cols[0], cols[1].intern());
+        String nextLine = scanner.nextLine();
+
+        // Find position of the comma separating token and type in the mapping.
+        // We assume token type name (Keyword, Symbol etc.) does not contain a comma. 
+        // We can find the position by finding the first comma as we iterate backwards from the right of the line.
+        // This accounts for the case in which the token name contains a comma eg. ',',Symbol.
+        int splitPosition = -1; 
+        for (int i = nextLine.length() - 1; i > 0; i--) {
+          if (nextLine.charAt(i) == ',') {
+            splitPosition = i;
+            break;
+          }
+        }
+        this.tokenNameMappings.put(nextLine.substring(0, splitPosition), nextLine.substring(splitPosition + 1));
       }
       scanner.close();
     } catch (Exception ex) {
@@ -229,6 +243,9 @@ public final class ANTLRDynamicTokenizer extends Tokenizer {
     } else if (language.equals("r")) {
       RLexer lexer = new RLexer(CharStreams.fromFileName(fileName));
       return lexer;
+    } else if (language.equals("haskell")) {
+      HaskellLexer lexer = new HaskellLexer(CharStreams.fromFileName(fileName));
+      return lexer;
     } else {
       String errorMessage = String.format(
           "%s Lexer not found. %s package containing the Lexer may have been excluded in build process.", language,
@@ -259,7 +276,7 @@ public final class ANTLRDynamicTokenizer extends Tokenizer {
         }
         tokenClassString = this.tokenNameMappings.get(tokenName);
         if (tokenClassString == null) {
-          throw new Exception("Unrecognized token name: " + tokenName);
+          throw new Exception("Unrecognized token nameee: " + tokenName + " " + this.tokenNameMappings.toString());
         }
       } else {
         tokenClassString = "Ignore";
