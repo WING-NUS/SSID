@@ -1,4 +1,9 @@
 <div class="site-cover">
+  <% if flash[:notice] %>
+    <div class="notice">
+      <%= flash[:notice] %>
+    </div>
+  <% end %>
   <div class="site-introduction">
     <p class="site-motto text-dark">Empowering the next generations of programmers.</p>
     <div class="site-clip">

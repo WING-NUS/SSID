@@ -37,8 +37,12 @@ class Admin::UsersController < ApplicationController
   def index
     @admins = User.where(is_admin: true)
 
+    @signups = User.where(is_admin_approved: false)
+
     # users don't belong to any course
-    @loners = User.all - User.joins(:memberships) - @admins
+    @loners = User.all - User.joins(:memberships) - @admins - @signups
+
+    
   end
 
   # GET /admin/users/new
