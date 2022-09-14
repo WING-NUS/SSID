@@ -15,18 +15,22 @@
     <%= f.text_field :full_name, class: "form-control" %>
   </div>
   <div>
-    <%= f.label :name, "Username", class: "form-label" %>
+    <%= f.label :name, class: "form-label" %>
     <%= f.text_field :name, class: "form-control" %>
+  </div>
+  <div>
+    <%= f.label :email, "Email", class: "form-label" %>  
+    <%= f.text_field :email, class: "form-control" %>
   </div>
   <div>
     <%= f.label :password, class: "form-label" %>
     <%= f.password_field :password, class: "form-control" %>
   </div>
-<div>
-  <%= f.label :password_confirmation, class: "form-label" %>
-  <%= f.password_field :password_confirmation, class: "form-control" %>
-</div>
-<div>
-  <%= f.submit "Submit", class: "submit" %>
-</div>
+  <div>
+    <%= f.label :password_confirmation, class: "form-label" %>
+    <%= f.password_field :password_confirmation, class: "form-control" %>
+  </div>
+  <div>
+    <%= f.submit "Submit", class: "submit" %>
+  </div>
 <% end %>
