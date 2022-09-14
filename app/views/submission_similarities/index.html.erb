@@ -51,6 +51,21 @@
       dialog.dialog( "open" ); 
     };
   });
+
+  function viewMultipairsReport() {
+    var idsToPrint = [...document.querySelectorAll('.checkbox:checked')].map(e => e.value);
+
+    var baseUrl = "view_printable_multiple?submission_similarity_ids="
+    
+    window.open(baseUrl + idsToPrint.join(","), '_blank').focus();
+  }
+
+  function handleHeaderCheckboxChange() {
+    var headerCheckbox = document.querySelectorAll('.headerCheckbox')[0]; 
+
+    document.querySelectorAll('.checkbox').forEach(x => x.checked = headerCheckbox.checked );  
+  }
+
   </script>
 </head>
 <body>
@@ -67,11 +82,16 @@
   <li>Similarity values are not symmetric so we display both the maximum and average values in the table</li>
   <li>To analyze these similarities, <%= link_to "view", assignment_cluster_groups_url(@assignment) %> / <%= link_to "create", new_assignment_cluster_group_url(@assignment) %> submission cluster groups or <%= link_to "use the course visualizations", course_visualize_url(@course) %></li>
   <li>To allow non-SSID users to view and analyse the results, <%= link_to "create", guest_user_create_path(:id => @assignment) %> a sharable link </li> 
-</ul>
+  </ul>
 
+<button type="button" class="btn btn-primary" onclick="viewMultipairsReport()")>Print Report for Selected</button>
+<p></p>
 <table>
   <thead>
     <tr>
+      <th class="action_col">        
+       <%= check_box_tag nil, nil, false, class: "headerCheckbox", onclick: "handleHeaderCheckboxChange();" %>
+      </th>
       <th class="student_col">Student 1</th>
       <th class="student_col">Student 2</th>
       <th class="similarity_col">Maximum Similarity</th>
@@ -83,6 +103,7 @@
   <tbody>
     <% @submission_similarities.each do |ss| %>
       <tr>
+        <td><%= check_box_tag nil, ss.id, false, class: "checkbox" %></td>
         <td><%= ss.student1.id_string %></td>
         <td><%= ss.student2.id_string %></td>
         <td><%= ss.similarity %>%</td>

@@ -63,6 +63,7 @@ SSID::Application.routes.draw do
 
   resources :assignments do 
     get "cluster_students", defaults: { format: "json" }
+    get "view_printable_multiple" => "submission_similarities#view_printable_multiple"
 
     resources :cluster_groups, controller: "submission_cluster_groups"
 
