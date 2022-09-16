@@ -32,6 +32,9 @@ import pd.utils.*;
 import pd.utils.Tokens.*;
 import org.antlr.v4.runtime.*;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public final class ANTLRDynamicTokenizer extends Tokenizer {
   private static String grammarsBinDir;
   private static Hashtable<String, ANTLRDynamicTokenizer> tokenizers = new Hashtable<String, ANTLRDynamicTokenizer>();
@@ -39,6 +42,8 @@ public final class ANTLRDynamicTokenizer extends Tokenizer {
   private Hashtable<String, String> tokenNames;
   private Hashtable<String, String> tokenNameMappings;
   private String REGEX_NON_COUNTABLE_KEYWORDS = "^(import|include|package|require)$";
+
+  private static Logger logger = LogManager.getLogger();
 
   /*
    * Sets the directory path to find recognizable grammars
@@ -92,7 +97,7 @@ public final class ANTLRDynamicTokenizer extends Tokenizer {
     // Get path of Submission, otherwise, create temp file
     String path = s.getPath();
     String tmpFileName = null;
-    System.out.println("Preparing temp file...");
+    logger.debug("Preparing temp file...");
     if (path == null) {
       // Create temp file for submission
       ArrayList<String> lines = s.getCombinedCode();
@@ -104,19 +109,19 @@ public final class ANTLRDynamicTokenizer extends Tokenizer {
         }
         fileWriter.close();
       } catch (Exception e) {
-        System.err.println("Error writing to temp file: " + tmpFileName);
+        logger.error("Error writing to temp file: {}", tmpFileName);
         System.exit(1);
       }
       path = tmpFileName;
     }
-    System.out.println("Temp file prepared");
+    logger.debug("Temp file prepared");
 
     // Run ANTLR and read tokens
     ArrayList<String> lexerOutput = null;
     try {
-      System.out.println("Preparing to run lexer");
+      logger.debug("Preparing to run lexer");
       lexerOutput = runLexer(path);
-      System.out.println("Lexer completed");
+      logger.debug("Lexer completed");
     } catch (Exception ex) {
       System.err.println("Error running lexer");
       System.err.println(ex);
@@ -126,9 +131,9 @@ public final class ANTLRDynamicTokenizer extends Tokenizer {
     // Convert tokens to PlagiarismDetection tokens
     TokenList tokenList = null;
     try {
-      System.out.println("Converting to PD readable Tokens");
+      logger.debug("Converting to PD readable Tokens");
       tokenList = processLexerOutput(lexerOutput);
-      System.out.println("Convert completed");
+      logger.debug("Convert completed");
     } catch (Exception ex) {
       System.err.println(ex);
       System.exit(1);
