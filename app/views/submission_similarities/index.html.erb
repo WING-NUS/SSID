@@ -82,7 +82,7 @@
   <li>Similarity values are not symmetric so we display both the maximum and average values in the table</li>
   <li>To analyze these similarities, <%= link_to "view", assignment_cluster_groups_url(@assignment) %> / <%= link_to "create", new_assignment_cluster_group_url(@assignment) %> submission cluster groups or <%= link_to "use the course visualizations", course_visualize_url(@course) %></li>
   <li>To allow non-SSID users to view and analyse the results, <%= link_to "create", guest_user_create_path(:id => @assignment) %> a sharable link </li> 
-  </ul>
+</ul>
 
 <button type="button" class="btn btn-primary" onclick="viewMultipairsReport()")>Print Report for Selected</button>
 <p></p>
