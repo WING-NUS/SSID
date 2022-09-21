@@ -116,6 +116,7 @@
             </a>
             <ul class="dropdown-menu" aria-labelledby="submissionSimilaritiesDropdownMenuLink">
               <li><%= link_to "View Submissions", assignment_submission_similarity_url(@assignment, ss), class: "dropdown-item"%></li>
+              <li><%= link_to "Print Report", assignment_submission_similarity_view_printable_url(@assignment, ss), target: "_blank", rel: "noreferrer noopener", class: "dropdown-item"%></li>
             </ul> 
           </div>
         </td>

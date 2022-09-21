@@ -102,6 +102,17 @@ class SubmissionSimilaritiesController < ApplicationController
     end
   end
 
+  # GET /assignments/1/submission_similarities/1/view_printable
+  def view_printable
+    @submission_similarity = SubmissionSimilarity.find(params["submission_similarity_id"])
+    @submission1 = @submission_similarity.submission1
+    @submission2 = @submission_similarity.submission2
+    @student1 = @submission1.student
+    @student2 = @submission2.student
+
+    render partial: "pair_report"
+  end
+
   # GET /assignments/1/view_printable_multiple?submission_similarity_ids=1,2,3
   def view_printable_multiple
     @submission_similarity_ids = params["submission_similarity_ids"].split(',')
