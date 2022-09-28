@@ -93,7 +93,7 @@ public final class SimComparer {
 
 	private void computeSims(TokenList s1Tokens, TokenList s2Tokens,
 			Result result) {
-		logger.info("S1: {} {} {}, S2: {} {} {}", s1Tokens.size(), s1Tokens.getMarkCount(), s1Tokens.getBaseCount(), s2Tokens.size(), s2Tokens.getMarkCount(), s2Tokens.getBaseCount());	
+		logger.debug("S1: {} {} {}, S2: {} {} {}", s1Tokens.size(), s1Tokens.getMarkCount(), s1Tokens.getBaseCount(), s2Tokens.size(), s2Tokens.getMarkCount(), s2Tokens.getBaseCount());	
 
 		result.setSim2To1((float) s2Tokens.getMarkCount() / s2Tokens.size());
 		result.setSim1To2((float) s1Tokens.getMarkCount() / s1Tokens.size());
