@@ -73,6 +73,7 @@ SSID::Application.routes.draw do
       put "confirm_as_plagiarism" => "submission_similarities#confirm_as_plagiarism"
       put "suspect_as_plagiarism" => "submission_similarities#suspect_as_plagiarism"
       put "unmark_as_plagiarism" => "submission_similarities#unmark_as_plagiarism"
+      get "view_printable" => "submission_similarities#view_printable"
     end
 
     resources :submissions do
