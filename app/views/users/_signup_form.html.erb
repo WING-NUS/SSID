@@ -5,7 +5,9 @@
 
       <ul>
       <% @user.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
+        <% if not msg.include? "Id string" %>
+          <li><%= msg %></li>
+        <% end %>
       <% end %>
       </ul>
     </div>
