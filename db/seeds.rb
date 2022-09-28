@@ -20,6 +20,9 @@ admin = User.new { |user|
   user.name = "admin"
   user.full_name = "SSID Administrator"
   user.password_digest = BCrypt::Password.create('$$SSIDPassword$$')
+  user.email = "ssidadmin@example.com",
   user.is_admin = true
+  user.activated = true,
+  user.activated_at = Time.zone.now
 }
 admin.save
