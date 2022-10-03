@@ -171,7 +171,6 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
         prettyPrint();
         
         $("table.lines td").find("input.checkbox").on("click", function() {
-          console.log("Get here!");
           if ($(this).is(":checked")) {
             SubmissionSimilarity.slideToLine($(this).closest("tr").find("input"));
             SubmissionSimilarity.highlightLines($(this).closest("tr").find("input"));
@@ -188,3 +187,4 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
       });
     }; 
   }).call(this);
+  
