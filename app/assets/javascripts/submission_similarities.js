@@ -169,31 +169,6 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
           Site.registerHighlightRowMethodsForLink(this);
         });
         prettyPrint();
-
-        $("table.lines td").hover(function() {
-          SubmissionSimilarity.slideToLine($(this).parent().find("input"));
-          SubmissionSimilarity.highlightLines($(this).parent().find("input"));
-        }, function() {
-          SubmissionSimilarity.unhighlightLines($(this).parent().find("input"));
-        });
-
-        $("table.lines th.check_box_col").hover(
-          function() {$("table.lines tbody tr").each(function() {
-            var inputNode;
-            inputNode = $(this).find("input.checkbox");
-            if (!inputNode.is(":checked")) {
-              SubmissionSimilarity.highlightLines(inputNode);
-            }
-          });
-          }, 
-          function() {$("table.lines tbody tr").each(function() {
-            var inputNode;
-            inputNode = $(this).find("input.checkbox");
-            if (!inputNode.is(":checked")) {
-              SubmissionSimilarity.unhighlightLines(inputNode);
-            }
-          });
-        });
         
         $("table.lines td").find("input.checkbox").on("click", function() {
           console.log("Get here!");
