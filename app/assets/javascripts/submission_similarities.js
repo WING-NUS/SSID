@@ -45,56 +45,61 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
       $(checkBox).closest("tr").addClass("highlight");
 
       // differentiate colors
-      let skeletonLines = $(checkBox).closest("input.skeleton-lines").val().split(/\s/)
-      let skeletonIdxS1 = []
-      let skeletonIdxS2 = []
-      for (i = startLine1; i <= endLine1; ++i) {
-        skeletonIdxS1.push(false);
-      }
+      if ($(checkBox).closest("input.skeleton-lines").val() != null) {
+        let skeletonLines = $(checkBox).closest("input.skeleton-lines").val().split(/\s/)
+        let skeletonIdxS1 = []
+        let skeletonIdxS2 = []
+        for (i = startLine1; i <= endLine1; ++i) {
+          skeletonIdxS1.push(false);
+        }
 
-      for (i = startLine2; i <= endLine2; ++i) {
-        skeletonIdxS2.push(false);
-      }
-      
-      skeletonLines.forEach((skeletonLine) => {
-        lineInfo = skeletonLine.split("_")
-        skeletonStartLine1 = parseInt(lineInfo[0])
-        skeletonEndLine1 = parseInt(lineInfo[1])
-        skeletonStartLine2 = parseInt(lineInfo[2])
-        skeletonEndLine2 = parseInt(lineInfo[3])
+        for (i = startLine2; i <= endLine2; ++i) {
+          skeletonIdxS2.push(false);
+        }
+        
+        skeletonLines.forEach((skeletonLine) => {
+          lineInfo = skeletonLine.split("_")
+          skeletonStartLine1 = parseInt(lineInfo[0])
+          skeletonEndLine1 = parseInt(lineInfo[1])
+          skeletonStartLine2 = parseInt(lineInfo[2])
+          skeletonEndLine2 = parseInt(lineInfo[3])
 
-        for (i = 0; i < skeletonIdxS1.length; ++i) {
-          if (skeletonStartLine1 <= i+startLine1 && i+startLine1 <= skeletonEndLine1) {
-            skeletonIdxS1[i] = true;
+          for (i = 0; i < skeletonIdxS1.length; ++i) {
+            if (skeletonStartLine1 <= i+startLine1 && i+startLine1 <= skeletonEndLine1) {
+              skeletonIdxS1[i] = true;
+            }
+          }
+
+          for (i = 0; i < skeletonIdxS2.length; ++i) {
+            if (skeletonStartLine2 <= i+startLine2 && i+startLine2 <= skeletonEndLine2) {
+              skeletonIdxS2[i] = true;
+            }
+          }                
+        })
+
+        for (lineIdx = _i = startLine1; startLine1 <= endLine1 ? _i <= endLine1 : _i >= endLine1; lineIdx = startLine1 <= endLine1 ? ++_i : --_i) {
+          if (skeletonIdxS1[lineIdx - startLine1] == false) {
+            $("div.submission1 li:eq(" + lineIdx + ")").addClass("highlight");
+          } else {
+            $("div.submission1 li:eq(" + lineIdx + ")").addClass("skeleton-highlight");
           }
         }
 
-        for (i = 0; i < skeletonIdxS2.length; ++i) {
-          if (skeletonStartLine2 <= i+startLine2 && i+startLine2 <= skeletonEndLine2) {
-            skeletonIdxS2[i] = true;
+        for (lineIdx = _j = startLine2; startLine2 <= endLine2 ? _j <= endLine2 : _j >= endLine2; lineIdx = startLine2 <= endLine2 ? ++_j : --_j) {
+          if (skeletonIdxS2[lineIdx - startLine2] == false) {
+            $("div.submission2 li:eq(" + lineIdx + ")").addClass("highlight");
+          } else {
+            $("div.submission2 li:eq(" + lineIdx + ")").addClass("skeleton-highlight");
           }
-        }                
-      })
-
-
-
-
-
-
-      for (lineIdx = _i = startLine1; startLine1 <= endLine1 ? _i <= endLine1 : _i >= endLine1; lineIdx = startLine1 <= endLine1 ? ++_i : --_i) {
-        if (skeletonIdxS1[lineIdx - startLine1] == false) {
+        }
+      } else {
+        for (lineIdx = _i = startLine1; startLine1 <= endLine1 ? _i <= endLine1 : _i >= endLine1; lineIdx = startLine1 <= endLine1 ? ++_i : --_i) {
           $("div.submission1 li:eq(" + lineIdx + ")").addClass("highlight");
-        } else {
-          $("div.submission1 li:eq(" + lineIdx + ")").addClass("skeleton-highlight");
         }
-      }
 
-      for (lineIdx = _j = startLine2; startLine2 <= endLine2 ? _j <= endLine2 : _j >= endLine2; lineIdx = startLine2 <= endLine2 ? ++_j : --_j) {
-        if (skeletonIdxS2[lineIdx - startLine2] == false) {
+        for (lineIdx = _j = startLine2; startLine2 <= endLine2 ? _j <= endLine2 : _j >= endLine2; lineIdx = startLine2 <= endLine2 ? ++_j : --_j) {
           $("div.submission2 li:eq(" + lineIdx + ")").addClass("highlight");
-        } else {
-          $("div.submission2 li:eq(" + lineIdx + ")").addClass("skeleton-highlight");
-        }
+        }      
       }
     };
   
@@ -121,7 +126,7 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
   
     SubmissionSimilarity.toggleRowHighlight = function(el) {
       var inputNode;
-      inputNode = $(el).find("input.checkbox");
+      inputNode = $(el).find("input");
       if (inputNode.is(":checked")) {
         inputNode.prop("checked", false);
         SubmissionSimilarity.unhighlightLines(inputNode);
