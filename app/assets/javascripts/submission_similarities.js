@@ -195,8 +195,14 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
           });
         });
         
-        $("table.lines td.check_box_col").on("click", function() {
-          SubmissionSimilarity.toggleRowHighlight(this);
+        $("table.lines td").find("input.checkbox").on("click", function() {
+          console.log("Get here!");
+          if ($(this).is(":checked")) {
+            SubmissionSimilarity.slideToLine($(this).closest("tr").find("input"));
+            SubmissionSimilarity.highlightLines($(this).closest("tr").find("input"));
+          } else {
+            SubmissionSimilarity.unhighlightLines($(this).closest("tr").find("input"));
+          }
         });
         $("table.lines th.check_box_col input").on('click', function(event) {
           SubmissionSimilarity.toggleAllRowHighlights(this);
