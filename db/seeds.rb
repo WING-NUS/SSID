@@ -22,5 +22,6 @@ admin = User.new { |user|
   user.password_digest = BCrypt::Password.create('$$SSIDPassword$$')
   user.email = "adminemail@testmail.com"
   user.is_admin = true
+  user.is_admin_approved = true
 }
 admin.save
