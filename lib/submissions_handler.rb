@@ -81,8 +81,7 @@ module SubmissionsHandler
     # Add filters for file types
     accepted_formats = [".ipynb", ".py",".java", ".cpp", ".c", ".h", ".scala", ".m", ".ml", ".mli", ".r"]
 
-    # check zip file from Mac
-    zip_from_Mac = false
+    # check zip file
     has_entry_same_name_with_upload_file = false
     upload_file_without_ext = File.basename(upload_file, ".zip") + File::SEPARATOR
 
@@ -95,13 +94,9 @@ module SubmissionsHandler
         if (file_name.eql?(upload_file_without_ext)) 
           has_entry_same_name_with_upload_file = true
         end
-
-        if (file_name.include?("__MACOSX")) 
-          zip_from_Mac = true
-        end
       }
 
-      if (zip_from_Mac and has_entry_same_name_with_upload_file) 
+      if has_entry_same_name_with_upload_file
         return false
       end
 
