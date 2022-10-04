@@ -153,6 +153,7 @@ class Admin::UsersController < ApplicationController
     @the_user = User.find(params[:user_id])
     @the_user.update_attribute(:is_admin_approved, true)
     @the_user.save
+    UserMailer.admin_approved(@the_user).deliver_now
     redirect_to admin_users_url, notice: 'User was successfully approved.'
   end
 
