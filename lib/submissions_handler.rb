@@ -79,7 +79,7 @@ module SubmissionsHandler
     FileUtils.copy_entry(file.path, upload_file)
 
     # Add filters for file types
-    accepted_formats = [".py",".java", ".cpp", ".c", ".h", ".scala", ".m", ".ml", ".mli", ".r"]
+    accepted_formats = [".ipynb", ".py",".java", ".cpp", ".c", ".h", ".scala", ".m", ".ml", ".mli", ".r"]
 
     # check zip file from Mac
     zip_from_Mac = false
@@ -198,6 +198,8 @@ module SubmissionsHandler
         process.status = SubmissionSimilarityProcess::STATUS_COMPLETED
       else
         process.status = SubmissionSimilarityProcess::STATUS_ERRONEOUS
+        puts "Print out log in case of erroneous processing"
+        puts java_log
       end
 
       # Save
@@ -251,9 +253,28 @@ module SubmissionsHandler
         strings << string_from_combined_files(subpath)
       }
     else
-      strings << File.open(path).readlines.join
+      # byebug
+      if (File.extname(path).include? ".ipynb") then
+        convert_to_python(path, strings)
+      else
+        strings << File.open(path).readlines.join
+      end
     end
 
     strings.join("\n")
+  end
+
+  def self.convert_to_python(path, strings)
+    # byebug
+    path_without_special_chars = path.gsub(/[\s\(\)\*\@\$\%\&\*]/, '__')
+    File.rename(path, path_without_special_chars)
+    command = "jupyter nbconvert --to script #{path_without_special_chars}"
+    isConversionSuccessful = system(command)
+    if isConversionSuccessful then
+      new_path = path_without_special_chars.gsub(/.ipynb$/, '.py')
+      strings << File.open(new_path).readlines.join
+    else
+      puts "Failed to convert file #{path_without_special_chars} to py"      
+    end
   end
 end
