@@ -160,18 +160,31 @@ module SubmissionsHandler
       }
     }
 
+    if ApplicationHelper.is_application_healthy()
+      puts "Process assignment: #{assignment.id}"
+      fork_Java_process(compare_dir, assignment, isMapEnabled)
+    else 
+      puts "Put in queue, assignment: #{assignment.id}"
+      SubmissionSimilarityProcess.create do |p|
+        p.assignment_id = assignment.id
+        p.status = SubmissionSimilarityProcess::STATUS_WAITING
+      end
+    end
+  end
+
+  def self.fork_Java_process(compare_dir, assignment, isMapEnabled)
     # Read database configuration
-	  config   = Rails.configuration.database_configuration
-	  host     = config[Rails.env]["host"]
-	  database = config[Rails.env]["database"]
-	  username = config[Rails.env]["username"]
-	  password = config[Rails.env]["password"]
+    config   = Rails.configuration.database_configuration
+    host     = config[Rails.env]["host"]
+    database = config[Rails.env]["database"]
+    username = config[Rails.env]["username"]
+    password = config[Rails.env]["password"]
 
     # Run the java program and get its pid
     command = %Q{java -Xmx2048M -Dlog4j2.configurationFile="#{Rails.application.config.plagiarism_detection_log_configuration_path}" -jar "#{Rails.application.config.plagiarism_detection_path}" } + 
               %Q{#{assignment.id} #{compare_dir} #{assignment.language.downcase} } +
               %Q{#{assignment.min_match_length} #{assignment.ngram_size} } +
-              %Q{#{host} #{database} #{username} #{password} #{isMapEnabled}}
+              %Q{#{host} #{database} #{username} #{password} #{isMapEnabled}}  
     # Fork to run java program in background
     ruby_pid = Process.fork do
       java_log = ""
@@ -205,10 +218,17 @@ module SubmissionsHandler
     end
 
     # Create process with pid
-    SubmissionSimilarityProcess.create do |p|
-      p.assignment_id = assignment.id
-      p.pid = ruby_pid
-      p.status = SubmissionSimilarityProcess::STATUS_RUNNING
+    process = assignment.submission_similarity_process
+    if process.nil?
+      SubmissionSimilarityProcess.create do |p|
+        p.assignment_id = assignment.id
+        p.pid = ruby_pid
+        p.status = SubmissionSimilarityProcess::STATUS_RUNNING
+      end
+    else
+      process.pid = ruby_pid
+      process.status = SubmissionSimilarityProcess::STATUS_RUNNING
+      process.save
     end
 
     Process.detach(ruby_pid) # Parent will not wait
