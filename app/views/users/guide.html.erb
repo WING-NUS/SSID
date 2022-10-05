@@ -70,6 +70,7 @@ end
     <li><a class="normalLink" href="#view_assignments">View assignments</a></li>
     <li><a class="normalLink" href="#create_an_assignment">Create an assignment</a></li>
     <li><a class="normalLink" href="#view_pairwise_code_comparison">View pairwise submissions comparison</a></li>
+    <li><a class="normalLink" href="#view_log">View student log</a></li>
     <li><a class="normalLink" href="#report_plagiarism">Report a plagiarism case</a></li>
     <li><a class="normalLink" href="#confirm_plagiarism">Confirm a plagiarism case </a></li>
     <li><a class="normalLink" href="#decline_plagiarism">Decline a plagiarism case </a></li>
@@ -139,6 +140,28 @@ end
           <li class="step">
             From the rightmost column, click <%=genBlankLink("Print Report")%> of the desired pair of student submissions to print/ save as PDF pairwise submission comparison result.<br/>
             <%=image("p8.png")%>
+          </li>
+        </ol>
+      </td>
+    </tr>
+
+    <tr>
+    <td><h2 id="view_log">View student log</h2></td>
+    <td align="right"><%=backToTop%></td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        <span class="note">Note: Refer to <a class='normalLink'  href="#view_pairwise_code_comparison">View pairwise submissions comparison</a></span><br/>
+        <span class="note">Note: If you are assigned with teaching assistant role for a module, you can only access the student's log within the module</span><br/>
+        <span class="note">Note: If you are assigned with teaching staff role for a module, you can access the student's log throughout all modules</span><p/>
+        <ol class="step">
+          <li class="step">
+            From pairwise submissions comparison, click <%=genBlankLink("Log")%> above the submission of the student.<br/>
+            <%=image("p13.png")%>
+            <p/>
+            <i>
+              Student log will be displayed.<br/>
+            </i>
           </li>
         </ol>
       </td>
