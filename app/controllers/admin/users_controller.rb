@@ -37,8 +37,12 @@ class Admin::UsersController < ApplicationController
   def index
     @admins = User.where(is_admin: true)
 
+    @signups = User.where(is_admin_approved: false)
+
     # users don't belong to any course
-    @loners = User.all - User.joins(:memberships) - @admins
+    @loners = User.all - User.joins(:memberships) - @admins - @signups
+
+    
   end
 
   # GET /admin/users/new
@@ -145,6 +149,15 @@ class Admin::UsersController < ApplicationController
     end
   end
 
+  def approve
+    @the_user = User.find(params[:user_id])
+    @the_user.update_attribute(:is_admin_approved, true)
+    @the_user.save
+    redirect_to admin_users_url, notice: 'User was successfully approved.'
+  end
+
+
+
   # PUT /admin/users/1
   def update
     @the_user = User.find(params[:id])
@@ -241,9 +254,10 @@ class Admin::UsersController < ApplicationController
         end
       else
         if @the_user.destroy
-          redirect_to url, notice: 'User was successfully deleted.'
+          redirect_to admin_users_url, notice: 'User was successfully deleted.'
+        else
+          redirect_to admin_users_url, alert: @the_user.errors.to_a.join(", ")
         end
-        redirect_to url, alert: @the_user.errors.to_a.join(", ")
       end
     end
   end
