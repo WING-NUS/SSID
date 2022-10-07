@@ -20,6 +20,14 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
   <%= javascript_include_tag "application" %>
   <%= yield :head %>
   <%= csrf_meta_tags %>
+  <style type="text/css" media="print">
+  @media print {
+    body {
+      -webkit-print-color-adjust: exact;
+      color-adjust: exact;               
+    }
+  }
+  </style>
 </head>
 <body class="<%= controller_name %> <%= controller_name %>_<%= action_name %>">
   <%= javascript_tag "if (window.#{controller_name.singularize.camelize} && #{controller_name.singularize.camelize}.onLoad) { #{controller_name.singularize.camelize}.onLoad(); };" %>
