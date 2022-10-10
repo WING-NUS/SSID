@@ -42,7 +42,9 @@ SSID::Application.routes.draw do
   resources :account_activations, only: [:edit]
 
   namespace :admin do
-    resources :users
+    resources :users do
+      get 'approve' => 'users#approve', :as => 'approve_user'
+    end
   end
   resources :users
   
