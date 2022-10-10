@@ -9,4 +9,9 @@
 
 <%= render partial: "pair_report_title" %>
 
-<%= render partial: "pair_report_student_pair", locals: { submission_similarity: @submission_similarity }%>
+<% @submission_similarity_ids.each do |id|%>
+  <% @submission_similarity = SubmissionSimilarity.find(id) %>
+  <%= render partial: "pair_report_student_pair", locals: { submission_similarity: @submission_similarity }%>
+
+  <div style="break-after:page"> </div>
+<% end %>

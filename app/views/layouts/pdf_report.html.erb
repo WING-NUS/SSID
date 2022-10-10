@@ -32,8 +32,6 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 <body class="<%= controller_name %> <%= controller_name %>_<%= action_name %>">
   <%= javascript_tag "if (window.#{controller_name.singularize.camelize} && #{controller_name.singularize.camelize}.onLoad) { #{controller_name.singularize.camelize}.onLoad(); };" %>
 
-  <h3 id="site-banner">Student Submissions Integrity Diagnosis System</h3>
-
   <main class="container">
     <div id="content">
       <%= yield :pre_content %>
