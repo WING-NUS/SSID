@@ -4,6 +4,11 @@
       <%= flash[:notice] %>
     </div>
   <% end %>
+  <% if flash[:alert] %>
+    <div class="alert">
+      <%= flash[:alert] %>
+    </div>
+  <% end %>  
   <div class="site-introduction">
     <p class="site-motto text-dark">Empowering the next generations of programmers.</p>
     <div class="site-clip">
