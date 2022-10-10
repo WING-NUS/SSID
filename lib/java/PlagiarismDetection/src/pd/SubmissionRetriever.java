@@ -20,9 +20,13 @@ import pd.utils.Submission;
 import java.io.*;
 import java.util.*;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 public final class SubmissionRetriever {
 
 	private static final String MAP_FILE_NAME = "mapfile.csv";
+
+	private static Logger logger = LogManager.getLogger();
 
 	/**
 	 * To retrieve submissions into Submission instances. All line terminals are
@@ -82,14 +86,14 @@ public final class SubmissionRetriever {
 	}
 
 	private static String getStudentName(Hashtable<String, String> mappedNames, String studentName) {
-		System.out.println(studentName);
+		logger.debug("Student name: {}", studentName);
 		String mappedStudentName = mappedNames.get(studentName);
-        if (mappedStudentName == null) {
-			System.out.println("why da?");
+    if (mappedStudentName == null) {
+			logger.debug("why da?");
 			return studentName;
-        } else {
-			System.out.println("working da");
-			System.out.println(mappedStudentName);
+    } else {
+			logger.debug("working da");
+			logger.debug(mappedStudentName);
 			return (mappedStudentName + " (" + studentName + ")");
 		}
 	}
@@ -109,6 +113,7 @@ public final class SubmissionRetriever {
 			lines.add(line);
 			codeLength += line.length() + 1;
 		}
+		br.close();
 		return codeLength;
 
 	}

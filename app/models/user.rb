@@ -33,6 +33,9 @@ class User < ActiveRecord::Base
   has_secure_password
   before_destroy :ensure_an_admin_remains
 
+  attr_accessor :activation_token
+  before_create :create_activation_digest
+
   def is_some_staff?
     self.courses.any? { |c| c.membership_for_user(self).role == UserCourseMembership::ROLE_TEACHING_STAFF }
   end
@@ -46,6 +49,12 @@ class User < ActiveRecord::Base
     the_full_name.strip.empty? ? nil : the_full_name
   end
 
+  def authenticated?(attribute, token)
+    digest = send("#{attribute}_digest")
+    return false if digest.nil?
+    BCrypt::Password.new(digest).is_password?(token)
+  end
+
   private
 
   def ensure_an_admin_remains
@@ -56,4 +65,20 @@ class User < ActiveRecord::Base
       true
     end
   end
+
+  def User.digest(string)
+    cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST : BCrypt::Engine.cost
+    BCrypt::Password.create(string, cost: cost)
+  end
+
+  def User.new_token
+    SecureRandom.urlsafe_base64
+  end
+
+  def create_activation_digest
+    self.activation_token = User.new_token
+    self.activation_digest = User.digest(activation_token)
+  end
+
+  
 end

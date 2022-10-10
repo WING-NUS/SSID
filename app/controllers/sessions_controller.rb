@@ -27,9 +27,14 @@ class SessionsController < ApplicationController
   #orRgKyGUs7cz
   def create
     user = User.find_by_name(params[:name])
+
     if user and user.authenticate(params[:password]) and user.is_admin_approved
-      session[:user_id] = user.id
-      redirect_to root_url
+      if user.activated?
+        session[:user_id] = user.id
+        redirect_to root_url
+      else
+        redirect_to login_url, alert: "Your account is not activated. Please check your email for the activation link."
+      end
     else
       redirect_to login_url, alert: "Invalid user/password combination or user account not approved by admin"
     end

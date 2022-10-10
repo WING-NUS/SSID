@@ -39,6 +39,7 @@ SSID::Application.routes.draw do
   root to: "announcements#index"
 
   resources :announcements
+  resources :account_activations, only: [:edit]
 
   namespace :admin do
     resources :users do
