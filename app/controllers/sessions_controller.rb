@@ -31,7 +31,7 @@ class SessionsController < ApplicationController
       session[:user_id] = user.id
       redirect_to root_url
     else
-      redirect_to login_url, alert: "Invalid user/password combination or user account not approved by admin"
+      redirect_to login_url, alert: "Invalid user/password combination or user account is still being processed."
     end
   end
 
