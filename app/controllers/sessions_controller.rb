@@ -36,7 +36,7 @@ class SessionsController < ApplicationController
         redirect_to login_url, alert: "Your account is not activated. Please check your email for the activation link."
       end
     else
-      redirect_to login_url, alert: "Invalid user/password combination or user account not approved by admin"
+      redirect_to login_url, alert: "Invalid user/password combination or user account is still being processed."
     end
   end
 
