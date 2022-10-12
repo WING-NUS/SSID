@@ -114,9 +114,14 @@ end
           <li class="step">
             Fill in the information of this assignment and select the zipped submission file (*.zip) to upload.<br/>
             <%=image("p5.png")%><br/>
-            <i>Note: You can include skeleton files to be ignored by the system in a folder named skeleton</i><br/>
+            <i>Note: SSID currently supports both file-based and directory-based submissions. Each file or folder should be placed at the top level.</i><br/>
+            <i>You can include skeleton file e.g. "skeleton.py" or folder "skeleton" to exclude sample codes from checking by the system.</i><br/>
             <i>Tip: You can move your cursor over the [i] for explanation of the term.</i>
           </li>
+          <li class="step">
+            Upload map file will allow you to map between a directory name (in the uploaded zip file) and the student roster that you might be using for your modules.<br/>
+            A csv file with no header, and row with format: <i>student-submission-folder-name,student-custom-id</i> will be needed.
+          </li>          
           <li class="step">
             Click <b>Create</b>.
           </li>
