@@ -88,11 +88,11 @@ end
       <td colspan="2">
         <ol class="step">
           <li class="step">
-            From the menu on the top, click <%=genBlankLink("My Modules")%>.<br/>
+            From the menu on the top, click <%=genBlankLink("Courses")%>.<br/>
             <%=image("p1.png")%>
           </li>
           <li class="step">
-            Click the desired module to view its assignment.<br/>
+            Click the Assignments icon of desired course to view its assignments.<br/>
             <%=image("p2.png")%>
           </li>
         </ol>
@@ -108,14 +108,14 @@ end
         <span class="note">Note: Refer to <a class="normalLink" href="#view_assignments">View assignments</a></span><p/>
         <ol class="step">
           <li class="step">
-            From assignments listing, click <%=genBlankLink("New Assignment")%>.<br/>
+            From assignments listing, click New Assignment icon.<br/>
             <%=image("p3.png")%>
           </li>
           <li class="step">
             Fill in the information of this assignment and select the zipped submission file (*.zip) to upload.<br/>
             <%=image("p5.png")%><br/>
             <i>Note: You can include skeleton files to be ignored by the system in a folder named skeleton</i><br/>
-            <i>Tip: You can move your cursor over the [?] for explaination of the term.</i>
+            <i>Tip: You can move your cursor over the [i] for explanation of the term.</i>
           </li>
           <li class="step">
             Click <b>Create</b>.
@@ -134,11 +134,11 @@ end
         <span class="note">Note: Refer to <a class="normalLink" href="#view_assignments">View assignments</a></span><p/>
         <ol class="step">
           <li class="step">
-            From assignments listing, click the desired assignment.<br/>
-            <%=image("p7.png")%>
+          From the rightmost column, click <%=genBlankLink("View Submissions")%> of the desired pair of student submissions to view the pairwise submissions comparison result.<br/>
+          <%=image("p7.png")%>
           </li>
           <li class="step">
-            From the rightmost column, click <%=genBlankLink("View Code")%> of the desired pair of student submissions to view the pairwise submissions comparison result.<br/>
+            From the rightmost column, click <%=genBlankLink("Print Report")%> of the desired pair of student submissions to print/ save as PDF pairwise submission comparison result.<br/>
             <%=image("p8.png")%>
           </li>
         </ol>
@@ -146,8 +146,8 @@ end
     </tr>
 
     <tr>
-      <td><h2 id="view_log">View student log</h2></td>
-      <td align="right"><%=backToTop%></td>
+    <td><h2 id="view_log">View student log</h2></td>
+    <td align="right"><%=backToTop%></td>
     </tr>
     <tr>
       <td colspan="2">
@@ -156,14 +156,11 @@ end
         <span class="note">Note: If you are assigned with teaching staff role for a module, you can access the student's log throughout all modules</span><p/>
         <ol class="step">
           <li class="step">
-            From pairwise submissions comparison, click the desired student id listed in the student 1 and student 2 colunms.<br/>
+            From pairwise submissions comparison, click <%=genBlankLink("Log")%> above the submission of the student.<br/>
             <%=image("p13.png")%>
             <p/>
             <i>
               Student log will be displayed.<br/>
-              Cases in <span style="color: red;">red</span> denotes confirmation of plagiarism cases;<br/>
-              Cases in <span style="color: orange">orange</span> denotes reported suspicious cases;<br/>
-              Cases in <span style="color: blue">blue</span> denotes declination of plagiarism cases.
             </i>
           </li>
         </ol>
@@ -179,7 +176,7 @@ end
         <span class="note">Note: Refer to <a class="normalLink" href="#view_pairwise_code_comparison">View pairwise submissions comparison</a></span><p/>
         <ol class="step">
           <li class="step">
-            From pairwise submissions comparison, click <%=genBlankLink("Report Suspicious")%> on the top.<br/>
+            From pairwise submissions comparison, click <%=genBlankLink("Mark as suspicious")%>.<br/>
             <%=image("p9.png")%>
           </li>
           <li class="step">
@@ -201,7 +198,7 @@ end
         <span class="note">Note: Refer to <a class='normalLink'  href="#view_pairwise_code_comparison">View pairwise submissions comparison</a></span><p/>
         <ol class="step">
           <li class="step">
-            From pairwise submissions comparison, click <%=genBlankLink("Found Guilty")%> next to the student id whom is found guilty.<br/>
+            From pairwise submissions comparison, click <%=genBlankLink("Confirm Plagiarism")%> next to the student id whom is found guilty.<br/>
             <%=image("p11.png")%>
           </li>
           <li class="step">
@@ -214,7 +211,7 @@ end
     </tr>
 
     <tr>
-      <td><h2 id="decline_plagiarism">Declare a suspicious case innocent</h2></td>
+      <td><h2 id="decline_plagiarism">Remove plagiarism status</h2></td>
       <td align="right"><%=backToTop%></td>
     </tr>
     <tr>
@@ -224,13 +221,13 @@ end
         <span class="note">Note: Refer to <a class='normalLink'  href="#view_pairwise_code_comparison">View pairwise submissions comparison</a></span><p/>
         <ol class="step">
           <li class="step">
-            From pairwise submissions comparison, click <%=genBlankLink("Found innocent")%> on the top.<br/>
+            From pairwise submissions comparison, click <%=genBlankLink("Remove plagiarism")%> on the top.<br/>
             <%=image("p14.png")%>
           </li>
           <li class="step">
             In the confirmation popup box, click <b>OK</b> to confirm this student is found guilty in the act of plagiarism.<br/>
             <%=image("p15.png")%><p/>
-            <i>This pair of submissions will be classified as an innocent case.</i>
+            <i>Plagiarism status for this pair of submissions will be cleared.</i>
           </li>
         </ol>
       </td>
@@ -246,11 +243,11 @@ end
         <span class="note">Note: Refer to <a class='normalLink'  href="#view_assignments">View Assignments</a></span><p/>
         <ol class="step">
           <li class="step">
-            From assignment listing, under the column titled <b>GROUPINGS</b> click view of the desired assignment<br/>
+            From assignment listing, click Similarity groups icon of desired assignment<br/>
             <%=image("p16.png")%>
           </li>
           <li class="step">
-            Click <%=genBlankLink("New Grouping")%> at the bottom left.<br/>
+            Click New Cluster Group icon.<br/>
             <%=image("p17.png")%>
           </li>
           <li class="step">
@@ -277,7 +274,7 @@ end
         <span class="note">Note: Refer to <a class='normalLink'  href="#view_assignments">View Assignments</a></span><p/>
         <ol class="step">
           <li class="step">
-            From Assignments Listing, click <%=genBlankLink("View Visuals")%>.<br/>
+            From Assignments Listing, click Visuals icon.<br/>
             <%=image("p19.png")%><p/>
             <i>The visual type selection interface will be displayed.</i>
           </li>
@@ -313,7 +310,7 @@ end
             <span class="note">Refer to <a class='normalLink'  href="#view_pairwise_code_comparison">View pairwise submissions comparison</a></span>
             <ol class="step">
               <li class="step">
-                From pairwise submissions comparison, click <%=genBlankLink("Show")%> on the top of the Mapping List if the list is hidden.<br/>
+                From pairwise submissions comparison, click <%=genBlankLink("Show matching statements")%> on the top of the Mapping List if the list is hidden.<br/>
                 <%=imagefaq("p21.png")%><p/>
                 <i>
                   The mapping list will be displayed.
@@ -321,13 +318,12 @@ end
               </li>
               <li class="step">
                 The mapping list has 3 columns:<br/>
-                The first column shows the number of statements found in a match, matches are sorted by the number of statements in descending order;<br/>
-                The second column shows the range of lines matched in student 1's submission;<br/>
-                The third column shows the range of lines matched in student 2's submissions.<p/>
-                To highlight a matched region, click the range of lines.<br/>
+                The first column shows the range of lines matched in student 05's submissions.<br/>
+                The second column shows the range of lines matched in student 04's submissions.<p/>
+                The third column shows the number of statements found in a match, matches are sorted by the number of statements in descending order;<br/>             
+                To highlight a matched region, select the checkboxes corresponding to desired lines.<br/>
                 <%=imagefaq("p22.png")%><p/>
-                <i>The respective matched region will be colored in red.</i><br/>
-                <i>Tip: You can move your cursor over the [?] for explaination of the term.</i>
+                <i>The respective matched region will be colored in yellow.</i><br/>
               </li>
             </ol>
           </li>
