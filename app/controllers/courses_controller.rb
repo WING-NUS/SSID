@@ -17,7 +17,7 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 
 class CoursesController < ApplicationController
   before_action { |controller|
-    controller.send :authenticate_actions_for_admin, only: [ :new, :create, :edit, :update, :destroy ]
+    controller.send :authenticate_actions_for_admin, only: [ :destroy ]
   }
   before_action { |controller|
     if params[:course_id]
@@ -72,11 +72,26 @@ class CoursesController < ApplicationController
       expiry_date = expiry_time.to_date
       c.expiry = Time.zone.local_to_utc(DateTime.new(expiry_date.year, expiry_date.month, expiry_date.mday, expiry_time.hour, expiry_time.min))
     }
+
     
     if @course.errors.empty? and @course.save
-      redirect_to courses_url, notice: 'Course was successfully created.'
+      
     else
       render action: "new"
+    end
+
+    if not @user.is_admin
+      @membership = UserCourseMembership.new { |m|
+        m.user = @user
+        m.course = @course
+        m.role = UserCourseMembership::ROLE_TEACHING_STAFF
+      }
+
+      if @membership.errors.empty? and @membership.save
+        redirect_to courses_url, notice: 'Course was successfully created.'
+      else
+        render action: "new"
+      end
     end
   end
 
