@@ -17,8 +17,6 @@
   <% if @course %>
     <div>
       <%= hidden_field_tag :user_course_id, @course.id, name: "user[course_id]" %>
-      <%= f.label :id_string, "ID", class: "form-label" %>
-      <%= f.text_field :id_string, class: "form-control" %>
     </div>
     <% unless @membership.role == UserCourseMembership::ROLE_STUDENT %>
       <div>
@@ -28,7 +26,7 @@
     <% end %>
   <% end %>
   <div>
-    <%= f.label :name, "Login", class: "form-label" %>
+    <%= f.label :name, "Name", class: "form-label" %>
     <%= f.text_field :name, class: "form-control" %>
   </div>
   <div>
