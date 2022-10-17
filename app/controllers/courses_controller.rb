@@ -16,9 +16,9 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
 class CoursesController < ApplicationController
-  # before_action { |controller|
-  #   controller.send :authenticate_actions_for_admin, only: [ :new, :create, :edit, :update, :destroy ]
-  # }
+  before_action { |controller|
+    controller.send :authenticate_actions_for_admin, only: [ :destroy ]
+  }
   before_action { |controller|
     if params[:course_id]
       @course = Course.find(params[:course_id])
