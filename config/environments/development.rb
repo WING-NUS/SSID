@@ -52,6 +52,8 @@ SSID::Application.configure do
   # Set time zone
   config.time_zone = "Singapore"
 
-  config.host = "localhost"
+  config.host = "localhost:3000"
+  config.action_mailer.default_url_options = { host: config.host, protocol: 'http' }
+
   config.protocol = "http"
 end

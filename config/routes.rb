@@ -26,6 +26,7 @@ SSID::Application.routes.draw do
   get "cover" => "sessions#index"
   get "login" => "sessions#new"
   post "login" => "sessions#create"
+  get "signup" => "users#new"
 
   get 'forget_password' => "password_resets#forget_password", :as => "get_forget_password"
   post 'forget_password' => 'password_resets#send_password_reset_link'
@@ -38,9 +39,12 @@ SSID::Application.routes.draw do
   root to: "announcements#index"
 
   resources :announcements
+  resources :account_activations, only: [:edit]
 
   namespace :admin do
-    resources :users
+    resources :users do
+      get 'approve' => 'users#approve', :as => 'approve_user'
+    end
   end
   resources :users
   
