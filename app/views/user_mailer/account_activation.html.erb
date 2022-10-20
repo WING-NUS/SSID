@@ -1,5 +1,3 @@
-<h1>SSID Account Activation</h1>
-
 <p> Hi <%= @user.name %>,</p>
 
 <p>
@@ -7,3 +5,7 @@
 </p>
 
 <%= link_to "Activate", edit_account_activation_url(@user.activation_token, email: @user.email) %>
+
+<p>Thank you.</p>
+  
+<p><%= ApplicationHelper::SSID_MAINTAINER %></p>
