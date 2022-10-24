@@ -178,7 +178,7 @@ class Admin::UsersController < ApplicationController
     # Update basic attributes for course user or for admin user
     if @course
       @the_user.full_name = params[:user]["full_name"]
-      @the_user.id_string = params[:user]["id_string"]
+      @the_user.id_string = params[:user]["name"]
       @the_user.name = params[:user]["name"]
       @the_user.email = params[:user]["email"]
 
