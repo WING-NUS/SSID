@@ -69,12 +69,12 @@ class Admin::UsersController < ApplicationController
     # Construct basic attributes for course user or for admin user
     if !@course.nil?
       # Check if user exists
-      @existing_user = User.where(id_string: params[:user]["id_string"]).first
+      @existing_user = User.where(name: params[:user]["name"]).first
       if @existing_user
         @the_user = @existing_user
       else
         @the_user.full_name = params[:user]["full_name"]
-        @the_user.id_string = params[:user]["id_string"]
+        @the_user.id_string = params[:user]["name"]
         @the_user.name = params[:user]["name"]
         @the_user.email = params[:user]["email"]
       end
@@ -125,11 +125,15 @@ class Admin::UsersController < ApplicationController
 
     # Check for errors and render view
     if @the_user.errors.empty? and @the_user.save
+      unless @existing_user
+        UserMailer.account_activation(@the_user).deliver_now
+      end
+
       if @existing_user or not @course.nil?
         redirect_to course_users_url(@course), notice: "User was successfully added 
-        to #{@course.code}."
+        to #{@course.code}, and account needs to be activated before use."
       else 
-        redirect_to admin_users_url, notice: 'User was successfully created.'
+        redirect_to admin_users_url, notice: 'User was successfully created, and account needs to be activated before use.'
       end
     else
       render action: "new"
@@ -174,7 +178,7 @@ class Admin::UsersController < ApplicationController
     # Update basic attributes for course user or for admin user
     if @course
       @the_user.full_name = params[:user]["full_name"]
-      @the_user.id_string = params[:user]["id_string"]
+      @the_user.id_string = params[:user]["name"]
       @the_user.name = params[:user]["name"]
       @the_user.email = params[:user]["email"]
 

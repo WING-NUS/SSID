@@ -1,7 +1,9 @@
 <div class="course_users_section">
 <header class="course_user_header">
   <h5><%= @course.code %> Users</h5>
-  <%= link_to image_tag("person_add_blue_24dp.svg", size: "28", alt: "Add #{@course.code} User"), new_admin_user_url+"?course_id=#{@course.id}", { 'data-toggle' => 'tooltip', 'data-placement' => 'bottom', 'title' => "Add #{@course.code} User" } %>
+  <% if @user.is_admin || @course.membership_for_user(@user).role == UserCourseMembership::ROLE_TEACHING_STAFF %>
+    <%= link_to image_tag("person_add_blue_24dp.svg", size: "28", alt: "Add #{@course.code} User"), new_admin_user_url+"?course_id=#{@course.id}", { 'data-toggle' => 'tooltip', 'data-placement' => 'bottom', 'title' => "Add #{@course.code} User" } %>
+  <% end %>
 </header>
 
 <% if flash[:notice] %>
@@ -16,7 +18,9 @@
       <th>Full Name</th>
       <th class="id_col">ID</th>
       <th class="role_col">Role</th>
-      <th class="actions_col">Actions</th>
+      <% if @user.is_admin || @course.membership_for_user(@user).role == UserCourseMembership::ROLE_TEACHING_STAFF %>
+        <th class="actions_col">Actions</th>
+      <% end %>
     </tr>
   </thead>
   <tbody>
@@ -25,30 +29,32 @@
         <td><%= user.full_name || "--" %></td>
         <td><%= user.id_string %></td>
         <td><%= @course.role_string_for_user(user) %></td>
-        <td>
-          <div class="dropdown">
-          <!-- Dropdown actions are available in 2 cases:
-            1. current logged-in user is an admin as admin has privilege to edit all users' info. 
-            2. Shown record is a non-student record   
-          -->
-          <% if @user.is_admin || @course.membership_for_user(user).role != UserCourseMembership::ROLE_STUDENT %>
-            <a data-toggle="dropdown" id="userDropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-              <%= image_tag("more_vert_black_24dp.svg", alt: "User Menu Dropdown")%>                  
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="userDropdownMenuLink">
-              <% if @user.is_admin %>
-                <li><%= link_to "Edit", edit_admin_user_url(user)+"?course_id=#{@course.id}", class: "dropdown-item" %></li>
-              <% end %>                  
-              <% if @course.membership_for_user(user).role != UserCourseMembership::ROLE_STUDENT and @course.membership_for_user(user).role != UserCourseMembership::ROLE_TEACHING_STAFF %>
-                <li> 
-                  <% url = admin_user_url(user)+"?course_id=#{@course.id}" %>
-                  <%= button_tag 'Remove', class: "dropdown-item", data: { 'bs-toggle' => "modal", 'bs-target' => "#removeUserModal", 'bs-url' => "#{url}" } %>
-                </li>
-              <% end %>
-            </ul>
-          <% end %> 
-          </div>          
-        </td>
+        <% if @user.is_admin || @course.membership_for_user(@user).role == UserCourseMembership::ROLE_TEACHING_STAFF %>        
+          <td>
+            <div class="dropdown">
+            <!-- Dropdown actions are available in 2 cases:
+              1. current logged-in user is an admin as admin has privilege to edit all users' info. 
+              2. Shown record is a non-student record   
+            -->
+            <% if @user.is_admin || @course.membership_for_user(user).role != UserCourseMembership::ROLE_STUDENT %>
+              <a data-toggle="dropdown" id="userDropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                <%= image_tag("more_vert_black_24dp.svg", alt: "User Menu Dropdown")%>                  
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="userDropdownMenuLink">
+                <% if @user.is_admin %>
+                  <li><%= link_to "Edit", edit_admin_user_url(user)+"?course_id=#{@course.id}", class: "dropdown-item" %></li>
+                <% end %>                  
+                <% if @course.membership_for_user(user).role != UserCourseMembership::ROLE_STUDENT %>
+                  <li> 
+                    <% url = admin_user_url(user)+"?course_id=#{@course.id}" %>
+                    <%= button_tag 'Remove', class: "dropdown-item", data: { 'bs-toggle' => "modal", 'bs-target' => "#removeUserModal", 'bs-url' => "#{url}" } %>
+                  </li>
+                <% end %>
+              </ul>
+            <% end %> 
+            </div>          
+          </td>
+        <% end %>
       </tr>
     <% } %>
   </tbody>

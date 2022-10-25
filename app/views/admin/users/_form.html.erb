@@ -12,7 +12,7 @@
   <% end %>
   <% if @course %>
     <div>
-      <small class="text-muted">If SSID has an existing user with the provided ID, SSID will add that user to the course with the specified role but ignore all the other fields in this form.</small>
+      <small class="text-muted">If SSID has an existing user with the provided ID (Name), SSID will add that user to the course with the specified role but ignore all the other fields in this form.</small>
     </div>
   <% end %>
   <div class="row">
@@ -23,8 +23,6 @@
   <% if @course %>
     <div class="col-12">
       <%= hidden_field_tag :user_course_id, @course.id, name: "user[course_id]" %>
-      <%= f.label :id_string, "ID", class: "form-label" %>
-      <%= f.text_field :id_string, class: "form-control" %>
     </div>
     <div class="col-12">
       <%= f.label :course_role, class: "form-label" %>
@@ -32,7 +30,7 @@
     </div>
   <% end %>
   <div class="col-12">
-    <%= f.label :name, "Login", class: "form-label" %>
+    <%= f.label :name, "Name", class: "form-label" %>
     <%= f.text_field :name, class: "form-control" %>
   </div>
   <div class="col-12">
