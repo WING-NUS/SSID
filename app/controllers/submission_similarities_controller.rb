@@ -70,6 +70,10 @@ class SubmissionSimilaritiesController < ApplicationController
         u.full_name = hash_string
         u.id_string = hash_string
         u.password_digest = BCrypt::Password.create("password")
+        u.email = "#{hash_string}@ssid.example.com"
+        u.is_admin_approved = 1
+        u.activated = 1
+        u.activated_at = Time.zone.now
       }
      
       # create a entry under other tables in database
