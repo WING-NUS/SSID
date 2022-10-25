@@ -53,6 +53,7 @@ java -jar ../../../../java/jar/antlr-4.8-complete.jar -no-listener -no-visitor -
 
 > In theory only LangLexer.java is needed for PlagiarismDetection.jar but some LangLexer.java makes use of methods from LangParser.java. LangParser.java is included in to prevent compilation issues when building PlagiarismDetection.jar
 
+> Some languages' lexor file extends from `langBases` (Eg. `JavaScriptLexerBase.java`). These find can be found within the `grammars-v4` repository. (Eg. https://github.com/antlr/grammars-v4/tree/master/javascript/javascript/Java)
 
 ### Creation of token mappings file
 11. Navigate back to `/lib/antlr/grammars/bin/lang` and create a file named `lang_token_mappings` file. Manually assign the tokens defined in `lang_tokens` to tokens understood by PlagiarismDetection.jar. Read below to find out more.
@@ -78,6 +79,10 @@ Antlr4Grammars.lang
 14. Run "ant"
 
 > Remember to add ANTLR to your CLASSPATH environmental variable before running it
+> <pre>export CLASSPATH='(Your system path)/SSID/lib/java/jar/antlr-4.8-complete.jar' </pre>
+
+> Warning: Our current implementation do not play well with mappings that contains commas (Eg. ',' = 77) and may cause complication error. A workaround is in progress.
+
 
 
 15. Now navigate to `/app/models/assignment.rb` and add the respective language name under `LANGUAGES` & `PRETTIFY_LANGUAGES`
