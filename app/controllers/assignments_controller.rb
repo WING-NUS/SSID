@@ -31,7 +31,7 @@ class AssignmentsController < ApplicationController
       @course = Course.find(params[:course_id])
       controller.send :authenticate_actions_for_role, UserCourseMembership::ROLE_TEACHING_ASSISTANT,
                                                       course: @course,
-                                                      only: [ :index, :cluster_students, :new, :create, :edit, :update]
+                                                      only: [ :index, :cluster_students, :new, :create, :show, :update]
       controller.send :authenticate_actions_for_role, UserCourseMembership::ROLE_STUDENT,
                                                       course: @course,
                                                       only: [ ]
