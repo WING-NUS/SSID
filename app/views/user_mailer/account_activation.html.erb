@@ -4,7 +4,10 @@
   Welcome to SSID! Click on the link below to activate your account:
 </p>
 
-<%= link_to "Activate", edit_account_activation_url(@user.activation_token, email: @user.email) %>
+<% link = (Rails.env == "production" ? url_for(:protocol => "#{Rails.application.config.protocol}", :host => "#{Rails.application.config.host}", :controller => "account_activations", :action => "edit", :id => @user.activation_token, :email => @user.email)
+                                     : url_for(:protocol => "#{Rails.application.config.protocol}", :host => "#{Rails.application.config.host}", :port => "3000",:controller => "account_activations", :action => "edit", :id => @user.activation_token, :email => @user.email)) %>
+
+<%= link_to "Activate", link %>
 
 <p>Thank you.</p>
   
