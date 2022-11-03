@@ -59,6 +59,6 @@ module SSID
     config.assets.precompile += %w( prettify/prettify.js  explorer_canvas/* jit/*)
     config.assets.precompile += %w( prettify/prettify.css)
 
-    config.critical_available_memory = 35
+    config.critical_available_memory = 30
   end
 end
