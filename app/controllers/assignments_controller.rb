@@ -191,7 +191,13 @@ class AssignmentsController < ApplicationController
       if submissions_path
         # Launch java program to process submissions
         SubmissionsHandler.process_submissions(submissions_path, assignment, isMapEnabled)
-        redirect_to course_assignments_url(@course), notice: 'SSID will start to process the assignment now. Please refresh this page after a few minutes to view the similarity results.'
+        
+        process = assignment.submission_similarity_process
+        notice = 'SSID will start to process the assignment now. Please refresh this page after a few minutes to view the similarity results.'
+        if process && process.status == SubmissionSimilarityProcess::STATUS_WAITING
+          notice = 'Your assignment has been put into a waiting list. SSID will process it soon. Thank you for your patience.'
+        end
+        redirect_to course_assignments_url(@course), notice: notice
       else
         assignment.errors.add "Submission zip file", ": SSID supports both directory-based and file-based submissions. Please select the submissions you want to evaluate and compress." 
         return render action: "show"
