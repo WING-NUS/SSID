@@ -21,12 +21,13 @@ namespace :SSID do
   task :process_waiting_assignment => :environment do
     if ApplicationHelper.is_application_healthy() 
       waiting_process = SubmissionSimilarityProcess.where(status: SubmissionSimilarityProcess::STATUS_WAITING).order(created_at: :asc).first
-      waiting_assignment = Assignment.find_by_id(waiting_process.assignment_id)
+      if waiting_process
+        waiting_assignment = Assignment.find_by_id(waiting_process.assignment_id)
 
-      compare_dir = File.join(".", "upload", waiting_assignment.id.to_s, "_compare")
-      puts "Process waiting assignment: #{waiting_assignment.id.to_s}"
-      SubmissionsHandler.fork_Java_process(compare_dir, waiting_assignment, waiting_assignment.mapbox)
-
+        compare_dir = File.join(".", "upload", waiting_assignment.id.to_s, "_compare")
+        puts "Process waiting assignment: #{waiting_assignment.id.to_s}"
+        SubmissionsHandler.fork_Java_process(compare_dir, waiting_assignment, waiting_assignment.mapbox)
+      end
     end
   end
 end
