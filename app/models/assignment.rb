@@ -79,9 +79,11 @@ class Assignment < ActiveRecord::Base
     }.flatten
   end
 
-  def submission_similarities_for_student(student)
-    self.submission_similarities.select { |ss|
-      ss.submission1.student == student or ss.submission2.student == student
-    }
+  def submission_similarities_for_student(student, num_display)
+    the_submission = self.submissions.find_by_student_id(student.id)
+
+    if the_submission
+      self.submission_similarities.where(["submission1_id = ? or submission2_id = ?", the_submission.id, the_submission.id]).order('assignment_id, similarity DESC').limit(num_display)
+    end
   end
 end
