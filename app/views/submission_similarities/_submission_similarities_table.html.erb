@@ -10,8 +10,8 @@
   <tbody>
   <%# @assignments not passed in %>
     <% assignments.each { |assignment| %>
-      <% submission_similarities = assignment.submission_similarities_for_student(student).sort_by { |ss| 1.0 / ss.similarity }[0..(num_display-1)] %>
-      <% submission_similarities.each_with_index { |submission_similarity, ss_idx| %>
+      <% submission_similarities = assignment.submission_similarities_for_student(student, num_display) %>
+      <% submission_similarities && submission_similarities.each_with_index { |submission_similarity, ss_idx| %>
         <tr>
           <% if ss_idx == 0 %>
             <td rowspan="<%= submission_similarities.size %>" class="assignment_cell"><%= assignment.title %></td>
