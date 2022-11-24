@@ -35,6 +35,6 @@ class SubmissionLog < ActiveRecord::Base
   belongs_to :submission_similarity
 
   def log_string
-    TYPE_TEMPLATE_STRINGS[self.log_type] + self.submission_similarity.other_student(self.submission.student).id_string
+    TYPE_TEMPLATE_STRINGS[self.log_type] + self.submission_similarity.other_student(self.submission.student).name
   end
 end

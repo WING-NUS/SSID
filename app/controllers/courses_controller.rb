@@ -132,7 +132,7 @@ class CoursesController < ApplicationController
     respond_to do |format|
       format.json { 
         render json: @course.cluster_students.collect { |s| 
-          { id: s.id, id_string: s.id_string } 
+          { id: s.id, name: s.name } 
         } 
       }
     end
