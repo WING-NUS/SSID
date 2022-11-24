@@ -74,7 +74,6 @@ class Admin::UsersController < ApplicationController
         @the_user = @existing_user
       else
         @the_user.full_name = params[:user]["full_name"]
-        @the_user.id_string = params[:user]["name"]
         @the_user.name = params[:user]["name"]
         @the_user.email = params[:user]["email"]
       end
@@ -82,7 +81,6 @@ class Admin::UsersController < ApplicationController
       @the_user.is_admin = true
       @the_user.full_name = params[:user]["full_name"]
       @the_user.name = params[:user]["name"]
-      @the_user.id_string = params[:user]["name"]
       @the_user.email = params[:user]["email"]
     end
 
@@ -112,7 +110,7 @@ class Admin::UsersController < ApplicationController
             guest = GuestUsersDetail.new { |g|
               g.user_id = @the_user.id
               g.course_id = @course.id
-              g.hash_string = params[:user]["id_string"]
+              g.hash_string = params[:user]["name"]
               g.assignment_id = 0
             }
             raise ActiveRecord::Rollback unless guest.save
@@ -178,7 +176,6 @@ class Admin::UsersController < ApplicationController
     # Update basic attributes for course user or for admin user
     if @course
       @the_user.full_name = params[:user]["full_name"]
-      @the_user.id_string = params[:user]["name"]
       @the_user.name = params[:user]["name"]
       @the_user.email = params[:user]["email"]
 

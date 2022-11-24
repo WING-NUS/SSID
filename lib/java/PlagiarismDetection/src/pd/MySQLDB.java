@@ -31,11 +31,11 @@ public final class MySQLDB {
 	private static String USER_PASSWORD;
 	private static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
 	private static String MYSQL_URL;
-	private static final String STUDENT_INSERT = "INSERT IGNORE INTO users(name, id_string, created_at, updated_at) VALUES (?, ?, ?, ?)";
+	private static final String STUDENT_INSERT = "INSERT IGNORE INTO users(name, created_at, updated_at) VALUES (?, ?, ?)";
   private static final String STUDENT_MEMBERSHIP_INSERT = "INSERT INTO user_course_memberships(user_id, course_id, role, created_at, updated_at) VALUES (?, ?, ?, ?, ?)";
   private static final String STUDENT_MEMBERSHIP_SELECT = "SELECT id FROM user_course_memberships WHERE user_id = ? AND course_id = ? AND role = ?";
   private static final String COURSE_ID_SELECT = "SELECT course_id FROM assignments WHERE id = ?";
-	private static final String STUDENT_SELECT = "SELECT id FROM users WHERE id_string = ?";
+	private static final String STUDENT_SELECT = "SELECT id FROM users WHERE name = ?";
 	private static final String RESULT_INSERT = "INSERT INTO submission_similarities(assignment_id, submission1_id, submission2_id, similarity_1_to_2, similarity_2_to_1, similarity, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 	private static final String CODE_INSERT = "INSERT INTO submissions(`lines`, assignment_id, student_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?)";
 	private static final String MAPPING_INSERT = "INSERT INTO submission_similarity_mappings(id, submission_similarity_id, start_index1, end_index1, start_index2, end_index2, start_line1, end_line1, start_line2, end_line2, statement_count, is_plagiarism, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
