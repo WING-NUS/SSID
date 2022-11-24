@@ -34,12 +34,11 @@ namespace :SSID do
     end
 
     # Create teaching staff for course
-    staff = User.find_by_id_string("SSID01")
+    staff = User.find_by_name("SSID01")
     unless staff
       staff = User.create { |user|
-        user.name = "demo_staff"
+        user.name = "SSID01"
         user.full_name = "SSID Demo Staff"
-        user.id_string = "SSID01"
         user.password_digest = BCrypt::Password.create('$$SSIDPassword$$')
       }
       membership = UserCourseMembership.create { |m|
