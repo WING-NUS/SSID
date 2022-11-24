@@ -150,9 +150,8 @@ public final class MySQLDB {
       try {
         stmt = con.prepareStatement(STUDENT_INSERT, Statement.RETURN_GENERATED_KEYS);
         stmt.setString(1, matric);
-        stmt.setString(2, matric);
+        stmt.setString(2, dateTime);
         stmt.setString(3, dateTime);
-        stmt.setString(4, dateTime);
         stmt.executeUpdate();
         rs = stmt.getGeneratedKeys();
         rs.first();
