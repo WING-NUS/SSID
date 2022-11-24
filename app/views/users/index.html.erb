@@ -16,7 +16,7 @@
   <thead>
     <tr>
       <th>Full Name</th>
-      <th class="id_col">ID</th>
+      <th class="id_col">Name</th>
       <th class="role_col">Role</th>
       <% if @user.is_admin || @course.membership_for_user(@user).role == UserCourseMembership::ROLE_TEACHING_STAFF %>
         <th class="actions_col">Actions</th>
@@ -27,7 +27,7 @@
     <% (@staff + @teaching_assistants + @students + @guests).each { |user| %>
       <tr>
         <td><%= user.full_name || "--" %></td>
-        <td><%= user.id_string %></td>
+        <td><%= user.name %></td>
         <td><%= @course.role_string_for_user(user) %></td>
         <% if @user.is_admin || @course.membership_for_user(@user).role == UserCourseMembership::ROLE_TEACHING_STAFF %>        
           <td>
