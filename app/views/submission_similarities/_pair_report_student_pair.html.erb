@@ -5,15 +5,15 @@
   @student2 = @submission2.student
 %>
 
-<h4>Submission Similarities for Students <%= @submission_similarity.student1.id_string %> and <%= @submission_similarity.student2.id_string %> (<%= @submission_similarity.similarity %>%)</h4>
+<h4>Submission Similarities for Students <%= @submission_similarity.student1.name %> and <%= @submission_similarity.student2.name %> (<%= @submission_similarity.similarity %>%)</h4>
 <div class="submission_similarity_header">
 
   <div class="table-container mt-3">
     <table id="matchingStatementsTable" class="table">
       <thead>
         <tr>
-          <th class="lines_col">Submission by <%= @student1.id_string %></th>
-          <th class="lines_col">Submission by <%= @student2.id_string %></th>
+          <th class="lines_col">Submission by <%= @student1.name %></th>
+          <th class="lines_col">Submission by <%= @student2.name %></th>
           <th>Num of Matching Statements</th>
         </tr>
       </thead>
@@ -36,7 +36,7 @@
 
 <div class="submissions">
   <div class="submission1">
-    <h5>Submission by <%= @student1.id_string %></h5>
+    <h5>Submission by <%= @student1.name %></h5>
     <pre class="prettyprint linenums <%= @assignment.prettify_js_lang %>">
     <% @submission1.lines.each { |line| %>
       <%= line %>
@@ -44,7 +44,7 @@
     </pre>
   </div>
   <div class="submission2">
-    <h5>Submission by <%= @student2.id_string %></h5>
+    <h5>Submission by <%= @student2.name %></h5>
     <pre class="prettyprint linenums <%= @assignment.prettify_js_lang %>">
     <% @submission2.lines.each { |line| %>
       <%= line %>
