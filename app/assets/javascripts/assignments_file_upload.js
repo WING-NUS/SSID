@@ -54,6 +54,17 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
                         $("#student_submissions_zip_files_list_label").text("Files inside:");
                     }
 
+                    // Change selected language to the appropriate one based on file extension
+                    if (fileNames.length > 0) { 
+                        var fileExtension = fileNames[0].split('.').pop();
+                        var language = Assignment.getLanguageFromExtension(fileExtension);
+                        if (language != null) {
+                            console.log("Changing language to " + language);
+                            console.log("prev language " + $("#student_submissions_language_list").val());
+                            $("#student_submissions_language_list").val(language);
+                        }
+                    }    
+
                     // Display the first ten files
                     for (let i = 0; i < Math.min(10, fileNames.length); i++) {
                         let fileName = fileNames[i];
@@ -89,6 +100,42 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
         };
         reader.readAsArrayBuffer(fileInput.files[0]);
     }
+
+    Assignment.getLanguageFromExtension = function (fileExtension) {
+        var language = null;
+        switch (fileExtension) {
+            case "py":
+                language = "python3";
+                break;
+            case "java":
+                language = "java";
+                break;
+            case "c":
+                language = "c";
+                break;
+            case "cpp":
+                language = "cpp";
+                break;
+            case "r":
+                language = "r";
+                break;
+            case "js":
+                language = "javascript";
+                break;
+            case "ocaml":
+                language = "ocaml";
+                break;
+            case "matlab":
+                language = "matlab";
+                break;
+            case "scala":
+                language = "scala";
+                break;
+
+        }
+        return language;
+    }
+            
 
     Assignment.onAssignmentMapFileInputChange = function (fileInput) {
         if (fileInput.files[0] == undefined) {
