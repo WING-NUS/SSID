@@ -101,39 +101,23 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
         reader.readAsArrayBuffer(fileInput.files[0]);
     }
 
-    Assignment.getLanguageFromExtension = function (fileExtension) {
-        var language = null;
-        switch (fileExtension) {
-            case "py":
-                language = "python3";
-                break;
-            case "java":
-                language = "java";
-                break;
-            case "c":
-                language = "c";
-                break;
-            case "cpp":
-                language = "cpp";
-                break;
-            case "r":
-                language = "r";
-                break;
-            case "js":
-                language = "javascript";
-                break;
-            case "ocaml":
-                language = "ocaml";
-                break;
-            case "matlab":
-                language = "matlab";
-                break;
-            case "scala":
-                language = "scala";
-                break;
 
-        }
-        return language;
+    // This hashmap is used to map file extensions to the appropriate language
+    languageHashMap = {
+        "java": "java",
+        "py": "python3",
+        "c": "c",
+        "cpp": "cpp",
+        "js": "javascript",
+        "r": "r",
+        "ocaml": "ocaml",
+        "matlab": "matlab",
+        "scala": "scala"
+    }
+
+    // This function returns the language based on the file extension
+    Assignment.getLanguageFromExtension = function (fileExtension) {
+        return languageHashMap[fileExtension];
     }
             
 
