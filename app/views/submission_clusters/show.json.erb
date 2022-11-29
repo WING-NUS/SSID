@@ -12,7 +12,7 @@
     "adjacencies": [
       <% @submissions.each { |submission| %>
         {
-          "nodeTo"  : "<%= "#{@submission_cluster_id}_#{submission.student.id_string}" %>",
+          "nodeTo"  : "<%= "#{@submission_cluster_id}_#{submission.student.name}" %>",
           "data"    : {
             "$alpha": 0
           }
@@ -25,8 +25,8 @@
   <%# Child Nodes %>
   <% @submissions.each { |submission1| %>
     {
-      "id"    : "<%= "#{@submission_cluster_id}_#{submission1.student.id_string}" %>",
-      "name"  : "<%= submission1.student.id_string %>",
+      "id"    : "<%= "#{@submission_cluster_id}_#{submission1.student.name}" %>",
+      "name"  : "<%= submission1.student.name %>",
       "data"  : {
         "is_plagiarism" : <%= submission1.is_plagiarism ? "true" : "false" %>,
         "logUrl"        : "<%= assignment_submission_log_url(@assignment, submission1) %>"
@@ -43,7 +43,7 @@
           ).first %>
           <% unless submission1 == submission2 %>
             {
-              "nodeTo": "<%= "#{@submission_cluster_id}_#{submission2.student.id_string}" %>",
+              "nodeTo": "<%= "#{@submission_cluster_id}_#{submission2.student.name}" %>",
               "data"  : {
                 "$color"    : "<%= SubmissionClustersHelper.color_for_similarity(submission_similarity.similarity) %>",
                 "$lineWidth"    : "<%= SubmissionClustersHelper.weight_for_similarity(submission_similarity.similarity) %>",

@@ -446,7 +446,7 @@ VisualizeSimilarityClusterGraph.selectAssignmentForSubmissions = (el) ->
   $.getJSON "../assignments/"+assignment_id+"/list", (data) ->
     options = ["<option value=\"\"></option>"]
     for submission in data
-      options.push "<option value=\""+submission["id"]+"\">"+submission["student_id_string"]+"</option>"
+      options.push "<option value=\""+submission["id"]+"\">"+submission["student_name"]+"</option>"
     $("#submissions").html(options.join(""))
     $(el).nextAll("span").first().html("(selected 0 of "+(options.length-1)+")")
     $(el).nextAll("select").first().removeAttr("disabled")
@@ -461,7 +461,7 @@ VisualizeTopSimilarSubmissions.selectAssignmentForSubmissions = (el) ->
   $.getJSON "../../../assignments/"+assignment_id+"/submissions", (data) ->
     options = ["<option value=\"\"></option>"]
     for submission in data
-      options.push "<option value=\""+submission["student_id"]+"\">"+submission["student_id_string"]+"</option>"
+      options.push "<option value=\""+submission["student_id"]+"\">"+submission["student_name"]+"</option>"
     $("#submissions").html(options.join(""))
     $(el).nextAll("span").first().html("(selected 0 of "+(options.length-1)+")")
     $(el).nextAll("select").first().removeAttr("disabled")
@@ -482,7 +482,7 @@ VisualizeSimilarityClusterGraph.selectAssignmentForExistingClusters = (el) ->
   $.getJSON url, (data) ->
     options = ["<option value=\"\"></option>"]
     for student in data
-      options.push "<option value=\""+student["id"]+"\">"+student["id_string"]+"</option>"
+      options.push "<option value=\""+student["id"]+"\">"+student["name"]+"</option>"
     $("#existing_cluster_submissions").html(options.join(""))
     $(el).nextAll("span").first().html("(selected 0 of "+(options.length-1)+")")
     $(el).nextAll("select").first().removeAttr("disabled")

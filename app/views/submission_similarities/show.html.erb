@@ -1,4 +1,4 @@
-<h4>Submission Similarities for Students <%= @submission_similarity.student1.id_string %> and <%= @submission_similarity.student2.id_string %> (<%= @submission_similarity.similarity %>%)</h4>
+<h4>Submission Similarities for Students <%= @submission_similarity.student1.name %> and <%= @submission_similarity.student2.name %> (<%= @submission_similarity.similarity %>%)</h4>
 <div class="submission_similarity_header">
   <div>
     <%= link_to "Show matching statements", "#matchingStatementsTable", data: { "bs-toggle" => "collapse" }, :"aria-expanded" => "false", :"aria-controls" => "matchingStatementsTable", class: "d-inline pr-2" %>
@@ -33,8 +33,8 @@
     <table id="matchingStatementsTable" class="lines collapse show">
       <thead>
         <tr>
-          <th class="lines_col">Submission by <%= @student1.id_string %></th>
-          <th class="lines_col">Submission by <%= @student2.id_string %></th>
+          <th class="lines_col">Submission by <%= @student1.name %></th>
+          <th class="lines_col">Submission by <%= @student2.name %></th>
           <th>Num of Matching Statements</th>
           <th class="check_box_col"><%= check_box_tag nil, nil, false %></th>
         </tr>
@@ -61,8 +61,8 @@
 <div>
   <p>These similarities were confirmed as plagiarism. Mark student(s) as guilty:</p>
   <p class="check_boxes">
-    <label><%= check_box_tag "toggle_guilty_#{@submission_similarity.id}_#{@submission1.id}", nil, @submission1.is_plagiarism, class: "guilty_check_box" %> Student <%= @student1.id_string %></label>
-    <label><%= check_box_tag "toggle_guilty_#{@submission_similarity.id}_#{@submission2.id}", nil, @submission2.is_plagiarism, class: "guilty_check_box" %> Student <%= @student2.id_string %></label>
+    <label><%= check_box_tag "toggle_guilty_#{@submission_similarity.id}_#{@submission1.id}", nil, @submission1.is_plagiarism, class: "guilty_check_box" %> Student <%= @student1.name %></label>
+    <label><%= check_box_tag "toggle_guilty_#{@submission_similarity.id}_#{@submission2.id}", nil, @submission2.is_plagiarism, class: "guilty_check_box" %> Student <%= @student2.name %></label>
   </p>
 </div>
 <% end %>
@@ -83,7 +83,7 @@
     </ul>
   </div>
   <div class="submission1">
-    <h5>Submission by <%= @student1.id_string %> (<%= link_to "Log", assignment_submission_log_url(@assignment, @submission1) %>)</h5>
+    <h5>Submission by <%= @student1.name %> (<%= link_to "Log", assignment_submission_log_url(@assignment, @submission1) %>)</h5>
     <pre class="prettyprint linenums <%= @assignment.prettify_js_lang %>">
     <% @submission1.lines.each { |line| %>
       <%= line %>
@@ -91,7 +91,7 @@
     </pre>
   </div>
   <div class="submission2">
-    <h5>Submission by <%= @student2.id_string %> (<%= link_to "Log", assignment_submission_log_url(@assignment, @submission2) %>)</h5>
+    <h5>Submission by <%= @student2.name %> (<%= link_to "Log", assignment_submission_log_url(@assignment, @submission2) %>)</h5>
     <pre class="prettyprint linenums <%= @assignment.prettify_js_lang %>">
     <% @submission2.lines.each { |line| %>
       <%= line %>
