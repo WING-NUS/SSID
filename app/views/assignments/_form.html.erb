@@ -20,18 +20,6 @@
       <%= f.text_field :title, class: "form-control" %>
     </div>
     <div class="col-12">
-      <%= f.label :language, class: "form-label" %>
-      <%= f.select :language, Assignment.options_for_languages, {}, { :class => 'form-select' } %>
-    </div>
-    <div class="col-sm-6">
-      <%= f.label :min_match_length, "Minimum Match Length \u24D8", title: "The least number of contiguous identical statements required to flag a match.", class: 'form-label' %>
-      <%= f.text_field :min_match_length, class: 'form-control' %>
-    </div>
-    <div class="col-sm-6">
-      <%= f.label :ngram_size, "Size of n-gram \u24D8", title: "An n-gram is a contiguous subsequence of n tokens of a given sequence.", class: 'form-label' %>
-      <%= f.text_field :ngram_size, class: 'form-control' %>
-    </div>
-    <div class="col-12">
       <%= f.label :file, "Student submissions (zip) \u24D8", title: "The zip file should contain one folder for each student's code files; folders are named according to student ID; Name your folder as \"skeleton\" for the codes you wish to exclude from the system", class: 'form-label' %>
       <%= f.file_field :file, class: 'form-control' %>
       <br/>
@@ -39,7 +27,10 @@
       <ul id="student_submissions_zip_files_list">
       </ul>
     </div>
-
+    <div class="col-12">
+      <%= f.label :language, class: "form-label" %>
+      <%= f.select :language, Assignment.options_for_languages, {}, { :class => 'form-select', :id => 'student_submissions_language_list' }  %>
+    </div>
     <div class="col-12">
       <%= f.label :mapbox, "Upload map file?" %>
       <%= f.check_box :mapbox, { :class => 'form-check-input' }, "Yes", "No" %>
@@ -48,8 +39,24 @@
       <%= f.label :mapfile, "Mapping file (csv) \u24D8", title: "The zip file should contain one folder for each student's code files; folders are named according to student ID; Name your folder as \"skeleton\" for the codes you wish to exclude from the system", class: 'form-label' %>
       <%= f.file_field :mapfile, accept: '.csv', class: 'form-control' %>
       <ul id="map_files_list"></ul>
-
     </div>
+    <div class="col-12">
+      <%= label_tag 'advancedbox', "Show advanced options?" %>
+      <%= check_box_tag 'advancedbox', 'yes', false, class: 'form-check-input' %>
+    </div>
+
+    <div class="col-sm-6 advanced-options" style="display:none;">
+      <%= f.label :min_match_length, "Minimum Match Length \u24D8", title: "The least number of contiguous identical statements required to flag a match.", class: 'form-label' %>
+      <%= f.text_field :min_match_length, class: 'form-control' %>
+    </div>
+    <div class="col-sm-6 advanced-options" style="display:none;">
+      <%= f.label :ngram_size, "Size of n-gram \u24D8", title: "An n-gram is a contiguous subsequence of n tokens of a given sequence.", class: 'form-label' %>
+      <%= f.text_field :ngram_size, class: 'form-control' %>
+    </div>
+    
+
+    
+
     <div>
       <%= f.submit class: "submit" %>
     </div>
@@ -66,6 +73,25 @@ checkbox.onchange = function() {
      details_div.style['display'] = 'none';
    }
 };
+
+var advanced_checkbox = document.getElementById('advancedbox');
+console.log(advanced_checkbox);
+var advanced_details_div = document.getElementsByClassName('advanced-options');
+console.log(advanced_details_div);
+
+advanced_checkbox.onchange = function() {
+  console.log("advanced checkbox changed");
+   if(this.checked) {
+    for (var i = 0; i < advanced_details_div.length; i++) {
+      advanced_details_div[i].style['display'] = 'block';
+    }
+   } else {
+    for (var i = 0; i < advanced_details_div.length; i++) {
+      advanced_details_div[i].style['display'] = 'none';
+    }
+   }
+};
+
 window.addEventListener('DOMContentLoaded', () => {
   console.log($('which-form').val());
   if ($('#which-form').val() === "update_assignment") {
