@@ -31,7 +31,7 @@ class AssignmentsController < ApplicationController
       @course = Course.find(params[:course_id])
       controller.send :authenticate_actions_for_role, UserCourseMembership::ROLE_TEACHING_ASSISTANT,
                                                       course: @course,
-                                                      only: [ :index, :cluster_students, :new, :create, :edit, :update]
+                                                      only: [ :index, :cluster_students, :new, :create, :show, :update]
       controller.send :authenticate_actions_for_role, UserCourseMembership::ROLE_STUDENT,
                                                       course: @course,
                                                       only: [ ]
@@ -63,7 +63,7 @@ class AssignmentsController < ApplicationController
     respond_to do |format|
       format.json { 
         render json: @assignment.cluster_students.collect { |s| 
-          { id: s.id, id_string: s.id_string } 
+          { id: s.id, name: s.name } 
         } 
       }
     end
@@ -191,7 +191,13 @@ class AssignmentsController < ApplicationController
       if submissions_path
         # Launch java program to process submissions
         SubmissionsHandler.process_submissions(submissions_path, assignment, isMapEnabled)
-        redirect_to course_assignments_url(@course), notice: 'SSID will start to process the assignment now. Please refresh this page after a few minutes to view the similarity results.'
+        
+        process = assignment.submission_similarity_process
+        notice = 'SSID will start to process the assignment now. Please refresh this page after a few minutes to view the similarity results.'
+        if process && process.status == SubmissionSimilarityProcess::STATUS_WAITING
+          notice = 'Your assignment has been put into a waiting list. SSID will process it soon. Thank you for your patience.'
+        end
+        redirect_to course_assignments_url(@course), notice: notice
       else
         assignment.errors.add "Submission zip file", ": SSID supports both directory-based and file-based submissions. Please select the submissions you want to evaluate and compress." 
         return render action: "show"

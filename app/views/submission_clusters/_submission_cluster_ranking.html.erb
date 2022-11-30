@@ -11,8 +11,8 @@
     <% students.each_with_index { |student, idx| %>
       <tr>
         <td class="rank_col"><%= idx + 1 %></td>
-        <td class="rank_check_box_cell"><%= check_box_tag nil, "student_"+student.id_string, false %></td>
-        <td><%= student.id_string %></td>
+        <td class="rank_check_box_cell"><%= check_box_tag nil, "student_"+student.name, false %></td>
+        <td><%= student.name %></td>
         <td><%= num_assignments[student.id] %></td>
         <td><%= num_clusters[student.id] %></td>
       </tr>

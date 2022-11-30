@@ -59,14 +59,16 @@ end
 </style>
 
 <div class="main">
-  <h2 id="top">User Guide</h2>
-  <h3>Welcome to SSID, a plagiarism detection system built in NUS.</h3>
+  <h3 id="top">User Guide</h3>
+  <h4>Welcome to SSID, a plagiarism detection system built in NUS.</h4>
   This system provides assistance to teaching teams in detecting plagiarism.
   Compare to many of the existing systems, this system not only provides the pairwise plagiarism detection in submissions,
   but also provides clustering analysis and the plagiarism history of students.
   <p/>
   To learn how SSID can help you detect and prevent plagiarism, click the following topics:
   <ul>
+    <li><a class="normalLink" href="#create_a_course">Create a course</a></li>
+    <li><a class="normalLink" href="#add_a_course_user">Add a course user</a></li>    
     <li><a class="normalLink" href="#view_assignments">View assignments</a></li>
     <li><a class="normalLink" href="#create_an_assignment">Create an assignment</a></li>
     <li><a class="normalLink" href="#view_pairwise_code_comparison">View pairwise submissions comparison</a></li>
@@ -81,7 +83,55 @@ end
   <p/>
   <table cellpadding="0" cellspacing="0">
     <tr>
-      <td><h2 id="view_assignments">View assignments</h2></td>
+      <td><h4 id="create_a_course">Create a course</h4></td>
+      <td align="right"><%= backToTop%></td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        <ol class="step">
+          <li class="step">
+            From courses listing, click <%=genBlankLink("New Course")%> icon.<br/>
+            <%=image("creating-courses-01.png")%>
+          </li>
+          <li class="step">
+            Fill in the information of this course.<br/>
+            <%=image("creating-courses-02.png")%>
+          </li>
+          <li class="step">
+            Click <b>Create Course</b>.
+          </li>
+        </ol>
+      </td>
+    </tr>
+
+    <tr>
+      <td><h4 id="add_a_course_user">Add a course user</h4></td>
+      <td align="right"><%= backToTop%></td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        <ol class="step">
+          <li class="step">
+            From courses listing, click View Users icon of the desired course.<br/>
+            <%=image("add-course-users-01.png")%>
+          </li>
+          <li class="step">
+            Click <%=genBlankLink("Add Course User")%> icon in users listing.<br/>
+            <%=image("add-course-users-02.png")%>
+          </li>
+          <li class="step">
+            Fill in the information of this user.<br/>
+            <%=image("add-course-users-03.png")%>            
+          </li>
+          <li class="step">
+            Click <b>Add Course User</b>.
+          </li>          
+        </ol>
+      </td>
+    </tr>
+
+    <tr>
+      <td><h4 id="view_assignments">View assignments</h4></td>
       <td align="right"><%= backToTop%></td>
     </tr>
     <tr>
@@ -100,7 +150,7 @@ end
     </tr>
 
     <tr>
-      <td><h2 id="create_an_assignment">Create an assignment</h2></td>
+      <td><h4 id="create_an_assignment">Create an assignment</h4></td>
       <td align="right"><%=backToTop%></td>
     </tr>
     <tr>
@@ -114,9 +164,14 @@ end
           <li class="step">
             Fill in the information of this assignment and select the zipped submission file (*.zip) to upload.<br/>
             <%=image("p5.png")%><br/>
-            <i>Note: You can include skeleton files to be ignored by the system in a folder named skeleton</i><br/>
+            <i>Note: SSID currently supports both file-based and directory-based submissions. Each file or folder should be placed at the top level.</i><br/>
+            <i>You can include skeleton file e.g. "skeleton.py" or folder "skeleton" to exclude sample codes from checking by the system.</i><br/>
             <i>Tip: You can move your cursor over the [i] for explanation of the term.</i>
           </li>
+          <li class="step">
+            Upload map file will allow you to map between a directory name (in the uploaded zip file) and the student roster that you might be using for your modules.<br/>
+            A csv file with no header, and row with format: <i>student-submission-folder-name,student-custom-id</i> will be needed.
+          </li>          
           <li class="step">
             Click <b>Create</b>.
           </li>
@@ -125,7 +180,7 @@ end
     </tr>
 
     <tr>
-      <td><h2 id="view_pairwise_code_comparison">View pairwise submissions comparison results</h2></td>
+      <td><h4 id="view_pairwise_code_comparison">View pairwise submissions comparison results</h4></td>
       <td align="right"><%=backToTop%></td>
     </tr>
     <tr>
@@ -146,7 +201,7 @@ end
     </tr>
 
     <tr>
-    <td><h2 id="view_log">View student log</h2></td>
+    <td><h4 id="view_log">View student log</h4></td>
     <td align="right"><%=backToTop%></td>
     </tr>
     <tr>
@@ -168,7 +223,7 @@ end
     </tr>
 
     <tr>
-      <td><h2 id="report_plagiarism">Report a suspicious case</h2></td>
+      <td><h4 id="report_plagiarism">Report a suspicious case</h4></td>
       <td align="right"><%=backToTop%></td>
     </tr>
     <tr>
@@ -188,7 +243,7 @@ end
     </tr>
 
     <tr>
-      <td><h2 id="confirm_plagiarism">Confirm a plagiarism case</h2></td>
+      <td><h4 id="confirm_plagiarism">Confirm a plagiarism case</h4></td>
       <td align="right"><%=backToTop%></td>
     </tr>
     <tr>
@@ -211,7 +266,7 @@ end
     </tr>
 
     <tr>
-      <td><h2 id="decline_plagiarism">Remove plagiarism status</h2></td>
+      <td><h4 id="decline_plagiarism">Remove plagiarism status</h4></td>
       <td align="right"><%=backToTop%></td>
     </tr>
     <tr>
@@ -234,7 +289,7 @@ end
     </tr>
 
     <tr>
-      <td><h2 id="create_grouping">Create grouping</h2></td>
+      <td><h4 id="create_grouping">Create grouping</h4></td>
       <td align="right"><%=backToTop%></td>
     </tr>
     <tr>
@@ -265,7 +320,7 @@ end
     </tr>
 
     <tr>
-      <td><h2 id="view_graphs">View Visuals</h2></td>
+      <td><h4 id="view_graphs">View Visuals</h4></td>
       <td align="right"><%=backToTop%></td>
     </tr>
     <tr>
@@ -293,7 +348,7 @@ end
     </tr>
 
     <tr>
-      <td><h2 id="faq">FAQ</h2></td>
+      <td><h4 id="faq">FAQ</h4></td>
       <td align="right"><%=backToTop%></td>
     </tr>
     <tr>

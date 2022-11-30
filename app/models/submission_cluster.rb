@@ -22,7 +22,7 @@ class SubmissionCluster < ActiveRecord::Base
   
   def submission_student_ids
     self.submissions.collect { |s|
-      s.student.id_string
+      s.student.name
     }
   end
 

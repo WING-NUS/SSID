@@ -37,8 +37,12 @@ class Admin::UsersController < ApplicationController
   def index
     @admins = User.where(is_admin: true)
 
+    @signups = User.where(is_admin_approved: false)
+
     # users don't belong to any course
-    @loners = User.all - User.joins(:memberships) - @admins
+    @loners = User.all - User.joins(:memberships) - @admins - @signups
+
+    
   end
 
   # GET /admin/users/new
@@ -65,12 +69,11 @@ class Admin::UsersController < ApplicationController
     # Construct basic attributes for course user or for admin user
     if !@course.nil?
       # Check if user exists
-      @existing_user = User.where(id_string: params[:user]["id_string"]).first
+      @existing_user = User.where(name: params[:user]["name"]).first
       if @existing_user
         @the_user = @existing_user
       else
         @the_user.full_name = params[:user]["full_name"]
-        @the_user.id_string = params[:user]["id_string"]
         @the_user.name = params[:user]["name"]
         @the_user.email = params[:user]["email"]
       end
@@ -78,7 +81,6 @@ class Admin::UsersController < ApplicationController
       @the_user.is_admin = true
       @the_user.full_name = params[:user]["full_name"]
       @the_user.name = params[:user]["name"]
-      @the_user.id_string = params[:user]["name"]
       @the_user.email = params[:user]["email"]
     end
 
@@ -108,7 +110,7 @@ class Admin::UsersController < ApplicationController
             guest = GuestUsersDetail.new { |g|
               g.user_id = @the_user.id
               g.course_id = @course.id
-              g.hash_string = params[:user]["id_string"]
+              g.hash_string = params[:user]["name"]
               g.assignment_id = 0
             }
             raise ActiveRecord::Rollback unless guest.save
@@ -121,11 +123,15 @@ class Admin::UsersController < ApplicationController
 
     # Check for errors and render view
     if @the_user.errors.empty? and @the_user.save
+      unless @existing_user
+        UserMailer.account_activation(@the_user).deliver_now
+      end
+
       if @existing_user or not @course.nil?
         redirect_to course_users_url(@course), notice: "User was successfully added 
-        to #{@course.code}."
+        to #{@course.code}, and account needs to be activated before use."
       else 
-        redirect_to admin_users_url, notice: 'User was successfully created.'
+        redirect_to admin_users_url, notice: 'User was successfully created, and account needs to be activated before use.'
       end
     else
       render action: "new"
@@ -145,6 +151,16 @@ class Admin::UsersController < ApplicationController
     end
   end
 
+  def approve
+    @the_user = User.find(params[:user_id])
+    @the_user.update_attribute(:is_admin_approved, true)
+    @the_user.save
+    UserMailer.admin_approved(@the_user).deliver_now
+    redirect_to admin_users_url, notice: 'User was successfully approved.'
+  end
+
+
+
   # PUT /admin/users/1
   def update
     @the_user = User.find(params[:id])
@@ -160,7 +176,6 @@ class Admin::UsersController < ApplicationController
     # Update basic attributes for course user or for admin user
     if @course
       @the_user.full_name = params[:user]["full_name"]
-      @the_user.id_string = params[:user]["id_string"]
       @the_user.name = params[:user]["name"]
       @the_user.email = params[:user]["email"]
 
@@ -241,9 +256,10 @@ class Admin::UsersController < ApplicationController
         end
       else
         if @the_user.destroy
-          redirect_to url, notice: 'User was successfully deleted.'
+          redirect_to admin_users_url, notice: 'User was successfully deleted.'
+        else
+          redirect_to admin_users_url, alert: @the_user.errors.to_a.join(", ")
         end
-        redirect_to url, alert: @the_user.errors.to_a.join(", ")
       end
     end
   end

@@ -35,7 +35,7 @@
                 <%= image_tag("more_vert_black_24dp.svg", alt: "Cluster Group Dropdown Menu Link")%>
               </a>
               <ul class="dropdown-menu">
-                <li><%= link_to "View Clusters", cluster_group_clusters_url(cluster_group), class: "dropdown-item" %></li>
+                <!-- <li><%= link_to "View Clusters", cluster_group_clusters_url(cluster_group), class: "dropdown-item" %></li> -->
                 <li>
                   <%= button_tag "Delete", class: "dropdown-item", data: { "bs-toggle" => "modal", "bs-target" => "#deleteClusterGroupModal", 'bs-url' => "#{assignment_cluster_group_url(@assignment, cluster_group)}" } %>
                 </li>

@@ -1,4 +1,4 @@
-<h4>Student: <%= @submission.student.id_string %></h4>
+<h4>Student: <%= @submission.student.name %></h4>
 
 <table>
   <thead>
@@ -8,7 +8,7 @@
       <th class="similarity_col">Assignment</th>
       <th class="similarity_col">Grader</th>
       <th>Remarks</th>
-      <th>View</th>
+      <!-- <th>View</th> -->
     </tr>
   </thead>
   <tbody>
@@ -21,7 +21,7 @@
               <td><%= log.submission.assignment.title %></td>
               <td><%= log.marker.full_name %></td>
               <td><%= log.log_string %></td>
-              <td class="view-similarity"><%= link_to image_tag("link.svg", size: "24", alt: "View submission similarities"), guest_view_similarity_path(log.submission.assignment, log.submission_similarity), { :class => 'tooltips', 'data-toggle' => 'tooltip', 'data-placement' => 'bottom', 'title' => 'View submission similarities' }%></td>
+              <!-- <td class="view-similarity"><%= link_to image_tag("link.svg", size: "24", alt: "View submission similarities"), guest_view_similarity_path(log.submission.assignment, log.submission_similarity), { :class => 'tooltips', 'data-toggle' => 'tooltip', 'data-placement' => 'bottom', 'title' => 'View submission similarities' }%></td> -->
           </tr>
           <% end %>
         <% end %>

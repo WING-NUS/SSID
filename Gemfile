@@ -46,6 +46,8 @@ gem 'jquery-rails', '~> 4.4'
 
 gem 'bootstrap', '~> 5.1.3'
 
+gem 'whenever', '~> 1.0'
+
 group :assets do
   gem 'sass-rails', '~> 6.0'
   gem 'coffee-rails', '~> 5.0'

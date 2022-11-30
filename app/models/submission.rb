@@ -51,7 +51,7 @@ class Submission < ActiveRecord::Base
     attr
   end
 
-  def student_id_string
-    self.student.id_string
+  def student_name
+    self.student.name
   end
 end
