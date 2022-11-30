@@ -78,7 +78,6 @@
     <pre class="prettyprint linenums <%= @assignment.prettify_js_lang %>">
     <% current_line_num = 1 %>
     <% @submission2.lines.each { |line| %>
-    
     <small class="unselectable"><%= line_num_to_key2[current_line_num].to_s  + "  " %></small><% current_line_num += 1 %><%= line %> 
     <% } %>
     </pre>
