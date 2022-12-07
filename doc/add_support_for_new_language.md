@@ -75,10 +75,7 @@ Antlr4Grammars.lang
       return lexer;
     }
     </pre>
-14. Run "ant"
-
-> Remember to add ANTLR to your CLASSPATH environmental variable before running it
-
+14. Run "ant" to rebuild.
 
 15. Now navigate to `/app/models/assignment.rb` and add the respective language name under `LANGUAGES` & `PRETTIFY_LANGUAGES`
 
