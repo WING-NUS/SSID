@@ -81,6 +81,9 @@ module SubmissionsHandler
     # Add filters for file types
     accepted_formats = [".ipynb", ".py",".java", ".cpp", ".c", ".h", ".scala", ".m", ".ml", ".mli", ".r"]
 
+    # Regexes for special characters (emojis etc.) be removed
+    regexes_to_remove = [/[\u{1f600}-\u{1f64f}]/,/[\u{2702}-\u{27b0}]/,/[\u{1f680}-\u{1f6ff}]/,/[\u{24C2}-\u{1F251}]/,/[\u{1f300}-\u{1f5ff}]/]
+    
     # check zip file
     has_entry_same_name_with_upload_file = false
     upload_file_without_ext = File.basename(upload_file, ".zip") + File::SEPARATOR
@@ -109,6 +112,18 @@ module SubmissionsHandler
         FileUtils.mkdir_p(File.dirname(f_path))
         # Extract files into the file path
         zip_file.extract(f, f_path) unless File.exist?(f_path)
+
+        # Remove characters in regexes_to_remove from extracted file
+        extracted_file_content = File.open(f_path, "r:UTF-8", &:read)
+
+        File.open(f_path, "w:UTF-8") do |f| 
+
+          regexes_to_remove.each do |regex|
+            extracted_file_content = extracted_file_content.gsub(regex, '')
+          end
+
+          f.write(extracted_file_content)
+        end 
 
         # Reject files that passed the extension test but might be a binary file in disguise
         # if f.file? filepath
