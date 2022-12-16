@@ -15,6 +15,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
+require 'yaml'
+
 class AnnouncementsController < ApplicationController
   before_action { |controller|
     if params[:announcement] and params[:announcement]["course_id"]
@@ -30,6 +32,9 @@ class AnnouncementsController < ApplicationController
 
   # GET /announcements
   def index
+    path = 'config/product_update/update_msg.yml'
+    update_msg_yaml = YAML.load_file(path)
+    flash[:product_update_msg] = "✨✨ Update from SSID: " + update_msg_yaml["msg"] + " ✨✨"
     @announcements = @user.courses.collect { |c| c.announcements }.flatten
   end
 
