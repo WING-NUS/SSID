@@ -28,6 +28,9 @@ gem 'rubyzip', '~> 2.3'
 
 gem 'sprockets-rails', :require => 'sprockets/railtie'
 
+# handles user authentication and authorization
+gem 'devise', '~> 4.7'
+
 # extends :File methods
 # gem 'win32-file', '~> 0.8.2'
 # gem 'ptools', '~> 1.3', '>= 1.3.7'
