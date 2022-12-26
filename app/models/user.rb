@@ -16,6 +16,10 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
 class User < ActiveRecord::Base
+  # Include default devise modules. Others available are:
+  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
+  devise :database_authenticatable, :registerable,
+         :recoverable, :rememberable, :validatable, :confirmable
   MIN_PASSWORD_LENGTH = 8
 
   has_many :memberships , class_name: "UserCourseMembership", :dependent => :delete_all

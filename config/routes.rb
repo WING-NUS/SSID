@@ -16,6 +16,7 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
 SSID::Application.routes.draw do
+  devise_for :users
   resources :submission_logs
 
   get 'assignments/:id/submission_similarities/guest_user' => 'submission_similarities#create_guest_user', :as => 'guest_user_create'
