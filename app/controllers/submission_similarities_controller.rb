@@ -68,7 +68,6 @@ class SubmissionSimilaritiesController < ApplicationController
       @guest_user = User.new { |u|
         u.name = hash_string
         u.full_name = hash_string
-        u.id_string = hash_string
         u.password_digest = BCrypt::Password.create("password")
         u.email = "#{hash_string}@ssid.example.com"
         u.is_admin_approved = 1

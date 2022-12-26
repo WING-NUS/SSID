@@ -11,12 +11,12 @@
   <div id="options">
     <ol>
       <li>Visualize a cluster comprising of submissions from assignment <%= select_tag "submissions_assignment_selector", options_from_collection_for_select(@course.assignments, "id", "title"), onchange: "VisualizeSimilarityClusterGraph.selectAssignmentForSubmissions(this);" %> by students:
-    <%= select_tag "submissions", options_from_collection_for_select(@course.assignments.first.submissions, "id", "student_id_string"), multiple: true, include_blank: true, class: "submissions" %>
+    <%= select_tag "submissions", options_from_collection_for_select(@course.assignments.first.submissions, "id", "student_name"), multiple: true, include_blank: true, class: "submissions" %>
     <span>(selected 0 of <%= @course.assignments.first.submissions.size %>)</span>
     </li>
     <li>
     Visualize existing submission clusters in assignment <%= select_tag "existing_clusters_assignment_selector", options_for_select([["All", @course.id]] + @course.assignments.collect { |a| [ a.title, a.id ] }), onchange: "VisualizeSimilarityClusterGraph.selectAssignmentForExistingClusters(this);" %> that include any of the following students:
-    <%= select_tag "existing_cluster_submissions", options_from_collection_for_select(@course.cluster_students, "id", "id_string"), multiple: true, include_blank: true, class: "submissions" %>
+    <%= select_tag "existing_cluster_submissions", options_from_collection_for_select(@course.cluster_students, "id", "name"), multiple: true, include_blank: true, class: "submissions" %>
     <span>(selected 0 of <%= @course.cluster_students.size %>)</span>
     </li>
     <li>

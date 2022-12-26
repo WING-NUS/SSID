@@ -75,14 +75,13 @@ Antlr4Grammars.lang
       return lexer;
     }
     </pre>
-14. Run "ant"
-
-> Remember to add ANTLR to your CLASSPATH environmental variable before running it
-
+14. Run "ant" to rebuild.
 
 15. Now navigate to `/app/models/assignment.rb` and add the respective language name under `LANGUAGES` & `PRETTIFY_LANGUAGES`
 
-16. Finally, navigate to `lib/submissions_handler.rb` and modify `accepted_formats` in line 78 to include file extension type for the language.
+16. Next, navigate to `/app/assets/javascripts/assignment_file_upload.js` and add the respective language extension and language name under `languageHashMap`
+
+17. Finally, navigate to `lib/submissions_handler.rb` and modify `accepted_formats` in line 78 to include file extension type for the language.
 
 
 

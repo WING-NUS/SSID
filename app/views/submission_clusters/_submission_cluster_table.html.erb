@@ -7,11 +7,11 @@
     <tr><td colspan="2" class="hide_link_cell"><%= link_to "Collapse Student IDs (#{cluster.submissions.size})", "#" %></td></tr>
     <% cluster.submissions.each { |submission| %>
       <tr>
-        <td class="check_box_cell"><%= check_box_tag nil, "student_"+submission.student.id_string, false %></td>
+        <td class="check_box_cell"><%= check_box_tag nil, "student_"+submission.student.name, false %></td>
         <% if submission.is_plagiarism %>
-          <td><%= link_to submission.student.id_string, assignment_submission_log_url(cluster.assignment, submission), class: "is_plagiarism" %></td>
+          <td><%= link_to submission.student.name, assignment_submission_log_url(cluster.assignment, submission), class: "is_plagiarism" %></td>
         <% else %>
-          <td><%= link_to submission.student.id_string, assignment_submission_log_url(cluster.assignment, submission) %></td>
+          <td><%= link_to submission.student.name, assignment_submission_log_url(cluster.assignment, submission) %></td>
         <% end %>
       </tr>
     <% } %>

@@ -63,7 +63,7 @@ class AssignmentsController < ApplicationController
     respond_to do |format|
       format.json { 
         render json: @assignment.cluster_students.collect { |s| 
-          { id: s.id, id_string: s.id_string } 
+          { id: s.id, name: s.name } 
         } 
       }
     end

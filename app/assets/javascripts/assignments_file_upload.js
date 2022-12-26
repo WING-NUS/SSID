@@ -54,6 +54,17 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
                         $("#student_submissions_zip_files_list_label").text("Files inside:");
                     }
 
+                    // Change selected language to the appropriate one based on file extension
+                    if (fileNames.length > 0) { 
+                        var fileExtension = fileNames[0].split('.').pop();
+                        var language = Assignment.getLanguageFromExtension(fileExtension);
+                        if (language != null) {
+                            console.log("Changing language to " + language);
+                            console.log("prev language " + $("#student_submissions_language_list").val());
+                            $("#student_submissions_language_list").val(language);
+                        }
+                    }    
+
                     // Display the first ten files
                     for (let i = 0; i < Math.min(10, fileNames.length); i++) {
                         let fileName = fileNames[i];
@@ -89,6 +100,26 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
         };
         reader.readAsArrayBuffer(fileInput.files[0]);
     }
+
+
+    // This hashmap is used to map file extensions to the appropriate language
+    languageHashMap = {
+        "java": "java",
+        "py": "python3",
+        "c": "c",
+        "cpp": "cpp",
+        "js": "javascript",
+        "r": "r",
+        "ocaml": "ocaml",
+        "matlab": "matlab",
+        "scala": "scala"
+    }
+
+    // This function returns the language based on the file extension
+    Assignment.getLanguageFromExtension = function (fileExtension) {
+        return languageHashMap[fileExtension];
+    }
+            
 
     Assignment.onAssignmentMapFileInputChange = function (fileInput) {
         if (fileInput.files[0] == undefined) {

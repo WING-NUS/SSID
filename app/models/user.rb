@@ -30,8 +30,7 @@ class User < ActiveRecord::Base
   has_many :password_resets, class_name: "PasswordReset"
 
   validates :name, :password_digest, presence: true
-  validates :name, :id_string, uniqueness: true
-  validates :id_string, presence: true, if: -> {is_admin == false}
+  validates :name, uniqueness: true
   validates :email, presence: true, uniqueness: true, format: { with: /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i }
 
   has_secure_password
