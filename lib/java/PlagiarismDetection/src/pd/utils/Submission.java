@@ -32,6 +32,8 @@ public final class Submission {
 	private HashMap<NGram, ArrayList<Integer>> nGramIndexingTable = new HashMap<NGram, ArrayList<Integer>>();
 	private boolean isSkeletonCode = false;
 
+	private ArrayList<String> possibleRelatedDocuments = new ArrayList<String>();
+
 	public Submission() {
 	}
 
@@ -116,4 +118,13 @@ public final class Submission {
 	public String toString() {
 		return id;
 	}
+
+	public ArrayList<String> getPossibleRelatedDocuments() {
+		return possibleRelatedDocuments;
+	}
+
+	public void setPossibleRelatedDocuments(ArrayList<String> possibleRelatedDocuments) {
+		this.possibleRelatedDocuments = possibleRelatedDocuments;
+	}
+	
 }

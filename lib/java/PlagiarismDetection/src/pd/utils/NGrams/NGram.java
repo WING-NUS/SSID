@@ -18,6 +18,11 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 package pd.utils.NGrams;
 
 import pd.utils.Tokens.*;
+
+import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 public class NGram {
@@ -122,5 +127,36 @@ public class NGram {
 		}
 
 		return !(i.hasNext() || other.hasNext());
+	}
+
+	public TokenList getTokenList() {
+		return tokens;
+	}
+
+	public String nGramValue() {
+		String nGram = "";
+		for (TokenSSID token : tokens) {
+			nGram = nGram + token.getValue() + "_";
+		}
+		return nGram;		
+	}
+
+	public String nGramHashString() throws NoSuchAlgorithmException {
+		String nGram = nGramValue();
+
+		MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+		byte[] digest = messageDigest.digest(nGram.getBytes(StandardCharsets.UTF_8));
+		BigInteger nbr = new BigInteger(1, digest);
+		String hash = nbr.toString(16);
+		return hash;
+	}
+
+	public BigInteger nGramHash() throws NoSuchAlgorithmException {
+		String nGram = nGramValue();
+
+		MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+		byte[] digest = messageDigest.digest(nGram.getBytes(StandardCharsets.UTF_8));
+		BigInteger nbr = new BigInteger(1, digest);
+		return nbr;
 	}
 }

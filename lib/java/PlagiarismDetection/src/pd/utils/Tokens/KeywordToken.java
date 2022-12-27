@@ -42,6 +42,11 @@ public final class KeywordToken extends TokenSSID {
 
 	@Override
 	public String toString() {
-		return strValue;
+		// return strValue;
+		return "(" + this.getClass().getName() + "_" + strValue + ")";
 	}
+
+	public String getValue() {
+		return strValue;
+	}	
 }

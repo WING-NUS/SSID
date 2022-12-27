@@ -17,19 +17,36 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
  
  package pd;
 
-import pd.utils.Mappings.*;
-import pd.utils.NGrams.*;
-import java.util.*;
-import pd.utils.*;
-import pd.utils.Tokens.*;
+import java.math.BigInteger;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import pd.utils.Result;
+import pd.utils.Submission;
+import pd.utils.Mappings.Mapping;
+import pd.utils.Mappings.MappingComparator;
+import pd.utils.Mappings.MatchingDocument;
+import pd.utils.Mappings.SkeletonMapping;
+import pd.utils.NGrams.FingerPrint;
+import pd.utils.NGrams.NGram;
+import pd.utils.NGrams.NGramList;
+import pd.utils.Tokens.TokenList;
+import pd.utils.Tokens.TokenSSID;
 public final class SimComparer {
 
 	private static SimComparer instance = new SimComparer();
 	private static final String SKELETON = "skeleton";
 	private static Logger logger = LogManager.getLogger();
+	private static final int WINDOW_SIZE = 4;
 
 	@SuppressWarnings("unused")
 	private boolean debugMode = false;
@@ -84,6 +101,7 @@ public final class SimComparer {
 		return results;
 	}
 
+
 	private void unmarkTokens(TokenList s1Tokens, TokenList s2Tokens,
 			TokenList bTokens) {
 		s1Tokens.unmarkAll();
@@ -115,6 +133,107 @@ public final class SimComparer {
 		}
 
 		return reply;
+	}
+
+	private void printSubmissionsInfo(Submission s) {
+
+		logger.debug("Comparing time using string vs big int to get min nGram hashes of submission {}:", s.getID());
+		/* Printing NGramIndexingTable
+		HashMap<NGram, ArrayList<Integer>> nGramIndexingTableOfS = s.getNGramIndexingTable();
+		logger.debug("Printing nGram indexing table of submission {}:", s.getID());
+		Set<NGram> keysInS = nGramIndexingTableOfS.keySet();
+		for (NGram key : keysInS) {
+			
+			ArrayList<Integer> values = nGramIndexingTableOfS.get(key);
+			String valuesInString = "";
+			for(Integer i : values) {
+				valuesInString = valuesInString + i + " ";
+			}
+			logger.debug("S, ngram = {}, value = {}", key.getTokenList().toString(), valuesInString);
+
+
+		}		
+
+		*/
+
+	}
+
+	private ArrayList<FingerPrint> computeDocumentFingerPrints (Submission s) {
+		logger.debug("Compute fingerprints of submission {}:", s.getID());
+
+		NGramList nGramList = s.getNGramList();
+		ArrayList<FingerPrint> documentFingerprints = new ArrayList<FingerPrint>();
+
+		
+
+		try {
+			FingerPrint lastMinGram = minGram(nGramList.get(0), nGramList.get(1), nGramList.get(2), nGramList.get(3), 0);
+			BigInteger lastMinHash = lastMinGram.getHash();
+			int lastSelectedPosition = 0 + lastMinGram.getIndexWithinWindow();
+
+			documentFingerprints.add(lastMinGram);
+			for (int window = 1; window < nGramList.size()- WINDOW_SIZE; window++) {
+			
+				NGram currentGram = nGramList.get(window + WINDOW_SIZE-1);
+				BigInteger hashOfTheCurrentGram = currentGram.nGramHash();
+				int currentPosition = window+3;
+
+				if (hashOfTheCurrentGram.compareTo(lastMinHash) <= 0 && (currentPosition - lastSelectedPosition) < WINDOW_SIZE) {
+					lastMinHash = hashOfTheCurrentGram;
+					lastSelectedPosition = currentPosition;
+					documentFingerprints.add(new FingerPrint(hashOfTheCurrentGram, currentGram, window, 3));
+				} else if (hashOfTheCurrentGram.compareTo(lastMinHash) > 0 && (currentPosition - lastSelectedPosition) < WINDOW_SIZE) {
+					// skip
+				} else {
+					NGram one = nGramList.get(window);
+					NGram two = nGramList.get(window+1);
+					NGram three = nGramList.get(window+2);
+					NGram four = nGramList.get(window+3);		
+					FingerPrint fingerPrint = minGram(one, two, three, four, window);
+
+					lastMinHash = fingerPrint.getHash();
+					lastSelectedPosition = window + fingerPrint.getIndexWithinWindow();
+					documentFingerprints.add(fingerPrint);
+				}
+				
+			}
+
+			for (FingerPrint fingerPrint : documentFingerprints) {
+				logger.debug("Fingerprint: {}", fingerPrint.toString());
+			}
+
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return documentFingerprints;
+
+	}
+
+	private FingerPrint minGram(NGram one, NGram two, NGram three, NGram four, int window) throws NoSuchAlgorithmException {
+		BigInteger i1 = one.nGramHash();
+		BigInteger i2 = two.nGramHash();
+		BigInteger i3 = three.nGramHash();
+		BigInteger i4 = four.nGramHash();
+
+		FingerPrint minGram = new FingerPrint(i4, four, window, 3);
+
+		if (i4.compareTo(i1) <= 0 && i4.compareTo(i2) <= 0 && i4.compareTo(i3) <= 0) {
+			// skip
+		} else if (i3.compareTo(i1) <= 0 && i3.compareTo(i2) <= 0 && i3.compareTo(i4) <= 0) {
+			minGram.setHash(i3);
+			minGram.setnGram(three);
+			minGram.setIndexWithinWindow(2);
+		} else if (i2.compareTo(i1) <= 0 && i2.compareTo(i3) <= 0 && i2.compareTo(i4) <= 0) {
+			minGram.setHash(i2);
+			minGram.setnGram(two);
+			minGram.setIndexWithinWindow(1);
+		} else {
+			minGram.setHash(i1);
+			minGram.setnGram(one);
+			minGram.setIndexWithinWindow(0);
+		}		
+		return minGram;
 	}
 
 	private Result compareSubmissions(Submission s1, Submission s2,
@@ -223,7 +342,10 @@ public final class SimComparer {
 			}
 
 			s1NGram = s1NGrams.get(s1StartIndex);
+			// logger.debug("The n-gram is: {} ", s1NGram.getTokenList().toString());
+			
 			if (s2NGramIndices.containsKey(s1NGram)) {
+				// logger.debug("The similar n-gram is: {} ", s1NGram.getTokenList().toString());	
 				s2Indices = s2NGramIndices.get(s1NGram);
 				s2Matches = new HashMap<Integer, Integer>();
 				for (int index : s2Indices) {
@@ -245,9 +367,11 @@ public final class SimComparer {
 							&& !s1Tokens.isTokenMarked(s1EndIndex)
 							&& !s2Tokens.isTokenMarked(s2EndIndex)) {
 						if (s1Token.isEndOfStatement() == TokenSSID.EndOfStatementType.COUNTABLE) {
+							// logger.debug("s1 token end of Countable: {} ", s1Token.toString());	
 							curCSMapped++;
 							s1EndOfStmtIndex = s1EndIndex;
 						} else if (s1Token.isEndOfStatement() == TokenSSID.EndOfStatementType.NON_COUNTABLE) {
+							// logger.debug("s1 token end of Non-Countable: {} ", s1Token.toString());	
 							curNCSMapped++;
 							s1EndOfStmtIndex = s1EndIndex;
 						}
@@ -348,12 +472,12 @@ public final class SimComparer {
 				gst(s1RegionNGrams, bNGramIndices, null, s1RegionTokens,
 						bTokens, null, minMatch, bMappings);
 				mappedCountableStmt = m.getMappedCountableStmtCount();
-				logger.debug("Mapping is: {} ", m.toString());
+				// logger.debug("Mapping is: {} ", m.toString());
 
 				List<SkeletonMapping> skeletonMappings = new ArrayList<>();
 				for (Mapping b : bMappings) {
 					mappedCountableStmt -= b.getMappedCountableStmtCount();
-					logger.debug("Skeleton mapping is: {} ", b.toString());					
+					// logger.debug("Skeleton mapping is: {} ", b.toString());					
 
 					int startIdxOfSkeletonInS1 = b.getStartIndex1() + m.getStartIndex1();
 					int endIdxOfSkeletonInS1 = b.getEndIndex1() + m.getStartIndex1();

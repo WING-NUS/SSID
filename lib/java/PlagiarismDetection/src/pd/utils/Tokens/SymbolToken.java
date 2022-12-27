@@ -42,6 +42,11 @@ public final class SymbolToken extends TokenSSID {
 
 	@Override
 	public String toString() {
+		// return value;
+		return "(" + this.getClass().getName() + "_" + value + ")";
+	}
+
+	public String getValue() {
 		return value;
 	}
 }
