@@ -67,6 +67,28 @@ public final class SimComparer {
 		TokenList s1Tokens, s2Tokens, bTokens = skeleton.getCodeTokens();
 		Result result;
 
+		long wholeAssFingerprintsNbr = 0;
+		HashMap<BigInteger, ArrayList<FingerPrint>> invertedIndexesOfAssignmentFingerPrints = new HashMap<BigInteger, ArrayList<FingerPrint>>();
+		for (Submission s : submissions) {
+			ArrayList<FingerPrint> subFingerPrints = computeDocumentFingerPrints(s);
+			for (FingerPrint fPrint : subFingerPrints) {
+				BigInteger hash = fPrint.getHash();
+				if (invertedIndexesOfAssignmentFingerPrints.containsKey(hash)) {
+					ArrayList<FingerPrint> listOFingerPrints = invertedIndexesOfAssignmentFingerPrints.get(hash);
+					listOFingerPrints.add(fPrint);
+				} else {
+					ArrayList<FingerPrint> listOFingerPrints = new ArrayList<FingerPrint>();
+					listOFingerPrints.add(fPrint);
+					invertedIndexesOfAssignmentFingerPrints.put(hash, listOFingerPrints);
+				}
+			}
+
+			long nbrOfFingerprints = subFingerPrints.size();
+			wholeAssFingerprintsNbr += nbrOfFingerprints; 
+		}
+
+		logger.debug("Assignment fingerprints: {}", wholeAssFingerprintsNbr);
+
 		for (int i = 0; i < noOfSub; i++) {
 			s1 = submissions.get(i);
 			if (s1.isSkeletonCode()) {
@@ -101,6 +123,160 @@ public final class SimComparer {
 		return results;
 	}
 
+	public ArrayList<Result> compareSubmissionsWithFingerPrints(
+			ArrayList<Submission> submissions, int nGramSize, int minMatch) {
+
+		Submission skeleton = getSkeletonCode(submissions);
+    assert(skeleton != null);
+		ArrayList<Result> results = new ArrayList<Result>();
+
+		int noOfSub = submissions.size();
+		Submission s1, s2;
+		TokenList s1Tokens, s2Tokens, bTokens = skeleton.getCodeTokens();
+		Result result;
+
+		long wholeAssFingerprintsNbr = 0;
+		HashMap<BigInteger, ArrayList<MatchingDocument>> invertedIndexesOfAssignmentFingerPrints = new HashMap<BigInteger, ArrayList<MatchingDocument>>();
+		for (Submission s : submissions) {
+			ArrayList<FingerPrint> submissionFingerPrints = computeDocumentFingerPrints(s);
+			for (FingerPrint fingerPrint : submissionFingerPrints) {
+				
+				BigInteger hash = fingerPrint.getHash();
+				
+				ArrayList<MatchingDocument> listOMatchingDocuments = new ArrayList<MatchingDocument>();
+				if (invertedIndexesOfAssignmentFingerPrints.containsKey(hash)) {
+				  listOMatchingDocuments = invertedIndexesOfAssignmentFingerPrints.get(hash);
+				} 
+
+				MatchingDocument match = new MatchingDocument(s.getID(), fingerPrint);
+				listOMatchingDocuments.add(match);
+				invertedIndexesOfAssignmentFingerPrints.put(hash, listOMatchingDocuments);
+			}
+
+			long nbrOfFingerprints = submissionFingerPrints.size();
+			wholeAssFingerprintsNbr += nbrOfFingerprints; 
+
+		}
+
+		logger.debug("Assignment fingerprints: {}", wholeAssFingerprintsNbr);
+
+		for(BigInteger hash : invertedIndexesOfAssignmentFingerPrints.keySet()) {
+			logger.debug("DEBUG POINT 02: Investigate inverted indexes of assignment fingerprints");
+			logger.debug("Hash: {}", hash);
+			String mds = "";
+			for (MatchingDocument md : invertedIndexesOfAssignmentFingerPrints.get(hash)) {
+				mds = mds + md.toString() + "\t";
+			}
+			logger.debug("Related document: {}", mds);
+			logger.debug("*********");
+		}
+
+		for (Submission s : submissions) {
+			computePossibleRelatedDocuments(s, invertedIndexesOfAssignmentFingerPrints);
+		}
+
+		for (int i = 0; i < noOfSub; i++) {
+			s1 = submissions.get(i);
+			if (s1.isSkeletonCode()) {
+				continue;
+			}
+			for (int j = i + 1; j < noOfSub; j++) {
+				s2 = submissions.get(j);
+				if (s2.isSkeletonCode()) {
+					continue;
+				}
+
+				if (!s1.getPossibleRelatedDocuments().contains(s2.getID())) {
+					continue;
+				}
+
+				logger.info("Start comparing submissions: {} vs {}", s1.getID(), s2.getID());
+				s1Tokens = s1.getCodeTokens();
+				s2Tokens = s2.getCodeTokens();
+				if (s1Tokens.size() < s2Tokens.size()) {
+					result = compareSubmissions(s1, s2, skeleton, nGramSize,
+							minMatch);
+					computeSims(s1Tokens, s2Tokens, result);
+				} else {
+					result = compareSubmissions(s2, s1, skeleton, nGramSize,
+							minMatch);
+					computeSims(s2Tokens, s1Tokens, result);
+				}
+
+				results.add(result);
+
+				unmarkTokens(s1Tokens, s2Tokens, bTokens);
+
+			}
+		}
+
+		return results;
+	}	
+
+	private void computePossibleRelatedDocuments(Submission s, HashMap<BigInteger, ArrayList<MatchingDocument>> invertedIndexesOfAssignmentFingerPrints) {
+		ArrayList<FingerPrint> currentSubmissionFingerPrints = computeDocumentFingerPrints(s);
+
+		// Each entry is: key=submissionId and value=the list of fingerprints that s and the submissionId share. 
+		HashMap<String, ArrayList<FingerPrint>> matchingFingerPrintsMap = new HashMap<String, ArrayList<FingerPrint>>();
+
+		for (FingerPrint fingerPrint : currentSubmissionFingerPrints) {
+			BigInteger hash = fingerPrint.getHash();
+
+			// Each entry is: key=hash and value=the list of documents that contain this hash.
+			ArrayList<MatchingDocument> relatedDocuments = invertedIndexesOfAssignmentFingerPrints.get(hash);
+			if (relatedDocuments != null) {
+				for (MatchingDocument document : relatedDocuments) {
+					String documentId = document.getSubmissionId();
+					
+					ArrayList<FingerPrint> matchingFingerPrints = new ArrayList<FingerPrint>();					
+					if (matchingFingerPrintsMap.containsKey(documentId)) {
+						matchingFingerPrints = matchingFingerPrintsMap.get(documentId);
+					}
+
+					// logger.debug("DEBUG POINT 01: matchingFingerPrints has duplicate fingerprints");
+					// for(int i = 0; i < matchingFingerPrints.size(); i++) {
+					// 	logger.debug("Sub: {}, sub: {}, fPrint1: {}, tobeAdded: {}, same?: {}", s.getID(), document.getSubmissionId(), matchingFingerPrints.get(i).toString(), document.getFingerPrint().toString(), matchingFingerPrints.get(i).equals(document.getFingerPrint()));
+					// }
+					if (!matchingFingerPrints.contains(document.getFingerPrint())) {
+						matchingFingerPrints.add(document.getFingerPrint());
+					}
+
+					if (!matchingFingerPrintsMap.containsKey(documentId)) {
+						matchingFingerPrintsMap.put(documentId, matchingFingerPrints);
+					}
+
+				} 
+
+
+			} else {
+				logger.debug("Submission {} has fingerprint {} not found in the universal set of fingerprints", s.getID(), fingerPrint.toString());
+			}
+
+		}
+
+		for (String submissionId : matchingFingerPrintsMap.keySet()) {
+			logger.debug("DEBUG POINT 03: Investigate map of similar fingerprints");
+			String fps = "";
+			for (FingerPrint fp : matchingFingerPrintsMap.get(submissionId)) {
+				fps = fps + fp.toString() + "\t";
+			}
+			logger.debug("Sub: {}, sub: {}, similar fps (position based on nbr #2): {}", s.getID(), submissionId, fps);
+		}
+
+
+
+		int sizeThreshold = (int) Math.floor(currentSubmissionFingerPrints.size() * 0.6);
+		for (String submissionId : matchingFingerPrintsMap.keySet()) {
+			ArrayList<FingerPrint> matchingFingerPrints = matchingFingerPrintsMap.get(submissionId);
+			
+			logger.debug("Current sub: {}, the other sub: {}, match size: {}, size threshold: {}", s.getID(), submissionId, matchingFingerPrints.size(), sizeThreshold);
+
+			if (matchingFingerPrints.size() >= sizeThreshold) {
+				s.getPossibleRelatedDocuments().add(submissionId);
+			}
+		}
+
+	} 
 
 	private void unmarkTokens(TokenList s1Tokens, TokenList s2Tokens,
 			TokenList bTokens) {
