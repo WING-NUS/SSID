@@ -21,11 +21,9 @@ import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -233,12 +231,8 @@ public final class SimComparer {
 						matchingFingerPrints = matchingFingerPrintsMap.get(documentId);
 					}
 
-					// logger.debug("DEBUG POINT 01: matchingFingerPrints has duplicate fingerprints");
-					// for(int i = 0; i < matchingFingerPrints.size(); i++) {
-					// 	logger.debug("Sub: {}, sub: {}, fPrint1: {}, tobeAdded: {}, same?: {}", s.getID(), document.getSubmissionId(), matchingFingerPrints.get(i).toString(), document.getFingerPrint().toString(), matchingFingerPrints.get(i).equals(document.getFingerPrint()));
-					// }
-					if (!matchingFingerPrints.contains(document.getFingerPrint())) {
-						matchingFingerPrints.add(document.getFingerPrint());
+					if (!matchingFingerPrints.contains(fingerPrint)) {
+						matchingFingerPrints.add(fingerPrint);
 					}
 
 					if (!matchingFingerPrintsMap.containsKey(documentId)) {
@@ -260,7 +254,7 @@ public final class SimComparer {
 			for (FingerPrint fp : matchingFingerPrintsMap.get(submissionId)) {
 				fps = fps + fp.toString() + "\t";
 			}
-			logger.debug("Sub: {}, sub: {}, similar fps (position based on nbr #2): {}", s.getID(), submissionId, fps);
+			logger.debug("Sub: {}, sub: {}, similar fps (position based on nbr #1): {}", s.getID(), submissionId, fps);
 		}
 
 
@@ -269,7 +263,7 @@ public final class SimComparer {
 		for (String submissionId : matchingFingerPrintsMap.keySet()) {
 			ArrayList<FingerPrint> matchingFingerPrints = matchingFingerPrintsMap.get(submissionId);
 			
-			logger.debug("Current sub: {}, the other sub: {}, match size: {}, size threshold: {}", s.getID(), submissionId, matchingFingerPrints.size(), sizeThreshold);
+			logger.debug("Current sub: {}, the other sub: {}, current sub size: {}, match size: {}, size threshold: {}", s.getID(), submissionId, currentSubmissionFingerPrints.size(), matchingFingerPrints.size(), sizeThreshold);
 
 			if (matchingFingerPrints.size() >= sizeThreshold) {
 				s.getPossibleRelatedDocuments().add(submissionId);
