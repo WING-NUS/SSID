@@ -158,16 +158,16 @@ public final class SimComparer {
 
 		logger.debug("Assignment fingerprints: {}", wholeAssFingerprintsNbr);
 
-		for(BigInteger hash : invertedIndexesOfAssignmentFingerPrints.keySet()) {
-			logger.debug("DEBUG POINT 02: Investigate inverted indexes of assignment fingerprints");
-			logger.debug("Hash: {}", hash);
-			String mds = "";
-			for (MatchingDocument md : invertedIndexesOfAssignmentFingerPrints.get(hash)) {
-				mds = mds + md.toString() + "\t";
-			}
-			logger.debug("Related document: {}", mds);
-			logger.debug("*********");
-		}
+		// for(BigInteger hash : invertedIndexesOfAssignmentFingerPrints.keySet()) {
+		// 	logger.debug("DEBUG POINT 02: Investigate inverted indexes of assignment fingerprints");
+		// 	logger.debug("Hash: {}", hash);
+		// 	String mds = "";
+		// 	for (MatchingDocument md : invertedIndexesOfAssignmentFingerPrints.get(hash)) {
+		// 		mds = mds + md.toString() + "\t";
+		// 	}
+		// 	logger.debug("Related document: {}", mds);
+		// 	logger.debug("*********");
+		// }
 
 		for (Submission s : submissions) {
 			computePossibleRelatedDocuments(s, invertedIndexesOfAssignmentFingerPrints);
@@ -248,14 +248,14 @@ public final class SimComparer {
 
 		}
 
-		for (String submissionId : matchingFingerPrintsMap.keySet()) {
-			logger.debug("DEBUG POINT 03: Investigate map of similar fingerprints");
-			String fps = "";
-			for (FingerPrint fp : matchingFingerPrintsMap.get(submissionId)) {
-				fps = fps + fp.toString() + "\t";
-			}
-			logger.debug("Sub: {}, sub: {}, similar fps (position based on nbr #1): {}", s.getID(), submissionId, fps);
-		}
+		// for (String submissionId : matchingFingerPrintsMap.keySet()) {
+		// 	logger.debug("DEBUG POINT 03: Investigate map of similar fingerprints");
+		// 	String fps = "";
+		// 	for (FingerPrint fp : matchingFingerPrintsMap.get(submissionId)) {
+		// 		fps = fps + fp.toString() + "\t";
+		// 	}
+		// 	logger.debug("Sub: {}, sub: {}, similar fps (position based on nbr #1): {}", s.getID(), submissionId, fps);
+		// }
 
 
 
@@ -368,9 +368,9 @@ public final class SimComparer {
 				
 			}
 
-			for (FingerPrint fingerPrint : documentFingerprints) {
-				logger.debug("Fingerprint: {}", fingerPrint.toString());
-			}
+			// for (FingerPrint fingerPrint : documentFingerprints) {
+			// 	logger.debug("Fingerprint: {}", fingerPrint.toString());
+			// }
 
 
 		} catch (Exception e) {
