@@ -22,6 +22,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -215,7 +216,7 @@ public final class SimComparer {
 		ArrayList<FingerPrint> currentSubmissionFingerPrints = computeDocumentFingerPrints(s);
 
 		// Each entry is: key=submissionId and value=the list of fingerprints that s and the submissionId share. 
-		HashMap<String, ArrayList<FingerPrint>> matchingFingerPrintsMap = new HashMap<String, ArrayList<FingerPrint>>();
+		HashMap<String, HashSet<FingerPrint>> matchingFingerPrintsMap = new HashMap<String, HashSet<FingerPrint>>();
 
 		for (FingerPrint fingerPrint : currentSubmissionFingerPrints) {
 			BigInteger hash = fingerPrint.getHash();
@@ -226,7 +227,7 @@ public final class SimComparer {
 				for (MatchingDocument document : relatedDocuments) {
 					String documentId = document.getSubmissionId();
 					
-					ArrayList<FingerPrint> matchingFingerPrints = new ArrayList<FingerPrint>();					
+					HashSet<FingerPrint> matchingFingerPrints = new HashSet<FingerPrint>();					
 					if (matchingFingerPrintsMap.containsKey(documentId)) {
 						matchingFingerPrints = matchingFingerPrintsMap.get(documentId);
 					}
@@ -261,7 +262,7 @@ public final class SimComparer {
 
 		int sizeThreshold = (int) Math.floor(currentSubmissionFingerPrints.size() * 0.6);
 		for (String submissionId : matchingFingerPrintsMap.keySet()) {
-			ArrayList<FingerPrint> matchingFingerPrints = matchingFingerPrintsMap.get(submissionId);
+			HashSet<FingerPrint> matchingFingerPrints = matchingFingerPrintsMap.get(submissionId);
 			
 			logger.debug("Current sub: {}, the other sub: {}, current sub size: {}, match size: {}, size threshold: {}", s.getID(), submissionId, currentSubmissionFingerPrints.size(), matchingFingerPrints.size(), sizeThreshold);
 
