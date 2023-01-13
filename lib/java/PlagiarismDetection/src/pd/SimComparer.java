@@ -23,12 +23,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import pd.utils.Pair;
 import pd.utils.Result;
 import pd.utils.Submission;
 import pd.utils.Mappings.Mapping;
@@ -174,18 +176,25 @@ public final class SimComparer {
 			computePossibleRelatedDocuments(s, invertedIndexesOfAssignmentFingerPrints);
 		}
 
+
+    HashSet<Pair> processedPairs = new HashSet<Pair>();
 		for (int i = 0; i < noOfSub; i++) {
 			s1 = submissions.get(i);
 			if (s1.isSkeletonCode()) {
 				continue;
 			}
-			for (int j = i + 1; j < noOfSub; j++) {
+			for (int j = 0; j < noOfSub; j++) {
 				s2 = submissions.get(j);
-				if (s2.isSkeletonCode()) {
+				if (s2.getID().equals(s1.getID()) || s2.isSkeletonCode()) {
 					continue;
 				}
 
 				if (!s1.getPossibleRelatedDocuments().contains(s2.getID())) {
+					continue;
+				}
+
+				Pair pair = new Pair(i, j);
+				if (processedPairs.contains(pair)) {
 					continue;
 				}
 
@@ -205,6 +214,8 @@ public final class SimComparer {
 				results.add(result);
 
 				unmarkTokens(s1Tokens, s2Tokens, bTokens);
+				processedPairs.add(pair);
+
 
 			}
 		}
