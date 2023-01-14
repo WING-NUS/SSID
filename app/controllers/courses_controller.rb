@@ -49,7 +49,7 @@ class CoursesController < ApplicationController
 
   # GET /courses
   def index
-    @courses = @user.is_admin ? Course.all : @user.courses
+    @courses = current_user.is_admin ? Course.all : current_user.courses
   end
 
   # GET /courses/new
@@ -80,9 +80,9 @@ class CoursesController < ApplicationController
       render action: "new"
     end
 
-    if not @user.is_admin
+    if not current_user.is_admin
       @membership = UserCourseMembership.new { |m|
-        m.user = @user
+        m.user = current_user
         m.course = @course
         m.role = UserCourseMembership::ROLE_TEACHING_STAFF
       }
