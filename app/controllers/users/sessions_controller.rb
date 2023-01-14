@@ -19,7 +19,7 @@ class Users::SessionsController < Devise::SessionsController
   # end
 
   
-  skip_before_action :authenticate_user!, only: [:new, :create, :check_hash, :index]
+  skip_before_action :authenticate_user!, only: [:new, :create, :index]
 
   def index
     render "layouts/cover"
@@ -44,19 +44,6 @@ class Users::SessionsController < Devise::SessionsController
     end
   end
 
-  def check_hash
-    # obtain the hash
-    input_hash = params[:id]
-    # verify the hash
-    guest_user = GuestUsersDetail.find_by_hash_string(params[:user][:id])
-    # allow access if the hash is verified and else redirect to login page
-    if guest_user
-      session[:user_id] = guest_user.user_id
-      redirect_to root_url
-    else
-      redirect_to login_url, alert: "The hash is not valid. Please use a valid sharable link or log in with your credientals."
-    end
-  end
 
   def destroy
     sign_out current_user
