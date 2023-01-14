@@ -16,7 +16,6 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
 class AnnouncementsController < ApplicationController
-  skip_before_action :authenticate_user!, only: [:index]
   before_action { |controller|
     if params[:announcement] and params[:announcement]["course_id"]
       @course = Course.find(params[:announcement]["course_id"])
@@ -31,11 +30,8 @@ class AnnouncementsController < ApplicationController
 
   # GET /announcements
   def index
-    if user_signed_in?
       @announcements = current_user.courses.collect { |c| c.announcements }.flatten
-    else
-      @announcements = []
-    end
+
   end
 
   # GET /announcements/new
