@@ -71,7 +71,7 @@ class ApplicationController < ActionController::Base
       
       # Check if we need to authenticate
       if membership.nil? or (membership and membership.role == role and !opts[:only].include? action_name.intern)
-        redirect_to( { controller: "announcements", action: "index" }, alert: "You do not have access to the url \"#{request.env['REQUEST_URI']}\". Please contact the administrator for more information.")
+        redirect_to( { controller: "sessions", action: "index" }, alert: "You do not have access to the url \"#{request.env['REQUEST_URI']}\". Please contact the administrator for more information.")
         return
       end
     end
@@ -83,7 +83,7 @@ class ApplicationController < ActionController::Base
       raise unless opts[:only]
 
       unless current_user.is_staff_or_ta? and opts[:only].include? action_name.intern
-        redirect_to( { controller: "announcements", action: "index" }, alert: "You do not have access to the url \"#{request.env['REQUEST_URI']}\". Please contact the administrator for more information.")
+        redirect_to( { controller: "sessions", action: "index" }, alert: "You do not have access to the url \"#{request.env['REQUEST_URI']}\". Please contact the administrator for more information.")
         return
       end
     end
