@@ -28,16 +28,15 @@ class Users::SessionsController < Devise::SessionsController
   def new
     super
   end
-  #orRgKyGUs7cz
+
   def create
     user = User.find_by_email(params[:user][:email])
-    # byebug
     if user and user.valid_password?(params[:user][:password]) and user.is_admin_approved
       if user.confirmed?
         sign_in user
         redirect_to root_url
       else
-        redirect_to new_user_session_url, alert: "Your account is not confirmed. Please check your email for the confirmation link."
+        redirect_to new_user_session_url, alert: "Your account is not activated. Please check your email for the activation link."
       end
     else
       redirect_to new_user_session_url, alert: "Invalid user/password combination or user account is still being processed."
