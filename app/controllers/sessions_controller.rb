@@ -40,19 +40,19 @@ class SessionsController < ApplicationController
     end
   end
 
-  def check_hash
-    # obtain the hash
-    input_hash = params[:id]
-    # verify the hash
-    guest_user = GuestUsersDetail.find_by_hash_string(params[:id])
-    # allow access if the hash is verified and else redirect to login page
-    if guest_user
-      session[:user_id] = guest_user.user_id
-      redirect_to root_url
-    else
-      redirect_to login_url, alert: "The hash is not valid. Please use a valid sharable link or log in with your credientals."
-    end
-  end
+  # def check_hash
+  #   # obtain the hash
+  #   input_hash = params[:id]
+  #   # verify the hash
+  #   guest_user = GuestUsersDetail.find_by_hash_string(params[:id])
+  #   # allow access if the hash is verified and else redirect to login page
+  #   if guest_user
+  #     session[:user_id] = guest_user.user_id
+  #     redirect_to root_url
+  #   else
+  #     redirect_to login_url, alert: "The hash is not valid. Please use a valid sharable link or log in with your credientals."
+  #   end
+  # end
 
   def destroy
     session[:user_id] = nil
