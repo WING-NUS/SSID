@@ -19,6 +19,11 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
     <%= flash[:alert] %>
   </div>
 <% end %>
+<% if flash[:notice] %>
+  <div class="notice">
+    <%= flash[:notice] %>
+  </div>
+<% end %>
 
 <header class="announcement_header">
 <h4>Announcements</h4>
@@ -27,11 +32,7 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 </p>
 </header>
 
-<% if flash[:notice] %>
-  <div class="notice">
-    <%= flash[:notice] %>
-  </div>
-<% end %>
+
 
 <% if @announcements.empty? %>
   <div class="announcement">No announcements</div>
