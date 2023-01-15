@@ -36,7 +36,7 @@
             </a>
             <ul class="dropdown-menu" aria-labelledby="adminUserDropdownMenuLink">
               <% if admin == current_user %>
-                <li><%= link_to "Settings", edit_user_url(current_user), class: "dropdown-item" %></li>
+                <li><%= link_to "Settings", edit_user_registration_url(current_user), class: "dropdown-item" %></li>
               <% else %>
                 <li><%= link_to "Edit", edit_admin_user_url(admin), class: "dropdown-item" %></li>
                 <li>
