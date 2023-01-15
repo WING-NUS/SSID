@@ -25,31 +25,31 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
   <%= javascript_tag "if (window.#{controller_name.singularize.camelize} && #{controller_name.singularize.camelize}.onLoad) { #{controller_name.singularize.camelize}.onLoad(); };" %>
   <header class="site_header">
     <div class="container d-flex flex-row w-100">
-      <% unless @user and @user.id?%>
+      <% unless user_signed_in?%>
         <div class="w-20">
           <%= image_tag("logo.png", height: "100", width: "150", alt: "NUS logo", class: "site_logo")%>
         </div>
         <h3 id="site-banner-login">Student Submissions Integrity Diagnosis System</h3>
         <div class="site-login w-20">
-          <ul id="menu" <%= %Q{ class="admin"}.html_safe if @user and @user.is_admin %>>
-            <li <%= highlight_if_current login_path %>><%= link_to "Login", login_path %></li>
-            <li <%= highlight_if_current signup_path %>><%= link_to "Sign Up", signup_path%></li>
+          <ul id="menu" <%= %Q{ class="admin"}.html_safe if user_signed_in? and current_user.is_admin %>>
+            <li <%= highlight_if_current new_user_session_path %>><%= link_to "Login", new_user_session_path %></li>
+            <li <%= highlight_if_current new_user_registration_path %>><%= link_to "Sign Up", new_user_registration_path%></li>
           </ul>
         </div>
       <% else %> 
         <h3 id="site_banner">SSID</h3>  
-        <ul id="menu" <%= %Q{ class="admin"}.html_safe if @user and @user.is_admin %>>
-          <% if @user %>
+        <ul id="menu" <%= %Q{ class="admin"}.html_safe if user_signed_in? and current_user.is_admin %>>
+          <% if user_signed_in? %>
             <li <%= highlight_if_current root_url %>><%= link_to "Home", root_url %></li>
             <li <%= highlight_if_current courses_url %>><%= link_to "Courses", courses_url %></li>
-            <% if @user.is_admin %>
+            <% if current_user.is_admin %>
               <li <%= highlight_if_current admin_users_url %>><%= link_to "Users", admin_users_url %></li>
             <% end %>
-            <% if @user.is_admin || (@membership.present? && @membership.role != 3) %>
-              <li <%= highlight_if_current edit_user_url(@user) %>><%= link_to "Settings", edit_user_url(@user) %></li>
+            <% if current_user.is_admin || (@membership.present? && @membership.role != 3) %>
+              <li <%= highlight_if_current edit_user_url(current_user) %>><%= link_to "Settings", edit_user_url(current_user) %></li>
             <% end %>
             <li <%= highlight_if_current guide_url %>><%= link_to "User Guide", guide_url %></li>
-            <li <%= highlight_if_current logout_url %>><%= link_to "Log Out", logout_url, :method => :delete, confirm: "Log out of SSID?" %></li>
+            <li <%= highlight_if_current logout_url %>><%= link_to "Log Out", destroy_user_session_url, :method => :delete, confirm: "Log out of SSID?" %></li>
           <% end %>
         </ul>
       <% end %>
