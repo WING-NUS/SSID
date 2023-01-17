@@ -142,6 +142,7 @@ public final class SimComparer {
 		HashMap<BigInteger, ArrayList<MatchingDocument>> invertedIndexesOfAssignmentFingerPrints = new HashMap<BigInteger, ArrayList<MatchingDocument>>();
 		for (Submission s : submissions) {
 			ArrayList<FingerPrint> submissionFingerPrints = computeDocumentFingerPrints(s, WINDOW_SIZE);
+			s.setSubmissionFingerPrints(submissionFingerPrints);
 			// ArrayList<FingerPrint> submissionFingerPrints = computeDocumentFingerPrints(s);
 			for (FingerPrint fingerPrint : submissionFingerPrints) {
 				
@@ -227,7 +228,7 @@ public final class SimComparer {
 	}	
 
 	private void computePossibleRelatedDocuments(Submission s, HashMap<BigInteger, ArrayList<MatchingDocument>> invertedIndexesOfAssignmentFingerPrints) {
-		ArrayList<FingerPrint> currentSubmissionFingerPrints = computeDocumentFingerPrints(s, WINDOW_SIZE);
+		ArrayList<FingerPrint> currentSubmissionFingerPrints = s.getSubmissionFingerPrints();
 		// ArrayList<FingerPrint> currentSubmissionFingerPrints = computeDocumentFingerPrints(s);
 
 		// Each entry is: key=submissionId and value=the list of fingerprints that s and the submissionId share. 

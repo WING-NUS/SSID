@@ -32,6 +32,7 @@ public final class Submission {
 	private HashMap<NGram, ArrayList<Integer>> nGramIndexingTable = new HashMap<NGram, ArrayList<Integer>>();
 	private boolean isSkeletonCode = false;
 
+	private ArrayList<FingerPrint> submissionFingerPrints = new ArrayList<FingerPrint>();
 	private ArrayList<String> possibleRelatedDocuments = new ArrayList<String>();
 
 	public Submission() {
@@ -126,5 +127,13 @@ public final class Submission {
 	public void setPossibleRelatedDocuments(ArrayList<String> possibleRelatedDocuments) {
 		this.possibleRelatedDocuments = possibleRelatedDocuments;
 	}
+
+	public ArrayList<FingerPrint> getSubmissionFingerPrints() {
+		return submissionFingerPrints;
+	}
+
+	public void setSubmissionFingerPrints(ArrayList<FingerPrint> submissionFingerPrints) {
+		this.submissionFingerPrints = submissionFingerPrints;
+	}	
 	
 }
