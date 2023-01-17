@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -47,7 +46,7 @@ public final class SimComparer {
 	private static SimComparer instance = new SimComparer();
 	private static final String SKELETON = "skeleton";
 	private static Logger logger = LogManager.getLogger();
-	private static final int WINDOW_SIZE = 4;
+	private static final int WINDOW_SIZE = 5;
 
 	@SuppressWarnings("unused")
 	private boolean debugMode = false;
@@ -72,7 +71,6 @@ public final class SimComparer {
 		HashMap<BigInteger, ArrayList<FingerPrint>> invertedIndexesOfAssignmentFingerPrints = new HashMap<BigInteger, ArrayList<FingerPrint>>();
 		for (Submission s : submissions) {
 			ArrayList<FingerPrint> subFingerPrints = computeDocumentFingerPrints(s, WINDOW_SIZE);
-			// ArrayList<FingerPrint> subFingerPrints = computeDocumentFingerPrints(s);
 
 			for (FingerPrint fPrint : subFingerPrints) {
 				BigInteger hash = fPrint.getHash();
@@ -143,7 +141,7 @@ public final class SimComparer {
 		for (Submission s : submissions) {
 			ArrayList<FingerPrint> submissionFingerPrints = computeDocumentFingerPrints(s, WINDOW_SIZE);
 			s.setSubmissionFingerPrints(submissionFingerPrints);
-			// ArrayList<FingerPrint> submissionFingerPrints = computeDocumentFingerPrints(s);
+
 			for (FingerPrint fingerPrint : submissionFingerPrints) {
 				
 				BigInteger hash = fingerPrint.getHash();
@@ -164,17 +162,6 @@ public final class SimComparer {
 		}
 
 		logger.debug("Assignment fingerprints: {}", wholeAssFingerprintsNbr);
-
-		// for(BigInteger hash : invertedIndexesOfAssignmentFingerPrints.keySet()) {
-		// 	logger.debug("DEBUG POINT 02: Investigate inverted indexes of assignment fingerprints");
-		// 	logger.debug("Hash: {}", hash);
-		// 	String mds = "";
-		// 	for (MatchingDocument md : invertedIndexesOfAssignmentFingerPrints.get(hash)) {
-		// 		mds = mds + md.toString() + "\t";
-		// 	}
-		// 	logger.debug("Related document: {}", mds);
-		// 	logger.debug("*********");
-		// }
 
 		for (Submission s : submissions) {
 			computePossibleRelatedDocuments(s, invertedIndexesOfAssignmentFingerPrints);
@@ -229,7 +216,6 @@ public final class SimComparer {
 
 	private void computePossibleRelatedDocuments(Submission s, HashMap<BigInteger, ArrayList<MatchingDocument>> invertedIndexesOfAssignmentFingerPrints) {
 		ArrayList<FingerPrint> currentSubmissionFingerPrints = s.getSubmissionFingerPrints();
-		// ArrayList<FingerPrint> currentSubmissionFingerPrints = computeDocumentFingerPrints(s);
 
 		// Each entry is: key=submissionId and value=the list of fingerprints that s and the submissionId share. 
 		HashMap<String, HashSet<FingerPrint>> matchingFingerPrintsMap = new HashMap<String, HashSet<FingerPrint>>();
@@ -264,17 +250,6 @@ public final class SimComparer {
 			}
 
 		}
-
-		// for (String submissionId : matchingFingerPrintsMap.keySet()) {
-		// 	logger.debug("DEBUG POINT 03: Investigate map of similar fingerprints");
-		// 	String fps = "";
-		// 	for (FingerPrint fp : matchingFingerPrintsMap.get(submissionId)) {
-		// 		fps = fps + fp.toString() + "\t";
-		// 	}
-		// 	logger.debug("Sub: {}, sub: {}, similar fps (position based on nbr #1): {}", s.getID(), submissionId, fps);
-		// }
-
-
 
 		int sizeThreshold = (int) Math.floor(currentSubmissionFingerPrints.size() * 0.6);
 		for (String submissionId : matchingFingerPrintsMap.keySet()) {
@@ -322,82 +297,6 @@ public final class SimComparer {
 		return reply;
 	}
 
-	private void printSubmissionsInfo(Submission s) {
-
-		logger.debug("Comparing time using string vs big int to get min nGram hashes of submission {}:", s.getID());
-		/* Printing NGramIndexingTable
-		HashMap<NGram, ArrayList<Integer>> nGramIndexingTableOfS = s.getNGramIndexingTable();
-		logger.debug("Printing nGram indexing table of submission {}:", s.getID());
-		Set<NGram> keysInS = nGramIndexingTableOfS.keySet();
-		for (NGram key : keysInS) {
-			
-			ArrayList<Integer> values = nGramIndexingTableOfS.get(key);
-			String valuesInString = "";
-			for(Integer i : values) {
-				valuesInString = valuesInString + i + " ";
-			}
-			logger.debug("S, ngram = {}, value = {}", key.getTokenList().toString(), valuesInString);
-
-
-		}		
-
-		*/
-
-	}
-
-	// private ArrayList<FingerPrint> computeDocumentFingerPrints (Submission s) {
-	// 	logger.debug("Compute fingerprints of submission {}:", s.getID());
-
-	// 	NGramList nGramList = s.getNGramList();
-	// 	ArrayList<FingerPrint> documentFingerprints = new ArrayList<FingerPrint>();
-
-		
-
-	// 	try {
-	// 		FingerPrint lastMinGram = minGram(nGramList.get(0), nGramList.get(1), nGramList.get(2), nGramList.get(3), 0);
-	// 		BigInteger lastMinHash = lastMinGram.getHash();
-	// 		int lastSelectedPosition = 0 + lastMinGram.getIndexWithinWindow();
-
-	// 		documentFingerprints.add(lastMinGram);
-	// 		for (int window = 1; window < nGramList.size()- WINDOW_SIZE; window++) {
-			
-	// 			NGram currentGram = nGramList.get(window + WINDOW_SIZE-1);
-	// 			BigInteger hashOfTheCurrentGram = currentGram.nGramHash();
-	// 			int currentPosition = window+3;
-
-	// 			if (hashOfTheCurrentGram.compareTo(lastMinHash) <= 0 && (currentPosition - lastSelectedPosition) < WINDOW_SIZE) {
-	// 				lastMinHash = hashOfTheCurrentGram;
-	// 				lastSelectedPosition = currentPosition;
-	// 				documentFingerprints.add(new FingerPrint(hashOfTheCurrentGram, currentGram, window, 3));
-	// 			} else if (hashOfTheCurrentGram.compareTo(lastMinHash) > 0 && (currentPosition - lastSelectedPosition) < WINDOW_SIZE) {
-	// 				// skip
-	// 			} else {
-	// 				NGram one = nGramList.get(window);
-	// 				NGram two = nGramList.get(window+1);
-	// 				NGram three = nGramList.get(window+2);
-	// 				NGram four = nGramList.get(window+3);		
-	// 				FingerPrint fingerPrint = minGram(one, two, three, four, window);
-
-	// 				lastMinHash = fingerPrint.getHash();
-	// 				lastSelectedPosition = window + fingerPrint.getIndexWithinWindow();
-	// 				documentFingerprints.add(fingerPrint);
-	// 			}
-				
-	// 		}
-
-	// 		for (FingerPrint fingerPrint : documentFingerprints) {
-	// 			logger.debug("Fingerprint: {}", fingerPrint.toString());
-	// 		}
-
-
-	// 	} catch (Exception e) {
-	// 		e.printStackTrace();
-	// 	}
-	// 	return documentFingerprints;
-
-	// }
-
-	/* Version 02 */
 	private ArrayList<FingerPrint> computeDocumentFingerPrints (Submission s, int windowSize) {
 		logger.debug("Compute fingerprints of submission {}:", s.getID());
 
@@ -453,35 +352,8 @@ public final class SimComparer {
 		return documentFingerprints;
 
 	}	
-	
 
-	// private FingerPrint minGram(NGram one, NGram two, NGram three, NGram four, int window) throws NoSuchAlgorithmException {
-	// 	BigInteger i1 = one.nGramHash();
-	// 	BigInteger i2 = two.nGramHash();
-	// 	BigInteger i3 = three.nGramHash();
-	// 	BigInteger i4 = four.nGramHash();
 
-	// 	FingerPrint minGram = new FingerPrint(i4, four, window, 3);
-
-	// 	if (i4.compareTo(i1) <= 0 && i4.compareTo(i2) <= 0 && i4.compareTo(i3) <= 0) {
-	// 		// skip
-	// 	} else if (i3.compareTo(i1) <= 0 && i3.compareTo(i2) <= 0 && i3.compareTo(i4) <= 0) {
-	// 		minGram.setHash(i3);
-	// 		minGram.setnGram(three);
-	// 		minGram.setIndexWithinWindow(2);
-	// 	} else if (i2.compareTo(i1) <= 0 && i2.compareTo(i3) <= 0 && i2.compareTo(i4) <= 0) {
-	// 		minGram.setHash(i2);
-	// 		minGram.setnGram(two);
-	// 		minGram.setIndexWithinWindow(1);
-	// 	} else {
-	// 		minGram.setHash(i1);
-	// 		minGram.setnGram(one);
-	// 		minGram.setIndexWithinWindow(0);
-	// 	}		
-	// 	return minGram;
-	// }
-
-	/* Version 02 */
 	private FingerPrint minGram(NGram[] arrayOfNGrams, int window) throws NoSuchAlgorithmException {
 		BigInteger[] hashes = new BigInteger[arrayOfNGrams.length];
 		for (int i = 0; i < hashes.length; i++) {
@@ -611,7 +483,6 @@ public final class SimComparer {
 			// logger.debug("The n-gram is: {} ", s1NGram.getTokenList().toString());
 			
 			if (s2NGramIndices.containsKey(s1NGram)) {
-				// logger.debug("The similar n-gram is: {} ", s1NGram.getTokenList().toString());	
 				s2Indices = s2NGramIndices.get(s1NGram);
 				s2Matches = new HashMap<Integer, Integer>();
 				for (int index : s2Indices) {
