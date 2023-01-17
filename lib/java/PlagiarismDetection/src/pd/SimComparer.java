@@ -71,7 +71,9 @@ public final class SimComparer {
 		long wholeAssFingerprintsNbr = 0;
 		HashMap<BigInteger, ArrayList<FingerPrint>> invertedIndexesOfAssignmentFingerPrints = new HashMap<BigInteger, ArrayList<FingerPrint>>();
 		for (Submission s : submissions) {
-			ArrayList<FingerPrint> subFingerPrints = computeDocumentFingerPrints(s);
+			ArrayList<FingerPrint> subFingerPrints = computeDocumentFingerPrints(s, WINDOW_SIZE);
+			// ArrayList<FingerPrint> subFingerPrints = computeDocumentFingerPrints(s);
+
 			for (FingerPrint fPrint : subFingerPrints) {
 				BigInteger hash = fPrint.getHash();
 				if (invertedIndexesOfAssignmentFingerPrints.containsKey(hash)) {
@@ -139,7 +141,8 @@ public final class SimComparer {
 		long wholeAssFingerprintsNbr = 0;
 		HashMap<BigInteger, ArrayList<MatchingDocument>> invertedIndexesOfAssignmentFingerPrints = new HashMap<BigInteger, ArrayList<MatchingDocument>>();
 		for (Submission s : submissions) {
-			ArrayList<FingerPrint> submissionFingerPrints = computeDocumentFingerPrints(s);
+			ArrayList<FingerPrint> submissionFingerPrints = computeDocumentFingerPrints(s, WINDOW_SIZE);
+			// ArrayList<FingerPrint> submissionFingerPrints = computeDocumentFingerPrints(s);
 			for (FingerPrint fingerPrint : submissionFingerPrints) {
 				
 				BigInteger hash = fingerPrint.getHash();
@@ -224,7 +227,8 @@ public final class SimComparer {
 	}	
 
 	private void computePossibleRelatedDocuments(Submission s, HashMap<BigInteger, ArrayList<MatchingDocument>> invertedIndexesOfAssignmentFingerPrints) {
-		ArrayList<FingerPrint> currentSubmissionFingerPrints = computeDocumentFingerPrints(s);
+		ArrayList<FingerPrint> currentSubmissionFingerPrints = computeDocumentFingerPrints(s, WINDOW_SIZE);
+		// ArrayList<FingerPrint> currentSubmissionFingerPrints = computeDocumentFingerPrints(s);
 
 		// Each entry is: key=submissionId and value=the list of fingerprints that s and the submissionId share. 
 		HashMap<String, HashSet<FingerPrint>> matchingFingerPrintsMap = new HashMap<String, HashSet<FingerPrint>>();
@@ -340,7 +344,60 @@ public final class SimComparer {
 
 	}
 
-	private ArrayList<FingerPrint> computeDocumentFingerPrints (Submission s) {
+	// private ArrayList<FingerPrint> computeDocumentFingerPrints (Submission s) {
+	// 	logger.debug("Compute fingerprints of submission {}:", s.getID());
+
+	// 	NGramList nGramList = s.getNGramList();
+	// 	ArrayList<FingerPrint> documentFingerprints = new ArrayList<FingerPrint>();
+
+		
+
+	// 	try {
+	// 		FingerPrint lastMinGram = minGram(nGramList.get(0), nGramList.get(1), nGramList.get(2), nGramList.get(3), 0);
+	// 		BigInteger lastMinHash = lastMinGram.getHash();
+	// 		int lastSelectedPosition = 0 + lastMinGram.getIndexWithinWindow();
+
+	// 		documentFingerprints.add(lastMinGram);
+	// 		for (int window = 1; window < nGramList.size()- WINDOW_SIZE; window++) {
+			
+	// 			NGram currentGram = nGramList.get(window + WINDOW_SIZE-1);
+	// 			BigInteger hashOfTheCurrentGram = currentGram.nGramHash();
+	// 			int currentPosition = window+3;
+
+	// 			if (hashOfTheCurrentGram.compareTo(lastMinHash) <= 0 && (currentPosition - lastSelectedPosition) < WINDOW_SIZE) {
+	// 				lastMinHash = hashOfTheCurrentGram;
+	// 				lastSelectedPosition = currentPosition;
+	// 				documentFingerprints.add(new FingerPrint(hashOfTheCurrentGram, currentGram, window, 3));
+	// 			} else if (hashOfTheCurrentGram.compareTo(lastMinHash) > 0 && (currentPosition - lastSelectedPosition) < WINDOW_SIZE) {
+	// 				// skip
+	// 			} else {
+	// 				NGram one = nGramList.get(window);
+	// 				NGram two = nGramList.get(window+1);
+	// 				NGram three = nGramList.get(window+2);
+	// 				NGram four = nGramList.get(window+3);		
+	// 				FingerPrint fingerPrint = minGram(one, two, three, four, window);
+
+	// 				lastMinHash = fingerPrint.getHash();
+	// 				lastSelectedPosition = window + fingerPrint.getIndexWithinWindow();
+	// 				documentFingerprints.add(fingerPrint);
+	// 			}
+				
+	// 		}
+
+	// 		for (FingerPrint fingerPrint : documentFingerprints) {
+	// 			logger.debug("Fingerprint: {}", fingerPrint.toString());
+	// 		}
+
+
+	// 	} catch (Exception e) {
+	// 		e.printStackTrace();
+	// 	}
+	// 	return documentFingerprints;
+
+	// }
+
+	/* Version 02 */
+	private ArrayList<FingerPrint> computeDocumentFingerPrints (Submission s, int windowSize) {
 		logger.debug("Compute fingerprints of submission {}:", s.getID());
 
 		NGramList nGramList = s.getNGramList();
@@ -349,29 +406,33 @@ public final class SimComparer {
 		
 
 		try {
-			FingerPrint lastMinGram = minGram(nGramList.get(0), nGramList.get(1), nGramList.get(2), nGramList.get(3), 0);
+			NGram[] firstNGrams = new NGram[windowSize];
+			for(int i = 0; i < firstNGrams.length; i++) {
+				firstNGrams[i] = nGramList.get(i);
+			}
+			FingerPrint lastMinGram = minGram(firstNGrams, 0);
 			BigInteger lastMinHash = lastMinGram.getHash();
 			int lastSelectedPosition = 0 + lastMinGram.getIndexWithinWindow();
 
 			documentFingerprints.add(lastMinGram);
-			for (int window = 1; window < nGramList.size()- WINDOW_SIZE; window++) {
+			for (int window = 1; window < nGramList.size()- windowSize; window++) {
 			
-				NGram currentGram = nGramList.get(window + WINDOW_SIZE-1);
+				NGram currentGram = nGramList.get(window + windowSize-1);
 				BigInteger hashOfTheCurrentGram = currentGram.nGramHash();
-				int currentPosition = window+3;
+				int currentPosition = window + windowSize-1;
 
-				if (hashOfTheCurrentGram.compareTo(lastMinHash) <= 0 && (currentPosition - lastSelectedPosition) < WINDOW_SIZE) {
+				if (hashOfTheCurrentGram.compareTo(lastMinHash) <= 0 && (currentPosition - lastSelectedPosition) < windowSize) {
 					lastMinHash = hashOfTheCurrentGram;
 					lastSelectedPosition = currentPosition;
-					documentFingerprints.add(new FingerPrint(hashOfTheCurrentGram, currentGram, window, 3));
-				} else if (hashOfTheCurrentGram.compareTo(lastMinHash) > 0 && (currentPosition - lastSelectedPosition) < WINDOW_SIZE) {
+					documentFingerprints.add(new FingerPrint(hashOfTheCurrentGram, currentGram, window, windowSize-1));
+				} else if (hashOfTheCurrentGram.compareTo(lastMinHash) > 0 && (currentPosition - lastSelectedPosition) < windowSize) {
 					// skip
 				} else {
-					NGram one = nGramList.get(window);
-					NGram two = nGramList.get(window+1);
-					NGram three = nGramList.get(window+2);
-					NGram four = nGramList.get(window+3);		
-					FingerPrint fingerPrint = minGram(one, two, three, four, window);
+					NGram[] currentNGrams = new NGram[windowSize];
+					for (int i=window; i <= window+windowSize-1; i++) {
+						currentNGrams[i-window] = nGramList.get(i);
+					}
+					FingerPrint fingerPrint = minGram(currentNGrams, window);
 
 					lastMinHash = fingerPrint.getHash();
 					lastSelectedPosition = window + fingerPrint.getIndexWithinWindow();
@@ -390,33 +451,55 @@ public final class SimComparer {
 		}
 		return documentFingerprints;
 
-	}
+	}	
+	
 
-	private FingerPrint minGram(NGram one, NGram two, NGram three, NGram four, int window) throws NoSuchAlgorithmException {
-		BigInteger i1 = one.nGramHash();
-		BigInteger i2 = two.nGramHash();
-		BigInteger i3 = three.nGramHash();
-		BigInteger i4 = four.nGramHash();
+	// private FingerPrint minGram(NGram one, NGram two, NGram three, NGram four, int window) throws NoSuchAlgorithmException {
+	// 	BigInteger i1 = one.nGramHash();
+	// 	BigInteger i2 = two.nGramHash();
+	// 	BigInteger i3 = three.nGramHash();
+	// 	BigInteger i4 = four.nGramHash();
 
-		FingerPrint minGram = new FingerPrint(i4, four, window, 3);
+	// 	FingerPrint minGram = new FingerPrint(i4, four, window, 3);
 
-		if (i4.compareTo(i1) <= 0 && i4.compareTo(i2) <= 0 && i4.compareTo(i3) <= 0) {
-			// skip
-		} else if (i3.compareTo(i1) <= 0 && i3.compareTo(i2) <= 0 && i3.compareTo(i4) <= 0) {
-			minGram.setHash(i3);
-			minGram.setnGram(three);
-			minGram.setIndexWithinWindow(2);
-		} else if (i2.compareTo(i1) <= 0 && i2.compareTo(i3) <= 0 && i2.compareTo(i4) <= 0) {
-			minGram.setHash(i2);
-			minGram.setnGram(two);
-			minGram.setIndexWithinWindow(1);
-		} else {
-			minGram.setHash(i1);
-			minGram.setnGram(one);
-			minGram.setIndexWithinWindow(0);
-		}		
+	// 	if (i4.compareTo(i1) <= 0 && i4.compareTo(i2) <= 0 && i4.compareTo(i3) <= 0) {
+	// 		// skip
+	// 	} else if (i3.compareTo(i1) <= 0 && i3.compareTo(i2) <= 0 && i3.compareTo(i4) <= 0) {
+	// 		minGram.setHash(i3);
+	// 		minGram.setnGram(three);
+	// 		minGram.setIndexWithinWindow(2);
+	// 	} else if (i2.compareTo(i1) <= 0 && i2.compareTo(i3) <= 0 && i2.compareTo(i4) <= 0) {
+	// 		minGram.setHash(i2);
+	// 		minGram.setnGram(two);
+	// 		minGram.setIndexWithinWindow(1);
+	// 	} else {
+	// 		minGram.setHash(i1);
+	// 		minGram.setnGram(one);
+	// 		minGram.setIndexWithinWindow(0);
+	// 	}		
+	// 	return minGram;
+	// }
+
+	/* Version 02 */
+	private FingerPrint minGram(NGram[] arrayOfNGrams, int window) throws NoSuchAlgorithmException {
+		BigInteger[] hashes = new BigInteger[arrayOfNGrams.length];
+		for (int i = 0; i < hashes.length; i++) {
+			hashes[i] = arrayOfNGrams[i].nGramHash();
+		}
+
+		int lastIdx = arrayOfNGrams.length-1;
+		FingerPrint minGram = new FingerPrint(hashes[lastIdx], arrayOfNGrams[lastIdx], window, lastIdx);
+		for (int j = hashes.length-1; j>=0; j--) {
+			BigInteger currentHash = hashes[j];
+			if (currentHash.compareTo(minGram.getHash()) < 0) {
+				minGram.setHash(currentHash);
+				minGram.setnGram(arrayOfNGrams[j]);
+				minGram.setIndexWithinWindow(j);
+			}
+		}
 		return minGram;
 	}
+	
 
 	private Result compareSubmissions(Submission s1, Submission s2,
 			Submission skeleton, int nGramSize, int minMatch) {
