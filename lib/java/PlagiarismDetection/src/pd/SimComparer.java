@@ -46,7 +46,7 @@ public final class SimComparer {
 	private static SimComparer instance = new SimComparer();
 	private static final String SKELETON = "skeleton";
 	private static Logger logger = LogManager.getLogger();
-	private static final int WINDOW_SIZE = 5;
+	private static final int WINDOW_SIZE = 4;
 
 	@SuppressWarnings("unused")
 	private boolean debugMode = false;
