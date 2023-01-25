@@ -70,7 +70,7 @@ public final class SimComparer {
 		long wholeAssFingerprintsNbr = 0;
 		HashMap<BigInteger, ArrayList<FingerPrint>> invertedIndexesOfAssignmentFingerPrints = new HashMap<BigInteger, ArrayList<FingerPrint>>();
 		for (Submission s : submissions) {
-			ArrayList<FingerPrint> subFingerPrints = computeDocumentFingerPrints(s, WINDOW_SIZE);
+			ArrayList<FingerPrint> subFingerPrints = computeDocumentFingerPrints(s, nGramSize-1);
 
 			for (FingerPrint fPrint : subFingerPrints) {
 				BigInteger hash = fPrint.getHash();
@@ -139,7 +139,7 @@ public final class SimComparer {
 		long wholeAssFingerprintsNbr = 0;
 		HashMap<BigInteger, ArrayList<MatchingDocument>> invertedIndexesOfAssignmentFingerPrints = new HashMap<BigInteger, ArrayList<MatchingDocument>>();
 		for (Submission s : submissions) {
-			ArrayList<FingerPrint> submissionFingerPrints = computeDocumentFingerPrints(s, WINDOW_SIZE);
+			ArrayList<FingerPrint> submissionFingerPrints = computeDocumentFingerPrints(s, nGramSize-1);
 			s.setSubmissionFingerPrints(submissionFingerPrints);
 
 			for (FingerPrint fingerPrint : submissionFingerPrints) {
