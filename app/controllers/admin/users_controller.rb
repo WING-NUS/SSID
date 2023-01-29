@@ -195,7 +195,7 @@ class Admin::UsersController < ApplicationController
       UsersHelper.validate_password(@the_user, params[:user]["new_password"], params[:user]["confirm_new_password"])
 
       # Set password
-      @the_user.password_digest = BCrypt::Password.create(params[:user]["new_password"]) if @the_user.errors.empty?
+      @the_user.password = params[:user]["new_password"] if @the_user.errors.empty?
     end
 
     # Validate email
@@ -217,7 +217,11 @@ class Admin::UsersController < ApplicationController
       if @course
         redirect_to course_users_url(@course), notice: "#{@course.code} User was successfully updated."
       else
-        redirect_to admin_users_url, notice: "Admin User was successfully updated."
+        if @the_user.is_admin?
+          redirect_to admin_users_url, notice: "Admin User was successfully updated."
+        else
+          redirect_to admin_users_url, notice: "User was successfully updated."
+        end
       end
     else
       render action: "edit"
