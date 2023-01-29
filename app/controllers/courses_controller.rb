@@ -73,11 +73,10 @@ class CoursesController < ApplicationController
       c.expiry = Time.zone.local_to_utc(DateTime.new(expiry_date.year, expiry_date.month, expiry_date.mday, expiry_time.hour, expiry_time.min))
     }
 
-    
-    if @course.errors.empty? and @course.save
-      
+    if @course.valid? and @course.save
     else
       render action: "new"
+      return
     end
 
     if not current_user.is_admin
@@ -86,8 +85,8 @@ class CoursesController < ApplicationController
         m.course = @course
         m.role = UserCourseMembership::ROLE_TEACHING_STAFF
       }
-
-      if @membership.errors.empty? and @membership.save
+      
+      if @membership.valid? and @membership.save
         redirect_to courses_url, notice: 'Course was successfully created.'
       else
         render action: "new"
