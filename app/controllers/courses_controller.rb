@@ -92,6 +92,8 @@ class CoursesController < ApplicationController
       else
         render action: "new"
       end
+    else
+      redirect_to courses_url, notice: 'Course was successfully created.'
     end
   end
 
