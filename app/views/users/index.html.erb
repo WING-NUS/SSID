@@ -18,7 +18,7 @@
       <th>Full Name</th>
       <th class="id_col">Name</th>
       <th class="role_col">Role</th>
-      <% if @user.is_admin || @course.membership_for_user(@user).role == UserCourseMembership::ROLE_TEACHING_STAFF %>
+      <% if current_user.is_admin || @course.membership_for_user(@user).role == UserCourseMembership::ROLE_TEACHING_STAFF %>
         <th class="actions_col">Actions</th>
       <% end %>
     </tr>
