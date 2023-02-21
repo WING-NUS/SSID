@@ -224,4 +224,6 @@ public abstract class TokenSSID {
 
 	@Override
 	public abstract String toString();
+
+	public abstract String getValue();
 }

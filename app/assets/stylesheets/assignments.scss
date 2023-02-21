@@ -87,7 +87,7 @@ body.assignments {
 }
 
 body.assignments_new, body.assignments_create, body.assignments_show {
-  form input#assignment_mapbox {
+  form input#assignment_mapbox, form input#assignment_used_fingerprints {
     margin-top: $spacer * 0.75;
     margin-left: $spacer;
   }
