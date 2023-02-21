@@ -27,7 +27,7 @@
   <tbody>
     <% @admins.each { |admin| %>
       <tr>
-        <td><%= admin.full_name || "--" %><%= " <em>(This is you)</em>".html_safe if @user == admin %></td>
+        <td><%= admin.full_name || "--" %><%= " <em>(This is you)</em>".html_safe if current_user == admin %></td>
         <td><%= admin.name %></td>
         <td>
           <div class="dropdown">
@@ -35,8 +35,8 @@
               <%= image_tag("more_vert_black_24dp.svg", alt: "Admin User Menu Dropdown")%>            
             </a>
             <ul class="dropdown-menu" aria-labelledby="adminUserDropdownMenuLink">
-              <% if admin == @user %>
-                <li><%= link_to "Settings", edit_user_url(@user), class: "dropdown-item" %></li>
+              <% if admin == current_user %>
+                <li><%= link_to "Settings", edit_user_registration_url(current_user), class: "dropdown-item" %></li>
               <% else %>
                 <li><%= link_to "Edit", edit_admin_user_url(admin), class: "dropdown-item" %></li>
                 <li>

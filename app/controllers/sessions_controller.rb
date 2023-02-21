@@ -16,7 +16,7 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
 class SessionsController < ApplicationController
-  skip_before_action :authorize
+  skip_before_action :authenticate_user!
 
   def index
     render "layouts/cover"
@@ -37,20 +37,6 @@ class SessionsController < ApplicationController
       end
     else
       redirect_to login_url, alert: "Invalid user/password combination or user account is still being processed."
-    end
-  end
-
-  def check_hash
-    # obtain the hash
-    input_hash = params[:id]
-    # verify the hash
-    guest_user = GuestUsersDetail.find_by_hash_string(params[:id])
-    # allow access if the hash is verified and else redirect to login page
-    if guest_user
-      session[:user_id] = guest_user.user_id
-      redirect_to root_url
-    else
-      redirect_to login_url, alert: "The hash is not valid. Please use a valid sharable link or log in with your credientals."
     end
   end
 

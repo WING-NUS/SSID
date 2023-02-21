@@ -16,6 +16,10 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
 class User < ActiveRecord::Base
+  # Include default devise modules. Others available are:
+  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
+  devise :database_authenticatable, :registerable,
+         :recoverable, :rememberable, :validatable, :confirmable
   MIN_PASSWORD_LENGTH = 8
 
   has_many :memberships , class_name: "UserCourseMembership", :dependent => :delete_all
@@ -23,17 +27,14 @@ class User < ActiveRecord::Base
   has_many :courses, -> { distinct }, :through => :memberships
   has_many :assignments, -> { distinct }, :through => :courses
   has_many :submissions, foreign_key: "student_id"
-  has_many :password_resets, class_name: "PasswordReset"
 
-  validates :name, :password_digest, presence: true
+  validates :name, presence: true
   validates :name, uniqueness: true
   validates :email, presence: true, uniqueness: true, format: { with: /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i }
 
-  has_secure_password
   before_destroy :ensure_an_admin_remains
 
   attr_accessor :activation_token
-  before_create :create_activation_digest
 
   def is_some_staff?
     self.courses.any? { |c| c.membership_for_user(self).role == UserCourseMembership::ROLE_TEACHING_STAFF }
@@ -52,6 +53,18 @@ class User < ActiveRecord::Base
     digest = send("#{attribute}_digest")
     return false if digest.nil?
     BCrypt::Password.new(digest).is_password?(token)
+  end
+
+  def active_for_authentication?
+    super && self.is_admin_approved?
+  end
+
+  def inactive_message
+    if !self.is_admin_approved?
+      :not_approved
+    else
+      super # Use whatever other message
+    end
   end
 
   private

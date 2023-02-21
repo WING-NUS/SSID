@@ -30,7 +30,8 @@ class AnnouncementsController < ApplicationController
 
   # GET /announcements
   def index
-    @announcements = @user.courses.collect { |c| c.announcements }.flatten
+      @announcements = current_user.courses.collect { |c| c.announcements }.flatten
+
   end
 
   # GET /announcements/new

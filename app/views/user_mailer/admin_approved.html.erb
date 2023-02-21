@@ -3,8 +3,8 @@
 
   <p>
     Click the link below to sign in to your SSID accont<br>
-    <% website = (Rails.env == "production" ? url_for(:protocol => "#{Rails.application.config.protocol}", :host => "#{Rails.application.config.host}", :controller => "sessions", :action => "index")
-                                            : url_for(:protocol => "#{Rails.application.config.protocol}", :host => "#{Rails.application.config.host}", :port => "3000",:controller => "sessions", :action => "index")) %>
+    <% website = (Rails.env == "production" ? url_for(:protocol => "#{Rails.application.config.protocol}", :host => "#{Rails.application.config.host}", :controller => "users/sessions", :action => "index")
+                                            : url_for(:protocol => "#{Rails.application.config.protocol}", :host => "#{Rails.application.config.host}", :port => "3000",:controller => "users/sessions", :action => "index")) %>
     <%= link_to "Click here", website %>
   </p>
     
