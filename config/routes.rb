@@ -40,7 +40,8 @@ SSID::Application.routes.draw do
     sessions: 'users/sessions',
     confirmations: 'users/confirmations',
     passwords: 'users/passwords',
-    registrations: 'users/registrations'
+    registrations: 'users/registrations',
+    omniauth_callbacks: 'users/omniauth_callbacks'
   }, :path => '', :path_names => { :sign_in => 'login', :sign_out => 'logout', :sign_up => 'signup' }
 
 
