@@ -61,4 +61,5 @@ SSID::Application.configure do
 
   config.eager_load = false
 
+  config.web_console.permissions = '172.20.0.1'
 end
