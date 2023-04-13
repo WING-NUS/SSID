@@ -58,4 +58,5 @@ SSID::Application.configure do
   config.action_mailer.default_url_options = { host: config.host, protocol: 'http' }
 
   config.protocol = "http"
+  config.web_console.permissions = '172.20.0.1'
 end
