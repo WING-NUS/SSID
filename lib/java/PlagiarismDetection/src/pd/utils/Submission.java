@@ -31,6 +31,7 @@ public final class Submission {
 	private NGramList nGramList = new NGramList();
 	private HashMap<NGram, ArrayList<Integer>> nGramIndexingTable = new HashMap<NGram, ArrayList<Integer>>();
 	private boolean isSkeletonCode = false;
+	private boolean isReference = false;
 
 	private ArrayList<FingerPrint> submissionFingerPrints = new ArrayList<FingerPrint>();
 	private ArrayList<String> possibleRelatedDocuments = new ArrayList<String>();
@@ -135,5 +136,14 @@ public final class Submission {
 	public void setSubmissionFingerPrints(ArrayList<FingerPrint> submissionFingerPrints) {
 		this.submissionFingerPrints = submissionFingerPrints;
 	}	
+
+	public boolean isReference() {
+		return isReference;
+	}
+
+	public void setReference(boolean isReference) {
+		this.isReference = isReference;
+	}
+	
 	
 }

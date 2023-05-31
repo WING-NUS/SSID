@@ -25,6 +25,7 @@ import org.apache.logging.log4j.Logger;
 public final class SubmissionRetriever {
 
 	private static final String MAP_FILE_NAME = "mapfile.csv";
+	public static final String REFERENCE = "reference";
 
 	private static Logger logger = LogManager.getLogger();
 
@@ -40,11 +41,16 @@ public final class SubmissionRetriever {
 	 *             File reading errors
 	 */
 	public static ArrayList<Submission> retrieveSubmissions(
-			String compareFolderPath, boolean isMapEnabled) throws Exception {
+			String compareFolderPath, String compareReferencesFolderPath, boolean isMapEnabled) throws Exception {
 
 
 		ArrayList<Submission> reply = new ArrayList<Submission>();
 		File[] files = new File(compareFolderPath).listFiles();
+		File[] referenceFiles = null;
+		if (compareReferencesFolderPath != null && !compareReferencesFolderPath.equals(REFERENCE)) {
+		  referenceFiles = new File(compareReferencesFolderPath).listFiles();
+		}
+
 		ArrayList<String> lines;
 		Hashtable<String, String> mappedNames = new Hashtable<String, String>();
 		mappedNames = getExtractedMappedNames(compareFolderPath, isMapEnabled);
@@ -58,6 +64,18 @@ public final class SubmissionRetriever {
 				reply.add(new Submission(studentName, f.getPath(), lines, codeLength));
 			}
 		}
+
+		if (referenceFiles != null) {
+			for (File f : referenceFiles) {
+				lines = new ArrayList<String>();
+				codeLength = getFileContents(f, lines);
+				studentName = getStudentName(mappedNames, f.getName());
+				Submission submission = new Submission(studentName, f.getPath(), lines, codeLength);
+				submission.setReference(true);
+				reply.add(submission);
+			}
+		}
+
 		return reply;
 	}
 
@@ -86,14 +104,14 @@ public final class SubmissionRetriever {
 	}
 
 	private static String getStudentName(Hashtable<String, String> mappedNames, String studentName) {
-		logger.debug("Student name: {}", studentName);
+		// logger.debug("Student name: {}", studentName);
 		String mappedStudentName = mappedNames.get(studentName);
     if (mappedStudentName == null) {
-			logger.debug("why da?");
+			// logger.debug("why da?");
 			return studentName;
     } else {
-			logger.debug("working da");
-			logger.debug(mappedStudentName);
+			// logger.debug("working da");
+			// logger.debug(mappedStudentName);
 			return (mappedStudentName + " (" + studentName + ")");
 		}
 	}

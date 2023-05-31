@@ -58,8 +58,8 @@ module SubmissionsHandler
   MAX_DATA_CHAR_SIZE = 64000
   DATA_TRUNCATE_MSG = "... (Data  got truncated)"
 
-  def self.process_upload(file, isMapEnabled, mapfile, assignment)
-    upload_dir = File.join(".", "upload", assignment.id.to_s)
+  def self.process_upload(file, path, isMapEnabled, mapfile, assignment)
+    upload_dir = File.join(".", path, assignment.id.to_s)
 
     # Clear upload dir if exists
     FileUtils.remove_dir upload_dir if File.exist? upload_dir
@@ -92,6 +92,7 @@ module SubmissionsHandler
     Zip::File.open(upload_file) { |zip_file|
       zip_file.each { |f|
 
+      byebug  
       file_entry_names = zip_file.entries.collect {|file| file.name}
       file_entry_names.each { |file_name|
         if (file_name.eql?(upload_file_without_ext)) 
@@ -159,7 +160,43 @@ module SubmissionsHandler
     upload_dir
   end
 
-  def self.process_submissions(path, assignment, isMapEnabled, used_fingerprints)
+  def self.process_submissions(path, references_path, assignment, isMapEnabled, used_fingerprints)
+    # # Create directory for code comparison, delete first if necessary
+    # compare_dir = File.join(path, "_compare")
+    # FileUtils.rm(compare_dir, force: true) if File.exist? compare_dir
+    # FileUtils.mkdir_p(File.join(path, "_compare"))
+    
+    # # For each student submission, combine the code files into one
+    # Dir.glob(File.join(path, "*")).each { |subpath|
+    #   next if subpath == compare_dir || (File.file?(subpath) && subpath.split('.').last.to_s.downcase == 'csv')
+
+    #   # Combine code files and write into compare dir as new file with same name, remove ext if any
+    #   File.open(File.join(compare_dir, File.basename(subpath, File.extname(subpath))), 'w') { |f|
+    #     f.puts string_from_combined_files(subpath)
+    #   }
+    # }
+    byebug
+
+    compare_dir = combine_submission_files(path)
+    compare_references_dir = "reference"
+    if references_path != nil
+      compare_references_dir = combine_submission_files(references_path)
+    end
+    
+
+    if ApplicationHelper.is_application_healthy()
+      puts "Process assignment: #{assignment.id}"
+      fork_Java_process(compare_dir, compare_references_dir, assignment, isMapEnabled, used_fingerprints)
+    else 
+      puts "Put in queue, assignment: #{assignment.id}"
+      SubmissionSimilarityProcess.create do |p|
+        p.assignment_id = assignment.id
+        p.status = SubmissionSimilarityProcess::STATUS_WAITING
+      end
+    end
+  end
+
+  def self.combine_submission_files(path)
     # Create directory for code comparison, delete first if necessary
     compare_dir = File.join(path, "_compare")
     FileUtils.rm(compare_dir, force: true) if File.exist? compare_dir
@@ -174,20 +211,10 @@ module SubmissionsHandler
         f.puts string_from_combined_files(subpath)
       }
     }
-
-    if ApplicationHelper.is_application_healthy()
-      puts "Process assignment: #{assignment.id}"
-      fork_Java_process(compare_dir, assignment, isMapEnabled, used_fingerprints)
-    else 
-      puts "Put in queue, assignment: #{assignment.id}"
-      SubmissionSimilarityProcess.create do |p|
-        p.assignment_id = assignment.id
-        p.status = SubmissionSimilarityProcess::STATUS_WAITING
-      end
-    end
+    return compare_dir
   end
 
-  def self.fork_Java_process(compare_dir, assignment, isMapEnabled, used_fingerprints)
+  def self.fork_Java_process(compare_dir, compare_references_dir, assignment, isMapEnabled, used_fingerprints)
     # Read database configuration
     config   = Rails.configuration.database_configuration
     host     = config[Rails.env]["host"]
@@ -199,7 +226,11 @@ module SubmissionsHandler
     command = %Q{java -Xmx2048M -Dlog4j2.configurationFile="#{Rails.application.config.plagiarism_detection_log_configuration_path}" -jar "#{Rails.application.config.plagiarism_detection_path}" } + 
               %Q{#{assignment.id} #{compare_dir} #{assignment.language.downcase} } +
               %Q{#{assignment.min_match_length} #{assignment.ngram_size} } +
-              %Q{#{host} #{database} #{username} #{password} #{isMapEnabled} #{used_fingerprints}}  
+              %Q{#{host} #{database} #{username} #{password} #{isMapEnabled} #{used_fingerprints} #{compare_references_dir} }  
+
+    byebug          
+    puts "The command is #{command}"                  
+
     # Fork to run java program in background
     ruby_pid = Process.fork do
       java_log = ""
@@ -295,8 +326,13 @@ module SubmissionsHandler
   end
 
   def self.convert_to_python(path, strings)
-    # byebug
-    path_without_special_chars = path.gsub(/[\s\(\)\*\@\$\%\&\*]/, '__')
+    byebug
+    # path_without_special_chars = path.gsub(/[\s\(\)\*\@\$\%\&\*]/, '__')
+    path_tokens = path.split(File::SEPARATOR)
+    puts "Path tokens: #{path_tokens}"
+    path_tokens[-1] = path_tokens[-1].gsub(/[\s\(\)\*\@\$\%\&\*]/, '__') unless path_tokens.empty?
+    path_without_special_chars = path_tokens.join(File::SEPARATOR)
+
     File.rename(path, path_without_special_chars)
     command = "jupyter nbconvert --to script #{path_without_special_chars}"
     isConversionSuccessful = system(command)

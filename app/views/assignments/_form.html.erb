@@ -28,6 +28,10 @@
       </ul>
     </div>
     <div class="col-12">
+      <%= f.label :reference_file, "Reference submissions (zip) \u24D8", title: "The zip file should contain one folder for each reference's code files; folders are named according to ID", class: 'form-label' %>
+      <%= f.file_field :reference_file, class: 'form-control' %>
+    </div>    
+    <div class="col-12">
       <%= f.label :language, class: "form-label" %>
       <%= f.select :language, Assignment.options_for_languages, {}, { :class => 'form-select', :id => 'student_submissions_language_list' }  %>
     </div>

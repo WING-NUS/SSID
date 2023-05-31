@@ -25,8 +25,9 @@ namespace :SSID do
         waiting_assignment = Assignment.find_by_id(waiting_process.assignment_id)
 
         compare_dir = File.join(".", "upload", waiting_assignment.id.to_s, "_compare")
+        compare_references_dir = File.join(".", "reference", waiting_assignment.id.to_s, "_compare")
         puts "Process waiting assignment: #{waiting_assignment.id.to_s}"
-        SubmissionsHandler.fork_Java_process(compare_dir, waiting_assignment, waiting_assignment.mapbox)
+        SubmissionsHandler.fork_Java_process(compare_dir, compare_references_dir, waiting_assignment, waiting_assignment.mapbox)
       end
     end
   end

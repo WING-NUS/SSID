@@ -104,6 +104,7 @@ class AssignmentsController < ApplicationController
 
       isMapEnabled = (params[:assignment]["mapbox"] == "Yes")? true : false;
       used_fingerprints = (params[:assignment]["used_fingerprints"] == "Yes")? true : false
+      checked_with_references = (params[:assignment]["reference_file"].nil? == true)? false : true
 
       # No student submission file was uploaded
       if params[:assignment]["file"].nil?
@@ -113,7 +114,11 @@ class AssignmentsController < ApplicationController
       elsif (is_valid_zip?(params[:assignment]["file"].content_type, params[:assignment]["file"].path))
         # Don't process the file and show error if the mapping was enabled but no mapping file was uploaded
         if (is_valid_map_or_no_map?(isMapEnabled, params[:assignment]["mapfile"])) 
-          self.start_upload(@assignment, params[:assignment]["file"], isMapEnabled, params[:assignment]["mapfile"], used_fingerprints)
+          if checked_with_references
+            self.start_upload(@assignment, params[:assignment]["file"], params[:assignment]["reference_file"], isMapEnabled, params[:assignment]["mapfile"], used_fingerprints)
+          else
+            self.start_upload(@assignment, params[:assignment]["file"], nil, isMapEnabled, params[:assignment]["mapfile"], used_fingerprints)
+          end
         # Don't process the file and show error if the mapping was enabled but no mapping file was uploaded
         elsif (isMapEnabled && params[:assignment]["mapfile"].nil?)
           @assignment.errors.add(:mapfile, "containing mapped student names need to be uploaded if the 'Upload map file' box is ticked")
@@ -144,6 +149,9 @@ class AssignmentsController < ApplicationController
 
     isMapEnabled = (params[:assignment]["mapbox"] == "Yes")? true : false;
     used_fingerprints = (params[:assignment]["used_fingerprints"] == "Yes")? true : false
+    checked_with_references = (params[:assignment]["reference_file"].nil? == true)? false : true
+
+    # params[:assignment]["reference_file"].nil?
 
     # No student submission file was uploaded
     if params[:assignment]["file"].nil?
@@ -157,7 +165,11 @@ class AssignmentsController < ApplicationController
     elsif (is_valid_zip?(params[:assignment]["file"].content_type, params[:assignment]["file"].path))
       # Don't process the file and show error if the mapping was enabled but no mapping file was uploaded
       if (is_valid_map_or_no_map?(isMapEnabled, params[:assignment]["mapfile"])) 
-        self.start_upload(@assignment, params[:assignment]["file"], isMapEnabled, params[:assignment]["mapfile"], used_fingerprints)
+        if checked_with_references
+          self.start_upload(@assignment, params[:assignment]["file"], params[:assignment]["reference_file"], isMapEnabled, params[:assignment]["mapfile"], used_fingerprints)
+        else
+          self.start_upload(@assignment, params[:assignment]["file"], nil, isMapEnabled, params[:assignment]["mapfile"], used_fingerprints)
+        end
       # Don't process the file and show error if the mapping was enabled but no mapping file was uploaded
       elsif (isMapEnabled && params[:assignment]["mapfile"].nil?)
         @assignment.errors.add(:mapfile, "containing mapped student names need to be uploaded if the 'Upload map file' box is ticked")
@@ -187,15 +199,20 @@ class AssignmentsController < ApplicationController
     redirect_to course_assignments_url(@course), notice: 'Assignment was successfully deleted.'
   end
   
-  def start_upload(assignment, submissionFile, isMapEnabled, mapFile, used_fingerprints)
+  def start_upload(assignment, submissionFile, reference_file, isMapEnabled, mapFile, used_fingerprints)
       require 'submissions_handler'
 
       # Process upload file
-      submissions_path = SubmissionsHandler.process_upload(submissionFile, isMapEnabled, mapFile, assignment)
+      submissions_path = SubmissionsHandler.process_upload(submissionFile, "upload", isMapEnabled, mapFile, assignment)
+      references_path = nil
+      if reference_file != nil 
+        references_path = SubmissionsHandler.process_upload(reference_file, "reference", false, mapFile, assignment)
+      end
+
       if submissions_path
         # Launch java program to process submissions
-        SubmissionsHandler.process_submissions(submissions_path, assignment, isMapEnabled, used_fingerprints)
-        
+        SubmissionsHandler.process_submissions(submissions_path, references_path, assignment, isMapEnabled, used_fingerprints)
+
         process = assignment.submission_similarity_process
         notice = 'SSID will start to process the assignment now. Please refresh this page after a few minutes to view the similarity results.'
         if process && process.status == SubmissionSimilarityProcess::STATUS_WAITING

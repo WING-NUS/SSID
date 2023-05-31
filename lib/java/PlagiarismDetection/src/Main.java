@@ -39,14 +39,15 @@ public class Main {
 
 		long start = System.nanoTime();
 
-		if (args.length != 11) {
+		if (args.length != 12) {
 			System.out.println("Your input arguments:" + Arrays.toString(args));
 			throw new Exception(
-					"Usage: jPDS <Assignment Id> <Compare Folder path> <Language> <minMatch> <N-Gram> <database host> <database name> <database username> <database password> <use fingerprints?>");
+					"Usage: jPDS <Assignment Id> <Compare Folder path> <Language> <minMatch> <N-Gram> <database host> <database name> <database username> <database password> <use fingerprints?> <references>");
 		}
 
 		String aId = args[0];
 		String compareFolderPath = args[1];
+		String compareReferencesFolderPath = args[11];
 		boolean isMapEnabled = Boolean.parseBoolean(args[9]);  
 		boolean isUsedFingerprints = Boolean.parseBoolean(args[10]);
 		logger.debug("Assignment: {}, going to use fingerprints? {}", aId, isUsedFingerprints);  
@@ -72,7 +73,7 @@ public class Main {
 		MySQLDB.setProperties(dbAddr, dbName, dbUser, dbPwd);
 
 		ArrayList<Submission> submissions = SubmissionRetriever
-				.retrieveSubmissions(compareFolderPath, isMapEnabled);
+				.retrieveSubmissions(compareFolderPath, compareReferencesFolderPath, isMapEnabled);
 
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z");
 

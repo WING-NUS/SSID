@@ -54,6 +54,12 @@ SSID::Application.routes.draw do
       put 'update' => 'users#upgrade_to_admin_account'
     end
   end
+
+  namespace :apis do
+    resources :assignments do
+
+    end
+  end
   
   resources :courses do
     get 'status'

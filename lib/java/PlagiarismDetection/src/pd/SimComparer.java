@@ -92,7 +92,7 @@ public final class SimComparer {
 
 		for (int i = 0; i < noOfSub; i++) {
 			s1 = submissions.get(i);
-			if (s1.isSkeletonCode()) {
+			if (s1.isSkeletonCode() || s1.isReference()) {
 				continue;
 			}
 			for (int j = i + 1; j < noOfSub; j++) {
@@ -101,7 +101,7 @@ public final class SimComparer {
 					continue;
 				}
 
-				logger.info("Start comparing submissions: {} vs {}", s1.getID(), s2.getID());
+				logger.info("Start comparing submissions: {} vs {}, s2 reference: {}", s1.getID(), s2.getID(), s2.isReference());
 				s1Tokens = s1.getCodeTokens();
 				s2Tokens = s2.getCodeTokens();
 				if (s1Tokens.size() < s2Tokens.size()) {
@@ -171,7 +171,7 @@ public final class SimComparer {
     HashSet<Pair> processedPairs = new HashSet<Pair>();
 		for (int i = 0; i < noOfSub; i++) {
 			s1 = submissions.get(i);
-			if (s1.isSkeletonCode()) {
+			if (s1.isSkeletonCode() || s1.isReference()) {
 				continue;
 			}
 			for (int j = 0; j < noOfSub; j++) {
@@ -189,7 +189,7 @@ public final class SimComparer {
 					continue;
 				}
 
-				logger.info("Start comparing submissions: {} vs {}", s1.getID(), s2.getID());
+				logger.info("Start comparing submissions: {} vs {}, s2 reference: {}", s1.getID(), s2.getID(), s2.isReference());
 				s1Tokens = s1.getCodeTokens();
 				s2Tokens = s2.getCodeTokens();
 				if (s1Tokens.size() < s2Tokens.size()) {
