@@ -1,0 +1,10 @@
+<p>Welcome <%= @resource.name %>!</p>
+
+<p>
+  Welcome to SSID! Click on the link below to activate your account:
+</p>
+
+<p><%= link_to 'Activate', confirmation_url(@resource, confirmation_token: @token) %></p>
+
+<p>Thank you.</p>
+<p><%= ApplicationHelper::SSID_MAINTAINER %></p>

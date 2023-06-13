@@ -17,23 +17,8 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 
 class ApplicationController < ActionController::Base
     protect_from_forgery
-    before_action :authorize
+    before_action :authenticate_user!
     before_action :sanitize_id, only: [:index, :show, :edit, :update, :destroy]
-  
-    protected
-  
-    def authorize
-      # get user and respective membership
-      @user = User.find_by_id(session[:user_id]) 
-
-      unless @user
-        # redirect_to login_url, notice: "Please log in"       
-        redirect_to cover_url
-        
-      else
-        @membership = UserCourseMembership.find_by_user_id(@user.id)
-      end
-    end
   
     private
   
@@ -72,7 +57,7 @@ class ApplicationController < ActionController::Base
     # }
 
     def authenticate_actions_for_role(role, opts={})
-      return if @user.is_admin
+      return if current_user.is_admin
   
       # Sanitize
       raise unless opts[:course]
@@ -82,23 +67,23 @@ class ApplicationController < ActionController::Base
       course = opts[:course]
   
       # Get current user's role
-      membership = course.membership_for_user(@user)
+      membership = course.membership_for_user(current_user)
       
       # Check if we need to authenticate
       if membership.nil? or (membership and membership.role == role and !opts[:only].include? action_name.intern)
-        redirect_to( { controller: "announcements", action: "index" }, alert: "You do not have access to the url \"#{request.env['REQUEST_URI']}\". Please contact the administrator for more information.")
+        redirect_to( { controller: "sessions", action: "index" }, alert: "You do not have access to the url \"#{request.env['REQUEST_URI']}\". Please contact the administrator for more information.")
         return
       end
     end
 
     def authenticate_custom_actions_for_teaching_staff(opts)
-      return if @user.is_admin
+      return if current_user.is_admin
 
       # Sanitize
       raise unless opts[:only]
 
-      unless @user.is_staff_or_ta? and opts[:only].include? action_name.intern
-        redirect_to( { controller: "announcements", action: "index" }, alert: "You do not have access to the url \"#{request.env['REQUEST_URI']}\". Please contact the administrator for more information.")
+      unless current_user.is_staff_or_ta? and opts[:only].include? action_name.intern
+        redirect_to( { controller: "sessions", action: "index" }, alert: "You do not have access to the url \"#{request.env['REQUEST_URI']}\". Please contact the administrator for more information.")
         return
       end
     end
@@ -107,7 +92,7 @@ class ApplicationController < ActionController::Base
       raise unless opts[:only]
   
       # Check if we need to authenticate
-      unless @user.is_admin
+      unless current_user.is_admin
         if opts[:only].include? action_name.intern
           redirect_to( { controller: "announcements", action: "index" }, alert: "You do not have access to the url \"#{request.env['REQUEST_URI']}\". Please contact the administrator for more information.")
         end
@@ -121,14 +106,14 @@ class ApplicationController < ActionController::Base
       user_current_role = nil
 
       # Get course
-      if (opts[:course] != nil && !@user.is_admin)
+      if (opts[:course] != nil && !current_user.is_admin)
         course = opts[:course]
         # check current user role (if any)
-        user_current_role = course.membership_for_user(@user).role
+        user_current_role = course.membership_for_user(current_user).role
       end
      
       # Check if we need to authenticate
-      unless @user.is_admin or user_current_role == UserCourseMembership::ROLE_TEACHING_STAFF
+      unless current_user.is_admin or user_current_role == UserCourseMembership::ROLE_TEACHING_STAFF
         if opts[:only].include? action_name.intern
           redirect_to( { controller: "announcements", action: "index" }, alert: "You do not have access to the url \"#{request.env['REQUEST_URI']}\". Please contact the administrator for more information.")
         end

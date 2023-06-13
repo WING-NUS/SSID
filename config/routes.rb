@@ -16,27 +16,42 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
 SSID::Application.routes.draw do
+  
   resources :submission_logs
 
   get 'assignments/:id/submission_similarities/guest_user' => 'submission_similarities#create_guest_user', :as => 'guest_user_create'
   get 'assignments/:assignment_id/submission_similarities/:submission_similarity_id/guest_user' => 'submission_logs#view_similarity', :as => 'guest_view_similarity'
-  get 'guest_user/:id' => "sessions#check_hash"
 
   # Login/Logout routes
-  get "cover" => "sessions#index"
-  get "login" => "sessions#new"
-  post "login" => "sessions#create"
-  get "signup" => "users#new"
+  devise_scope :user do
+    get "cover" => "users/sessions#index"
+    authenticated :user do
+      root to: "announcements#index", as: :authenticated_root
+    end
+  
+    root to: "users/sessions#index"
+  end
 
-  get 'forget_password' => "password_resets#forget_password", :as => "get_forget_password"
-  post 'forget_password' => 'password_resets#send_password_reset_link'
-  get 'reset_password/:token' => "password_resets#reset_password"
-  put 'reset_password' => "password_resets#update_password"
 
-  delete "logout" => "sessions#destroy"
+
+  devise_for :users, :controllers => { 
+    # :registrations => "users/registrations",
+    # :sign_in => "users/sessions",
+    sessions: 'users/sessions',
+    confirmations: 'users/confirmations',
+    passwords: 'users/passwords',
+    registrations: 'users/registrations',
+    omniauth_callbacks: 'users/omniauth_callbacks'
+  }, :path => '', :path_names => { :sign_in => 'login', :sign_out => 'logout', :sign_up => 'signup' }
+
+
+ 
+  
+
+
   
   get "guide" => "users#guide"
-  root to: "announcements#index"
+
 
   resources :announcements
   resources :account_activations, only: [:edit]
@@ -46,7 +61,6 @@ SSID::Application.routes.draw do
       get 'approve' => 'users#approve', :as => 'approve_user'
     end
   end
-  resources :users
   
   resources :courses do
     get 'status'
