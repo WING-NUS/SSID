@@ -41,7 +41,7 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
     <div class="card announcement rounded">
       <div class="card-header d-flex justify-content-between">
         <strong class="d-inline"><%= a.title + " " if a.title %></strong>
-        <% if @user.is_some_staff? %>
+        <% if current_user.is_some_staff? %>
           <div class="dropdown d-inline">
             <a data-toggle="dropdown" id="announcementDropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
               <%= image_tag("more_vert_black_24dp.svg", alt: "Announcement Menu Dropdown")%>      
