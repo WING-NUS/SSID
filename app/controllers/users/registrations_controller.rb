@@ -29,6 +29,21 @@ class Users::RegistrationsController < Devise::RegistrationsController
   #   super
   # end
 
+  def index
+    @admins = User.where(is_admin: true)
+    @signups = User.joins(:courses, :memberships).where(users: { is_admin_approved: false}).where(user_course_memberships: { role: [UserCourseMembership::ROLE_TEACHING_STAFF, UserCourseMembership::ROLE_TEACHING_ASSISTANT, UserCourseMembership::ROLE_GUEST]})
+
+    # users don't belong to any course
+    @loners = User.all - User.joins(:memberships) - @admins - @signups
+  end  
+
+  def approve
+  end
+
+  def upgrade_to_admin_account
+
+  end
+
   # GET /resource/cancel
   # Forces the session data which is usually expired after sign
   # in to be expired now. This is useful if the user wants to
@@ -57,7 +72,17 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # If you have extra params to permit, append them to the sanitizer.
   def configure_account_update_params
-    devise_parameter_sanitizer.permit(:account_update, keys: [:name, :full_name])
+    # devise_parameter_sanitizer.permit(:account_update, keys: [:name, :full_name])
+
+    if current_user.is_admin && current_user.id != resource.id
+      devise_parameter_sanitizer.permit(:account_update) do |user_params| 
+        user_params.permit(:email, :password, :password_confirmation, :name, :full_name)
+      end
+    else
+      devise_parameter_sanitizer.permit(:account_update) do |user_params| 
+        user_params.permit(:email, :password, :password_confirmation, :current_password, :name, :full_name)
+      end
+    end
   end
 
   # The path used after sign up.

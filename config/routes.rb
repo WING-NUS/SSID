@@ -25,6 +25,9 @@ SSID::Application.routes.draw do
   # Login/Logout routes
   devise_scope :user do
     get "cover" => "users/sessions#index"
+    get 'users' => "users/registrations#index" 
+    get 'users/approve' => "users/registrations#approve"
+
     authenticated :user do
       root to: "announcements#index", as: :authenticated_root
     end
@@ -56,17 +59,18 @@ SSID::Application.routes.draw do
   resources :announcements
   resources :account_activations, only: [:edit]
 
-  namespace :admin do
-    resources :users do
-      get 'approve' => 'users#approve', :as => 'approve_user'
-    end
-  end
+  # namespace :admin do
+  #   resources :users do
+  #     get 'approve' => 'users#approve', :as => 'approve_user'
+  #   end
+  # end
   
   resources :courses do
     get 'status'
     get "cluster_students", defaults: { format: "json" }
+    get 'users'
 
-    resources :users
+    # resources :users
 
     resources :assignments do
       get "log" => "assignments#show_log"
