@@ -28,10 +28,10 @@ class CoursesController < ApplicationController
     if @course
       controller.send :authenticate_actions_for_role, UserCourseMembership::ROLE_TEACHING_STAFF,
                                                       course: @course,
-                                                      only: [ :index, :cluster_students , :status]
+                                                      only: [ :index, :cluster_students , :status, :users]
       controller.send :authenticate_actions_for_role, UserCourseMembership::ROLE_TEACHING_ASSISTANT,
                                                       course: @course,
-                                                      only: [ :index, :cluster_students , :status]
+                                                      only: [ :index, :cluster_students , :status, :users]
       controller.send :authenticate_actions_for_role, UserCourseMembership::ROLE_STUDENT,
                                                       course: @course,
                                                       only: [ :index ]
@@ -138,4 +138,13 @@ class CoursesController < ApplicationController
       }
     end
   end
+
+  # GET /courses/1/users
+  def users
+    @course = Course.find(params[:course_id])
+    @staff = @course.staff
+    @teaching_assistants = @course.teaching_assistants
+    @students = @course.students
+    @guests = @course.guests
+  end  
 end
