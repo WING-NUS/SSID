@@ -16,34 +16,18 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
 class Admin::UsersController < ApplicationController
-  
-  GUEST_USER_ROLE_ID = '3'
-  
-  before_action { |controller|
-    
-  # obtain course (if any) to determine whether the user has any course membership
-    begin
-      @course = Course.find(params[:course_id])
-    rescue ActiveRecord::RecordNotFound
-        @course = Course.find(params[:user]["course_id"]) rescue nil
-    end
-   
-    controller.send :authenticate_actions_for_admin_or_teaching_staff,
-                    course: @course, 
-                    only: [ :index, :new, :create, :edit, :update, :destroy ] # all methods
-  }
+
+  before_action :is_admin, only: [:index, :approve, :upgrade_to_admin_account, :destroy]
 
   # GET /admin/users
   def index
     @admins = User.where(is_admin: true)
-
-    @signups = User.where(is_admin_approved: false)
+    @students = User.joins(:courses, :memberships).where(users: { is_admin_approved: false}).where(user_course_memberships: { role: UserCourseMembership::ROLE_STUDENT })
+    @signups = User.where(is_admin_approved: false) - @students
 
     # users don't belong to any course
     @loners = User.all - User.joins(:memberships) - @admins - @signups
-
-    
-  end
+  end  
 
   def approve
     @the_user = User.find(params[:user_id])
@@ -53,6 +37,9 @@ class Admin::UsersController < ApplicationController
     redirect_to admin_users_url, notice: 'User was successfully approved.'
   end
 
+  def upgrade_to_admin_account
+  end
+  
   # TODO: refactor later
   # DELETE /admin/users/1
   # DELETE /admin/users/1?course_id=1
@@ -91,6 +78,14 @@ class Admin::UsersController < ApplicationController
           redirect_to admin_users_url, alert: @the_user.errors.to_a.join(", ")
         end
       end
+    end
+  end
+
+  protected
+
+  def is_admin
+    unless current_user.is_admin
+      redirect_to root_url, status: 401
     end
   end
 end
