@@ -19,7 +19,7 @@ class Users::SessionsController < Devise::SessionsController
   # end
 
   
-  skip_before_action :authenticate_user!, only: [:new, :create, :index]
+  skip_before_action :authenticate_user!, only: [:new, :create, :index, :guide]
 
   def index
     render "layouts/cover"
@@ -47,6 +47,10 @@ class Users::SessionsController < Devise::SessionsController
   def destroy
     sign_out current_user
     redirect_to root_url
+  end
+
+  def guide
+    render "layouts/guide"
   end
 
   protected
