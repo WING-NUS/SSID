@@ -26,8 +26,6 @@ SSID::Application.routes.draw do
   devise_scope :user do
     get "cover" => "users/sessions#index"
     get "guide" => "users/sessions#guide"
-    # get 'users' => "users/registrations#index" 
-    # get 'users/approve' => "users/registrations#approve"
 
     authenticated :user do
       root to: "announcements#index", as: :authenticated_root
@@ -48,15 +46,6 @@ SSID::Application.routes.draw do
     omniauth_callbacks: 'users/omniauth_callbacks'
   }, :path => '', :path_names => { :sign_in => 'login', :sign_out => 'logout', :sign_up => 'signup' }
 
-
- 
-  
-
-
-  
-  # get "guide" => "users#guide"
-
-
   resources :announcements
 
   namespace :admin do
@@ -70,8 +59,6 @@ SSID::Application.routes.draw do
     get 'status'
     get "cluster_students", defaults: { format: "json" }
     get 'users'
-
-    # resources :users
 
     resources :assignments do
       get "log" => "assignments#show_log"
