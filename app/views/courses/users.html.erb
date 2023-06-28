@@ -2,10 +2,11 @@
 <header class="course_user_header">
   <h5><%= @course.code %> Users</h5>
   <% if current_user.is_admin %>
-    <%= link_to image_tag("person_add_blue_24dp.svg", size: "28", alt: "Add #{@course.code} User"), new_admin_user_registration_path+"?course_id=#{@course.id}", { 'data-toggle' => 'tooltip', 'data-placement' => 'bottom', 'title' => "Add #{@course.code} User" } %>
+    <!-- TODO: Admin users can try to retrieve from existing users or send an invitation link for a user to signup -->
+    <!-- <%= link_to image_tag("person_add_blue_24dp.svg", size: "28", alt: "Add #{@course.code} User"), new_user_registration_path+"?course_id=#{@course.id}", { 'data-toggle' => 'tooltip', 'data-placement' => 'bottom', 'title' => "Add #{@course.code} User" } %> -->
   <% elsif @course.membership_for_user(current_user).role == UserCourseMembership::ROLE_TEACHING_STAFF %>
     <!-- TODO: Staff users can try to retrieve from existing users or send an invitation link for a user to signup -->
-    <%= link_to image_tag("person_add_blue_24dp.svg", size: "28", alt: "Add #{@course.code} User"), new_admin_user_registration_path+"?course_id=#{@course.id}", { 'data-toggle' => 'tooltip', 'data-placement' => 'bottom', 'title' => "Add #{@course.code} User" } %>  
+    <!-- <%= link_to image_tag("person_add_blue_24dp.svg", size: "28", alt: "Add #{@course.code} User"), new_user_registration_path+"?course_id=#{@course.id}", { 'data-toggle' => 'tooltip', 'data-placement' => 'bottom', 'title' => "Add #{@course.code} User" } %> -->
   <% end %>
 </header>
 
@@ -45,13 +46,17 @@
               </a>
               <ul class="dropdown-menu" aria-labelledby="userDropdownMenuLink">
                 <% if current_user.is_admin %>
-                  <li><%= link_to "Edit", edit_admin_user_registration_path(user)+"?course_id=#{@course.id}", class: "dropdown-item" %></li>
+                  <!-- TODO -->
+                  <!-- <li><%= link_to "Edit", edit_user_registration_path(user)+"?course_id=#{@course.id}", class: "dropdown-item" %></li> -->
                 <% end %>                  
                 <% if @course.membership_for_user(user).role != UserCourseMembership::ROLE_STUDENT %>
+                  <!-- TODO -->
+                  <!--                
                   <li> 
-                    <% url = admin_user_registration_path(user)+"?course_id=#{@course.id}" %>
+                    <% url = user_registration_path(user)+"?course_id=#{@course.id}" %>
                     <%= button_tag 'Remove', class: "dropdown-item", data: { 'bs-toggle' => "modal", 'bs-target' => "#removeUserModal", 'bs-url' => "#{url}" } %>
                   </li>
+                  -->
                 <% end %>
               </ul>
             <% end %> 
