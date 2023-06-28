@@ -1,0 +1,141 @@
+<h4>Users</h4>
+<% if flash[:notice] %>
+  <div class="notice">
+    <%= flash[:notice] %>
+  </div>
+<% end %>
+<% if flash[:alert] %>
+  <div class="alert">
+    <%= flash[:alert] %>
+  </div>
+<% end %>
+
+<div class="admin_users_section"> 
+<header class="user_header">
+<h5>Admins</h5>
+<%= link_to image_tag("person_add_blue_24dp.svg", size: "28", alt: "New Admin"), new_admin_user_url, {'data-toggle' => 'tooltip', 'data-placement' => 'bottom', 'title' => 'New Admin' } %>
+</header>
+
+<table>
+  <thead>
+    <tr>
+      <th>Full Name</th>
+      <th class="id_col">Login</th>
+      <th class="actions_col">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @admins.each { |admin| %>
+      <tr>
+        <td><%= admin.full_name || "--" %><%= " <em>(This is you)</em>".html_safe if @user == admin %></td>
+        <td><%= admin.name %></td>
+        <td>
+          <div class="dropdown">
+            <a data-toggle="dropdown" id="adminUserDropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+              <%= image_tag("more_vert_black_24dp.svg", alt: "Admin User Menu Dropdown")%>            
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="adminUserDropdownMenuLink">
+              <% if admin == @user %>
+                <li><%= link_to "Settings", edit_user_url(@user), class: "dropdown-item" %></li>
+              <% else %>
+                <li><%= link_to "Edit", edit_admin_user_url(admin), class: "dropdown-item" %></li>
+                <li>
+                  <%= button_tag 'Delete', class: "dropdown-item", data: { 'bs-toggle' => "modal", 'bs-target' => "#deleteUserModal", 'bs-url' => "#{admin_user_url(admin)}" } %>
+                </li>
+              <% end %>
+            </ul>
+          </div>
+        </td>
+      </tr>
+    <% } %>
+  </tbody>
+</table>
+
+</div>
+
+<% unless @loners.empty? %>
+<div class="lone_users_section">
+
+  <h5>Users With No Course Membership</h5>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Full Name/ Hash</th>
+        <th class="id_col">Login/ Hash</th>
+        <th class="actions_col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @loners.each { |user| %>
+        <tr>
+          <td><%= user.full_name || "--" %></td>
+          <td><%= user.name %></td>
+          <td>
+            <div class="dropdown">
+              <a data-toggle="dropdown" id="loneUserDropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                <%= image_tag("more_vert_black_24dp.svg", alt: "Lone Users Menu Dropdown")%>        
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="loneUserDropdownMenuLink">
+                <li><%= link_to "Edit", edit_admin_user_url(user), class: 'dropdown-item' %></li>
+                <li>
+                  <%= button_tag 'Delete', class: "dropdown-item", data: { 'bs-toggle' => "modal", 'bs-target' => "#deleteUserModal", 'bs-url' => "#{admin_user_url(user)}" } %>
+                </li>
+              </ul>
+            </div>
+          </td>          
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>
+<% end %>
+
+<% unless @signups.empty? %>
+<div class="new_users_section">
+
+  <h5>New User Signups</h5>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Full Name/ Hash</th>
+        <th class="id_col">Login/ Hash</th>
+        <th class="actions_col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @signups.each { |user| %>
+        <tr>
+          <td><%= user.full_name || "--" %></td>
+          <td><%= user.name %></td>
+          <td>
+            <div class="dropdown">
+              <a data-toggle="dropdown" id="loneUserDropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                <%= image_tag("more_vert_black_24dp.svg", alt: "Lone Users Menu Dropdown")%>        
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="loneUserDropdownMenuLink">
+                <li><%= link_to "Edit", edit_admin_user_url(user), class: 'dropdown-item' %></li>
+                <li>
+                  <%= button_tag 'Delete', class: "dropdown-item", data: { 'bs-toggle' => "modal", 'bs-target' => "#deleteUserModal", 'bs-url' => "#{admin_user_url(user)}" } %>
+                </li>
+                <li>
+                  <li><%= link_to "Approve", admin_user_approve_user_url(user), class: 'dropdown-item' %></li>
+                </li>
+              </ul>
+            </div>
+          </td>          
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>
+<% end %>
+
+<div class="modal fade" id="deleteUserModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <% @modal = SiteModal.new("Delete User", "The user will be permanently deleted. Are you sure?", { :name => "OK", :method => :delete }) %>
+  <%= render partial: "site/modal", locals: { modal: @modal }%>
+</div>
+
+
+<%= javascript_include_tag "site_modal.js" %>
