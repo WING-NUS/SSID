@@ -29,21 +29,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
   #   super
   # end
 
-  def index
-    @admins = User.where(is_admin: true)
-    @signups = User.joins(:courses, :memberships).where(users: { is_admin_approved: false}).where(user_course_memberships: { role: [UserCourseMembership::ROLE_TEACHING_STAFF, UserCourseMembership::ROLE_TEACHING_ASSISTANT, UserCourseMembership::ROLE_GUEST]})
-
-    # users don't belong to any course
-    @loners = User.all - User.joins(:memberships) - @admins - @signups
-  end  
-
-  def approve
-  end
-
-  def upgrade_to_admin_account
-
-  end
-
   # GET /resource/cancel
   # Forces the session data which is usually expired after sign
   # in to be expired now. This is useful if the user wants to
