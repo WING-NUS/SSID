@@ -39,15 +39,17 @@ public class Main {
 
 		long start = System.nanoTime();
 
-		if (args.length != 10) {
+		if (args.length != 11) {
 			System.out.println("Your input arguments:" + Arrays.toString(args));
 			throw new Exception(
-					"Usage: jPDS <Assignment Id> <Compare Folder path> <Language> <minMatch> <N-Gram> <database host> <database name> <database username> <database password>");
+					"Usage: jPDS <Assignment Id> <Compare Folder path> <Language> <minMatch> <N-Gram> <database host> <database name> <database username> <database password> <use fingerprints?>");
 		}
 
 		String aId = args[0];
 		String compareFolderPath = args[1];
 		boolean isMapEnabled = Boolean.parseBoolean(args[9]);  
+		boolean isUsedFingerprints = Boolean.parseBoolean(args[10]);
+		logger.debug("Assignment: {}, going to use fingerprints? {}", aId, isUsedFingerprints);  
 		System.out.println(compareFolderPath);
 		String language = args[2];
 		int minMatch = Integer.parseInt(args[3]);
@@ -94,8 +96,14 @@ public class Main {
 			NGramizer.getNGramizer().constructSubmissionsNGrams(submissions,
 					nGramSize);
 
-			ArrayList<Result> simResults = SimComparer.getComparer()
-					.compareSubmissions(submissions, nGramSize, minMatch);
+			ArrayList<Result> simResults;
+			if (isUsedFingerprints) {
+				simResults = SimComparer.getComparer()
+				.compareSubmissionsWithFingerPrints(submissions, nGramSize, minMatch);				
+			} else {
+				simResults = SimComparer.getComparer()
+				.compareSubmissions(submissions, nGramSize, minMatch);
+			}
 
 			System.out.println("[" + dateFormat.format(new java.util.Date()) 
           + "] Plagarism detection completed with duration = "

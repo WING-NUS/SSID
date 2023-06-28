@@ -19,7 +19,7 @@ class Users::SessionsController < Devise::SessionsController
   # end
 
   
-  skip_before_action :authenticate_user!, only: [:new, :create, :index]
+  skip_before_action :authenticate_user!, only: [:new, :create, :index, :guide]
 
   def index
     render "layouts/cover"
@@ -49,7 +49,11 @@ class Users::SessionsController < Devise::SessionsController
     redirect_to root_url
   end
 
-  # protected
+  def guide
+    render "layouts/guide"
+  end
+
+  protected
 
   # # If you have extra params to permit, append them to the sanitizer.
   # def configure_sign_in_params
