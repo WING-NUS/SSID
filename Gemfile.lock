@@ -108,8 +108,8 @@ GEM
     ffi (1.15.0)
     globalid (1.0.1)
       activesupport (>= 5.0)
-    i18n (1.12.0)
     hashie (5.0.0)
+    i18n (1.12.0)
       concurrent-ruby (~> 1.0)
     jbuilder (2.11.2)
       activesupport (>= 5.0.0)
@@ -166,6 +166,8 @@ GEM
       nio4r (~> 2.0)
     racc (1.6.2)
     rack (2.2.6.2)
+    rack-protection (3.0.6)
+      rack
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
     rails (6.0.3.7)
@@ -294,4 +296,4 @@ RUBY VERSION
    ruby 2.6.6p146
 
 BUNDLED WITH
-   2.2.17
+   2.2.33
