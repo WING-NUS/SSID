@@ -38,6 +38,11 @@ class Admin::UsersController < ApplicationController
   end
 
   def upgrade_to_admin_account
+    @the_user = User.find(params[:user_id])
+    @the_user.update_attribute(:is_admin, true)
+    @the_user.save
+    logger.info("#{Time.now} Account id #{@the_user.id} was upgraded to admin by #{current_user.id}")
+    redirect_to admin_users_url, notice: 'User was successfully upgraded to admin account.'    
   end
   
   # TODO: refactor later

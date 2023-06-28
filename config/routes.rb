@@ -25,6 +25,7 @@ SSID::Application.routes.draw do
   # Login/Logout routes
   devise_scope :user do
     get "cover" => "users/sessions#index"
+    get "guide" => "users/sessions#guide"
     # get 'users' => "users/registrations#index" 
     # get 'users/approve' => "users/registrations#approve"
 
@@ -53,7 +54,7 @@ SSID::Application.routes.draw do
 
 
   
-  get "guide" => "users#guide"
+  # get "guide" => "users#guide"
 
 
   resources :announcements
@@ -61,6 +62,7 @@ SSID::Application.routes.draw do
   namespace :admin do
     resources :users do
       get 'approve' => 'users#approve', :as => 'approve_user'
+      put 'update' => 'users#upgrade_to_admin_account'
     end
   end
   
