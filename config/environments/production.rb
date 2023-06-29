@@ -77,4 +77,6 @@ SSID::Application.configure do
   
   config.host = "ssid.comp.nus.edu.sg"
   config.protocol = "https"
+
+  config.eager_load = true
 end

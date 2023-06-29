@@ -218,6 +218,7 @@ DEPENDENCIES
   byebug
   capybara (>= 2.15)
   coffee-rails (~> 5.0)
+  execjs
   jbuilder (~> 2.7)
   jquery-rails (~> 4.4)
   mysql2 (~> 0.5.3)

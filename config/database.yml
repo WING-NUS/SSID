@@ -11,7 +11,7 @@ development:
   pool: 5
   host: 127.0.0.1
   username: root
-  password: lostworld
+  password: FutJenB7!
   # socket: /var/lib/mysql/mysql.sock
 
 # Warning: The database defined as "test" will be erased and
@@ -25,7 +25,7 @@ test:
   pool: 5
   host: 127.0.0.1
   username: root
-  password: lostworld
+  password: FutJenB7!
   socket: /var/lib/mysql/mysql.sock
 
 production:
@@ -35,6 +35,6 @@ production:
   database: ssid_production
   pool: 5
   host: 127.0.0.1
-  username: ssid
-  password: ssid123
+  username: root
+  password: FutJenB7!
   socket: /var/lib/mysql/mysql.sock

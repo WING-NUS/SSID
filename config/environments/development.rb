@@ -56,4 +56,6 @@ SSID::Application.configure do
   config.action_mailer.default_url_options = { host: config.host, protocol: 'http' }
 
   config.protocol = "http"
+
+  config.eager_load = false
 end
