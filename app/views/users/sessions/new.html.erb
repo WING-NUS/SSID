@@ -8,14 +8,16 @@
     <%= flash[:alert] %>
   </div>
 <% end %>
-<h2>Log in</h2>
+
+<div class="user-login">
+<div class="row">
 <%= form_for(resource, as: resource_name, url: user_session_path(resource_name)) do |f| %>
-  <div class="field">
+  <div class="field col-6">
     <%= f.label :email, class: "form-label" %><br />
     <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form-control" %>
   </div>
 
-  <div class="field">
+  <div class="field col-6">
     <%= f.label :password, class: "form-label" %><br />
     <%= f.password_field :password, autocomplete: "current-password", class: "form-control" %>
   </div>
@@ -31,7 +33,8 @@
     <%= f.submit "Log in", class: "submit" %>
   </div>
 <% end %>
+</div>
 
 <%= render "users/shared/links" %>
-
+</div>
 

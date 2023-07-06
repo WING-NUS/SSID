@@ -1,3 +1,4 @@
+<div class="users-shared-links">
 <%- if controller_name != 'sessions' %>
   <%= link_to "Log in", new_session_path(resource_name) %><br />
 <% end %>
@@ -19,12 +20,15 @@
 <% end %>
 
 <%- if devise_mapping.omniauthable? %>
-  <%- resource_class.omniauth_providers.each do |provider| %>
-    <%= form_for "Login",
-      url: omniauth_authorize_path(resource_name, provider),
-      method: :post,
-      data: {turbo: "false"} do |f| %>
-        <%= image_submit_tag("btn_google_signin_dark_normal_web.png", alt: "Login") %>
-    <% end %>  
-  <% end %>
+  <div class="omniauth-links">
+    <%- resource_class.omniauth_providers.each do |provider| %>
+      <%= form_for "Login",
+        url: omniauth_authorize_path(resource_name, provider),
+        method: :post,
+        data: {turbo: "false"} do |f| %>
+          <%= image_submit_tag("btn_google_signin_dark_normal_web.png", alt: "Login") %>
+      <% end %>  
+    <% end %>
+  </div>
 <% end %>
+</div>

@@ -1,9 +1,10 @@
-<h2>Resend confirmation instructions</h2>
+<h4>Resend confirmation instructions</h4>
 
+<div class="row">
 <%= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post }) do |f| %>
   <%= render "users/shared/error_messages", resource: resource %>
 
-  <div class="field">
+  <div class="field col-6">
     <%= f.label :email, class: "form-label" %><br />
     <%= f.email_field :email, autofocus: true, autocomplete: "email", value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email), class: "form-control" %>
   </div>
@@ -12,5 +13,6 @@
     <%= f.submit "Resend confirmation instructions", class: "submit" %>
   </div>
 <% end %>
+</div>
 
 <%= render "users/shared/links" %>
