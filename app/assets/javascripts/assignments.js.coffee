@@ -17,16 +17,21 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 
 window.Assignment ||= {}
 
-Assignment.onLoad = ->
-  $ ->
-    $("table a").each ->
-      # Site.registerHighlightRowMethodsForLink(this)
-      # return
-    return
-  
+Assignment.updateAdvancedOptions = ->
+  $("#assignment_used_fingerprints").click (event) ->
+    used_fingerprints = $('input[name="assignment[used_fingerprints]"]:checked');
+    if used_fingerprints.length > 0    
+      $('input[name="assignment[ngram_size]"]').val(5);    
+    else
+      $('input[name="assignment[ngram_size]"]').val(4);      
+  return  
+     
 $(document).ready ->
-  if $("#status").length > 0
-    $("#status").load statusURL
+  $ -> 
+    if $("#status").length > 0
+      $("#status").load statusURL
+    Assignment.updateAdvancedOptions()
+    return
     # setInterval (->
     #   $("#status").load statusURL
     # ), 3000

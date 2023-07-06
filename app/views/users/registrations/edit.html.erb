@@ -36,10 +36,12 @@
     <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "form-control" %>
   </div>
 
-  <div class="field">
-    <%= f.label :current_password, class: "form-label" %> <i>(we need your current password to confirm your changes)</i><br />
-    <%= f.password_field :current_password, autocomplete: "current-password", class: "form-control" %>
-  </div>
+  <% if !current_user.is_admin || current_user.id == resource.id %>
+    <div class="field">
+      <%= f.label :current_password, class: "form-label" %> <i>(we need your current password to confirm your changes)</i><br />
+      <%= f.password_field :current_password, autocomplete: "current-password", class: "form-control" %>
+    </div>
+  <% end %>  
 
   <div class="actions">
     <%= f.submit "Update", class: "submit" %>

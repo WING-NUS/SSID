@@ -43,6 +43,10 @@ public final class VariableToken extends TokenSSID {
 	@Override
 	public String toString() {
 		// return Integer.toString(reg);
-		return value;
+		return "(" + VAR_REG + "_" + value + "_" + isStartOfStatement()+ ")";
+	}
+
+	public String getValue() {
+		return VAR_REG + "." + isStartOfStatement();
 	}
 }

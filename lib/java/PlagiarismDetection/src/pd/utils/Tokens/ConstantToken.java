@@ -40,6 +40,11 @@ public final class ConstantToken extends TokenSSID {
 	@Override
 	public String toString() {
 		// return Integer.toString(reg);
-		return "C";
+		// return "C";
+		return "(" + CONSTANT_REG + "_" + "C" + ")";
 	}
+
+	public String getValue() {
+		return CONSTANT_REG + "." + "C";
+	}	
 }

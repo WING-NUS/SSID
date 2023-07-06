@@ -22,9 +22,12 @@ import java.util.*;
 import pd.utils.NGrams.*;
 import pd.utils.Tokens.*;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;	
 public final class NGramizer {
 
 	private static NGramizer instance = new NGramizer();
+	private static Logger logger = LogManager.getLogger();
 
 	private NGramizer() {
 
@@ -45,6 +48,7 @@ public final class NGramizer {
 	private void constructNGrams(Submission s, int nGramSize) {
 		// ArrayList<KGramChar> norCode = s.getNormalizedCode();
 		TokenList tokens = s.getCodeTokens();
+		// logger.debug("Submission: {}, token list: {} ", s.getID(), tokens.toString());
 		int tokenSize = tokens.size();
 		NGramList nGramList;
 
@@ -103,6 +107,16 @@ public final class NGramizer {
 		// }
 		// }
 
+		logger.debug("Constructing list of n-grams for submission: {} ", s.getID());
+		String nGrams = "";
+		// for(int i = 0; i < nGramList.size(); i++) {
+		// 	nGrams += nGramList.get(i).getTokenList().toString() + " -- ";
+		// }
+		// logger.debug("n-grams: {} ", nGrams);
+		
+		for (int i = 0; i < nGramList.size(); i++) {
+			logger.debug("index: {}, ngram: {}, line nbr: {}", i, nGramList.get(i).getTokenList().toString(), nGramList.get(i).getCodeStartLine());
+		}
 		s.setNGramList(nGramList);
 	}
 }
