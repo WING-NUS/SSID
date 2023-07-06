@@ -140,19 +140,11 @@ class CoursesController < ApplicationController
   end
 
   # GET /courses/1/users
-  def course_users
+  def users
     @course = Course.find(params[:course_id])
     @staff = @course.staff
     @teaching_assistants = @course.teaching_assistants
     @students = @course.students
     @guests = @course.guests
   end  
-
-  # new_course_user GET      /courses/:course_id/users/new(.:format)      
-  def new_course_user
-    render "courses/users/new"
-  end
-
-  def add_course_user
-  end
 end
