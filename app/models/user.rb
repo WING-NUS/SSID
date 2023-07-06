@@ -32,6 +32,7 @@ class User < ActiveRecord::Base
   validates :name, presence: true
   validates :name, uniqueness: true
   validates :email, presence: true, uniqueness: true, format: { with: /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i }
+  validate :password_complexity
 
   before_destroy :ensure_an_admin_remains
 
@@ -79,6 +80,12 @@ class User < ActiveRecord::Base
     end
   end
 
+  def password_complexity
+    # Regexp extracted from https://stackoverflow.com/questions/19605150/regex-for-password-must-contain-at-least-eight-characters-at-least-one-number-a
+    return if password.blank? || password =~ /(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-])/
+
+    errors.add :password, 'Complexity requirement not met. Please use: 1 uppercase, 1 lowercase, 1 digit and 1 special character'
+  end
   
 end
 
