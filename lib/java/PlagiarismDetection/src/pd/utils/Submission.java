@@ -29,6 +29,7 @@ public final class Submission {
 	private int codeLength = 0;
 	private TokenList codeTokens = new TokenList();
 	private NGramList nGramList = new NGramList();
+	private NGramList nGramsStartingStmtsList = new NGramList();
 	private HashMap<NGram, ArrayList<Integer>> nGramIndexingTable = new HashMap<NGram, ArrayList<Integer>>();
 	private boolean isSkeletonCode = false;
 
@@ -89,6 +90,10 @@ public final class Submission {
 		return this.nGramList;
 	}
 
+	public NGramList getNGramsStartingStmtsList() {
+		return this.nGramsStartingStmtsList;
+	}
+
 	public void setNGramList(NGramList list) {
 		this.nGramList = list;
 
@@ -106,9 +111,19 @@ public final class Submission {
 					nGramIndexingTable.put(n, indices);
 				}
 				indices.add(i);
+				nGramsStartingStmtsList.add(n);
 			}
 			i++;
 		}
+	}
+
+	public int getTokenIndexOfLoc(int loc) {
+		for (int i=0; i< codeTokens.size(); i++) {
+			if (this.codeTokens.get(i).getCodeStartIndex() == loc) {
+				return i;
+			}
+		}
+		return -1;
 	}
 
 	public HashMap<NGram, ArrayList<Integer>> getNGramIndexingTable() {

@@ -385,7 +385,7 @@ public final class SimComparer {
 			gst(s1NGrams, s2.getNGramIndexingTable(),
 					skeleton.getNGramIndexingTable(), s1.getCodeTokens(),
 					s2.getCodeTokens(), skeleton.getCodeTokens(), minMatch,
-					result.getTokenIndexMappings());
+					result.getTokenIndexMappings(), s1, s2, skeleton);
 
 			getCodeMapping(s1.getCodeTokens(), s2.getCodeTokens(), result);
 
@@ -441,21 +441,24 @@ public final class SimComparer {
 			HashMap<NGram, ArrayList<Integer>> s2NGramIndices,
 			HashMap<NGram, ArrayList<Integer>> bNGramIndices,
 			TokenList s1Tokens, TokenList s2Tokens, TokenList bTokens,
-			int minMatch, ArrayList<Mapping> tokenMappings) {
+			int minMatch, ArrayList<Mapping> tokenMappings, Submission s1, Submission s2,
+			Submission skeleton) {
 
 		int nGramSize = s1NGrams.size() > 0 ? NGram.getNGramSize() : 0;
 
 		ArrayList<Mapping> mappings;
 
+		// Use int[1] instead of int so that we can use maxMatch as a global object that can be passed around
 		int[] maxMatch = new int[1];
 
 		do {
 			maxMatch[0] = minMatch;
 			mappings = new ArrayList<Mapping>();
 			mappings = gstPhase1(s1Tokens, s1NGrams, s2NGramIndices, s2Tokens,
-					maxMatch, mappings);
+					maxMatch, mappings, s1, s2, skeleton, minMatch);
+
 			gstPhase2(mappings, s1Tokens, nGramSize, s1NGrams, s2Tokens,
-					bTokens, bNGramIndices, minMatch, tokenMappings);
+					bTokens, bNGramIndices, minMatch, tokenMappings, s1, s2, skeleton);
 
 		} while (maxMatch[0] > minMatch);
 	}
@@ -463,39 +466,99 @@ public final class SimComparer {
 	private ArrayList<Mapping> gstPhase1(TokenList s1Tokens,
 			NGramList s1NGrams,
 			HashMap<NGram, ArrayList<Integer>> s2NGramIndices,
-			TokenList s2Tokens, int[] maxMatch, ArrayList<Mapping> mappings) {
+			TokenList s2Tokens, int[] maxMatch, ArrayList<Mapping> mappings,
+			Submission s1, Submission s2, Submission skeleton, int minMatch) {
 
-		// curCSMapped = current countable statement mapped
-		// curNCSMapped = current non-countable statement mapped
-		int s1EndIndex, s2EndIndex, curCSMapped, curNCSMapped, curTotalStatementMapped, s1EndOfStmtIndex, s2StartIndex, s2EndOfStmtIndex;
+		NGramList s1NGramsStartingStmtsList;
+		NGramList s2NGramsStartingStmtsList;
+		s1NGramsStartingStmtsList = s1.getNGramsStartingStmtsList();
+		s2NGramsStartingStmtsList = s2.getNGramsStartingStmtsList();
+		 
+		int s1EndIndex, s2EndIndex, curCSMapped, curNCSMapped, curTotalStatementMapped, 
+			s1EndOfStmtIndex, s2StartIndex, s2EndOfStmtIndex;
 		TokenSSID s1Token, s2Token;
-		HashMap<Integer, Integer> s2Matches;
-		ArrayList<Integer> s2Indices;
-		NGram s1NGram;
 
-		for (int s1StartIndex : s1Tokens.getStartOfStmtTokenIndices()) {
-			if (s1NGrams.size() <= s1StartIndex
+		RKHasher RKHasher1 = new RKHasher(minMatch, s1NGramsStartingStmtsList);
+		RKHasher RKHasher2 = new RKHasher(minMatch, s2NGramsStartingStmtsList);
+		Map<Integer, ArrayList<Integer>> precomputedHashMap = new HashMap<Integer, ArrayList<Integer>>();
+
+
+		// Get index of first unmarked NGram in s2NGramsStartingStmtsList.
+		// This is done by checking first token of the NGram under consideration to determine whether or not that NGram 
+		// is marked. We are keeping track of markings using TokenList and each statement (whose the Ngram under 
+		// consideration belongs to) is marked as a whole, so that is sufficient.
+		int firstUnmarkedNGramIdxS2NGramsStartingStmtsList = 0;
+		for (int i = 0; i < s2NGramsStartingStmtsList.size(); i++) {
+			int tokenIdx = s2.getTokenIndexOfLoc(s2NGramsStartingStmtsList.get(i).codeStartIndex());
+
+			if (!s2Tokens.isTokenMarked(tokenIdx)) {
+				firstUnmarkedNGramIdxS2NGramsStartingStmtsList = i;
+				break;
+			}
+		}
+
+		// Terminates if unmarked index found is too close to end of list and thus we can't find any more match
+		if (firstUnmarkedNGramIdxS2NGramsStartingStmtsList + minMatch > s2NGramsStartingStmtsList.size() - 1) {
+			return mappings;
+		}
+
+		for (int s2NGramIndex = firstUnmarkedNGramIdxS2NGramsStartingStmtsList; s2NGramIndex < s2NGramsStartingStmtsList.size() - minMatch; s2NGramIndex++) {
+			boolean isMMLRangeAllUnmarked = true;
+			for (int i = s2NGramIndex; i < s2NGramIndex + minMatch; i++) {
+				int codeStartIndex = s2.getTokenIndexOfLoc(s2NGramsStartingStmtsList.get(i).codeStartIndex());
+				if (s1Tokens.isTokenMarked(codeStartIndex)) {
+					isMMLRangeAllUnmarked = false;
+					break;
+				}
+			}
+			if (!isMMLRangeAllUnmarked) continue;
+			
+			int hashStartFromIdx2 = RKHasher2.getHashStartingFrom(s2NGramIndex);
+
+			if (!precomputedHashMap.containsKey(hashStartFromIdx2)) {
+				ArrayList<Integer> positions = new ArrayList<>();
+				positions.add(s2.getTokenIndexOfLoc(s2NGramsStartingStmtsList.get(s2NGramIndex).codeStartIndex()));
+				precomputedHashMap.put(hashStartFromIdx2, positions);
+			} else {
+				precomputedHashMap.get(hashStartFromIdx2).add(s2.getTokenIndexOfLoc(s2NGramsStartingStmtsList.get(s2NGramIndex).codeStartIndex()));
+			}
+		}
+	
+		// Get index of first unmarked NGram in s1NGramsStartingStmtsList.
+		// This is done by checking first token of the NGram under consideration to determine whether or not that NGram 
+		// is marked. We are keeping track of markings using TokenList and each statement (whose the Ngram under 
+		// consideration belongs to) is marked as a whole, so that is sufficient.
+		int firstUnmarkedNGramIdxS1NGramsStartingStmtsList = 0;
+		for (int i = 0; i < s1NGramsStartingStmtsList.size(); i++) {
+			int tokenIdx = s1.getTokenIndexOfLoc(s1NGramsStartingStmtsList.get(i).codeStartIndex());
+			if (!s1Tokens.isTokenMarked(tokenIdx)) {
+				firstUnmarkedNGramIdxS1NGramsStartingStmtsList = i;
+				break;
+			}
+		}
+
+		// Terminates if unmarked index found is too close to end of list and thus we can't find any more match
+		if (firstUnmarkedNGramIdxS1NGramsStartingStmtsList + maxMatch[0] > s1NGramsStartingStmtsList.size() - 1) {
+			return mappings;
+		}
+
+		for (int s1NGramIndex = firstUnmarkedNGramIdxS1NGramsStartingStmtsList; s1NGramIndex < s1NGramsStartingStmtsList.size(); s1NGramIndex++) {
+			int s1StartIndex = s1.getTokenIndexOfLoc(s1NGramsStartingStmtsList.get(s1NGramIndex).codeStartIndex());
+
+			if (s1NGramsStartingStmtsList.size() <= s1NGramIndex
+					|| s1NGramIndex + maxMatch[0] > s1NGramsStartingStmtsList.size() - 1
 					|| s1Tokens.isTokenMarked(s1StartIndex)) {
 				continue;
 			}
 
-			s1NGram = s1NGrams.get(s1StartIndex);
-			// logger.debug("The n-gram is: {} ", s1NGram.getTokenList().toString());
-			
-			if (s2NGramIndices.containsKey(s1NGram)) {
-				s2Indices = s2NGramIndices.get(s1NGram);
-				s2Matches = new HashMap<Integer, Integer>();
-				for (int index : s2Indices) {
-					if (s2Tokens.isTokenMarked(index)) {
-						continue;
-					}
-					s2Matches.put(index, index);
-				}
-				for (Map.Entry<Integer, Integer> s2Match : s2Matches.entrySet()) {
+			int hashStartingFromS1NGramIndex = RKHasher1.getHashStartingFrom(s1NGramIndex);
+					
+			if (precomputedHashMap.containsKey(hashStartingFromS1NGramIndex)) {	
+				for (int s2Match: precomputedHashMap.get(hashStartingFromS1NGramIndex)) {
 					s1EndIndex = s1StartIndex;
 					curCSMapped = 0;
 					curNCSMapped = 0;
-					s2EndIndex = s2Match.getValue();
+					s2EndIndex = s2Match;
 					s1EndOfStmtIndex = -1;
 					while (s1Tokens.size() > s1EndIndex
 							&& s2Tokens.size() > s2EndIndex
@@ -517,9 +580,11 @@ public final class SimComparer {
 					}
 
 					curTotalStatementMapped = curCSMapped + curNCSMapped;
+					
+					NGram s1NGram = s1NGramsStartingStmtsList.get(s1NGramIndex);
 					if (curTotalStatementMapped >= maxMatch[0]) {
 						s1Token = s1Tokens.get(s1EndOfStmtIndex);
-						s2StartIndex = s2Match.getKey();
+						s2StartIndex = s2Match;
 						s2EndOfStmtIndex = s1EndOfStmtIndex - s1StartIndex
 								+ s2StartIndex;
 						s2Token = s2Tokens.get(s2EndOfStmtIndex);
@@ -560,7 +625,7 @@ public final class SimComparer {
 			int nGramSize, NGramList s1NGrams, TokenList s2Tokens,
 			TokenList bTokens,
 			HashMap<NGram, ArrayList<Integer>> bNGramIndices, int minMatch,
-			ArrayList<Mapping> tokenMappings) {
+			ArrayList<Mapping> tokenMappings, Submission s1, Submission s2, Submission skeleton) {
 
 		NGramList s1RegionNGrams;
 		TokenList s1RegionTokens;
@@ -607,7 +672,7 @@ public final class SimComparer {
 			bMappings = new ArrayList<Mapping>();
 			if (bTokens != null) {
 				gst(s1RegionNGrams, bNGramIndices, null, s1RegionTokens,
-						bTokens, null, minMatch, bMappings);
+						bTokens, null, minMatch, bMappings, s1, skeleton, null);
 				mappedCountableStmt = m.getMappedCountableStmtCount();
 				// logger.debug("Mapping is: {} ", m.toString());
 
