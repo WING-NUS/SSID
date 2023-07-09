@@ -137,6 +137,7 @@ def main():
         anonymized_content = anonymizer.anonymize(orig_content, str(file))
 
         logger.info("[" + str(file) + "] Completed Anonymization")
+        os.makedirs('Output', exist_ok=True)
         output_filename = join("Output/" + str(os.path.basename(file)))
         output_file = open(output_filename, 'w')
         logger.info("[" + str(file) + "] Saving anonymized content in " + str(output_filename))
