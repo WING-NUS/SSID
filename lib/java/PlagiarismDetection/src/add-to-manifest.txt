@@ -1,0 +1,6 @@
+Ant-Version: Apache Ant 1.10.7
+Main-Class: Main
+Class-Path: ./mysql-connector-java-8.0.20.jar ./snakeyaml-1.10.jar ./a
+ ntlr-4.8-complete.jar ./log4j-api-2.17.2.jar ./log4j-core-2.17.2.jar
+
+
