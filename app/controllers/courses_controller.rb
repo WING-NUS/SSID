@@ -147,4 +147,16 @@ class CoursesController < ApplicationController
     @students = @course.students
     @guests = @course.guests
   end  
+
+  def search_user
+    @course_id = params[:course_id]
+    render "search_user"
+  end
+
+  def fetch_user
+    byebug
+    @course = Course.find(params[:course_id])
+    @the_user = User.find_by_email(params[:query])
+    render "user_course_memberships/new", locals: { course: @course, user: @the_user }
+  end
 end

@@ -16,4 +16,21 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
 class UserCourseMembershipsController < ApplicationController
+  # before action: either teaching staff or admin can add/ update/ remove 
+
+  def show 
+  end
+
+
+
+
+  def new
+    @user_course_membership = UserCourseMembership.new
+    @user_course_membership.user = user
+    @user_course_membership.course = course
+  end
+
+  def create
+    
+  end
 end

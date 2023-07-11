@@ -60,6 +60,13 @@ SSID::Application.routes.draw do
     get "cluster_students", defaults: { format: "json" }
     get 'users'
 
+    get "search_user" 
+    post "search_user" => "courses#fetch_user"
+
+    resources :user_course_memberships 
+
+  
+
     resources :assignments do
       get "log" => "assignments#show_log"
       get "list" => "submissions#index"
