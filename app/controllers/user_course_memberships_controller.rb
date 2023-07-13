@@ -48,4 +48,32 @@ class UserCourseMembershipsController < ApplicationController
       return render action: "new"
     end
   end
+
+  def edit
+    @course = Course.find_by_id(params[:course_id])
+    @user_course_membership = UserCourseMembership.find_by_id(params[:id])
+  end
+
+  def update
+    @user_course_membership = UserCourseMembership.find_by_id(params[:id])  
+    course_role = params[:user_course_membership][:course_role]
+    @user_course_membership.role = course_role
+    if @user_course_membership.save 
+      return redirect_to course_users_url, notice: "User course role was successfully updated."
+    else
+      return render action: "edit"
+    end      
+  end
+
+  def destroy
+    byebug
+    @user_course_membership = UserCourseMembership.find_by_id(params[:id])
+    @user_course_membership.destroy
+
+    # delete user if he is guest
+
+
+
+    redirect_to course_users_url, notice: "User was successfully removed from the course."
+  end
 end
