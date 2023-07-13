@@ -25,12 +25,27 @@ class UserCourseMembershipsController < ApplicationController
 
 
   def new
+    @course = Course.find_by_id(params[:course_id])
     @user_course_membership = UserCourseMembership.new
-    @user_course_membership.user = user
-    @user_course_membership.course = course
   end
 
   def create
-    
+    byebug
+    # params[:user_course_membership][:user_email]
+    @user = User.find_by_email(params[:user_course_membership][:user_email])
+
+    @course = Course.find_by_id(params[:course_id])
+    course_role = params[:user_course_membership][:course_role]
+    @user_course_membership = UserCourseMembership.new { |ucm|
+      ucm.course = @course
+      ucm.user = @user
+      ucm.role = course_role
+    }
+
+    if @user_course_membership.save 
+      return redirect_to course_users_url, notice: "User was successfully added to the course."
+    else
+      return render action: "new"
+    end
   end
 end
