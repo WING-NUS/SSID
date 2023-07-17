@@ -32,10 +32,6 @@
         <% if current_user.is_admin || @course.membership_for_user(current_user).role == UserCourseMembership::ROLE_TEACHING_STAFF %>        
           <td>
             <div class="dropdown">
-            <!-- Dropdown actions are available in 2 cases:
-              1. current logged-in user is an admin as admin has privilege to edit all users' info. 
-              2. Shown record is a non-student record   
-            -->
             <% if @course.membership_for_user(user).role != UserCourseMembership::ROLE_STUDENT %>
               <a data-toggle="dropdown" id="userDropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                 <%= image_tag("more_vert_black_24dp.svg", alt: "User Menu Dropdown")%>                  

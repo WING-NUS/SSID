@@ -31,6 +31,9 @@ class UserCourseMembershipsController < ApplicationController
       controller.send :authenticate_actions_for_role, UserCourseMembership::ROLE_STUDENT,
                                                       course: @course,
                                                       only: [  ]
+      controller.send :authenticate_actions_for_role, UserCourseMembership::ROLE_GUEST,
+                                                      course: @course,
+                                                      only: [  ]                                                
     end
   } 
 
@@ -88,14 +91,10 @@ class UserCourseMembershipsController < ApplicationController
 
   # DELETE /courses/:course_id/user_course_memberships/:id
   def destroy
-    byebug
     @user_course_membership = UserCourseMembership.find_by_id(params[:id])
     @user_course_membership.destroy
-
-    # delete user if he is guest
-
-
 
     redirect_to course_user_course_memberships_url, notice: "User was successfully removed from the course."
   end
 end
+
