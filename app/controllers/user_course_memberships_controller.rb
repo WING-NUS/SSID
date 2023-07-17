@@ -62,7 +62,7 @@ class UserCourseMembershipsController < ApplicationController
     }
 
     if @user_course_membership.save 
-      return redirect_to course_users_url, notice: "User was successfully added to the course."
+      return redirect_to course_user_course_memberships_url, notice: "User was successfully added to the course."
     else
       return render action: "new"
     end
@@ -80,7 +80,7 @@ class UserCourseMembershipsController < ApplicationController
     course_role = params[:user_course_membership][:course_role]
     @user_course_membership.role = course_role
     if @user_course_membership.save 
-      return redirect_to course_users_url, notice: "User course role was successfully updated."
+      return redirect_to course_user_course_memberships_url, notice: "User course role was successfully updated."
     else
       return render action: "edit"
     end      
@@ -96,6 +96,6 @@ class UserCourseMembershipsController < ApplicationController
 
 
 
-    redirect_to course_users_url, notice: "User was successfully removed from the course."
+    redirect_to course_user_course_memberships_url, notice: "User was successfully removed from the course."
   end
 end
