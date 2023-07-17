@@ -58,7 +58,11 @@ SSID::Application.routes.draw do
   resources :courses do
     get 'status'
     get "cluster_students", defaults: { format: "json" }
-    get 'users'
+
+
+    resources :user_course_memberships 
+
+  
 
     resources :assignments do
       get "log" => "assignments#show_log"

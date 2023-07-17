@@ -6,8 +6,8 @@
     <% elsif action_name == "edit" or action_name == "update" %>
       <li class="breadcrumb-item">Edit Course</li>
     <% end %>
-  <% elsif controller_name == "users" and action_name == "index" %>
-      <li class="breadcrumb-item"><%= link_to "#{course.code} Users", course_users_url(course) %></li>
+  <% elsif controller_name == "user_course_memberships" %>
+      <li class="breadcrumb-item"><%= link_to "#{course.code} Users", course_user_course_memberships_url(course) %></li>
   <% elsif controller_name == "visualize" %>
       <li class="breadcrumb-item"><%= link_to "#{course.code} Visualizations", course_visualize_url(course) %></li>
     <% if action_name != "index" %>
