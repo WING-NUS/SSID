@@ -16,22 +16,41 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
 class UserCourseMembershipsController < ApplicationController
-  # before action: either teaching staff or admin can add/ update/ remove 
+  before_action { |controller|
+    if params[:course_id]
+      @course = Course.find(params[:course_id])
+    end
 
-  def show 
+    if @course
+      controller.send :authenticate_actions_for_role, UserCourseMembership::ROLE_TEACHING_STAFF,
+                                                      course: @course,
+                                                      only: [ :index, :new, :create, :edit, :update, :destroy ]
+      controller.send :authenticate_actions_for_role, UserCourseMembership::ROLE_TEACHING_ASSISTANT,
+                                                      course: @course,
+                                                      only: [ :index ]
+      controller.send :authenticate_actions_for_role, UserCourseMembership::ROLE_STUDENT,
+                                                      course: @course,
+                                                      only: [  ]
+    end
+  } 
+
+  # GET /courses/:course_id/user_course_memberships
+  def index
+    @course = Course.find(params[:course_id])
+    @staff = @course.staff
+    @teaching_assistants = @course.teaching_assistants
+    @students = @course.students
+    @guests = @course.guests
   end
 
-
-
-
+  # GET /courses/:course_id/user_course_memberships/new
   def new
     @course = Course.find_by_id(params[:course_id])
     @user_course_membership = UserCourseMembership.new
   end
 
+  # POST /courses/:course_id/user_course_memberships
   def create
-    byebug
-    # params[:user_course_membership][:user_email]
     @user = User.find_by_email(params[:user_course_membership][:user_email])
 
     @course = Course.find_by_id(params[:course_id])
@@ -49,11 +68,13 @@ class UserCourseMembershipsController < ApplicationController
     end
   end
 
+  # GET /courses/:course_id/user_course_memberships/:id/edit
   def edit
     @course = Course.find_by_id(params[:course_id])
     @user_course_membership = UserCourseMembership.find_by_id(params[:id])
   end
 
+  # PATCH /courses/:course_id/user_course_memberships/:id
   def update
     @user_course_membership = UserCourseMembership.find_by_id(params[:id])  
     course_role = params[:user_course_membership][:course_role]
@@ -65,6 +86,7 @@ class UserCourseMembershipsController < ApplicationController
     end      
   end
 
+  # DELETE /courses/:course_id/user_course_memberships/:id
   def destroy
     byebug
     @user_course_membership = UserCourseMembership.find_by_id(params[:id])

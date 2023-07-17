@@ -58,10 +58,7 @@ SSID::Application.routes.draw do
   resources :courses do
     get 'status'
     get "cluster_students", defaults: { format: "json" }
-    get 'users'
 
-    get "search_user" 
-    post "search_user" => "courses#fetch_user"
 
     resources :user_course_memberships 
 

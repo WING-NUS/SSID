@@ -2,7 +2,6 @@
 <header class="course_user_header">
   <h5><%= @course.code %> Users</h5>
   <% if current_user.is_admin || @course.membership_for_user(current_user).role == UserCourseMembership::ROLE_TEACHING_STAFF %>
-    <!-- TODO: Admin users can try to retrieve from existing users or send an invitation link for a user to signup -->
     <%= link_to image_tag("person_add_blue_24dp.svg", size: "28", alt: "Add #{@course.code} User"), new_course_user_course_membership_path, { 'data-toggle' => 'tooltip', 'data-placement' => 'bottom', 'title' => "Add #{@course.code} User" } %>
   <% end %>
 </header>
