@@ -77,4 +77,5 @@ SSID::Application.configure do
   
   config.host = "ssid.comp.nus.edu.sg"
   config.protocol = "https"
+  config.action_mailer.default_url_options = { host: config.host, protocol: config.protocol }
 end
