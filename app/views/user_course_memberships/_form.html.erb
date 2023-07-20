@@ -1,0 +1,36 @@
+<%= form_with(model: [ @course, @user_course_membership ]) do |form| %>
+  <% if @user_course_membership.errors.any? %>
+    <div>
+      <h6 class="error_title"><%= pluralize(@user_course_membership.errors.count, "error") %> prohibited this user from being added to the course:</h6>
+      <ul>
+      <% @user_course_membership.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>  
+  <%= hidden_field_tag "which_form", (@user_course_membership.id ? "update_course_user" : "add_course_user"), { :id => "which-form" } %>
+
+  <div class="row">
+    <div class="col-12">
+      <%= form.label :user_email, class: "form-label" %>
+      <%= form.email_field :user_email, class: "form-control user-email" %>      
+    </div>
+    <div class="col-12">
+      <%= form.label :course_role, class: "form-label" %>
+      <%= form.select :course_role, UserCourseMembership.options_for_non_student_roles, {}, { :class => 'form-select' } %>      
+    </div>
+    <div class="col-12">
+      <%= form.submit class: "submit" %>
+    </div>
+  </div>
+<% end %> 
+
+<script type="text/javascript">
+  window.addEventListener('DOMContentLoaded', () => {
+    console.log($('which-form').val());
+    if ($('#which-form').val() === "update_course_user") {
+      document.querySelector('.user-email').disabled = true;
+    }
+  })
+</script>
