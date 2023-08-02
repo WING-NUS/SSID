@@ -149,13 +149,13 @@ class SubmissionSimilaritiesController < ApplicationController
       SubmissionLog.create { |sl|
         sl.submission_similarity = @submission_similarity
         sl.submission = @submission_similarity.submission1
-        sl.marker = @user
+        sl.marker = current_user
         sl.log_type = SubmissionLog::TYPE_PAIR_CONFIRM_AS_PLAGIARISM
       }
       SubmissionLog.create { |sl|
         sl.submission_similarity = @submission_similarity
         sl.submission = @submission_similarity.submission2
-        sl.marker = @user
+        sl.marker = current_user
         sl.log_type = SubmissionLog::TYPE_PAIR_CONFIRM_AS_PLAGIARISM
       }
     end
@@ -172,13 +172,13 @@ class SubmissionSimilaritiesController < ApplicationController
       SubmissionLog.create { |sl|
         sl.submission_similarity = @submission_similarity
         sl.submission = @submission_similarity.submission1
-        sl.marker = @user
+        sl.marker = current_user
         sl.log_type = SubmissionLog::TYPE_PAIR_SUSPECT_AS_PLAGIARISM
       }
       SubmissionLog.create { |sl|
         sl.submission_similarity = @submission_similarity
         sl.submission = @submission_similarity.submission2
-        sl.marker = @user
+        sl.marker = current_user
         sl.log_type = SubmissionLog::TYPE_PAIR_SUSPECT_AS_PLAGIARISM
       }
     end
@@ -195,13 +195,13 @@ class SubmissionSimilaritiesController < ApplicationController
       SubmissionLog.create { |sl|
         sl.submission_similarity = @submission_similarity
         sl.submission = @submission_similarity.submission1
-        sl.marker = @user
+        sl.marker = current_user
         sl.log_type = SubmissionLog::TYPE_PAIR_UNMARK_AS_PLAGIARISM
       }
       SubmissionLog.create { |sl|
         sl.submission_similarity = @submission_similarity
         sl.submission = @submission_similarity.submission2
-        sl.marker = @user
+        sl.marker = current_user
         sl.log_type = SubmissionLog::TYPE_PAIR_UNMARK_AS_PLAGIARISM
       }
     end
@@ -217,7 +217,7 @@ class SubmissionSimilaritiesController < ApplicationController
       SubmissionLog.create { |sl|
         sl.submission_similarity = submission_similarity
         sl.submission = submission
-        sl.marker = @user
+        sl.marker = current_user
         sl.log_type = SubmissionLog::TYPE_STUDENT_MARK_AS_NOT_GUILTY
       }
     end

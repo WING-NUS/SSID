@@ -19,19 +19,20 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
     <%= flash[:alert] %>
   </div>
 <% end %>
-
-<header class="announcement_header">
-<h4>Announcements</h4>
-<p>
-<%= link_to image_tag("add_circle_outline_blue_24dp.svg", size: "28", alt: "New announcement"), new_announcement_url, { "data-toggle" => "tooltip", "data-placement" => "bottom", "title" => "New Announcement" } if @user.is_some_staff? %>
-</p>
-</header>
-
 <% if flash[:notice] %>
   <div class="notice">
     <%= flash[:notice] %>
   </div>
 <% end %>
+
+<header class="announcement_header">
+<h4>Announcements</h4>
+<p>
+<%= link_to image_tag("add_circle_outline_blue_24dp.svg", size: "28", alt: "New announcement"), new_announcement_url, { "data-toggle" => "tooltip", "data-placement" => "bottom", "title" => "New Announcement" } if user_signed_in? and current_user.is_some_staff? %>
+</p>
+</header>
+
+
 
 <% if @announcements.empty? %>
   <div class="announcement">No announcements</div>
@@ -40,7 +41,7 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
     <div class="card announcement rounded">
       <div class="card-header d-flex justify-content-between">
         <strong class="d-inline"><%= a.title + " " if a.title %></strong>
-        <% if @user.is_some_staff? %>
+        <% if current_user.is_some_staff? %>
           <div class="dropdown d-inline">
             <a data-toggle="dropdown" id="announcementDropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
               <%= image_tag("more_vert_black_24dp.svg", alt: "Announcement Menu Dropdown")%>      
