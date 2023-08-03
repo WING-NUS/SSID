@@ -7,17 +7,8 @@
 
 <%= render :template => 'layouts/pdf_report' %>
 
-<%= render partial: "pair_report_title" %>
-
 <% @submission_similarity_ids.each do |id|%>
   <% @submission_similarity = SubmissionSimilarity.find(id) %>
-  <%= render partial: "pair_report_student_pair", locals: { submission_similarity: @submission_similarity }%>
-
+  <%= render partial: "submission_similarities/pair_report_student_pair", locals: { submission_similarity: @submission_similarity }%>
   <div style="break-after:page"> </div>
 <% end %>
-
-<script type="text/javascript">
-$(document).ready(function() {
-  window.print();
-});
-</script>

@@ -83,7 +83,7 @@
     </ul>
   </div>
   <div class="submission1">
-    <h5>Submission by <%= @student1.name %> (<%= link_to "Log", assignment_submission_log_url(@assignment, @submission1) %>)</h5>
+    <h5>Submission by <%= link_to @student1.name, assignment_submission_log_url(@assignment, @submission1) %></h5>
     <pre class="prettyprint linenums <%= @assignment.prettify_js_lang %>">
     <% @submission1.lines.each { |line| %>
       <%= line %>
@@ -91,7 +91,7 @@
     </pre>
   </div>
   <div class="submission2">
-    <h5>Submission by <%= @student2.name %> (<%= link_to "Log", assignment_submission_log_url(@assignment, @submission2) %>)</h5>
+  <h5>Submission by <%= link_to @student2.name, assignment_submission_log_url(@assignment, @submission2) %></h5>
     <pre class="prettyprint linenums <%= @assignment.prettify_js_lang %>">
     <% @submission2.lines.each { |line| %>
       <%= line %>
