@@ -13,7 +13,6 @@
 <div class="admin_users_section"> 
 <header class="user_header">
 <h5>Admins</h5>
-<%= link_to image_tag("person_add_blue_24dp.svg", size: "28", alt: "New Admin"), new_admin_user_url, {'data-toggle' => 'tooltip', 'data-placement' => 'bottom', 'title' => 'New Admin' } %>
 </header>
 
 <table>
@@ -38,10 +37,13 @@
               <% if admin == @user %>
                 <li><%= link_to "Settings", edit_user_url(@user), class: "dropdown-item" %></li>
               <% else %>
+                <!-- TODO -->
+                <!--
                 <li><%= link_to "Edit", edit_admin_user_url(admin), class: "dropdown-item" %></li>
                 <li>
                   <%= button_tag 'Delete', class: "dropdown-item", data: { 'bs-toggle' => "modal", 'bs-target' => "#deleteUserModal", 'bs-url' => "#{admin_user_url(admin)}" } %>
                 </li>
+                -->
               <% end %>
             </ul>
           </div>
@@ -77,10 +79,12 @@
                 <%= image_tag("more_vert_black_24dp.svg", alt: "Lone Users Menu Dropdown")%>        
               </a>
               <ul class="dropdown-menu" aria-labelledby="loneUserDropdownMenuLink">
+                <!-- TODO 
                 <li><%= link_to "Edit", edit_admin_user_url(user), class: 'dropdown-item' %></li>
                 <li>
                   <%= button_tag 'Delete', class: "dropdown-item", data: { 'bs-toggle' => "modal", 'bs-target' => "#deleteUserModal", 'bs-url' => "#{admin_user_url(user)}" } %>
                 </li>
+                -->
               </ul>
             </div>
           </td>          
@@ -115,11 +119,14 @@
                 <%= image_tag("more_vert_black_24dp.svg", alt: "Lone Users Menu Dropdown")%>        
               </a>
               <ul class="dropdown-menu" aria-labelledby="loneUserDropdownMenuLink">
+                <!-- TODO
                 <li><%= link_to "Edit", edit_admin_user_url(user), class: 'dropdown-item' %></li>
                 <li>
                   <%= button_tag 'Delete', class: "dropdown-item", data: { 'bs-toggle' => "modal", 'bs-target' => "#deleteUserModal", 'bs-url' => "#{admin_user_url(user)}" } %>
                 </li>
                 <li>
+                -->
+                  <li><%= link_to "Upgrade to admin account", admin_user_update_url(user), method: "put", data: {confirm: "The user will be upgraded to admin account. Are you sure?"}, class: 'dropdown-item' %></li>            
                   <li><%= link_to "Approve", admin_user_approve_user_url(user), class: 'dropdown-item' %></li>
                 </li>
               </ul>

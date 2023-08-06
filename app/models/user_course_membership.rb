@@ -32,7 +32,9 @@ class UserCourseMembership < ActiveRecord::Base
   belongs_to :user
   belongs_to :course
 
+  validate :is_existing_user
   validates_uniqueness_of :user_id, scope: [ :course_id ]
+
 
   def role_string
     ROLE_STRINGS[self.role]
@@ -43,4 +45,16 @@ class UserCourseMembership < ActiveRecord::Base
       role_id == ROLE_STUDENT
     }
   end
+
+  def user_email
+    self.user.nil? ? "" : self.user.email
+  end
+
+  def is_existing_user
+    if self.user.nil?
+      errors.add :user_email, "This user email is not in SSID. Please invite him or her to signup."
+      return false
+    end
+  end
+
 end
