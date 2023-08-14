@@ -9,18 +9,28 @@ module ApplicationHelper
   COPYRIGHT_HOLDER = "Web Information Retrieval and Natural Language Processing Group"
 
   def self.is_application_healthy
-    check_memory = `free` 
+    begin
+      check_memory = `free`
+      if check_memory
+        memory_stats = check_memory.split("\n")[1].split(/\s+/)
+        total_memory, available_memory = Integer(memory_stats[1]), Integer(memory_stats[6])
+        return available_memory * 100.0 / total_memory > Rails.application.config.critical_available_memory
+      end
+    rescue Errno::ENOENT
+      # If the 'free' command is not found, fall back to reading /proc/meminfo
+    end
 
-    # Mem: total used free shared buff/cache available
-    if check_memory
-      memory_stats = check_memory.split("\n")[1].split("\s")
-      puts "Output: #{check_memory}"
-      puts "Memory: #{memory_stats}"  
-      total_memory, available_memory = Integer(memory_stats[1]), Integer(memory_stats[6])
+    meminfo_path = '/proc/meminfo'
+    if File.exist?(meminfo_path)
+      meminfo = File.read(meminfo_path)
+      total_memory = meminfo.match(/^MemTotal:\s+(\d+)/)[1].to_i
+      free_memory = meminfo.match(/^MemFree:\s+(\d+)/)[1].to_i
+      available_memory = total_memory - free_memory # Adjust as needed
+
       return available_memory * 100.0 / total_memory > Rails.application.config.critical_available_memory
     else
+      puts "Memory information not available"
       return false
     end
   end
-
 end
