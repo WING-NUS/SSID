@@ -92,7 +92,7 @@ module SubmissionsHandler
     Zip::File.open(upload_file) { |zip_file|
       zip_file.each { |f|
 
-      byebug  
+      # byebug  
       file_entry_names = zip_file.entries.collect {|file| file.name}
       file_entry_names.each { |file_name|
         if (file_name.eql?(upload_file_without_ext)) 
@@ -175,7 +175,7 @@ module SubmissionsHandler
     #     f.puts string_from_combined_files(subpath)
     #   }
     # }
-    byebug
+    # byebug
 
     compare_dir = combine_submission_files(path)
     compare_references_dir = "reference"
@@ -228,8 +228,8 @@ module SubmissionsHandler
               %Q{#{assignment.min_match_length} #{assignment.ngram_size} } +
               %Q{#{host} #{database} #{username} #{password} #{isMapEnabled} #{used_fingerprints} #{compare_references_dir} }  
 
-    byebug          
-    puts "The command is #{command}"                  
+    # byebug          
+    # puts "The command is #{command}"                  
 
     # Fork to run java program in background
     ruby_pid = Process.fork do
@@ -326,7 +326,7 @@ module SubmissionsHandler
   end
 
   def self.convert_to_python(path, strings)
-    byebug
+    # byebug
     # path_without_special_chars = path.gsub(/[\s\(\)\*\@\$\%\&\*]/, '__')
     path_tokens = path.split(File::SEPARATOR)
     puts "Path tokens: #{path_tokens}"
