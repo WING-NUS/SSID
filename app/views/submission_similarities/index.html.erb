@@ -104,8 +104,8 @@
     <% @submission_similarities.each do |ss| %>
       <tr>
         <td><%= check_box_tag nil, ss.id, false, class: "checkbox" %></td>
-        <td><%= ss.student1.name %></td>
-        <td><%= ss.student2.name %></td>
+        <td><%= link_to ss.student1.name, assignment_submission_log_url(@assignment, ss.submission1) %></td>
+        <td><%= link_to ss.student2.name, assignment_submission_log_url(@assignment, ss.submission2) %></td>
         <td><%= ss.similarity %>%</td>
         <td><%= ss.average_similarity %>%</td>
         <td><%= ss.status_string.html_safe %></td>
