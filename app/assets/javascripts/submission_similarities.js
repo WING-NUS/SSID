@@ -17,6 +17,29 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 
 (function() {
     window.SubmissionSimilarity || (window.SubmissionSimilarity = {});
+
+    SubmissionSimilarity.changeViewType = function(el) {
+      viewType = $(el).val()
+      if (viewType == "Interactive") {
+        $("div.side-by-side").hide();
+        $("div.interactive").show();
+        interactiveCSS = {
+          "overflow-y": "auto",
+          "height": "700px"
+        }
+        $("div.submission1").css(interactiveCSS);
+        $("div.submission2").css(interactiveCSS);
+      } else {
+        $("div.interactive").hide();
+        $("div.side-by-side").show();
+        sideBySideCSS = {
+          "overflow-y": "",
+          "height": "auto"
+        }
+        $("div.submission1").css(sideBySideCSS);
+        $("div.submission2").css(sideBySideCSS);
+      }
+    };
   
     SubmissionSimilarity.slideToLine = function(checkBox) {
       var s1y, s2y, startLine1, startLine2, values;
