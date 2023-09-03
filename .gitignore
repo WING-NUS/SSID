@@ -41,3 +41,6 @@
 /yarn-error.log
 yarn-debug.log*
 .yarn-integrity
+
+# Ignore since local database password might differ.
+/config/database.yml
