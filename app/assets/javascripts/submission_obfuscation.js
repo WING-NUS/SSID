@@ -9,16 +9,16 @@
     SubmissionObfuscation.originalStudent2Name = null;
 
     SubmissionObfuscation.maskStudentName = function() {
-        console.log("JS Script here onwards");
-        console.log(window.shouldNotObfuscate)
+        // console.log("JS Script here onwards");
+        // console.log(window.shouldNotObfuscate)
     
         // Check if the global flag for obfuscation is false; if so, return without obfuscating
         if (window.shouldNotObfuscate) {
-            console.log("Names are not obfuscated")
+            // console.log("Names are not obfuscated")
             return;
         }
     
-        console.log("Masking student name now");
+        // console.log("Masking student name now");
     
         // Masking inside all h4 elements to get the student pairings
         let h4Elements = document.querySelectorAll('h4');
