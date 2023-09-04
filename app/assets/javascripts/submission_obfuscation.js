@@ -23,32 +23,35 @@
         // Masking inside all h4 elements to get the student pairings
         let h4Elements = document.querySelectorAll('h4');
         h4Elements.forEach(h4Element => {
-            let match = h4Element.innerHTML.match(/for Students (\w+-\d+) and (\w+-\d+)/);
-            if (match && match[1] && match[2] && match[2] !== '******') {
-                let student1Name = match[1];
-                let student2Name = match[2];
+            let match = h4Element.innerHTML.match(/for Students .*? and (.*?) \(\d+\.\d+%\)/);
+            if (match && match[1] && match[1] !== '******') {
+                let student2Name = match[1];
                 h4Element.innerHTML = h4Element.innerHTML.replace(new RegExp("and\\s" + student2Name, "g"), "and ******");
             }
         });
         
         // Masking the second h5 for each pair of submissions
         let h5Elements = document.querySelectorAll('h5');
-    
+
         for (let i = 1; i < h5Elements.length; i += 2) {
-            h5Elements[i].innerHTML = h5Elements[i].innerHTML.replace(/Student-\d+/, '******');
+            // Adjusted regex to capture student names like Student-02 or x-v6551_q1
+            h5Elements[i].innerHTML = h5Elements[i].innerHTML.replace(/Submission by [\w-]+[_\w]*/, 'Submission by ******');
         }
+        
     
         // Masking inside all table headers in every table
         let tables = document.querySelectorAll('table');
         tables.forEach(table => {
             let thirdColumnHeader = table.querySelector('th.lines_col:nth-child(3)');
             if (thirdColumnHeader) {
-                let match = thirdColumnHeader.innerHTML.match(/Submission by (\w+-\d+)/);
+                // Adjusted regex to capture student names like Student-02 or x-v6551_q1
+                let match = thirdColumnHeader.innerHTML.match(/Submission by ([\w-]+[_\w]*)/);
                 if (match && match[1] && match[1] !== '******') {
                     thirdColumnHeader.innerHTML = thirdColumnHeader.innerHTML.replace(match[1], '******');
                 }
             }
         });
+        
     };
     
 
