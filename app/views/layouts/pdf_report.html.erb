@@ -38,5 +38,18 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
       <%= yield %>
     </div>
   </main>
+
+  <script type="text/javascript">
+    window.onload = function() {
+      var shouldNotObfuscate = localStorage.getItem('shouldNotObfuscate') === 'true';
+      window.shouldNotObfuscate = shouldNotObfuscate
+      if (window.SubmissionObfuscation && typeof window.SubmissionObfuscation.maskStudentName === 'function') {
+        // console.log("Report Fn Hit")
+        // console.log(window.shouldNotObfuscate)
+        // console.log("Local Storage", shouldNotObfuscate)
+        window.SubmissionObfuscation.maskStudentName();
+      }
+    };
+  </script>
 </body>
 </html>
