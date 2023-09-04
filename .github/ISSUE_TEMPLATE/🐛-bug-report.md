@@ -1,6 +1,6 @@
 ---
 name: "\U0001F41B Bug Report"
-about: Create a report to help us improve documented [here] (https://www.ssw.com.au/rules/the-right-way-to-report-bugs-and-give-feedback-suggestions).
+about: Create a report to help us improve documented here (https://www.ssw.com.au/rules/the-right-way-to-report-bugs-and-give-feedback-suggestions).
   If this doesn't look right, choose a different type.
 title: "\U0001F41B "
 labels: 'Type: Bug'
