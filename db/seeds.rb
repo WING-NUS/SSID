@@ -16,16 +16,16 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 
 # Create default admin user
-admin = User.new { |user|
-  user.name = "admin"
+admin = User.new do |user|
+  user.name = "admin123"
   user.full_name = "SSID Administrator"
-  user.password = "SSIDPassword"
-  user.password_confirmation = "SSIDPassword"
-  user.email = "ssidadmin@example.com"
+  user.password = "SSIDPassword123!"
+  user.password_confirmation = "SSIDPassword123!"
+  user.email = "ssidadmin123@example.com"
   user.is_admin = true
   user.is_admin_approved = true
   user.confirmed_at = Time.zone.now
   user.confirmation_sent_at = Time.zone.now
-
-}
+end
+admin.skip_confirmation! # Used to confirm account when seeding a user to bypass user.confirmed? check
 admin.save
