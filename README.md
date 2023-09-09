@@ -32,11 +32,11 @@ Before following the below instructions, please ensure that you have met all the
 	
 2. Go to *config/database.yml* and modify the file by changing the username and password fields with your MySQL database settings (Please do it for all the 3 listed databases in the file)
 	
-3. Now, go to *config/envionments/* and add the respective line to the respective file(s)
-   -  Under *config/envionments/development.rb* & *config/envionments/test.rb*, add the below line:
+3. Now, go to *config/environments/* and add the respective line to the respective file(s)
+   -  Under *config/environments/development.rb* & *config/environments/test.rb*, add the below line:
    <pre>config.eager_load = false</pre>
 
-   -  Under *config/envionments/production.rb* add the below line:
+   -  Under *config/environments/production.rb* add the below line:
    <pre>config.eager_load = true</pre>
      
 4. Open your terminal and navigate to the code directory. Run bundler to install the necessary gems (including rails) from the root directory of SSID:
