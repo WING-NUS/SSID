@@ -42,10 +42,14 @@ class SubmissionSimilaritiesController < ApplicationController
     @hashed_url = session[:hashed_url]
     @displayDialog = session[:displayDialog]
     session[:displayDialog] = false
- 
+    
+    # Determine sort direction
+    sort_direction = params[:sort_direction] || 'descending'
+    order_string = sort_direction == 'ascending' ? 'status asc' : 'status desc'
+  
     @submission_similarities = SubmissionSimilarity.where(
       assignment_id: @assignment.id 
-    ).order('similarity desc').paginate(page: params[:page], per_page: 20)
+    ).order(order_string, 'similarity desc').paginate(page: params[:page], per_page: 20)
   end
 
   def create_guest_user

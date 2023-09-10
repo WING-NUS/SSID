@@ -96,8 +96,13 @@
       <th class="student_col">Student 2</th>
       <th class="similarity_col">Maximum Similarity</th>
       <th class="similarity_col">Average Similarity</th>
-      <th>Remarks</th>
-      <th class="action_col">Actions</th>
+      <th>
+        <a href="<%= request.path + "?sort_direction=" + (params[:sort_direction] == 'ascending' ? 'descending' : 'ascending') %>">
+          Remarks 
+          <%= params[:sort_direction] == 'ascending' ? '↑' : '↓' %>
+        </a>
+      </th>
+          <th class="action_col">Actions</th>
     </tr>
   </thead>
   <tbody>
