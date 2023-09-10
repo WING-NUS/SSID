@@ -1,6 +1,6 @@
 ---
 name: "\U0001F4DD Documentation"
-about: Updating documentation (e.g. README, Wiki, Guides etc.) as documented [here]
+about: Updating documentation (e.g. README, Wiki, Guides etc.) as documented here
   (https://www.ssw.com.au/rules/awesome-documentation/) If this doesn't look right,
   choose a different type.
 title: "\U0001F4DD"
