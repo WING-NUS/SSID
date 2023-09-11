@@ -10,38 +10,121 @@
     </div>
   <% end %>  
   <div class="site-introduction">
-    <p class="site-motto text-dark">Empowering the next generations of programmers.</p>
-    <div class="site-clip">
-      <iframe src="https://www.youtube.com/embed/6FCHKCHno44" allowfullscreen></iframe>
+    <div>
+      <p class="site-motto text-dark">Empowering the next generations of <em>programmers</em></p>
+      <p class="site-subtitle">Use Student Submission Integrity Diagnosis (SSID) System to uphold the highest standards of academic integrity for your courses.</p>
+      <div style="display:flex;">
+        <span style="width:300px;">  
+          <button type="button" class="btn btn-start btn-primary py-1" onclick="location.href='/signup';">Get started</button>
+        </span>
+        <span class="site-subtitle2">Join our community of <strong>50+ users</strong> and <strong>300+ assignments</strong></span>
+      </div>
     </div>
-  </div>
-  <div class="w-100">
-    <p><strong>Join our community of satisfied instructors</strong></p>
+    <div class="site-clip">
+      <%= image_tag("plagiarism_cover_image.svg", size: "500", alt: "Plagiarism Cover Image")%>            
+    </div>
   </div>
   <div class="site-features-wrapper">
-    <div class="site-statistics">
-      <p>
-        <%= image_tag("people_black_24dp.svg", size: "36", alt: "Users")%> <strong>50+</strong> users
-      </p>
-      <p>
-        <%= image_tag("assignment_black_24dp.svg", size: "36", alt: "Users")%> <strong>300+</strong> assignments
-      </p>
+    <div class="site-screenshot">
+      <%= image_tag("ssid_cover_screenshot.png", alt: "SSID Sreenshot", class: "site-screenshot-img")%>     
     </div>
     <div class="site-features">
-      <p><%= image_tag("done_24dp.svg", size: "20", alt: "site feature") %> Advanced algorithms</p>
-      <p><%= image_tag("done_24dp.svg", size: "20", alt: "site feature") %> Seamless integrations</p>
-      <p><%= image_tag("done_24dp.svg", size: "20", alt: "site feature") %> Interactive results</p>
-      <p><%= image_tag("done_24dp.svg", size: "20", alt: "site feature") %> Downloadable reports</p>
+      <h3> Why SSID? </h3>
+      <span class="site-subtitle">Save time on the thankless task of detecting plagiarism. SSID provides advanced plagiarism detection capability with informative and easy-to-use interfaces.</span>
+      <br><br>
+      <span class="site-subtitle"><%= image_tag("check_icon.svg", size: "24", alt: "site feature") %> Advanced algorithms</span> <br>
+      <span class="site-subtitle"><%= image_tag("check_icon.svg", size: "24", alt: "site feature") %> Seamless integrations</span> <br>
+      <span class="site-subtitle"><%= image_tag("check_icon.svg", size: "24", alt: "site feature") %> Interactive results</span>
     </div>
   </div>
-  <hr>
-  <div class="site-footer">
-    <span>&copy; <%= ApplicationHelper::COPYRIGHT_DATE_RANGE %> WING NUS</span>
-    <ul>
-      <li><%= link_to "About Us", "https://wing.comp.nus.edu.sg", target: "_blank" %> | </li>
-      <li><%= link_to "Contact", "https://github.com/WING-NUS/SSID#contact", target: "_blank" %> | </li>
-      <li><%= link_to "GitHub", "https://github.com/WING-NUS/SSID", target: "_blank" %></li>
-    </ul>
 
+  <div class="site-testimonials">
+    <div class="testimonial-heading">
+      <h2 style="color: white;">Hear from our instructors</h2>
+    </div>
+    <div class="testimonial-cards">
+      <span class="float-child card mx-4">
+        <p class="site-subtitle2 px-4 pt-4 pb-2"><small>My teaching team have used SSID every semester since I joined SoC. It came in very handy during the large increase in class sizes at SoC, allowing us to check the programs of all of our students. The user interface is very clear, and it works with multiple program languages. In addition, the development team is very responsive to any issues we have encountered. Thank you to the team.</small></p>
+        <span class="testimonial-author">
+          <span class="px-4"><strong>Boyd Anderson</strong></span>
+          <br>
+          <span class="px-4"><small>Lecturer, NUS School of Computing</small></span>
+             </span>
+      </span>
+
+      <span class="float-child card mx-4">
+        <p class="site-subtitle2 px-4 pt-4 pb-2"><small>I used the SSID tool for my operating system course to find plagiarism in students' C codes. The tool was easy to use with a user-friendly interface. The feature that stood out to me was the side-by-side comparison of the suspected code, as it made spotting similarities much more apparent. Furthermore, I particularly liked the option to upload skeleton codes that get exempted from the analysis resulting in an accurate comparison.</small></p>
+        <span class="testimonial-author">
+          <span class="px-4"><strong>Nitya Lakshmanan</strong></span>
+          <br>
+          <span class="px-4"><small>Lecturer, NUS School of Computing</small></span>
+        </span>
+      </span>
+        
+      <span class="float-child card mx-4">
+        <p class="site-subtitle2 px-4 pt-4 pb-2"><small>Coming soon...</small></p>
+      </span>
+    </div>
   </div>
+  
+  <div class="site-faq">
+    <div class="faq-heading">
+      <h2>Frequently Asked Questions</h2>
+    </div>
+    <div class="accordion" id="accordionFAQ">
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="headingOne">
+          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+            What are the system requirements for using SSID?
+          </button>
+        </h2>
+        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionFAQ">
+          <div class="accordion-body">
+            SSID is web-based with a graphical user interface, so it works with most modern browsers. For best experience, use PC with a minimal resolution of 1280x768.
+          </div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="headingTwo">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+            How can I get started with using SSID?
+          </button>
+        </h2>
+        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionFAQ">
+          <div class="accordion-body">
+          <%= link_to "Sign up", "/signup", target: "_blank" %> for an account and we will get back to you. Feel free to <%= link_to "contact us", "https://github.com/WING-NUS/SSID#contact", target: "_blank" %> if you have any questions or suggestions.
+          </div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="headingThree">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+            Is SSID free to use?
+          </button>
+        </h2>
+        <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionFAQ">
+          <div class="accordion-body">
+            Yes, SSID is free to use.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="site-footer">
+    <div class="actioncall-heading">
+      <h2 style="color: white;">Ready to join our community?</h2>
+    </div>
+
+    <button class="btn btn-actioncall" onclick="location.href='/signup';">Create account</button>
+
+    <span class="footer">
+      <span class="copyright">&copy; <%= ApplicationHelper::COPYRIGHT_DATE_RANGE %> WING NUS</span>
+      <ul>
+        <li><%= link_to "About Us", "https://wing.comp.nus.edu.sg", target: "_blank" %> | </li>
+        <li><%= link_to "Contact", "https://github.com/WING-NUS/SSID#contact", target: "_blank" %> | </li>
+        <li><%= link_to "GitHub", "https://github.com/WING-NUS/SSID", target: "_blank" %></li>
+      </ul>
+    </span>
+  </div>  
 </div>

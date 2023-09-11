@@ -5,7 +5,7 @@ module ApplicationHelper
   EMAIL_DEFAULT_SENDER = "no-reply@ssid.comp.nus.edu.sg"
 
   # copyright
-  COPYRIGHT_DATE_RANGE = "2009–2022"
+  COPYRIGHT_DATE_RANGE = "2009–2023"
   COPYRIGHT_HOLDER = "Web Information Retrieval and Natural Language Processing Group"
 
   def self.is_application_healthy

@@ -56,3 +56,19 @@
     color: #468847;
     text-align: left;
  }
+
+.btn-signup {
+    @extend .btn-primary;
+    background-color: #003d7c !important;
+    height: 3rem; 
+    color: white;
+}
+
+.btn-signup:hover {
+    background-color: white !important;
+    color: #003d7c !important;
+}
+
+.btn-signup:active {
+    border-style: outset !important; 
+}
