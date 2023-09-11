@@ -16,6 +16,8 @@
 
 require 'capybara/rspec'
 
+BASE_URL = "http://localhost:3000/"
+
 RSpec.configure do |config|
   
   # rspec-expectations config goes here. You can use an alternate
