@@ -139,6 +139,12 @@ h2, h3, h4, h5, h6 {
   }
 }
 
+@media screen and (max-width: 1100px) {
+  .site-testimonials {
+      display: none !important;
+  }
+}
+
 .site-testimonials {
   width: 100vw;
   position: relative;
