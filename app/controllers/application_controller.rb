@@ -19,7 +19,7 @@ class ApplicationController < ActionController::Base
     protect_from_forgery
     before_action :authenticate_user!
     before_action :sanitize_id, only: [:index, :show, :edit, :update, :destroy]
-  
+    add_flash_types :product_update_msg
     private
   
     def sanitize_id
