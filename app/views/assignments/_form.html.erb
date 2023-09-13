@@ -36,10 +36,14 @@
       <%= f.check_box :mapbox, { :class => 'form-check-input' }, "Yes", "No" %>
     </div>
     <div id="map_file_details" style="display:none;" class="col-12">
-      <%= f.label :mapfile, "Mapping file (csv) \u24D8", title: "The zip file should contain one folder for each student's code files; folders are named according to student ID; Name your folder as \"skeleton\" for the codes you wish to exclude from the system", class: 'form-label' %>
+      <%= f.label :mapfile, "Mapping file (csv) \u24D8", title: "Allows you to map between a directory name (in the uploaded zip file) and the student roster that you might be using for your modules. A csv file with no header, and row with format student-submission-folder-name,student-custom-id will be needed.", class: 'form-label' %>
       <%= f.file_field :mapfile, accept: '.csv', class: 'form-control' %>
       <ul id="map_files_list"></ul>
     </div>
+    <div class="col-12">
+      <%= f.label :used_fingerprints, "Use fingerprints? \u24D8", title: "Enable the optimization of preprocessing batch of submissions using winnowing fingerprinting algorithm before pairwise comparisons.", class: 'form-label' %>
+      <%= f.check_box :used_fingerprints, { :class => 'form-check-input' }, "Yes", "No" %>
+    </div>    
     <div class="col-12">
       <%= label_tag 'advancedbox', "Show advanced options?" %>
       <%= check_box_tag 'advancedbox', 'yes', false, class: 'form-check-input' %>

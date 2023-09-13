@@ -81,3 +81,23 @@ body.users_index {
     margin-bottom: $spacer * 5;
   }
 }
+
+// Devise 
+body {
+  .users-shared-links {
+    a {
+      text-decoration: none;
+    }
+
+    .omniauth-links {
+      margin: $spacer * 0.5 0;
+    }   
+
+  }
+}
+
+body.registrations_new {
+  div.user-signup {
+    margin-top: $spacer * 2;
+  }
+}

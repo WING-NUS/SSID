@@ -35,14 +35,14 @@ class AnnouncementsController < ApplicationController
     path = 'config/product_update/update_msg.yml'
     update_msg_yaml = YAML.load_file(path)
     flash[:product_update_msg] = "✨✨ Update from SSID: " + update_msg_yaml["msg"] + " ✨✨"
-    @announcements = @user.courses.collect { |c| c.announcements }.flatten
+    @announcements = current_user.courses.collect { |c| c.announcements }.flatten
   end
 
   # GET /announcements/new
   def new
     @announcement = Announcement.new
-    @announceable_courses = @user.courses.select { |course|
-      course.membership_for_user(@user).role == UserCourseMembership::ROLE_TEACHING_STAFF
+    @announceable_courses = current_user.courses.select { |course|
+      course.membership_for_user(current_user).role == UserCourseMembership::ROLE_TEACHING_STAFF
     }
   end
 
@@ -61,8 +61,8 @@ class AnnouncementsController < ApplicationController
     end
 
     # Check permissions
-    @announceable_courses = @user.courses.select { |course|
-      course.membership_for_user(@user).role == UserCourseMembership::ROLE_TEACHING_STAFF
+    @announceable_courses = current_user.courses.select { |course|
+      course.membership_for_user(current_user).role == UserCourseMembership::ROLE_TEACHING_STAFF
     }
     if course and @announceable_courses.include? course
       @announcement.announceable = course
@@ -80,8 +80,8 @@ class AnnouncementsController < ApplicationController
   # GET /announcements/1/edit
   def edit
     @announcement = Announcement.find(params[:id])
-    @announceable_courses = @user.courses.select { |course|
-      course.membership_for_user(@user).role == UserCourseMembership::ROLE_TEACHING_STAFF
+    @announceable_courses = current_user.courses.select { |course|
+      course.membership_for_user(current_user).role == UserCourseMembership::ROLE_TEACHING_STAFF
     }
   end
 
@@ -101,8 +101,8 @@ class AnnouncementsController < ApplicationController
     end
 
     # Check permissions
-    @announceable_courses = @user.courses.select { |course|
-      course.membership_for_user(@user).role == UserCourseMembership::ROLE_TEACHING_STAFF
+    @announceable_courses = current_user.courses.select { |course|
+      course.membership_for_user(current_user).role == UserCourseMembership::ROLE_TEACHING_STAFF
     }
     if course and @announceable_courses.include? course
       @announcement.announceable = course

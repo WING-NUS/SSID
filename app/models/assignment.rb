@@ -24,6 +24,7 @@ class Assignment < ActiveRecord::Base
   has_many :confirmed_plagiarism_cases, -> { where("status = #{SubmissionSimilarity::STATUS_CONFIRMED_AS_PLAGIARISM}") }, class_name: "SubmissionSimilarity"
   has_many :submissions
   belongs_to :course
+  attr_accessor :used_fingerprints
 
   validates :title, :language, :min_match_length, :ngram_size, presence: true
   validates_numericality_of :min_match_length, only_integer: true, greater_than: 0

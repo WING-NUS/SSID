@@ -17,19 +17,36 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
  
  package pd;
 
-import pd.utils.Mappings.*;
-import pd.utils.NGrams.*;
-import java.util.*;
-import pd.utils.*;
-import pd.utils.Tokens.*;
+import java.math.BigInteger;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import pd.utils.Pair;
+import pd.utils.Result;
+import pd.utils.Submission;
+import pd.utils.Mappings.Mapping;
+import pd.utils.Mappings.MappingComparator;
+import pd.utils.Mappings.MatchingDocument;
+import pd.utils.Mappings.SkeletonMapping;
+import pd.utils.NGrams.FingerPrint;
+import pd.utils.NGrams.NGram;
+import pd.utils.NGrams.NGramList;
+import pd.utils.Tokens.TokenList;
+import pd.utils.Tokens.TokenSSID;
 public final class SimComparer {
 
 	private static SimComparer instance = new SimComparer();
 	private static final String SKELETON = "skeleton";
 	private static Logger logger = LogManager.getLogger();
+	private static final int WINDOW_SIZE = 4;
 
 	@SuppressWarnings("unused")
 	private boolean debugMode = false;
@@ -49,6 +66,29 @@ public final class SimComparer {
 		Submission s1, s2;
 		TokenList s1Tokens, s2Tokens, bTokens = skeleton.getCodeTokens();
 		Result result;
+
+		long wholeAssFingerprintsNbr = 0;
+		HashMap<BigInteger, ArrayList<FingerPrint>> invertedIndexesOfAssignmentFingerPrints = new HashMap<BigInteger, ArrayList<FingerPrint>>();
+		for (Submission s : submissions) {
+			ArrayList<FingerPrint> subFingerPrints = computeDocumentFingerPrints(s, nGramSize-1);
+
+			for (FingerPrint fPrint : subFingerPrints) {
+				BigInteger hash = fPrint.getHash();
+				if (invertedIndexesOfAssignmentFingerPrints.containsKey(hash)) {
+					ArrayList<FingerPrint> listOFingerPrints = invertedIndexesOfAssignmentFingerPrints.get(hash);
+					listOFingerPrints.add(fPrint);
+				} else {
+					ArrayList<FingerPrint> listOFingerPrints = new ArrayList<FingerPrint>();
+					listOFingerPrints.add(fPrint);
+					invertedIndexesOfAssignmentFingerPrints.put(hash, listOFingerPrints);
+				}
+			}
+
+			long nbrOfFingerprints = subFingerPrints.size();
+			wholeAssFingerprintsNbr += nbrOfFingerprints; 
+		}
+
+		logger.debug("Assignment fingerprints: {}", wholeAssFingerprintsNbr);
 
 		for (int i = 0; i < noOfSub; i++) {
 			s1 = submissions.get(i);
@@ -84,6 +124,146 @@ public final class SimComparer {
 		return results;
 	}
 
+	public ArrayList<Result> compareSubmissionsWithFingerPrints(
+			ArrayList<Submission> submissions, int nGramSize, int minMatch) {
+
+		Submission skeleton = getSkeletonCode(submissions);
+    assert(skeleton != null);
+		ArrayList<Result> results = new ArrayList<Result>();
+
+		int noOfSub = submissions.size();
+		Submission s1, s2;
+		TokenList s1Tokens, s2Tokens, bTokens = skeleton.getCodeTokens();
+		Result result;
+
+		long wholeAssFingerprintsNbr = 0;
+		HashMap<BigInteger, ArrayList<MatchingDocument>> invertedIndexesOfAssignmentFingerPrints = new HashMap<BigInteger, ArrayList<MatchingDocument>>();
+		for (Submission s : submissions) {
+			ArrayList<FingerPrint> submissionFingerPrints = computeDocumentFingerPrints(s, nGramSize-1);
+			s.setSubmissionFingerPrints(submissionFingerPrints);
+
+			for (FingerPrint fingerPrint : submissionFingerPrints) {
+				
+				BigInteger hash = fingerPrint.getHash();
+				
+				ArrayList<MatchingDocument> listOMatchingDocuments = new ArrayList<MatchingDocument>();
+				if (invertedIndexesOfAssignmentFingerPrints.containsKey(hash)) {
+				  listOMatchingDocuments = invertedIndexesOfAssignmentFingerPrints.get(hash);
+				} 
+
+				MatchingDocument match = new MatchingDocument(s.getID(), fingerPrint);
+				listOMatchingDocuments.add(match);
+				invertedIndexesOfAssignmentFingerPrints.put(hash, listOMatchingDocuments);
+			}
+
+			long nbrOfFingerprints = submissionFingerPrints.size();
+			wholeAssFingerprintsNbr += nbrOfFingerprints; 
+
+		}
+
+		logger.debug("Assignment fingerprints: {}", wholeAssFingerprintsNbr);
+
+		for (Submission s : submissions) {
+			computePossibleRelatedDocuments(s, invertedIndexesOfAssignmentFingerPrints);
+		}
+
+
+    HashSet<Pair> processedPairs = new HashSet<Pair>();
+		for (int i = 0; i < noOfSub; i++) {
+			s1 = submissions.get(i);
+			if (s1.isSkeletonCode()) {
+				continue;
+			}
+			for (int j = 0; j < noOfSub; j++) {
+				s2 = submissions.get(j);
+				if (s2.getID().equals(s1.getID()) || s2.isSkeletonCode()) {
+					continue;
+				}
+
+				if (!s1.getPossibleRelatedDocuments().contains(s2.getID())) {
+					continue;
+				}
+
+				Pair pair = new Pair(i, j);
+				if (processedPairs.contains(pair)) {
+					continue;
+				}
+
+				logger.info("Start comparing submissions: {} vs {}", s1.getID(), s2.getID());
+				s1Tokens = s1.getCodeTokens();
+				s2Tokens = s2.getCodeTokens();
+				if (s1Tokens.size() < s2Tokens.size()) {
+					result = compareSubmissions(s1, s2, skeleton, nGramSize,
+							minMatch);
+					computeSims(s1Tokens, s2Tokens, result);
+				} else {
+					result = compareSubmissions(s2, s1, skeleton, nGramSize,
+							minMatch);
+					computeSims(s2Tokens, s1Tokens, result);
+				}
+
+				results.add(result);
+
+				unmarkTokens(s1Tokens, s2Tokens, bTokens);
+				processedPairs.add(pair);
+
+
+			}
+		}
+
+		return results;
+	}	
+
+	private void computePossibleRelatedDocuments(Submission s, HashMap<BigInteger, ArrayList<MatchingDocument>> invertedIndexesOfAssignmentFingerPrints) {
+		ArrayList<FingerPrint> currentSubmissionFingerPrints = s.getSubmissionFingerPrints();
+
+		// Each entry is: key=submissionId and value=the list of fingerprints that s and the submissionId share. 
+		HashMap<String, HashSet<FingerPrint>> matchingFingerPrintsMap = new HashMap<String, HashSet<FingerPrint>>();
+
+		for (FingerPrint fingerPrint : currentSubmissionFingerPrints) {
+			BigInteger hash = fingerPrint.getHash();
+
+			// Each entry is: key=hash and value=the list of documents that contain this hash.
+			ArrayList<MatchingDocument> relatedDocuments = invertedIndexesOfAssignmentFingerPrints.get(hash);
+			if (relatedDocuments != null) {
+				for (MatchingDocument document : relatedDocuments) {
+					String documentId = document.getSubmissionId();
+					
+					HashSet<FingerPrint> matchingFingerPrints = new HashSet<FingerPrint>();					
+					if (matchingFingerPrintsMap.containsKey(documentId)) {
+						matchingFingerPrints = matchingFingerPrintsMap.get(documentId);
+					}
+
+					if (!matchingFingerPrints.contains(fingerPrint)) {
+						matchingFingerPrints.add(fingerPrint);
+					}
+
+					if (!matchingFingerPrintsMap.containsKey(documentId)) {
+						matchingFingerPrintsMap.put(documentId, matchingFingerPrints);
+					}
+
+				} 
+
+
+			} else {
+				logger.debug("Submission {} has fingerprint {} not found in the universal set of fingerprints", s.getID(), fingerPrint.toString());
+			}
+
+		}
+
+		int sizeThreshold = (int) Math.floor(currentSubmissionFingerPrints.size() * 0.6);
+		for (String submissionId : matchingFingerPrintsMap.keySet()) {
+			HashSet<FingerPrint> matchingFingerPrints = matchingFingerPrintsMap.get(submissionId);
+			
+			logger.debug("Current sub: {}, the other sub: {}, current sub size: {}, match size: {}, size threshold: {}", s.getID(), submissionId, currentSubmissionFingerPrints.size(), matchingFingerPrints.size(), sizeThreshold);
+
+			if (matchingFingerPrints.size() >= sizeThreshold) {
+				s.getPossibleRelatedDocuments().add(submissionId);
+			}
+		}
+
+	} 
+
 	private void unmarkTokens(TokenList s1Tokens, TokenList s2Tokens,
 			TokenList bTokens) {
 		s1Tokens.unmarkAll();
@@ -116,6 +296,83 @@ public final class SimComparer {
 
 		return reply;
 	}
+
+	private ArrayList<FingerPrint> computeDocumentFingerPrints (Submission s, int windowSize) {
+		logger.debug("Compute fingerprints of submission {}:", s.getID());
+
+		NGramList nGramList = s.getNGramList();
+		ArrayList<FingerPrint> documentFingerprints = new ArrayList<FingerPrint>();
+
+		
+
+		try {
+			NGram[] firstNGrams = new NGram[windowSize];
+			for(int i = 0; i < firstNGrams.length; i++) {
+				firstNGrams[i] = nGramList.get(i);
+			}
+			FingerPrint lastMinGram = minGram(firstNGrams, 0);
+			BigInteger lastMinHash = lastMinGram.getHash();
+			int lastSelectedPosition = 0 + lastMinGram.getIndexWithinWindow();
+
+			documentFingerprints.add(lastMinGram);
+			for (int window = 1; window < nGramList.size()- windowSize; window++) {
+			
+				NGram currentGram = nGramList.get(window + windowSize-1);
+				BigInteger hashOfTheCurrentGram = currentGram.nGramHash();
+				int currentPosition = window + windowSize-1;
+
+				if (hashOfTheCurrentGram.compareTo(lastMinHash) <= 0 && (currentPosition - lastSelectedPosition) < windowSize) {
+					lastMinHash = hashOfTheCurrentGram;
+					lastSelectedPosition = currentPosition;
+					documentFingerprints.add(new FingerPrint(hashOfTheCurrentGram, currentGram, window, windowSize-1));
+				} else if (hashOfTheCurrentGram.compareTo(lastMinHash) > 0 && (currentPosition - lastSelectedPosition) < windowSize) {
+					// skip
+				} else {
+					NGram[] currentNGrams = new NGram[windowSize];
+					for (int i=window; i <= window+windowSize-1; i++) {
+						currentNGrams[i-window] = nGramList.get(i);
+					}
+					FingerPrint fingerPrint = minGram(currentNGrams, window);
+
+					lastMinHash = fingerPrint.getHash();
+					lastSelectedPosition = window + fingerPrint.getIndexWithinWindow();
+					documentFingerprints.add(fingerPrint);
+				}
+				
+			}
+
+			// for (FingerPrint fingerPrint : documentFingerprints) {
+			// 	logger.debug("Fingerprint: {}", fingerPrint.toString());
+			// }
+
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return documentFingerprints;
+
+	}	
+
+
+	private FingerPrint minGram(NGram[] arrayOfNGrams, int window) throws NoSuchAlgorithmException {
+		BigInteger[] hashes = new BigInteger[arrayOfNGrams.length];
+		for (int i = 0; i < hashes.length; i++) {
+			hashes[i] = arrayOfNGrams[i].nGramHash();
+		}
+
+		int lastIdx = arrayOfNGrams.length-1;
+		FingerPrint minGram = new FingerPrint(hashes[lastIdx], arrayOfNGrams[lastIdx], window, lastIdx);
+		for (int j = hashes.length-1; j>=0; j--) {
+			BigInteger currentHash = hashes[j];
+			if (currentHash.compareTo(minGram.getHash()) < 0) {
+				minGram.setHash(currentHash);
+				minGram.setnGram(arrayOfNGrams[j]);
+				minGram.setIndexWithinWindow(j);
+			}
+		}
+		return minGram;
+	}
+	
 
 	private Result compareSubmissions(Submission s1, Submission s2,
 			Submission skeleton, int nGramSize, int minMatch) {
@@ -223,6 +480,8 @@ public final class SimComparer {
 			}
 
 			s1NGram = s1NGrams.get(s1StartIndex);
+			// logger.debug("The n-gram is: {} ", s1NGram.getTokenList().toString());
+			
 			if (s2NGramIndices.containsKey(s1NGram)) {
 				s2Indices = s2NGramIndices.get(s1NGram);
 				s2Matches = new HashMap<Integer, Integer>();
@@ -245,9 +504,11 @@ public final class SimComparer {
 							&& !s1Tokens.isTokenMarked(s1EndIndex)
 							&& !s2Tokens.isTokenMarked(s2EndIndex)) {
 						if (s1Token.isEndOfStatement() == TokenSSID.EndOfStatementType.COUNTABLE) {
+							// logger.debug("s1 token end of Countable: {} ", s1Token.toString());	
 							curCSMapped++;
 							s1EndOfStmtIndex = s1EndIndex;
 						} else if (s1Token.isEndOfStatement() == TokenSSID.EndOfStatementType.NON_COUNTABLE) {
+							// logger.debug("s1 token end of Non-Countable: {} ", s1Token.toString());	
 							curNCSMapped++;
 							s1EndOfStmtIndex = s1EndIndex;
 						}
@@ -348,12 +609,12 @@ public final class SimComparer {
 				gst(s1RegionNGrams, bNGramIndices, null, s1RegionTokens,
 						bTokens, null, minMatch, bMappings);
 				mappedCountableStmt = m.getMappedCountableStmtCount();
-				logger.debug("Mapping is: {} ", m.toString());
+				// logger.debug("Mapping is: {} ", m.toString());
 
 				List<SkeletonMapping> skeletonMappings = new ArrayList<>();
 				for (Mapping b : bMappings) {
 					mappedCountableStmt -= b.getMappedCountableStmtCount();
-					logger.debug("Skeleton mapping is: {} ", b.toString());					
+					// logger.debug("Skeleton mapping is: {} ", b.toString());					
 
 					int startIdxOfSkeletonInS1 = b.getStartIndex1() + m.getStartIndex1();
 					int endIdxOfSkeletonInS1 = b.getEndIndex1() + m.getStartIndex1();
