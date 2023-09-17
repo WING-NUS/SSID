@@ -1,7 +1,7 @@
 ---
 name: "♻️ Refactor"
 about: Something that needs improving while not changing functionality as documented
-  [here] (https://www.ssw.com.au/rules/technical-debt/) If this doesn't look right,
+  here (https://www.ssw.com.au/rules/technical-debt/). If this doesn't look right,
   choose a different type.
 title: "♻️"
 labels: 'Type: Refactor'

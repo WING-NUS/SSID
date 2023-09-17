@@ -1,6 +1,6 @@
 ---
 name: "✨ New Feature"
-about: Suggest an idea. If this doesn't look right, choose a different type.  @huyuxin0429
+about: Suggest an idea. If this doesn't look right, choose a different type.
 title: "✨"
 labels: 'Type: Feature'
 assignees: ''

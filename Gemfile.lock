@@ -160,6 +160,9 @@ GEM
       actionpack (>= 4.2)
       omniauth (~> 2.0)
     orm_adapter (0.5.0)
+    passenger (6.0.18)
+      rack
+      rake (>= 0.8.1)
     popper_js (2.9.3)
     public_suffix (4.0.6)
     puma (4.3.12)
@@ -278,6 +281,7 @@ DEPENDENCIES
   omniauth
   omniauth-google-oauth2
   omniauth-rails_csrf_protection
+  passenger
   puma (~> 4.3)
   rails (~> 6.0.3, >= 6.0.3.2)
   rubyzip (~> 2.3)
@@ -296,4 +300,4 @@ RUBY VERSION
    ruby 2.6.6p146
 
 BUNDLED WITH
-   2.2.33
+   2.4.18
