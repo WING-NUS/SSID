@@ -15,6 +15,8 @@
 # See https://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 
 require 'capybara/rspec'
+require 'simplecov'
+require 'simplecov-lcov'
 
 BASE_URL = "http://localhost:3000/"
 
@@ -102,3 +104,4 @@ RSpec.configure do |config|
   Kernel.srand config.seed
 =end
 end
+

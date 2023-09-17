@@ -69,19 +69,31 @@ group :development, :test do
   gem 'selenium-webdriver'
   gem 'rspec-rails', '~> 4.0.2'
   gem 'webdrivers'
+
+  # Linter for Ruby code
+  gem 'pronto'
+  gem 'pronto-eslint', require: false
+  gem 'pronto-rubocop', require: false
+
+  gem 'prettier_print'
+  gem 'rubocop-changes'
+  gem 'rubocop-rails', require: false
+  gem 'rubocop-rake', require: false
+  gem 'rubocop-rspec', require: false
+  # Security scanners
+  gem 'brakeman'
+  gem 'bundle-audit'
+  # Testing
+  gem 'rspec-rails', '~> 4.0.2'
+
+  # Coverage
+  gem 'simplecov',      require: false
+  gem 'simplecov-lcov', require: false
 end
 
 group :development do
   # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
   gem 'web-console', '>= 3.3.0'
-end
-
-group :test do
-  # Adds support for Capybara system testing and selenium driver
-  gem 'capybara', '>= 2.15'
-  gem 'selenium-webdriver'
-  # Easy installation and use of web drivers to run system tests with browsers
-  gem 'webdrivers'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
