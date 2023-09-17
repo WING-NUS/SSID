@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_06_27_085255) do
+ActiveRecord::Schema.define(version: 2023_09_16_144010) do
 
   create_table "announcements", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
     t.string "title"
@@ -20,6 +20,14 @@ ActiveRecord::Schema.define(version: 2023_06_27_085255) do
     t.integer "announceable_category"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "api_keys", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
+    t.bigint "user_id"
+    t.string "value"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_api_keys_on_user_id"
   end
 
   create_table "assignments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
@@ -172,7 +180,7 @@ ActiveRecord::Schema.define(version: 2023_06_27_085255) do
   create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
     t.string "name"
     t.string "full_name"
-    t.string "encrypted_password", default: "$2a$12$dSTo0bmRPVIw5OCjObpKEenFzQ5o5QpRwhWsIxgCQquxnWvRD4T7G"
+    t.string "encrypted_password", default: "$2a$12$Eiq.36Z1.F46sSyseN3Bee6fQpI9BqKARkPP9Y0NgcP.qN2rq4W42"
     t.boolean "is_admin", default: false, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
