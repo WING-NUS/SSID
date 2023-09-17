@@ -153,7 +153,7 @@ GEM
     multi_json (1.15.0)
     multi_xml (0.6.0)
     mysql2 (0.5.3)
-    nio4r (2.5.8)
+    nio4r (2.5.9)
     nokogiri (1.13.10)
       mini_portile2 (~> 2.8.0)
       racc (~> 1.4)
@@ -210,7 +210,7 @@ GEM
       pronto (~> 0.11.0)
       rubocop (>= 0.63.1, < 2.0)
     public_suffix (4.0.6)
-    puma (4.3.12)
+    puma (5.6.7)
       nio4r (~> 2.0)
     racc (1.6.2)
     rack (2.2.6.4)
@@ -394,7 +394,7 @@ DEPENDENCIES
   pronto
   pronto-eslint
   pronto-rubocop
-  puma (~> 4.3)
+  puma (~> 5.6)
   rails (~> 6.0.3, >= 6.0.3.2)
   rspec-rails (~> 4.0.2)
   rubocop-changes
