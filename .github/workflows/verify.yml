@@ -96,7 +96,7 @@ jobs:
           bundle exec rails db:schema:load
 
       - name: Install chrome
-        run: sudo apt-fast install -y google-chrome
+        uses: browser-actions/setup-chrome@v1
 
       - name: Setup chromedriver
         uses: nanasess/setup-chromedriver@v2
