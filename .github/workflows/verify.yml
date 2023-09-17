@@ -94,6 +94,9 @@ jobs:
           mysql -e 'CREATE DATABASE ssid_test;' -u root -proot
           bundle exec rails db:create
           bundle exec rails db:schema:load
+      - name: Setup chromedriver
+        uses: nanasess/setup-chromedriver@v2
+        
       - name: Run tests
         run: bundle exec rspec
 
