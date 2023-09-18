@@ -126,10 +126,9 @@ SSID::Application.routes.draw do
       # Assignments routes
       resources :assignments, only: [] do
         member do
-          get 'submission_similarities', to: 'submissionSimilarities#get_similarities_for_assignment'
+          get 'submission_similarities', to: 'submission_similarities#get_similarities_for_assignment'
         end
       end
     end
   end
-
 end
