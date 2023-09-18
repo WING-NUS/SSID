@@ -19,7 +19,7 @@ class Api::V1::SubmissionSimilaritiesController < ApplicationController
   end
 
   def set_course_and_assignment
-    @assignment = Assignment.find(params[:assignment_id])
+    @assignment = Assignment.find(params[:id])
     if @assignment.nil?
       render json: {'Status': 'Assignment not found'}, status: :not_found
       return
