@@ -52,6 +52,6 @@ class Api::V1::SubmissionSimilaritiesController < ApplicationController
 
     def authorized_for_course?(user, course)
         user_course_membership = UserCourseMembership.find_by(user: user, course: course)
-        return user_course_membership.present?
+        user_course_membership.present?
     end
 end
