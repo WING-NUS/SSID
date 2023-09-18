@@ -36,13 +36,10 @@ class Api::V1::SubmissionSimilaritiesController < ApplicationController
     
         if assignment.nil?
             render json: {"Status": "Assignment not found"}, status: :not_found
-            return
         end
     
         # Fetch all submission similarities associated with this assignment
         submission_similarities = assignment.submission_similarities
-    
-        # Assuming you want to return the similarities as a JSON response
         render json: submission_similarities
     end
     
