@@ -11,7 +11,7 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema.define(version: 2023_09_16_144010) do
-  
+
   create_table "announcements", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
     t.string "title"
     t.text "html_content", null: false
@@ -22,13 +22,13 @@ ActiveRecord::Schema.define(version: 2023_09_16_144010) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-+  create_table "api_keys", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
-+    t.bigint "user_id"
-+    t.string "value"
-+    t.datetime "created_at", precision: 6, null: false
-+    t.datetime "updated_at", precision: 6, null: false
-+    t.index ["user_id"], name: "index_api_keys_on_user_id"
-+  end
+  create_table "api_keys", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
+    t.bigint "user_id"
+    t.string "value"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_api_keys_on_user_id"
+  end
 
   create_table "assignments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
     t.string "title", null: false
@@ -180,7 +180,7 @@ ActiveRecord::Schema.define(version: 2023_09_16_144010) do
   create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
     t.string "name"
     t.string "full_name"
-    t.string "encrypted_password", default: "$2a$12$Eiq.36Z1.F46sSyseN3Bee6fQpI9BqKARkPP9Y0NgcP.qN2rq4W42"
+    t.string "encrypted_password", default: "$2a$12$58O3OP.RnDo7npDsZJAjWuqf.m3SIQ17.BDoNa0W0FsmnwpOu1gIe"
     t.boolean "is_admin", default: false, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -200,4 +200,5 @@ ActiveRecord::Schema.define(version: 2023_09_16_144010) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "api_keys", "users"
 end
