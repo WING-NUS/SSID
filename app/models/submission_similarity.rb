@@ -40,10 +40,6 @@ class SubmissionSimilarity < ActiveRecord::Base
     0.5 * (self.similarity_1_to_2 + self.similarity_2_to_1)
   end
 
-  def maximum_similarity
-    [self.similarity_1_to_2, self.similarity_2_to_1].max()
-  end
-
   def student1
     self.submission1.student
   end
