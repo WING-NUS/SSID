@@ -5,7 +5,7 @@ class Api::V1::SubmissionSimilaritiesController < ApplicationController
         api_key = ApiKey.find_by(value: request.headers["X-API-KEY"])
         
         if api_key
-            if authorized_for_course?(api_key.user, @requested_course) # Assuming you set @requested_course somewhere
+            if authorized_for_course?(api_key.user, @requested_course) 
                 render json: {"Status": "OK"}, status: :ok
             else
                 render json: {"Status": "Unauthorized access"}, status: :unauthorized
@@ -19,7 +19,7 @@ class Api::V1::SubmissionSimilaritiesController < ApplicationController
         api_key = ApiKey.find_by(value: request.headers["X-API-KEY"])
         
         if api_key
-            if authorized_for_course?(api_key.user, @requested_course) # Assuming you set @requested_course somewhere
+            if authorized_for_course?(api_key.user, @requested_course) 
                 render json: {"Status": "OK"}, status: :ok
             else
                 render json: {"Status": "Unauthorized access"}, status: :unauthorized
