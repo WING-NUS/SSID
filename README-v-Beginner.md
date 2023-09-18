@@ -4,7 +4,7 @@
 
 **Guide in One Paragraph**: This is an installation guide for those who have limited knowledge of Linux. This guide assumes only limited fluency with `bash`,  `tmux`, and `conda`.  This guide wishes to save your time by telling you the trick in critical steps. 
 
-Last update: 18th March 2021 (pre-dockerized configuration)
+Last update: 18th September 2023 (pre-dockerized configuration)
 
 ## Package Installation
 
@@ -39,6 +39,16 @@ https://www.digitalocean.com/community/tutorials/how-to-install-java-with-apt-on
 
 ### Ruby v2.6.6. ; bundler v2.1.4
 
+(Newer Update): If you are using Ubuntu 22.04 (LTS), you may benefit from following the steps specified in the following link:
+
+```
+https://www.digitalocean.com/community/tutorials/how-to-install-ruby-on-rails-with-rbenv-on-ubuntu-22-04
+```
+
+Complete the installation up to the following step: `echo "gem: --no-document" > ~/.gemrc`, then proceed to the "installing bundler" section.
+
+(Older Update: Ubuntu 18.04)
+
 I had a hard time installing `Ruby v2.6.6`., which was the current version at the time of writing this installation guide. 
 
 I forgot my specific steps, but these tips are useful:
@@ -72,6 +82,8 @@ A successful installation may follow these steps:
 ```
 https://rubygems.org/gems/bundler/versions/2.1.4
 ```
+
+### Installing Bundler
 
 Make sure to follow these commands:
 
@@ -128,8 +140,6 @@ Please `mysql -u root -p` to try to login into `root` to see if the password is 
 
 ## TroubleShooting
 
-###
-
 ### libmysqlclient.so error
 
 This error occurs when doing `bundle install`, specifically with installing the `rugged` gem.
@@ -153,6 +163,35 @@ sudo apt-get install libmysqlclient-dev
 ```
 
 Then re-run `bundle install`. This should do the trick.
+
+
+### MySQL: Error 1045
+
+You might encounter the following error when using MySQL:
+
+```
+ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: YES)
+```
+
+In this case, most likely you have entered a wrong password that is different from what you set during the MySQL installation for the root user.
+
+If you have forgotten the password, you may follow the instruction below:
+
+### MySQL: Update Password
+
+You can refer to the following instruction to change the root password:
+
+```
+https://docs.rackspace.com/docs/reset-a-mysql-root-password
+```
+
+Alternatively, if everything else fails, you can remove MySQL DB and install it again, should you don't have any crucial data that is stored in MySQL (noting that you have recently installed...)
+
+You can refer to the following guide:
+
+```
+https://linuxgenie.net/uninstall-mysql-from-ubuntu/
+```
 
 ## Final Words
 
