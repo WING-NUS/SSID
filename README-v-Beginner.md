@@ -17,6 +17,16 @@ Make sure to install all packages in the version as **exactly** specified in the
 
 Yisong's config: a standard Ubuntu 18.04 version Linux.
 
+## WSL Support
+
+For Windows Users who are not planning to do a dual-boot on their computer, WSL works just as well for most of the SSID operations. You can refer to the following link on how to setup Ubuntu with WSL on your computer.
+
+https://learn.microsoft.com/en-us/windows/wsl/install
+
+Our recommended method is to activate WSL and then install an Ubuntu distribution from the Microsoft Store. Current SSID supports Ubuntu 22.04 (LTS).
+
+For those who are using WSL, you might find that some of the commands provided in the below tutorials are rather Linux specific (e.g. `sudo systemctl start <SERVICE_NAME>`). On our case, if you are using WSL, you might find that the syntax might be different (e.g. `sudo service <SERVICE_NAME> start`). Do adjust accordingly.
+
 ### Java 11
 
 No difficulty installing `Java 11`. 
@@ -90,6 +100,13 @@ The last package actually takes a significant time to properly install and confi
 https://phoenixnap.com/kb/how-to-install-mysql-on-ubuntu-18-04
 ```
 
+Alternatively, you may also want to refer to the following instruction:
+
+https://www.digitalocean.com/community/tutorials/how-to-install-mysql-on-ubuntu-22-04
+
+This will provide a better instruction for Ubuntu 22.04 (LTS) users.
+
+
 Step 2 in this tutorial is very critical for Linux users. 
 
 🎉🎉🎉 Congratulations! You have successfully installed all packages!
@@ -108,6 +125,34 @@ The `root` MySQL user password is different from what we key in the SSID config 
 Please `mysql -u root -p` to try to login into `root` to see if the password is correct. 
 
 🎉🎉🎉 All done!
+
+## TroubleShooting
+
+###
+
+### libmysqlclient.so error
+
+This error occurs when doing `bundle install`, specifically with installing the `rugged` gem.
+
+Exact Error Message:
+
+```
+LoadError: libmysqlclient.so.21: cannot open shared object file: No such file or directory - /root/.rbenv/versions/2.6.6/lib/ruby/gems/2.6.0/gems/mysql2-0.5.3/lib/mysql2/mysql2.so
+/mnt/c/Users/Jason C/Code/SSID/config/application.rb:7:in `<top (required)>'
+/mnt/c/Users/Jason C/Code/SSID/rakefile:4:in `require_relative'
+/mnt/c/Users/Jason C/Code/SSID/rakefile:4:in `<top (required)>'
+(See full trace by running task with --trace)
+```
+
+Suggested solution:
+
+Install the `libmysqlclient.so` MySQL Client Library by running the following command:
+
+```
+sudo apt-get install libmysqlclient-dev
+```
+
+Then re-run `bundle install`. This should do the trick.
 
 ## Final Words
 
