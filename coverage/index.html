@@ -14,7 +14,7 @@
       <img src="./assets/0.12.3/loading.gif" alt="loading"/>
     </div>
     <div id="wrapper" class="hide">
-      <div class="timestamp">Generated <abbr class="timeago" title="2023-08-27T17:20:15+08:00">2023-08-27T17:20:15+08:00</abbr></div>
+      <div class="timestamp">Generated <abbr class="timeago" title="2023-09-19T21:10:09+08:00">2023-09-19T21:10:09+08:00</abbr></div>
       <ul class="group_tabs"></ul>
 
       <div id="content">
@@ -23,14 +23,14 @@
     <span class="group_name">All Files</span>
     (<span class="covered_percent">
       <span class="red">
-  0.13%
+  0.22%
 </span>
 
      </span>
      covered at
      <span class="covered_strength">
        <span class="red">
-         0.0
+         0.01
        </span>
     </span> hits/line
     )
@@ -43,11 +43,11 @@
   </div>
 
   <div class="t-line-summary">
-    <b>2295</b> relevant lines,
-    <span class="green"><b>3</b> lines covered</span> and
-    <span class="red"><b>2292</b> lines missed. </span>
+    <b>2298</b> relevant lines,
+    <span class="green"><b>5</b> lines covered</span> and
+    <span class="red"><b>2293</b> lines missed. </span>
     (<span class="red">
-  0.13%
+  0.22%
 </span>
 )
   </div>
@@ -556,12 +556,12 @@
         
           <tr class="t-file">
             <td class="strong t-file__name"><a href="#f2bd5a26c04304c54a627616c271ec44736466fb" class="src_link" title="lib/string_calculator.rb">lib/string_calculator.rb</a></td>
-            <td class="green strong cell--number t-file__coverage">100.00 %</td>
+            <td class="yellow strong cell--number t-file__coverage">83.33 %</td>
+            <td class="cell--number">11</td>
+            <td class="cell--number">6</td>
             <td class="cell--number">5</td>
-            <td class="cell--number">3</td>
-            <td class="cell--number">3</td>
-            <td class="cell--number">0</td>
-            <td class="cell--number">1.00</td>
+            <td class="cell--number">1</td>
+            <td class="cell--number">2.67</td>
             
           </tr>
         
@@ -1409,14 +1409,14 @@
     <span class="group_name">Libraries</span>
     (<span class="covered_percent">
       <span class="red">
-  1.38%
+  2.27%
 </span>
 
      </span>
      covered at
      <span class="covered_strength">
        <span class="red">
-         0.01
+         0.07
        </span>
     </span> hits/line
     )
@@ -1429,11 +1429,11 @@
   </div>
 
   <div class="t-line-summary">
-    <b>217</b> relevant lines,
-    <span class="green"><b>3</b> lines covered</span> and
-    <span class="red"><b>214</b> lines missed. </span>
+    <b>220</b> relevant lines,
+    <span class="green"><b>5</b> lines covered</span> and
+    <span class="red"><b>215</b> lines missed. </span>
     (<span class="red">
-  1.38%
+  2.27%
 </span>
 )
   </div>
@@ -1458,12 +1458,12 @@
         
           <tr class="t-file">
             <td class="strong t-file__name"><a href="#f2bd5a26c04304c54a627616c271ec44736466fb" class="src_link" title="lib/string_calculator.rb">lib/string_calculator.rb</a></td>
-            <td class="green strong cell--number t-file__coverage">100.00 %</td>
+            <td class="yellow strong cell--number t-file__coverage">83.33 %</td>
+            <td class="cell--number">11</td>
+            <td class="cell--number">6</td>
             <td class="cell--number">5</td>
-            <td class="cell--number">3</td>
-            <td class="cell--number">3</td>
-            <td class="cell--number">0</td>
-            <td class="cell--number">1.00</td>
+            <td class="cell--number">1</td>
+            <td class="cell--number">2.67</td>
             
           </tr>
         
@@ -33566,8 +33566,8 @@
   <div class="header">
     <h3>lib/string_calculator.rb</h3>
     <h4>
-      <span class="green">
-  100.0%
+      <span class="yellow">
+  83.33%
 </span>
 
       lines covered
@@ -33576,9 +33576,9 @@
     
 
     <div class="t-line-summary">
-      <b>3</b> relevant lines.
-      <span class="green"><b>3</b> lines covered</span> and
-      <span class="red"><b>0</b> lines missed.</span>
+      <b>6</b> relevant lines.
+      <span class="green"><b>5</b> lines covered</span> and
+      <span class="red"><b>1</b> lines missed.</span>
     </div>
 
     
@@ -33589,13 +33589,13 @@
     <ol>
       
         <div>
-          <li class="covered" data-hits="1" data-linenumber="1">
-            <span class="hits">1</span>
+          <li class="never" data-hits="" data-linenumber="1">
+            
             
 
             
 
-            <code class="ruby">class StringCalculator</code>
+            <code class="ruby"># lib/string_calculator.rb</code>
           </li>
         </div>
       
@@ -33606,7 +33606,7 @@
 
             
 
-            <code class="ruby">    def self.add(input)</code>
+            <code class="ruby">class StringCalculator</code>
           </li>
         </div>
       
@@ -33617,12 +33617,78 @@
 
             
 
-            <code class="ruby">        0</code>
+            <code class="ruby">    def self.add(input)</code>
           </li>
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="4">
+          <li class="covered" data-hits="2" data-linenumber="4">
+            <span class="hits">2</span>
+            
+
+            
+
+            <code class="ruby">        if input.empty?</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="missed" data-hits="0" data-linenumber="5">
+            
+            
+
+            
+
+            <code class="ruby">          0</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="6">
+            
+            
+
+            
+
+            <code class="ruby">        else</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="6" data-linenumber="7">
+            <span class="hits">6</span>
+            
+
+            
+
+            <code class="ruby">          numbers = input.split(&quot;,&quot;).map { |num| num.to_i }</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="6" data-linenumber="8">
+            <span class="hits">6</span>
+            
+
+            
+
+            <code class="ruby">          numbers.inject(0) { |sum, number| sum + number }</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="9">
+            
+            
+
+            
+
+            <code class="ruby">        end</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="10">
             
             
 
@@ -33633,7 +33699,7 @@
         </div>
       
         <div>
-          <li class="never" data-hits="" data-linenumber="5">
+          <li class="never" data-hits="" data-linenumber="11">
             
             
 
