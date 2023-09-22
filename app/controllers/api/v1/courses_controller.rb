@@ -1,19 +1,26 @@
-class Api::V1::CoursesController < ApplicationController
-    skip_before_action :authenticate_user!
+# frozen_string_literal: true
 
-    def sample_get
-        if ApiKey.find_by(value: request.headers["X-API-KEY"])
-            render json: {"Status": "OK"}, status: :ok
+module Api
+  module V1
+    # Sample get and post methods
+    class CoursesController < ApplicationController
+      skip_before_action :authenticate_user!
+
+      def sample_get
+        if ApiKey.find_by(value: request.headers['X-API-KEY'])
+          render json: { Status: 'OK' }, status: :ok
         else
-            render json: {"Status": "Can't find API key"}, status: :ok
+          render json: { Status: "Can't find API key" }, status: :ok
         end
-    end
+      end
 
-    def sample_post
-        if ApiKey.find_by(value: request.headers["X-API-KEY"])
-            render json: {"Status": "OK"}, status: :ok
+      def sample_post
+        if ApiKey.find_by(value: request.headers['X-API-KEY'])
+          render json: { Status: 'OK' }, status: :ok
         else
-            render json: {"Status": "Can't find API key"}, status: :ok
-        end 
+          render json: { Status: "Can't find API key" }, status: :ok
+        end
+      end
     end
+  end
 end
