@@ -122,13 +122,12 @@ SSID::Application.routes.draw do
     namespace :v1 do
       get 'sample_get', to: 'courses#sample_get'
       post 'sample_post', to: 'courses#sample_post'
-
+  
       # Assignments routes
       resources :assignments, only: [] do
-        member do
-          get 'submission_similarities', to: 'submission_similarities#get_similarities_for_assignment'
-        end
+        resources :submission_similarities, only: [:index], module: :assignments
       end
     end
   end
+  
 end
