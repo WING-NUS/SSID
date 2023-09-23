@@ -1,0 +1,195 @@
+---
+layout: page
+title: SSID API
+---
+
+# SSID API Phase 1
+
+## Table of Contents
+
+- [Introduction](#introduction)
+- [Authentication](#authentication)
+- [Functionality](#functionality)
+
+## Introduction
+
+SSID API allows you to programmatically use a subset of SSID's functionalities. With SSID API, you can create assignments and submit assignment files programmatically, retrieve plagiarism detection results in machine-readable format, and integrate SSID into your applications. This document describes the usage of SSID API.
+
+## Authentication
+
+- **Creating API keys**: Please contact SSID team to get your developer API key.
+- **Adding API key to your request**: You must include your API key with every request in the parameter `X-API-KEY` in your request header.
+
+## Functionality
+
+### 1. Create an assignment
+
+**URL**: `/api/v1/courses/{course_id}/assignment/`
+
+**Method**: `POST`
+
+**Authentication required**: YES
+
+**Description**: Creates a new assignment for SSID to process. The web equivalence is going to `/courses/{course_id}/assignments/new` and creating a new assignment.
+
+The content type of the request should be `multipart/form-data`. The first part to be sent is a JSON for parameters, followed by the zip file for student submissions, followed by a maximum of 5 reference zip files. In the body, any boundary delimiter for different parts to be sent is acceptable.
+
+**JSON Parameters**:
+
+- `title (Required) string`: The title of the assignment.
+- `language (Required) string`: Programming language of submission files. Currently supported: `"python3", "c", "cpp", "javascript", "r", "ocaml", "matlab", "scala"`. The parameter value must be in lowercase and match exactly one of the options.
+- `useFingerprint (Optional) boolean`: If `true`, enable the optimization of preprocessing batch of submissions using winnowing fingerprinting algorithm before pairwise comparisons. If not specified, defaults to `false`.
+- `minimumMatchLength (Optional) number`: The least number of contiguous identical statements required to flag a match. If not specified, defaults to 2.
+- `sizeOfNGram (Optional) number`: Specifies size of n-gram to be used in SSID. An n-gram is a contiguous subsequence of n tokens of a given sequence. If not specified, defaults to 5.
+- `threshold (Optional) number`: A number between 0 and 1. If specified, returns only submission similarities whose similarity percentage is between `threshold` and 1 inclusive. Otherwise, returns all submission similarities. **[Note: This function is not yet available in SSID, so we need to first build it for SSID, then allow it to be used via API]**.
+- `page (Optional) number`: If specified, returns submission similarities in such page when sorted by highest maximum similarity percentage. Otherwise, returns all submission similarities.
+- `limit (Optional) number`: If specified, returns such number of submission similarities with highest maximum similarity percentage. Otherwise, returns all submission similarities. **[Note: Currently SSID stores and displays all submission similarities on its web interface. The function to take top N submissions is not yet available in SSID, so we need to first build it for SSID, then allow it to be used via API]**.
+- `discardAfter (Optional) number`: If specified, discard files after such duration in seconds. **[Note: Currently SSID stores all data persistently and data is manually cleared every semester. This parameter accommodates the future auto-discard functionality. This function is not yet available in SSID, so we need to first build it for SSID, then allow it to be used via API]**.
+- `studentSubmissions (Required) zip`: zip file of student submissions in SSID’s standard format. **[Note: The zip file should be in SSID's standard format (potentially includes skeleton codes). For more details, please refer to SSID's User's Guide. Removed file size limit as there might be users with bigger file sizes.]**.
+- `mappingFile (Optional) csv`: csv map file that allows you to map between a directory name (in the uploaded zip file) and the student roster that you might be using for your modules. For more details, see SSID's User Guide.
+- `references zip`: zip files for past semesters to be used as reference. Maximum of 5 reference zips allowed. **[Note: This function is not yet available in SSID, so we need to first build it for SSID, then allow it to be used via API. To be built in Phase 2]**.
+
+**Request Example**:
+| Header |
+| --- |
+
+```
+{
+ "Content-Type": "multipart/form-data; boundary=\"boundary\"",
+ "X-Api-Key": "YOUR_API_KEY"
+}
+```
+
+| Body |
+| ---- |
+
+```
+--boundary
+Content-Type: application/json
+
+{
+  "title": "Assignment",
+  "language": "java",
+  "useFingerprint": true,
+  "limit": 10,
+  "minimumMatchLength": 3
+}
+--boundary
+Content-Type: application/zip
+Content-Disposition: form-data; name="studentSubmissions"; filename="studentSubmissions.zip"
+
+<file content>
+--boundary
+Content-Type: text/csv
+Content-Disposition: form-data; name="mappingFile"; filename="mappingFile.csv"
+
+<file content>
+--boundary
+Content-Type: application/zip
+Content-Disposition: form-data; name="reference1"; filename="reference1.zip"
+
+<file content>
+--boundary
+Content-Type: application/zip
+Content-Disposition: form-data; name="reference2"; filename="reference2.zip"
+
+<file content>
+--boundary--
+```
+
+**Possible responses**:
+
+| Code | Status              | Return body                                                                                                                                                                                                                        |
+| ---- | ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 200  | Successful          | `{ "assignmentID": 1168 }`                                                                                                                                                                                                         |
+| 400  | Error               | `{ "error": "Value of {parameterName} is not valid. {state the constraint/ limit}" }`, `{ "error": "Missing required parameter {parameterName}" }`, or `{ "error": "Parameter {parameterName} is invalid or not yet supported." }` |
+| 401  | Unauthorized        | `{ "error": "Missing or invalid API key." }` or `{ "error": "Your API key is not authorized to access this resource." }`                                                                                                           |
+| 503  | Service Unavailable | `{ "error": "SSID is busy or under maintenance. Please try again later." }`                                                                                                                                                        |
+
+---
+
+### 2. View pairwise submissions comparison results
+
+**URL**: `/api/v1/assignments/{assignment_id}/submission_similarities/`
+
+**Method**: `GET`
+
+**Authentication required**: YES
+
+**Description**: Returns all submission similarities of an assignment. The web equivalence is going to `/assignments/{assignment_id}/submission_similarities/`.
+
+**JSON Parameters**:
+
+- **No param**. Pass in the desired assignment id in the URL.
+
+**Request Example**:
+| Header |
+| --- |
+
+```
+{
+  "Content-Type": "application/json",
+  "X-Api-Key": "YOUR_API_KEY"
+}
+```
+
+| Body |
+| ---- |
+
+```
+<empty>
+```
+
+**Possible responses**:
+
+| Code | Status              | Return body                                                                                                                                                                                                                                                                                                                                                                                            |
+| ---- | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 200  | Successful          | `{ "status": "empty" }` **[Note: This status, currently in SSID's web interface, is for when the user did not include a zip file when creating an assignment. To rectify this, the user must upload the file via the web interface. When submitting through API, the zip assignment file is compulsory.]**, `{ "status": "processing" }`, or `{ "status": "processed", "submissionSimilarities": [] }` |
+| 400  | Error               | `{ “error”: “Submission similarities requested does not exist." }`                                                                                                                                                                                                                                                                                                                                     |
+| 401  | Unauthorized        | `{ "error": "Missing or invalid API key." }` or `{ "error": "Your API key is not authorized to access this resource." }`                                                                                                                                                                                                                                                                               |
+| 503  | Service Unavailable | `{ "error": "SSID is busy or under maintenance. Please try again later." }`                                                                                                                                                                                                                                                                                                                            |
+
+---
+
+### 3. View details of flagged pairwise submissions comparison results
+
+**URL**: `/api/v1/assignments/{assignment_id}/submission_similarities/{submission_similarities_id}`
+
+**Method**: `GET`
+
+**Authentication required**: YES
+
+**Description**: Returns details of a pair of a flagged submissions. Please use SSID's web interface to view and mark students as suspicious or guilty. The web equivalence is going to `/assignments/{assignment_id}/submission_similarities/{submission_similarity_id}`.
+
+**JSON Parameters**:
+
+- **No param**. Pass in the desired assignment id and submission similarity id in the URL.
+
+**Request Example**:
+| Header |
+| --- |
+
+```
+{
+  "Content-Type": "application/json",
+  "X-Api-Key": "YOUR_API_KEY"
+}
+```
+
+| Body |
+| ---- |
+
+```
+<empty>
+```
+
+**Possible responses**:
+
+| Code | Status              | Return body                                                                                                              |
+| ---- | ------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| 200  | Successful          | `{ "maxSimilaryPercentage": …, "matches": [] }` **[Note: max similarity percentage is between 0 and 1]**                 |
+| 400  | Error               | `{ “error”: “Submission similarities requested does not exist." }`                                                       |
+| 401  | Unauthorized        | `{ "error": "Missing or invalid API key." }` or `{ "error": "Your API key is not authorized to access this resource." }` |
+| 503  | Service Unavailable | `{ "error": "SSID is busy or under maintenance. Please try again later." }`                                              |
+
+---
