@@ -10,6 +10,9 @@ title: SSID API
 - [Introduction](#introduction)
 - [Authentication](#authentication)
 - [Functionality](#functionality)
+    - [Create an assignment](#1-create-an-assignment)
+    - [View pairwise submissions comparison results](#2-view-pairwise-submissions-comparison-results)
+    - [View details of flagged pairwise submissions comparison results](#3-view-details-of-flagged-pairwise-submissions-comparison-results)
 
 ## Introduction
 
