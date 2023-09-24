@@ -63,6 +63,25 @@ gem 'bootsnap', '>= 1.4.2', require: false
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
+  # Linter for Ruby code
+  gem 'pronto'
+  gem 'pronto-eslint', require: false
+  gem 'pronto-rubocop', require: false
+
+  gem 'prettier_print'
+  gem 'rubocop-changes'
+  gem 'rubocop-rails', require: false
+  gem 'rubocop-rake', require: false
+  gem 'rubocop-rspec', require: false
+  # Security scanners
+  gem 'brakeman'
+  gem 'bundle-audit'
+  # Testing
+  gem 'rspec-rails', '~> 4.0.2'
+
+  # Coverage
+  gem 'simplecov',      require: false
+  gem 'simplecov-lcov', require: false
 end
 
 group :development do
@@ -85,3 +104,5 @@ gem "dotenv-rails"
 gem 'omniauth'
 gem 'omniauth-google-oauth2'
 gem "omniauth-rails_csrf_protection"
+
+gem 'passenger'
