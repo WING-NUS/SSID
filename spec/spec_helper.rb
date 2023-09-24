@@ -18,7 +18,9 @@ require 'capybara/rspec'
 require 'simplecov'
 require 'simplecov-lcov'
 
-BASE_URL = "http://localhost:3000/"
+Capybara.configure do |config|
+  config.app_host = "http://localhost:3000/"
+end
 
 RSpec.configure do |config|
   

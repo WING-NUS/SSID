@@ -6,7 +6,7 @@ describe "landing page", type: :feature do
   end
 
   it "click on Log In" do
-    visit BASE_URL 
+    visit '/' 
     click_button "Log In"
     expect(page).to have_content 'Remember me'
   end
@@ -20,7 +20,7 @@ describe "landing page", type: :feature do
   end
 
   it "click on logo" do
-    visit BASE_URL
+    visit '/'
     click_link "Student Submissions Integrity Diagnosis System"
     expect(page).to have_content 'Hear from our instructors'
   end
@@ -32,7 +32,7 @@ describe "landing page", type: :feature do
   end
 
   it "click on Get started" do
-    visit BASE_URL
+    visit '/'
     click_button "Get started"
     expect(page).to have_content '(8 characters minimum)'
   end
@@ -44,7 +44,7 @@ describe "landing page", type: :feature do
   end
 
   it "click on Sign Up" do
-    visit BASE_URL
+    visit '/' 
     click_button "Sign Up"
     expect(page).to have_content '(8 characters minimum)'
   end
@@ -56,7 +56,7 @@ describe "landing page", type: :feature do
   end
 
   it "click on Create account" do
-    visit BASE_URL
+    visit '/'
     click_button "Create account"
     expect(page).to have_content '(8 characters minimum)'
   end
