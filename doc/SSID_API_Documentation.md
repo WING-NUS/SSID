@@ -41,7 +41,7 @@ The content type of the request should be `multipart/form-data`. The first part 
 
 - `title (Required) string`: The title of the assignment.
 - `language (Required) string`: Programming language of submission files. Currently supported: `"python3", "c", "cpp", "javascript", "r", "ocaml", "matlab", "scala"`. The parameter value must be in lowercase and match exactly one of the options.
-- `useFingerprint (Optional) boolean`: If `true`, enable the optimization of preprocessing batch of submissions using winnowing fingerprinting algorithm before pairwise comparisons. If not specified, defaults to `false`.
+- `useFingerprints (Optional) boolean`: If `true`, enable the optimization of preprocessing batch of submissions using winnowing fingerprinting algorithm before pairwise comparisons. If not specified, defaults to `false`.
 - `minimumMatchLength (Optional) number`: The least number of contiguous identical statements required to flag a match. If not specified, defaults to 2.
 - `sizeOfNGram (Optional) number`: Specifies size of n-gram to be used in SSID. An n-gram is a contiguous subsequence of n tokens of a given sequence. If not specified, defaults to 5.
 - `threshold (Optional) number`: A number between 0 and 1. If specified, returns only submission similarities whose similarity percentage is between `threshold` and 1 inclusive. Otherwise, returns all submission similarities. **[Note: This function is not yet available in SSID, so we need to first build it for SSID, then allow it to be used via API]**.
