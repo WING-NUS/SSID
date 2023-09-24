@@ -79,20 +79,16 @@ class CoursesController < ApplicationController
       return
     end
 
-    if not current_user.is_admin
-      @membership = UserCourseMembership.new { |m|
-        m.user = current_user
-        m.course = @course
-        m.role = UserCourseMembership::ROLE_TEACHING_STAFF
-      }
-      
-      if @membership.valid? and @membership.save
-        redirect_to courses_url, notice: 'Course was successfully created.'
-      else
-        render action: "new"
-      end
-    else
+    @membership = UserCourseMembership.new { |m|
+      m.user = current_user
+      m.course = @course
+      m.role = UserCourseMembership::ROLE_TEACHING_STAFF
+    }
+    
+    if @membership.valid? and @membership.save
       redirect_to courses_url, notice: 'Course was successfully created.'
+    else
+      render action: "new"
     end
   end
 
