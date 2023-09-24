@@ -35,7 +35,7 @@ SSID API allows you to programmatically use a subset of SSID's functionalities. 
 
 **Description**: Creates a new assignment for SSID to process. The web equivalence is going to `/courses/{course_id}/assignments/new` and creating a new assignment.
 
-The content type of the request should be `multipart/form-data`. The first part to be sent is a JSON for parameters, followed by the zip file for student submissions, followed by a maximum of 5 reference zip files. In the body, any boundary delimiter for different parts to be sent is acceptable.
+The content type of the request should be `multipart/form-data`. Each parameter is a form part, with the parameter name specified in the `name` attribute in `Content-Disposition` header. In the body, any boundary delimiter for different parts to be sent is acceptable.
 
 **JSON Parameters**:
 
