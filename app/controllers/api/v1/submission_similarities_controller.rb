@@ -13,29 +13,45 @@ module Api
       skip_before_action :authenticate_user!
 
       def index
+        set_api_key_and_assignment
+        handle_errors
+        render_submission_similarities
+      end
+
+      private
+
+      def set_api_key_and_assignment
+        set_api_key
+        set_course_and_assignment
+      end
+
+      def set_api_key
         api_key_value = request.headers['X-API-KEY']
         APIKeysHandler.api_key = ApiKey.find_by(value: api_key_value)
-        assignment = set_course_and_assignment(params[:assignment_id])
-        render json: { Status: 'Assignment not found' }, status: :not_found if assignment.nil?
-        return if assignment.nil?
-      
-        APIKeysHandler.authenticate_api_key
-        render_unauthorized("Can't find API key") if APIKeysHandler.api_key.nil?
-        render_unauthorized('Unauthorized access') unless APIKeysHandler.authorized_for_course?(APIKeysHandler.api_key.user_id, assignment.course.id)
-      
-        submission_similarities = assignment.submission_similarities
-        render json: submission_similarities
       end
-      
-      def set_course_and_assignment(assignment_id)
+
+      def set_course_and_assignment(assignment_id = params[:assignment_id])
         assignment = Assignment.find_by(id: assignment_id)
         return nil if assignment.nil?
-      
+
         APIKeysHandler.course = assignment.course
         assignment
       end
-      
-      
+
+      def handle_errors
+        APIKeysHandler.authenticate_api_key
+        render_unauthorized("Can't find API key") if APIKeysHandler.api_key.nil?
+        assignment = Assignment.find_by(id: params[:assignment_id])
+        render_unauthorized('Unauthorized access') unless APIKeysHandler.authorized_for_course?(
+          APIKeysHandler.api_key.user_id, assignment.course.id
+        )
+      end
+
+      def render_submission_similarities
+        assignment = Assignment.find_by(id: params[:assignment_id])
+        submission_similarities = assignment.submission_similarities
+        render json: submission_similarities
+      end
     end
   end
 end
