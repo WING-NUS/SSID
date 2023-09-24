@@ -63,11 +63,11 @@ gem 'bootsnap', '>= 1.4.2', require: false
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
-  
+
   # Testing
   gem 'capybara', '>= 2.15'
-  gem 'selenium-webdriver'
   gem 'rspec-rails', '~> 4.0.2'
+  gem 'selenium-webdriver'
   gem 'webdrivers'
 
   # Linter for Ruby code
@@ -83,8 +83,6 @@ group :development, :test do
   # Security scanners
   gem 'brakeman'
   gem 'bundle-audit'
-  # Testing
-  gem 'rspec-rails', '~> 4.0.2'
 
   # Coverage
   gem 'simplecov',      require: false
