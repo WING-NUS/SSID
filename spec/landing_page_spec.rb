@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe "landing page", type: :feature do
   before(:all) do
-    Capybara.current_driver = :selenium_chrome
+    Capybara.current_driver = :selenium_chrome_headless
   end
 
   it "click on Log In" do
@@ -14,7 +14,9 @@ end
 
 describe "landing page", type: :feature do
   before(:all) do
-    Capybara.current_driver = :selenium_chrome
+    Capybara.current_driver = :selenium_chrome_headless
+    window = Capybara.current_session.driver.browser.manage.window
+    window.resize_to(1920, 1080)
   end
 
   it "click on logo" do
@@ -26,7 +28,7 @@ end
 
 describe "landing page", type: :feature do
   before(:all) do
-    Capybara.current_driver = :selenium_chrome
+    Capybara.current_driver = :selenium_chrome_headless
   end
 
   it "click on Get started" do
@@ -38,7 +40,7 @@ end
 
 describe "landing page", type: :feature do
   before(:all) do
-    Capybara.current_driver = :selenium_chrome
+    Capybara.current_driver = :selenium_chrome_headless
   end
 
   it "click on Sign Up" do
@@ -50,7 +52,7 @@ end
 
 describe "landing page", type: :feature do
   before(:all) do
-    Capybara.current_driver = :selenium_chrome
+    Capybara.current_driver = :selenium_chrome_headless
   end
 
   it "click on Create account" do
