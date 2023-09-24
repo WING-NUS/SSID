@@ -31,14 +31,6 @@ module APIKeysHandler
 
     class << self; attr_accessor :api_key, :course; end
 
-    # def self.set_api_key(api_key)
-    #     self.api_key = api_key
-    # end
-
-    # def self.set_course(course)
-    #     self.course = course
-    # end
-
     def self.authenticate_api_key
         if self.api_key.nil? || self.api_key.user_id.nil?
             raise APIKeyError.new("Missing or invalid API key.", :unauthorized)
