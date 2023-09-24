@@ -104,19 +104,19 @@ class Api::V1::AssignmentsController < ApplicationController
       # Save assignment to obtain id
       return render action: "new" unless @assignment.save
 
-      isMapEnabled = (params["mappingFile"].nil?) ? false : true
+      is_map_enabled = (params["mappingFile"].nil?) ? false : true
       used_fingerprints = (params["useFingerprints"] == "Yes")? true : false
 
       # No student submission file was uploaded
       # Student submission file is a valid zip
       if (is_valid_zip?(params["studentSubmissions"].content_type, params["studentSubmissions"].path))
         # Don't process the file and show error if the mapping was enabled but no mapping file was uploaded
-        if (is_valid_map_or_no_map?(isMapEnabled, params["mappingFile"])) 
-          self.start_upload(@assignment, params["studentSubmissions"], isMapEnabled, params["mappingFile"], used_fingerprints)
+        if (is_valid_map_or_no_map?(is_map_enabled, params["mappingFile"])) 
+          self.start_upload(@assignment, params["studentSubmissions"], is_map_enabled, params["mappingFile"], used_fingerprints)
         # Don't process the file and show error if the mapping was enabled but no mapping file was uploaded
         else 
           @assignment.errors.add :mapfile, "containing mapped student names must be a valid csv file"
-          render json: { "error": "Value of mappingFile is not valid. The mapping file must be a valid csv file. #{isMapEnabled}, #{params["mappingFile"].content_type}" }, status: :bad_request
+          render json: { "error": "Value of mappingFile is not valid. The mapping file must be a valid csv file. #{is_map_enabled}, #{params["mappingFile"].content_type}" }, status: :bad_request
         end
       # Student submission file is not a valid zip file
       else
@@ -129,14 +129,14 @@ class Api::V1::AssignmentsController < ApplicationController
     end
   end
 
-  def start_upload(assignment, submissionFile, isMapEnabled, mapFile, used_fingerprints)
+  def start_upload(assignment, submissionFile, is_map_enabled, mapFile, used_fingerprints)
       require 'submissions_handler'
 
       # Process upload file
-      submissions_path = SubmissionsHandler.process_upload(submissionFile, isMapEnabled, mapFile, assignment)
+      submissions_path = SubmissionsHandler.process_upload(submissionFile, is_map_enabled, mapFile, assignment)
       if submissions_path
         # Launch java program to process submissions
-        SubmissionsHandler.process_submissions(submissions_path, assignment, isMapEnabled, used_fingerprints)
+        SubmissionsHandler.process_submissions(submissions_path, assignment, is_map_enabled, used_fingerprints)
         
         process = assignment.submission_similarity_process
         notice = 'SSID will start to process the assignment now. Please refresh this page after a few minutes to view the similarity results.'
@@ -185,8 +185,8 @@ class Api::V1::AssignmentsController < ApplicationController
     zip.close if zip
   end
 
-  def is_valid_map_or_no_map?(isMapEnabled, mapFile)
-    if (!isMapEnabled)
+  def is_valid_map_or_no_map?(is_map_enabled, mapFile)
+    if (!is_map_enabled)
       return true
     else
       if (mapFile.nil?) 
