@@ -117,4 +117,11 @@ SSID::Application.routes.draw do
   resources :students, controller: "users" do
     get "submission_similarities/show_table_partial" => "submission_similarities#show_table_partial"
   end
+
+  namespace :api do
+    namespace :v1 do
+      get 'sample_get', to: 'courses#sample_get'
+      post 'sample_post', to: 'courses#sample_post'
+    end
+  end
 end
