@@ -37,7 +37,7 @@ module APIKeysHandler
         end
 
         if !authorized_for_course?(self.api_key.user_id, self.course.id)
-            raise APIKeyError.new("Your API key is not authorized to access this resource. #{self.api_key.user_id} #{self.course.id}", :unauthorized)
+            raise APIKeyError.new("Your API key is not authorized to access this resource.", :unauthorized)
         end
     end
 

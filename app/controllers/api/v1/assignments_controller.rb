@@ -87,12 +87,12 @@ class Api::V1::AssignmentsController < ApplicationController
     end
 
     if !ALLOWED_LANGUAGES.include?(params["language"])
-      render json: { "error": "Value of language is not valid. We currently support #{ALLOWED_LANGUAGES.to_s}. Ensure the parameter value must be in lowercase and match exactly one of the options." }, status: :bad_request
+      render json: { "error": "Value of language is not valid. We currently support #{ALLOWED_LANGUAGES.to_s}. The parameter value must be in lowercase and match exactly one of the options." }, status: :bad_request
       return
     end
 
     if params["useFingerprints"] && !["Yes", "No"].include?(params["useFingerprints"])
-      render json: { "error": "Value of useFingerprints is not valid. The value should be \"Yes\" or \"No\". Ensure the parameter value must be in lowercase and match exactly one of the options." }, status: :bad_request
+      render json: { "error": "Value of useFingerprints is not valid. The value should be \"Yes\" or \"No\". The parameter value must be in lowercase and match exactly one of the options." }, status: :bad_request
       return
     end
 
