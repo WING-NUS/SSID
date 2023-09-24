@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'api_keys_handler'
+
 module Api
   module V1
     # The `SubmissionSimilaritiesController` is responsible for handling API requests related to
@@ -9,36 +11,31 @@ module Api
     # authorization for the specified course.
     class SubmissionSimilaritiesController < ApplicationController
       skip_before_action :authenticate_user!
-      before_action :authenticate_api_key
-      before_action :set_course_and_assignment
 
       def index
-        render_unauthorized("Can't find API key") if @api_key.nil?
-        render_unauthorized('Unauthorized access') unless authorized_for_course?(@api_key.user_id, @assignment.course)
-
-        # Fetch all submission similarities associated with this assignment
-        submission_similarities = @assignment.submission_similarities
+        api_key_value = request.headers['X-API-KEY']
+        APIKeysHandler.api_key = ApiKey.find_by(value: api_key_value)
+        assignment = set_course_and_assignment(params[:assignment_id])
+        render json: { Status: 'Assignment not found' }, status: :not_found if assignment.nil?
+        return if assignment.nil?
+      
+        APIKeysHandler.authenticate_api_key
+        render_unauthorized("Can't find API key") if APIKeysHandler.api_key.nil?
+        render_unauthorized('Unauthorized access') unless APIKeysHandler.authorized_for_course?(APIKeysHandler.api_key.user_id, assignment.course.id)
+      
+        submission_similarities = assignment.submission_similarities
         render json: submission_similarities
       end
-
-      private
-
-      def authenticate_api_key
-        @api_key = ApiKey.find_by(value: request.headers['X-API-KEY'])
+      
+      def set_course_and_assignment(assignment_id)
+        assignment = Assignment.find_by(id: assignment_id)
+        return nil if assignment.nil?
+      
+        APIKeysHandler.course = assignment.course
+        assignment
       end
-
-      def set_course_and_assignment
-        @assignment = Assignment.find_by(params[:assignment_id])
-        if @assignment.nil?
-          render json: { Status: 'Assignment not found' }, status: :not_found
-          return
-        end
-        @course = @assignment.course
-      end
-
-      def authorized_for_course?(user, course)
-        UserCourseMembership.exists?(user: user, course: course)
-      end
+      
+      
     end
   end
 end

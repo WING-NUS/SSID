@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This file is part of SSID.
 #
 # SSID is free software: you can redistribute it and/or modify
@@ -16,10 +18,13 @@
 SSID::Application.routes.draw do
   resources :submission_logs
 
-  get 'assignments/:id/submission_similarities/guest_user' => 'submission_similarities#create_guest_user',
-      :as => 'guest_user_create'
-  get 'assignments/:assignment_id/submission_similarities/:submission_similarity_id/guest_user' => 'submission_logs#view_similarity',
-      :as => 'guest_view_similarity'
+  get 'assignments/:id/submission_similarities/guest_user',
+      to: 'submission_similarities#create_guest_user',
+      as: 'guest_user_create'
+
+  get 'assignments/:assignment_id/submission_similarities/:submission_similarity_id/guest_user',
+      to: 'submission_logs#view_similarity',
+      as: 'guest_view_similarity'
 
   # Login/Logout routes
   devise_scope :user do
