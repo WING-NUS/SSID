@@ -55,8 +55,9 @@ The content type of the request should be `multipart/form-data`. The first part 
 
 ```
 {
- "Content-Type": "multipart/form-data; boundary=\"boundary\"",
- "X-Api-Key": "YOUR_API_KEY"
+  "Content-Type": "multipart/form-data; 
+  \"boundary=------------------------a41c8131a72f1dad\"",
+  "X-Api-Key": "YOUR_API_KEY"
 }
 ```
 
@@ -64,37 +65,24 @@ The content type of the request should be `multipart/form-data`. The first part 
 | ---- |
 
 ```
---boundary
-Content-Type: application/json
+--------------------------a41c8131a72f1dad
+Content-Disposition: form-data; name="title"
 
-{
-  "title": "Assignment",
-  "language": "java",
-  "useFingerprint": true,
-  "limit": 10,
-  "minimumMatchLength": 3
-}
---boundary
-Content-Type: application/zip
-Content-Disposition: form-data; name="studentSubmissions"; filename="studentSubmissions.zip"
+assignment1
+--------------------------a41c8131a72f1dad
+Content-Disposition: form-data; name="language"
 
-<file content>
---boundary
-Content-Type: text/csv
-Content-Disposition: form-data; name="mappingFile"; filename="mappingFile.csv"
+java
+--------------------------a41c8131a72f1dad
+Content-Disposition: form-data; name="sizeOfNGram"
+
+5
+--------------------------a41c8131a72f1dad
+Content-Disposition: form-data; name="studentSubmissions"; filename="dir.zip"
+Content-Type: application/octet-stream
 
 <file content>
---boundary
-Content-Type: application/zip
-Content-Disposition: form-data; name="reference1"; filename="reference1.zip"
-
-<file content>
---boundary
-Content-Type: application/zip
-Content-Disposition: form-data; name="reference2"; filename="reference2.zip"
-
-<file content>
---boundary--
+--------------------------a41c8131a72f1dad–
 ```
 
 **Possible responses**:
