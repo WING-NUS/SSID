@@ -84,11 +84,11 @@ class CoursesController < ApplicationController
       m.course = @course
       m.role = UserCourseMembership::ROLE_TEACHING_STAFF
     }
-    
-    if @membership.valid? and @membership.save
+
+    if @membership.valid? && @membership.save
       redirect_to courses_url, notice: 'Course was successfully created.'
     else
-      render action: "new"
+      render action: 'new'
     end
   end
 
