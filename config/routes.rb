@@ -120,8 +120,9 @@ SSID::Application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      get 'sample_get', to: 'courses#sample_get'
-      post 'sample_post', to: 'courses#sample_post'
+      resources :courses, controller: 'courses' do
+        resources :assignments, controller: 'assignments'
+      end
     end
   end
 end
