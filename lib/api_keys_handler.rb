@@ -29,22 +29,12 @@ module APIKeysHandler
 
   class << self; attr_accessor :api_key, :course; end
 
-  # def self.set_api_key(api_key)
-  #     self.api_key = api_key
-  # end
-
-  # def self.set_course(course)
-  #     self.course = course
-  # end
-
   def self.authenticate_api_key
     raise APIKeyError.new('Missing or invalid API key.', :unauthorized) if api_key.nil? || api_key.user_id.nil?
 
     return if authorized_for_course?(api_key.user_id, course.id)
 
-    raise APIKeyError.new(
-      "Your API key is not authorized to access this resource. #{api_key.user_id} #{course.id}", :unauthorized
-    )
+    raise APIKeyError.new('Your API key is not authorized to access this resource.', :unauthorized)
   end
 
   def self.authorized_for_course?(user_id, course_id)
