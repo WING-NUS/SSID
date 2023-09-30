@@ -1,0 +1,111 @@
+name: Verify
+on: [push, pull_request]
+
+jobs:
+  linters:
+    name: Linters
+    permissions: write-all
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - run: |
+          git fetch --no-tags --unshallow --prune origin +refs/heads/*:refs/remotes/origin/*
+
+      - name: Setup Ruby and install gems
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: Run linters
+        run: |
+          bundle exec pronto run -c origin/master --exit-code
+          # bundle exec stylelint
+          # bundle exec prettier
+          # bundle exec eslint --fix $(git diff --name-only HEAD | xargs)
+        env:
+          PRONTO_PULL_REQUEST_ID: ${{ github.event.pull_request.number }}
+          PRONTO_GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
+
+  # security_checks:
+  #   name: Security checks
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v2
+  #     - run: |
+  #         git fetch --no-tags --prune origin +refs/heads/*:refs/remotes/origin/*
+
+  #     - name: Setup Ruby and install gems
+  #       uses: ruby/setup-ruby@v1
+  #       with:
+  #         bundler-cache: true
+
+  #     - name: Run security checks
+  #       run: |
+  #         bundle exec bundler-audit --update
+  #         bundle exec brakeman -q -w2
+  tests:
+    name: Tests
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_HOST: 127.0.0.1
+          MYSQL_USER: root
+          MYSQL_PASSWORD: root
+          MYSQL_DATABASE: ssid_test
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - "3306:3306"
+        # options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Ruby and install gems
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      # - name: Setup Node
+      #   uses: actions/setup-node@v2
+      #   with:
+      #     node-version: 16
+      #     cache: yarn
+
+      - name: Install packages
+        run: |
+          yarn install --pure-lockfile
+      - name: Setup test database
+        env:
+          RAILS_ENV: test
+          DATABASE_PORT: 3306
+          DB_HOST: 127.0.0.1
+          DB_CONNECTION: mysql
+          DB_DATABASE: ssid_test
+          DB_USER: root
+          DB_PASSWORD: root
+        run: |
+          sudo /etc/init.d/mysql start
+          mysql -e 'CREATE DATABASE ssid_test;' -u root -proot
+          bundle exec rails db:create
+          bundle exec rails db:schema:load
+
+      - name: Install chrome
+        uses: browser-actions/setup-chrome@v1
+
+      - name: Setup chromedriver
+        uses: nanasess/setup-chromedriver@v2
+
+      - name: Run tests
+        run: bundle exec rspec
+
+      - name: Coveralls 
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path-to-lcov: "./coverage/lcov.info"
