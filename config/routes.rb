@@ -125,7 +125,7 @@ SSID::Application.routes.draw do
 
       # Assignments routes
       resources :assignments, only: [] do
-        resources :submission_similarities, only: [:index]
+        resources :submission_similarities, only: [:index, :show]
       end
     end
   end
@@ -137,12 +137,5 @@ SSID::Application.routes.draw do
       end
     end
   end
-
-  namespace :api do
-    namespace :v1 do
-      get 'sample_get', to: 'courses#sample_get'
-      post 'sample_post', to: 'courses#sample_post'
-      get 'assignments/:assignment_id/submission_similarities/:submission_similarity_id', to: 'courses#get_pair_of_flagged_submission_details'
-    end
-  end
+  
 end
