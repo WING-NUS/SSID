@@ -59,7 +59,7 @@ module Api
         render json: submission_similarities
       end
 
-      def get_pair_of_flagged_submission_details
+      def render_pair_of_flagged_submissions
         assignment_id = params[:assignment_id]
         submission_similarity_id = params[:submission_similarity_id]
 
