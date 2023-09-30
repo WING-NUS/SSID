@@ -72,22 +72,24 @@ module Api
           render json: {"error": "Submission similarities requested does not exist."}, status: :bad_request
           return
         end
-        
+
         # Fetch details of the flagged submissions
         max_similarity_percentage = submission_similarity.similarity
         matches = []
 
-        submission_similarity.similarity_mappings.each do |similarity| 
-          matches.append({
-            "student1": similarity.line_range1_string,
-            "student2": similarity.line_range2_string,
-            "statementCount": similarity.statement_count
-          })
+        submission_similarity.similarity_mappings.each do |similarity|
+          matches.append(
+            {
+              student1: similarity.line_range1_string,
+              student2: similarity.line_range2_string,
+              statementCount: similarity.statement_count
+            }
+          )
         end
 
         render json: {
-          "maxSimilarityPercentage": max_similarity_percentage,
-          "matches": matches
+          maxSimilarityPercentage: max_similarity_percentage,
+          matches: matches
         }, status: :ok
       end
     end
