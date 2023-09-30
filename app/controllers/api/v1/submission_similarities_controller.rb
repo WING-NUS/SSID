@@ -60,20 +60,16 @@ module Api
       end
 
       def render_pair_of_flagged_submissions
-        assignment_id = params[:assignment_id]
-        submission_similarity_id = params[:submission_similarity_id]
-
         submission_similarity = SubmissionSimilarity.find_by(
-          assignment_id: assignment_id,
-          id: submission_similarity_id
+          assignment_id: params[:assignment_id],
+          id: params[:submission_similarity_id]
         )
 
         if submission_similarity.nil?
-          render json: {"error": "Submission similarities requested does not exist."}, status: :bad_request
+          render json: { error: "Submission similarities requested do not exist." }, status: :bad_request
           return
         end
 
-        # Fetch details of the flagged submissions
         max_similarity_percentage = submission_similarity.similarity
         matches = []
 
