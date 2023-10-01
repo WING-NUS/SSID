@@ -93,14 +93,24 @@ jobs:
           sudo /etc/init.d/mysql start
           mysql -e 'CREATE DATABASE ssid_test;' -u root -proot
           bundle exec rails db:create
-          bundle exec rails db:schema:load
+          bundle exec rails db:migrate
+          bundle exec rails db:seed
 
       - name: Install chrome
+        id: setup-chrome
         uses: browser-actions/setup-chrome@v1
+
+      - name: Show chrome version
+        run: |
+          echo Installed chromium version: ${{ steps.setup-chrome.outputs.chrome-version }} ${{ steps.setup-chrome.outputs.chrome-path }} --version
 
       - name: Setup chromedriver
         uses: nanasess/setup-chromedriver@v2
 
+      - name: Run local server for testing
+        run: |
+          bundle exec rails server -d -p 3000 -e test
+          sleep 5
       - name: Run tests
         run: bundle exec rspec
 
