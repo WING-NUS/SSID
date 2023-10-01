@@ -45,12 +45,9 @@ module Api
       end
 
       def handle_errors
-        begin
-          APIKeysHandler.authenticate_api_key
-        rescue APIKeysHandler::APIKeyError => e
-          render json: { error: e.message }, status: e.status
-          return
-        end
+        APIKeysHandler.authenticate_api_key
+      rescue APIKeysHandler::APIKeyError => e
+        render json: { error: e.message }, status: e.status
       end
 
       def render_submission_similarities
