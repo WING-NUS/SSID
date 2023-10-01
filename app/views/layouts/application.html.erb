@@ -29,7 +29,7 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
           <h3 id="site-banner-login"><a href='/' style="color:inherit; text-decoration:inherit">Student Submissions Integrity Diagnosis System</a></h3>
           <div class="site-login w-20">
             <ul id="menu" <%= %Q{ class="admin"}.html_safe if user_signed_in? and current_user.is_admin %>>
-              <li> <button type="button" style="background-color: transparent; color: #003d7c; height: 3rem; padding: 1rem" class="btn py-1" onclick="location.href='/login';">Log In</button> </li>
+              <li> <button type="button" class="btn btn-login" onclick="location.href='/login';">Log In</button> </li>
               <li> <button type="button" class="btn btn-signup" onclick="location.href='/signup';">Sign Up</button> </li>
               </ul>
           </div>
