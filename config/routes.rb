@@ -125,7 +125,7 @@ SSID::Application.routes.draw do
 
       # Assignments routes
       resources :assignments, only: [] do
-        resources :submission_similarities, only: [:index]
+        resources :submission_similarities, only: [:index, :show]
       end
     end
   end
