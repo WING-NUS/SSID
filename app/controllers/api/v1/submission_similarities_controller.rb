@@ -63,7 +63,7 @@ module Api
         )
 
         if submission_similarity.nil?
-          render json: { error: "Submission similarities requested do not exist." }, status: :bad_request
+          render json: { error: 'Submission similarities requested do not exist.' }, status: :bad_request
           return
         end
 
