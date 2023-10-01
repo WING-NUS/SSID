@@ -137,4 +137,12 @@ SSID::Application.routes.draw do
       end
     end
   end
+
+  namespace :api do
+    namespace :v1 do
+      resources :courses, controller: 'courses' do
+        resources :assignments, controller: 'assignments'
+      end
+    end
+  end
 end
