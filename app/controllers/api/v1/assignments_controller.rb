@@ -135,7 +135,6 @@ module Api
             render json: { error: 'Value of studentSubmissions is not valid. ' \
                                   'studentSubmissions must be a valid zip file.' },
                    status: :bad_request
-            render action: 'new'
           end
         else
           render action: 'new'
