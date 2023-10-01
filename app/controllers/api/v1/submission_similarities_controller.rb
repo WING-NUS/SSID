@@ -18,6 +18,12 @@ module Api
         render_submission_similarities
       end
 
+      def show
+        set_api_key_and_assignment
+        handle_errors
+        render_pair_of_flagged_submissions
+      end
+
       private
 
       def set_api_key_and_assignment
@@ -40,17 +46,44 @@ module Api
 
       def handle_errors
         APIKeysHandler.authenticate_api_key
-        render_unauthorized("Can't find API key") if APIKeysHandler.api_key.nil?
-        assignment = Assignment.find_by(id: params[:assignment_id])
-        render_unauthorized('Unauthorized access') unless APIKeysHandler.authorized_for_course?(
-          APIKeysHandler.api_key.user_id, assignment.course.id
-        )
+      rescue APIKeysHandler::APIKeyError => e
+        render json: { error: e.message }, status: e.status
       end
 
       def render_submission_similarities
         assignment = Assignment.find_by(id: params[:assignment_id])
         submission_similarities = assignment.submission_similarities
         render json: submission_similarities
+      end
+
+      def render_pair_of_flagged_submissions
+        submission_similarity = SubmissionSimilarity.find_by(
+          assignment_id: params[:assignment_id],
+          id: params[:submission_similarity_id]
+        )
+
+        if submission_similarity.nil?
+          render json: { error: 'Submission similarities requested do not exist.' }, status: :bad_request
+          return
+        end
+
+        max_similarity_percentage = submission_similarity.similarity
+        matches = []
+
+        submission_similarity.similarity_mappings.each do |similarity|
+          matches.append(
+            {
+              student1: similarity.line_range1_string,
+              student2: similarity.line_range2_string,
+              statementCount: similarity.statement_count
+            }
+          )
+        end
+
+        render json: {
+          maxSimilarityPercentage: max_similarity_percentage,
+          matches: matches
+        }, status: :ok
       end
     end
   end
