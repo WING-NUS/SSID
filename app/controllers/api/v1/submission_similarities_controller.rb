@@ -45,12 +45,12 @@ module Api
       end
 
       def handle_errors
-        APIKeysHandler.authenticate_api_key
-        render_unauthorized("Can't find API key") if APIKeysHandler.api_key.nil?
-        assignment = Assignment.find_by(id: params[:assignment_id])
-        render_unauthorized('Unauthorized access') unless APIKeysHandler.authorized_for_course?(
-          APIKeysHandler.api_key.user_id, assignment.course.id
-        )
+        begin
+          APIKeysHandler.authenticate_api_key
+        rescue APIKeysHandler::APIKeyError => e
+          render json: { error: e.message }, status: e.status
+          return
+        end
       end
 
       def render_submission_similarities
