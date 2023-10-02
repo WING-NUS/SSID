@@ -108,7 +108,7 @@ Content-Type: application/octet-stream
 
 **JSON Parameters**:
 
-- `threshold (Optional) number`: A number between 0 and 1. If specified, returns only submission similarities whose similarity percentage is between `threshold` and 1 inclusive. Otherwise, returns all submission similarities. **[Note: This function is not yet available in SSID, so we need to first build it for SSID, then allow it to be used via API]**.
+- `threshold (Optional) number`: A number between 0 and 100. If specified, returns only submission similarities whose similarity percentage is between `threshold` and 1 inclusive. Otherwise, returns all submission similarities. **[Note: This function is not yet available in SSID, so we need to first build it for SSID, then allow it to be used via API]**.
 - `page (Optional) number`: If specified, returns submission similarities in such page when sorted by highest maximum similarity percentage. Otherwise, returns all submission similarities.
 - `limit (Optional) number`: If specified, returns such number of submission similarities with highest maximum similarity percentage. Otherwise, returns all submission similarities. **[Note: Currently SSID stores and displays all submission similarities on its web interface. The function to take top N submissions is not yet available in SSID, so we need to first build it for SSID, then allow it to be used via API]**.
 
@@ -177,7 +177,7 @@ Content-Type: application/octet-stream
 
 | Code | Status              | Return body                                                                                                              |
 | ---- | ------------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| 200  | Successful          | `{ "maxSimilaryPercentage": …, "matches": [] }` **[Note: max similarity percentage is between 0 and 1]**                 |
+| 200  | Successful          | `{ "maxSimilaryPercentage": …, "matches": [] }` **[Note: max similarity percentage is between 0 and 100]**                 |
 | 400  | Error               | `{ “error”: “Submission similarities requested does not exist." }`                                                       |
 | 401  | Unauthorized        | `{ "error": "Missing or invalid API key." }` or `{ "error": "Your API key is not authorized to access this resource." }` |
 | 503  | Service Unavailable | `{ "error": "SSID is busy or under maintenance. Please try again later." }`                                              |
