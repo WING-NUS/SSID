@@ -12,16 +12,22 @@ module Api
     class SubmissionSimilaritiesController < ApplicationController
       skip_before_action :authenticate_user!
 
-      def index
+      before_action do |_controller|
         set_api_key_and_assignment
-        handle_errors
+      end
+
+      def index
+        APIKeysHandler.authenticate_api_key
         render_submission_similarities
+      rescue APIKeysHandler::APIKeyError => e
+        render json: { error: e.message }, status: e.status
       end
 
       def show
-        set_api_key_and_assignment
-        handle_errors
+        APIKeysHandler.authenticate_api_key
         render_pair_of_flagged_submissions
+      rescue APIKeysHandler::APIKeyError => e
+        render json: { error: e.message }, status: e.status
       end
 
       private
@@ -44,12 +50,6 @@ module Api
         assignment
       end
 
-      def handle_errors
-        APIKeysHandler.authenticate_api_key
-      rescue APIKeysHandler::APIKeyError => e
-        render json: { error: e.message }, status: e.status
-      end
-
       def render_submission_similarities
         assignment = Assignment.find_by(id: params[:assignment_id])
         submission_similarities = assignment.submission_similarities
@@ -59,7 +59,7 @@ module Api
       def render_pair_of_flagged_submissions
         submission_similarity = SubmissionSimilarity.find_by(
           assignment_id: params[:assignment_id],
-          id: params[:submission_similarity_id]
+          id: params[:id]
         )
 
         if submission_similarity.nil?
