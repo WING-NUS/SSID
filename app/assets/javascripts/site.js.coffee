@@ -52,9 +52,15 @@ Site.setClipHeight = (page) ->
   return
 
 $(document).ready ->
-  if $("ul#menu").length > 0
-    $(".site_header").addClass("site_header_background");
   Site.setClipHeight($(this));
+
+  if $(".site-introduction").length > 0
+    $("body").css('background-image', "radial-gradient(
+        at top right,
+        #d4e5ea,
+        white 75%
+        )");
+    $("body").css('background-repeat', "no-repeat");
 
   # if (window.location.pathname && !window.location.pathname.includes('cover'))
   #   $(".site-login").addClass("site-login-hidden")
