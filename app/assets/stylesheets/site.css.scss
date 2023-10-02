@@ -14,6 +14,10 @@
 // along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 @import "bootstrap_custom";
 
+html { 
+  height: 100%;
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -51,35 +55,64 @@ h2, h3, h4, h5, h6 {
   }
 }
 
-.site_header_background {
-  background-color: var(--bs-gray-200);
-}
-
-.site_logo {
-  padding: 1.25rem 0.5rem;
+.site-subtitle {
+  font-size: 1.125rem;
+  color: #003d7c;
 }
 
 .site-introduction {
   width: 100%;
   display: flex;
   flex-direction: row;
-  margin-bottom: $spacer * 2;
+  margin-top: $spacer * 2.5;
+  margin-bottom: $spacer * 10;
+
+  .site_logo {
+    padding: 1.25rem 0.5rem;
+  }
+
+  .btn-start {
+    @extend .btn-primary;
+    background-color: #003d7c !important;
+    height: 3.5rem;
+    padding: 1rem;
+    width: 100%;
+    margin-top: 2rem;
+  }
+
+  .btn-start:hover {
+    @extend .btn-primary;
+    color: #003d7c !important;
+    background-color: white !important;
+  }
+
+  .site-subtitle2 {
+    margin-top: 2rem;
+    padding-left: 1.5rem;
+    color: #003d7c;
+  }
 
   .site-motto {
-    width: 40%;
-    font-size: 1.25rem;
-    font-weight: 500;
-    font-style: italic;
-    padding: 0.5rem 0 0 0.5rem;
+    width: 38%;
+    font-size: 3.5rem;
+    font-weight: 700;
+    line-height: 3.75rem;
+    color: #003d7c;
+    margin-top: $spacer * 2.5;
+
+  }
+
+  .site-motto em {
+    color: #003d7c;
+    font-style: normal;
   }
 
   div.site-clip {
-    width: 60%;
-
-    iframe {
-      width: 100%;
-      height: 100%;
-    }
+    width: 62%;
+    padding: 3rem 3rem 1rem 1rem;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
   }
 }
 
@@ -87,40 +120,141 @@ h2, h3, h4, h5, h6 {
   width: 100%;
   display: flex;
   flex-direction: row;
+  margin-top: $spacer * 10;
+  margin-bottom: $spacer * 10;
 
-  .site-statistics {
+  .site-screenshot {
     width: 50%;
+  }
+
+  .site-screenshot-img {
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .site-features {
     width: 50%;
+    margin-left: 2 rem;
+  }
+}
+
+@media screen and (max-width: 1100px) {
+  .site-testimonials {
+      display: none !important;
+  }
+}
+
+.site-testimonials {
+  width: 100vw;
+  position: relative;
+  left: calc(-50vw + 50%);
+  height: 500px;
+  background-color: #003d7c;
+  text-align: "center";
+
+  .testimonial-heading {
+    text-align: center; 
+    width: 100%;
+    padding: 3.5rem;
+  }
+
+  .testimonial-cards {
+    display: flex;
+    justify-content: center;
+  }
+
+  .card {
+    width:28%;
+    height:450px;
+  }
+
+  .testimonial-author {
+    position: absolute;
+    bottom: 2rem;
+  }
+
+}
+
+.site-faq {
+  height: 550px;
+  margin-top: $spacer * 8;
+  .faq-heading {
+    text-align: center; 
+    width: 100%;
+    padding-top: $spacer * 4;
+    padding-bottom: $spacer * 4;
+  }
+  .accordion-button {
+    background: white !important;
+    color: black !important;
   }
 }
 
 .site-footer {
-  width: 100%;
+  width: 100vw;
+  height: 350px;
+  position: relative;
+  left: calc(-50vw + 50%);
   display: flex;
   flex-direction: row;
+  background-color: #003d7c;
+  color: white !important;
 
-  span {
-    width: 50%;
-    margin: 0 0 1rem;
-    @extend .text-muted;
+  .actioncall-heading {
+    text-align: center; 
+    width: 100%;
+    padding-top: $spacer * 3;
+    padding-bottom: $spacer * 3;
   }
 
-  ul {
-    width: 50%;
-    height: fit-content;
-    list-style: none;
-    text-align: right;
-    padding: 0 1rem 0 2rem;
+  .btn-actioncall {
+    @extend .btn-primary;
+    position: absolute;
+    top: 7rem;
+    left: 0; 
+    right: 0; 
+    margin-left: auto; 
+    margin-right: auto;
+    background-color: white !important;
+    color: #003d7c;
+    height: 3.5rem;
+    padding: 1rem;
+    width: 200px;
+    margin-top: 2rem;
+  }
 
-    li {
-      display: inline-block;
-      a {
-        text-decoration: none;
+  .btn-actioncall:hover {
+    @extend .btn-primary;
+    color: #003d7c;
+  }
+  .footer {
+    .copyright {
+      position: absolute;
+      bottom: 1rem;
+      left: 3.5rem;
+      color: white !important;
+    }
+
+    ul {
+      list-style: none;
+      position: absolute;
+      bottom: 0;
+      right: 3.5rem;
+      li {
+        display: inline-block;
+        a {
+          text-decoration: none;
+        }
       }
     }
+
+    a {
+      color: white !important;
+      text-decoration: inherit;
+      margin:0;
+    }
+  
   }
 }
 
@@ -159,10 +293,10 @@ table {
 #site-banner-login {
   margin: 0;
   height: 75%;
-  width: 60%;
+  width: 80%;
   padding: 1.25rem 0.5rem;
   font-size: 2rem;
-  font-weight: 500;
+  font-weight: 700;
   color: #003d7c;
 }
 
