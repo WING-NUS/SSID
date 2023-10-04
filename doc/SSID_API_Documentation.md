@@ -3,7 +3,7 @@ layout: page
 title: SSID API
 ---
 
-# SSID API Phase 1
+# SSID API
 
 ## Table of Contents
 
@@ -44,10 +44,10 @@ The content type of the request should be `multipart/form-data`. Each parameter 
 - `useFingerprints (Optional) boolean`: If `true`, enable the optimization of preprocessing batch of submissions using winnowing fingerprinting algorithm before pairwise comparisons. If not specified, defaults to `false`.
 - `minimumMatchLength (Optional) number`: The least number of contiguous identical statements required to flag a match. If not specified, defaults to 2.
 - `sizeOfNGram (Optional) number`: Specifies size of n-gram to be used in SSID. An n-gram is a contiguous subsequence of n tokens of a given sequence. If not specified, defaults to 5.
-- `discardAfter (Optional) number`: If specified, discard files after such duration in seconds. **[Note: Currently SSID stores all data persistently and data is manually cleared every semester. This parameter accommodates the future auto-discard functionality. This function is not yet available in SSID, so we need to first build it for SSID, then allow it to be used via API]**.
+- `discardAfter (Optional) number`: If specified, discard files after such duration in seconds. **[Note: Currently SSID stores all data persistently and data is manually cleared every semester. This parameter accommodates the future auto-discard functionality. This function is not yet available in both web interface and API, so we need to first build it for SSID, then allow it to be used via API]**.
 - `studentSubmissions (Required) zip`: zip file of student submissions in SSID’s standard format. **[Note: The zip file should be in SSID's standard format (potentially includes skeleton codes). For more details, please refer to SSID's User's Guide. Removed file size limit as there might be users with bigger file sizes.]**.
 - `mappingFile (Optional) csv`: csv map file that allows you to map between a directory name (in the uploaded zip file) and the student roster that you might be using for your modules. For more details, see SSID's User Guide.
-- `references zip`: zip files for past semesters to be used as reference. Maximum of 5 reference zips allowed. **[Note: This function is not yet available in SSID, so we need to first build it for SSID, then allow it to be used via API. To be built in Phase 2]**.
+- `references zip`: zip files for past semesters to be used as reference. Maximum of 5 reference zips allowed. **[Note: This function is not yet available in both web interface and API, so we need to first build it for SSID, then allow it to be used via API.]**.
 
 **Request Example**:
 | Header |
@@ -108,9 +108,9 @@ Content-Type: application/octet-stream
 
 **JSON Parameters**:
 
-- `threshold (Optional) number`: A number between 0 and 100. If specified, returns only submission similarities whose similarity percentage is between `threshold` and 1 inclusive. Otherwise, returns all submission similarities. **[Note: This function is not yet available in SSID, so we need to first build it for SSID, then allow it to be used via API]**.
-- `page (Optional) number`: If specified, returns submission similarities in such page when sorted by highest maximum similarity percentage. Otherwise, returns all submission similarities.
-- `limit (Optional) number`: If specified, returns such number of submission similarities with highest maximum similarity percentage. Otherwise, returns all submission similarities. **[Note: Currently SSID stores and displays all submission similarities on its web interface. The function to take top N submissions is not yet available in SSID, so we need to first build it for SSID, then allow it to be used via API]**.
+- `threshold (Optional) number`: A number between 0 and 100. If specified, returns only submission similarities whose similarity percentage is between `threshold` and 100 inclusive. Otherwise, returns all submission similarities. **[Note: Currently this is already available in SSID's web interface but not API]**.
+- `page (Optional) number`: If specified, returns submission similarities in such page when sorted by highest maximum similarity percentage. Otherwise, returns all submission similarities. **[Note: Currently SSID stores and displays all submission similarities on its web interface. The function to take top N submissions is not yet available in both API and web interface, so we need to first build it for SSID, then allow it to be used via API]**.
+- `limit (Optional) number`: If specified, returns such number of submission similarities with highest maximum similarity percentage. Otherwise, returns all submission similarities. **[Note: Currently SSID stores and displays all submission similarities on its web interface. The function to take top N submissions is not yet available in both web interface and API, so we need to first build it for SSID, then allow it to be used via API]**.
 
 **Request Example**:
 | Header |
