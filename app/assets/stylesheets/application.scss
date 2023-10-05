@@ -56,3 +56,28 @@
     color: #468847;
     text-align: left;
  }
+
+.btn-signup {
+    @extend .btn-primary;
+    background-color: #003d7c !important;
+    height: 3rem; 
+    color: white;
+}
+
+.btn-signup:hover {
+    background-color: white !important;
+    color: #003d7c !important;
+}
+
+.btn-signup:active {
+    border-style: outset !important; 
+}
+
+.btn-login {
+    background-color: transparent;
+    height: 3rem; 
+    color: #003d7c;
+    padding: 1rem;
+}
+
+// background-color: transparent; color: #003d7c; height: 3rem; padding: 1rem
