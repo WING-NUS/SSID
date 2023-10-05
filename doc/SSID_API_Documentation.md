@@ -108,9 +108,10 @@ Content-Type: application/octet-stream
 
 **JSON Parameters**:
 
-- `threshold (Optional) number`: A number between 0 and 100. If specified, returns only submission similarities whose similarity percentage is between `threshold` and 100 inclusive. Otherwise, returns all submission similarities.
-- `page (Optional) number`: If specified, returns submission similarities in such page when sorted by highest maximum similarity percentage. Otherwise, returns all submission similarities. **[Note: Currently SSID stores and displays all submission similarities on its web interface. The function to take top N submissions is not yet available in web interface so we need to  build it for SSID]**.
-- `limit (Optional) number`: If specified, returns such number of submission similarities with highest maximum similarity percentage. Otherwise, returns all submission similarities. **[Note: Currently SSID stores and displays all submission similarities on its web interface. The function to take top N submissions is not yet available in web interface so we need to  build it for SSID]**.
+
+- `threshold (Optional) number`: A number between 0 and 100. If specified, returns only submission similarities whose similarity percentage is between `threshold` and 100 inclusive. Otherwise, returns all submission similarities. **[Note: This function is not yet available in both web interface and API, so we need to first build it for SSID, then allow it to be used via API.]**.
+- `page (Optional) number`: If specified, returns submission similarities in such page when sorted by highest maximum similarity percentage. Otherwise, returns all submission similarities. **[Note: Currently SSID stores and displays all submission similarities on its web interface. The function to take top N submissions is not yet available in both API and web interface, so we need to first build it for SSID, then allow it to be used via API]**.
+- `limit (Optional) number`: If specified, returns such number of submission similarities with highest maximum similarity percentage. Otherwise, returns all submission similarities. **[Note: Currently SSID stores and displays all submission similarities on its web interface. The function to take top N submissions is not yet available in both web interface and API, so we need to first build it for SSID, then allow it to be used via API]**.
 
 **Request Example**:
 | Header |
