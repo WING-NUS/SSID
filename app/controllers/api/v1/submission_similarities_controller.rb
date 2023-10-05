@@ -53,9 +53,30 @@ module Api
       def render_submission_similarities
         assignment = Assignment.find_by(id: params[:assignment_id])
         submission_similarities = assignment.submission_similarities
+
+        # Apply the threshold filter
+        if params[:threshold].present?
+          threshold_value = params[:threshold].to_f
+          submission_similarities = submission_similarities.where('similarity >= ?', threshold_value)
+        end
+        
+        # Apply the limit filter
+        if params[:limit].present?
+          limit_value = params[:limit].to_i
+          submission_similarities = submission_similarities.limit(limit_value)
+        end
+
+        # Apply the page filter
+        if params[:page].present?
+          per_page = params[:limit].present? ?limit_value : 20 # Default per page value is 20, limit to use a page size
+          page_number = params[:page].to_i
+          submission_similarities = submission_similarities.offset(per_page * (page_number - 1))
+        end
+
+
         render json: submission_similarities
       end
-
+      
       def render_pair_of_flagged_submissions
         submission_similarity = SubmissionSimilarity.find_by(
           assignment_id: params[:assignment_id],
