@@ -51,9 +51,32 @@ module Api
       end
 
       def render_submission_similarities
-        assignment = Assignment.find_by(id: params[:assignment_id])
+        assignment = set_course_and_assignment(params[:assignment_id])
+
+        if assignment.nil?
+          render json: { error: 'Assignment does not exist' }, status: :bad_request
+          return
+        end
+        # Check if the assignment has associated submission files.
+        if assignment.submissions.empty?
+          render json: { status: 'empty' }, status: :ok
+          return
+        end
+
+        # Determine process status of assignment
+        submission_similarity_process = assignment.submission_similarity_process
+        case submission_similarity_process.status
+        when SubmissionSimilarityProcess::STATUS_RUNNING, SubmissionSimilarityProcess::STATUS_WAITING
+          render json: { status: 'processing' }, status: :ok
+          return
+        when SubmissionSimilarityProcess::STATUS_ERRONEOUS
+          render json: { status: 'error', message: 'SSID is busy or under maintenance. Please try again later.' }, status: :service_unavailable
+          return
+        end
+
         submission_similarities = assignment.submission_similarities
 
+        ### Filtering Code 
         # Apply the threshold filter
         if params[:threshold].present?
           threshold_value = params[:threshold].to_f
@@ -74,7 +97,7 @@ module Api
         end
 
 
-        render json: submission_similarities
+        render json: { status: "processed", submissionSimilarities: submission_similarities }, status: :ok
       end
       
       def render_pair_of_flagged_submissions
