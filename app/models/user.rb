@@ -28,7 +28,7 @@ class User < ActiveRecord::Base
   has_many :courses, -> { distinct }, :through => :memberships
   has_many :assignments, -> { distinct }, :through => :courses
   has_many :submissions, foreign_key: "student_id"
-  has_many :api_keys, :dependent => :delete_all
+  has_many :api_keys, :dependent => :destroy
 
   validates :name, presence: true
   validates :name, uniqueness: true
