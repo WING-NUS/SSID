@@ -172,7 +172,6 @@ end
 
 # Removes all newly-created data
 def clear_tests
-  ApiKey.find_by(value: 'SSID_RSPEC_API_KEY').delete
   User.find_by(name: 'ssid_api_user').delete
   course = Course.find_by(name: 'Introduction to Programming')
   UserCourseMembership.find_by(course_id: course.id).delete
