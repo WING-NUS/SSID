@@ -102,7 +102,7 @@ module Api
 
         submission_similarities.each { |submission_similarity|
           result_submission_similarities.append( {
-              submissionSimilarityId: submission_similarity.id,
+              submissionSimilarityID: submission_similarity.id,
               student1: submission_similarity.submission1.student.id,
               student2: submission_similarity.submission2.student.id,
               similarity: submission_similarity.similarity
