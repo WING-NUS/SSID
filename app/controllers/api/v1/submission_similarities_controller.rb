@@ -97,7 +97,20 @@ module Api
           submission_similarities = submission_similarities.offset(per_page * (page_number - 1))
         end
 
-        render json: { status: 'processed', submissionSimilarities: submission_similarities }, status: :ok
+        # Process subnission similarities into readable format for returning via JSON
+        result_submission_similarities = []
+
+        submission_similarities.each { |submission_similarity|
+          result_submission_similarities.append( {
+              submissionSimilarityId: submission_similarity.id,
+              student1: submission_similarity.submission1.student.id,
+              student2: submission_similarity.submission2.student.id,
+              similarity: submission_similarity.similarity
+            }
+          )
+        }
+
+        render json: { status: 'processed', submissionSimilarities: result_submission_similarities }, status: :ok
       end
 
       def render_pair_of_flagged_submissions
@@ -111,21 +124,22 @@ module Api
           return
         end
 
-        max_similarity_percentage = submission_similarity.similarity
         matches = []
 
         submission_similarity.similarity_mappings.each do |similarity|
           matches.append(
             {
-              student1: similarity.line_range1_string,
-              student2: similarity.line_range2_string,
-              statementCount: similarity.statement_count
+              student1StartLine: similarity.start_line1 + 1,
+              student1EndLine: similarity.end_line1 + 1,
+              student2StartLine: similarity.start_line2 + 1,
+              student2EndLine: similarity.end_line2 + 1,
+              numOfMatchingStatements: similarity.statement_count
             }
           )
         end
 
         render json: {
-          maxSimilarityPercentage: max_similarity_percentage,
+          similarity: submission_similarity.similarity,
           matches: matches
         }, status: :ok
       end
