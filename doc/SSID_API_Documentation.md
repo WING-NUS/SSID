@@ -100,6 +100,10 @@ Content-Type: application/octet-stream
 
 **URL**: `/api/v1/assignments/{assignment_id}/submission_similarities/`
 
+***With threshold***: `/api/v1/assignments/{assignment_id}/submission_similarities?threshold={threshold value}`. For example, `/api/v1/assignments/{assignment_id}/submission_similarities?threshold=95` returns all submission similarities whose similarity is greater than or equal to 95%.
+
+***With limit***: `/api/v1/assignments/{assignment_id}/submission_similarities?limit={limit count}`. For example, `/api/v1/assignments/{assignment_id}/submission_similarities?limit=5` returns 5 submission similarities.
+
 **Method**: `GET`
 
 **Authentication required**: YES
