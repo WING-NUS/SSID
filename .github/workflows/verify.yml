@@ -93,7 +93,7 @@ jobs:
           sudo /etc/init.d/mysql start
           mysql -e 'CREATE DATABASE ssid_test;' -u root -proot
           bundle exec rails db:create
-          bundle exec rails db:migrate
+          bundle exec rails db:migrate RAILS_ENV=test
           bundle exec rails db:seed
 
       - name: Install chrome
