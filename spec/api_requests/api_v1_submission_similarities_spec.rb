@@ -67,12 +67,6 @@ def init_submisision_similarities_tests
   submission_similarity_mapping.save
 end
 
-def clear_submisision_similarities_tests
-  clear_tests
-  # destroys newly-created assignment
-  Assignment.find_by(title: 'RSpec Assignment').destroy
-end
-
 RSpec.describe 'api v1 submission_similarities requests index', type: :request do
   describe 'GET /api/v1/assignments/:assignment_id/submission_similarities/' do
     context 'successful' do
@@ -87,7 +81,7 @@ RSpec.describe 'api v1 submission_similarities requests index', type: :request d
       end
 
       after do
-        clear_submisision_similarities_tests
+        clear_tests
       end
 
       it 'returns an ok status' do
@@ -111,7 +105,7 @@ RSpec.describe 'api v1 submission_similarities requests index', type: :request d
       end
 
       after do
-        clear_submisision_similarities_tests
+        clear_tests
       end
 
       it 'returns a 401 status' do
@@ -139,7 +133,7 @@ RSpec.describe 'api v1 submission_similarities requests show', type: :request do
       end
 
       after do
-        clear_submisision_similarities_tests
+        clear_tests
       end
 
       it 'returns an ok status' do
@@ -164,7 +158,7 @@ RSpec.describe 'api v1 submission_similarities requests show', type: :request do
       end
 
       after do
-        clear_submisision_similarities_tests
+        clear_tests
       end
 
       it 'returns a 400 status' do
@@ -189,7 +183,7 @@ RSpec.describe 'api v1 submission_similarities requests show', type: :request do
       end
 
       after do
-        clear_submisision_similarities_tests
+        clear_tests
       end
 
       it 'returns a 401 status' do
