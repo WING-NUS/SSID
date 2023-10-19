@@ -155,6 +155,5 @@ end
 def clear_tests
   User.find_by(name: 'ssid_api_user').destroy
   course = Course.find_by(name: 'Introduction to Programming')
-  UserCourseMembership.find_by(course_id: course.id).destroy
   course.destroy
 end
