@@ -69,8 +69,8 @@ end
 
 def clear_submisision_similarities_tests
   clear_tests
-  # Deletes newly-created assignment
-  Assignment.find_by(title: 'RSpec Assignment').delete
+  # destroys newly-created assignment
+  Assignment.find_by(title: 'RSpec Assignment').destroy
 end
 
 RSpec.describe 'api v1 submission_similarities requests index', type: :request do
