@@ -142,7 +142,7 @@ RSpec.describe 'api v1 submission_similarities requests show', type: :request do
 
       it 'returns maxSimilaryPercentage and matches' do
         response.body.should include 'matches'
-        response.body.should include 'maxSimilarityPercentage'
+        response.body.should include 'similarity'
       end
     end
 
