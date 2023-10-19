@@ -99,6 +99,8 @@ jobs:
       - name: Install chrome
         id: setup-chrome
         uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
 
       - name: Show chrome version
         run: |
