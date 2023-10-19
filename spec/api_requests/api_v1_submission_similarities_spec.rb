@@ -18,6 +18,13 @@ def init_submisision_similarities_tests
 
   assignment.save
 
+  submission_similarity_process = SubmissionSimilarityProcess.new do |process|
+    process.assignment_id = assignment.id
+    process.status = SubmissionSimilarityProcess::STATUS_COMPLETED
+  end
+
+  submission_similarity_process.save
+  
   submission1 = Submission.new do |submission1|
     submission1.assignment_id = assignment.id
     submission1.student_id = 999_999_998
