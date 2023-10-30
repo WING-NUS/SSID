@@ -51,9 +51,66 @@ module Api
       end
 
       def render_submission_similarities
-        assignment = Assignment.find_by(id: params[:assignment_id])
+        assignment = set_course_and_assignment(params[:assignment_id])
+
+        if assignment.nil?
+          render json: { error: 'Assignment does not exist' }, status: :bad_request
+          return
+        end
+        # Check if the assignment has associated submission files.
+        if assignment.submissions.empty?
+          render json: { status: 'empty' }, status: :ok
+          return
+        end
+
+        # Determine process status of assignment
+        submission_similarity_process = assignment.submission_similarity_process
+        case submission_similarity_process.status
+        when SubmissionSimilarityProcess::STATUS_RUNNING, SubmissionSimilarityProcess::STATUS_WAITING
+          render json: { status: 'processing' }, status: :ok
+          return
+        when SubmissionSimilarityProcess::STATUS_ERRONEOUS
+          render json: { status: 'error', message: 'SSID is busy or under maintenance. Please try again later.' },
+                 status: :service_unavailable
+          return
+        end
+
         submission_similarities = assignment.submission_similarities
-        render json: submission_similarities
+
+        ### Filtering Code
+        # Apply the threshold filter
+        if params[:threshold].present?
+          threshold_value = params[:threshold].to_f
+          submission_similarities = submission_similarities.where('similarity >= ?', threshold_value)
+        end
+
+        # Apply the limit filter
+        if params[:limit].present?
+          limit_value = params[:limit].to_i
+          submission_similarities = submission_similarities.limit(limit_value)
+        end
+
+        # Apply the page filter
+        if params[:page].present?
+          per_page = params[:limit].present? ? limit_value : 20 # Default per page value is 20, limit to use a page size
+          page_number = params[:page].to_i
+          submission_similarities = submission_similarities.offset(per_page * (page_number - 1))
+        end
+
+        # Process subnission similarities into readable format for returning via JSON
+        result_submission_similarities = []
+
+        submission_similarities.each { |submission_similarity|
+          result_submission_similarities.append( {
+              submissionSimilarityID: submission_similarity.id,
+              student1ID: submission_similarity.submission1.student_id,
+              student2ID: submission_similarity.submission2.student_id,
+              similarity: submission_similarity.similarity
+            }
+          )
+        }
+
+        render json: { status: 'processed', submissionSimilarities: result_submission_similarities }, status: :ok
       end
 
       def render_pair_of_flagged_submissions
@@ -67,21 +124,22 @@ module Api
           return
         end
 
-        max_similarity_percentage = submission_similarity.similarity
         matches = []
 
         submission_similarity.similarity_mappings.each do |similarity|
           matches.append(
             {
-              student1: similarity.line_range1_string,
-              student2: similarity.line_range2_string,
-              statementCount: similarity.statement_count
+              student1StartLine: similarity.start_line1 + 1,
+              student1EndLine: similarity.end_line1 + 1,
+              student2StartLine: similarity.start_line2 + 1,
+              student2EndLine: similarity.end_line2 + 1,
+              numOfMatchingStatements: similarity.statement_count
             }
           )
         end
 
         render json: {
-          maxSimilarityPercentage: max_similarity_percentage,
+          similarity: submission_similarity.similarity,
           matches: matches
         }, status: :ok
       end

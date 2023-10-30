@@ -18,6 +18,13 @@ def init_submisision_similarities_tests
 
   assignment.save
 
+  submission_similarity_process = SubmissionSimilarityProcess.new do |process|
+    process.assignment_id = assignment.id
+    process.status = SubmissionSimilarityProcess::STATUS_COMPLETED
+  end
+
+  submission_similarity_process.save
+  
   submission1 = Submission.new do |submission1|
     submission1.assignment_id = assignment.id
     submission1.student_id = 999_999_998
@@ -67,12 +74,6 @@ def init_submisision_similarities_tests
   submission_similarity_mapping.save
 end
 
-def clear_submisision_similarities_tests
-  clear_tests
-  # Deletes newly-created assignment
-  Assignment.find_by(title: 'RSpec Assignment').delete
-end
-
 RSpec.describe 'api v1 submission_similarities requests index', type: :request do
   describe 'GET /api/v1/assignments/:assignment_id/submission_similarities/' do
     context 'successful' do
@@ -87,7 +88,7 @@ RSpec.describe 'api v1 submission_similarities requests index', type: :request d
       end
 
       after do
-        clear_submisision_similarities_tests
+        clear_tests
       end
 
       it 'returns an ok status' do
@@ -111,7 +112,7 @@ RSpec.describe 'api v1 submission_similarities requests index', type: :request d
       end
 
       after do
-        clear_submisision_similarities_tests
+        clear_tests
       end
 
       it 'returns a 401 status' do
@@ -139,7 +140,7 @@ RSpec.describe 'api v1 submission_similarities requests show', type: :request do
       end
 
       after do
-        clear_submisision_similarities_tests
+        clear_tests
       end
 
       it 'returns an ok status' do
@@ -148,7 +149,7 @@ RSpec.describe 'api v1 submission_similarities requests show', type: :request do
 
       it 'returns maxSimilaryPercentage and matches' do
         response.body.should include 'matches'
-        response.body.should include 'maxSimilarityPercentage'
+        response.body.should include 'similarity'
       end
     end
 
@@ -164,7 +165,7 @@ RSpec.describe 'api v1 submission_similarities requests show', type: :request do
       end
 
       after do
-        clear_submisision_similarities_tests
+        clear_tests
       end
 
       it 'returns a 400 status' do
@@ -189,7 +190,7 @@ RSpec.describe 'api v1 submission_similarities requests show', type: :request do
       end
 
       after do
-        clear_submisision_similarities_tests
+        clear_tests
       end
 
       it 'returns a 401 status' do

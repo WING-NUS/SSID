@@ -40,7 +40,7 @@ Capybara.default_driver = :headless_chrome
 Capybara.javascript_driver = :headless_chrome
 
 Capybara.configure do |config|
-  config.app_host = "http://127.0.0.1:3000/"
+  config.app_host = 'http://127.0.0.1:3000/'
 end
 
 RSpec.configure do |config|
@@ -172,9 +172,7 @@ end
 
 # Removes all newly-created data
 def clear_tests
-  User.find_by(name: 'ssid_api_user').delete
-  ApiKey.find_by(value: 'SSID_RSPEC_API_KEY').delete
+  User.find_by(name: 'ssid_api_user').destroy
   course = Course.find_by(name: 'Introduction to Programming')
-  UserCourseMembership.find_by(course_id: course.id).delete
-  course.delete
+  course.destroy
 end

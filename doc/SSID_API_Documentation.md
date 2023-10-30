@@ -100,6 +100,10 @@ Content-Type: application/octet-stream
 
 **URL**: `/api/v1/assignments/{assignment_id}/submission_similarities/`
 
+***With threshold***: `/api/v1/assignments/{assignment_id}/submission_similarities?threshold={threshold value}`. For example, `/api/v1/assignments/{assignment_id}/submission_similarities?threshold=95` returns all submission similarities whose similarity is greater than or equal to 95%.
+
+***With limit***: `/api/v1/assignments/{assignment_id}/submission_similarities?limit={limit count}`. For example, `/api/v1/assignments/{assignment_id}/submission_similarities?limit=5` returns 5 submission similarities.
+
 **Method**: `GET`
 
 **Authentication required**: YES
@@ -108,9 +112,9 @@ Content-Type: application/octet-stream
 
 **JSON Parameters**:
 
-- `threshold (Optional) number`: A number between 0 and 100. If specified, returns only submission similarities whose similarity percentage is between `threshold` and 100 inclusive. Otherwise, returns all submission similarities. **[Note: Currently this is already available in SSID's web interface but not API]**.
-- `page (Optional) number`: If specified, returns submission similarities in such page when sorted by highest maximum similarity percentage. Otherwise, returns all submission similarities. **[Note: Currently SSID stores and displays all submission similarities on its web interface. The function to take top N submissions is not yet available in both API and web interface, so we need to first build it for SSID, then allow it to be used via API]**.
-- `limit (Optional) number`: If specified, returns such number of submission similarities with highest maximum similarity percentage. Otherwise, returns all submission similarities. **[Note: Currently SSID stores and displays all submission similarities on its web interface. The function to take top N submissions is not yet available in both web interface and API, so we need to first build it for SSID, then allow it to be used via API]**.
+
+- `threshold (Optional) number`: A number between 0 and 100. If specified, returns only submission similarities whose similarity percentage is between `threshold` and 100 inclusive. Otherwise, returns all submission similarities **[Note: Currently SSID stores and displays all submission similarities on its web interface. The function to display only submission similarities whose similarity percentage is greater than or equal to `threshold` is not yet available in the web interface so we need to build it for SSID]**.
+- `limit (Optional) number`: If specified, returns such number of submission similarities with highest maximum similarity percentage. Otherwise, returns all submission similarities. **[Note: Currently SSID stores and displays all submission similarities on its web interface. The function to take top N submissions is not yet available in the web interface so we need to build it for SSID]**.
 
 **Request Example**:
 | Header |
@@ -135,7 +139,7 @@ Content-Type: application/octet-stream
 | Code | Status              | Return body                                                                                                                                                                                                                                                                                                                                                                                            |
 | ---- | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | 200  | Successful          | `{ "status": "empty" }` **[Note: This status, currently in SSID's web interface, is for when the user did not include a zip file when creating an assignment. To rectify this, the user must upload the file via the web interface. When submitting through API, the zip assignment file is compulsory.]**, `{ "status": "processing" }`, or `{ "status": "processed", "submissionSimilarities": [] }` |
-| 400  | Error               | `{ “error”: “Submission similarities requested does not exist." }`                                                                                                                                                                                                                                                                                                                                     |
+| 400  | Error               | `{ “error”: “Submission similarities requested does not exist." }`, `{ “error”: “Assignment does not exist" }`                                                                                                                                                                                                                                                                                                                                    |
 | 401  | Unauthorized        | `{ "error": "Missing or invalid API key." }` or `{ "error": "Your API key is not authorized to access this resource." }`                                                                                                                                                                                                                                                                               |
 | 503  | Service Unavailable | `{ "error": "SSID is busy or under maintenance. Please try again later." }`                                                                                                                                                                                                                                                                                                                            |
 
@@ -177,7 +181,7 @@ Content-Type: application/octet-stream
 
 | Code | Status              | Return body                                                                                                              |
 | ---- | ------------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| 200  | Successful          | `{ "maxSimilaryPercentage": …, "matches": [] }` **[Note: max similarity percentage is between 0 and 100]**                 |
+| 200  | Successful          | `{ "similarity": …, "matches": [] }` **[Note: similarity is between 0 and 100]**                 |
 | 400  | Error               | `{ “error”: “Submission similarities requested does not exist." }`                                                       |
 | 401  | Unauthorized        | `{ "error": "Missing or invalid API key." }` or `{ "error": "Your API key is not authorized to access this resource." }` |
 | 503  | Service Unavailable | `{ "error": "SSID is busy or under maintenance. Please try again later." }`                                              |

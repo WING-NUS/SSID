@@ -35,7 +35,7 @@ module Api
       APPLICATION_ZIP_MIME_TYPE = 'application/zip'
       MULTIPART_X_ZIP_MIME_TYPE = 'multipart/x-zip'
       OCTET_STREAM_MIME_TYPE = 'application/octet-stream'
-      REQUIRED_PARAMS = %w[title language].freeze
+      REQUIRED_PARAMS = %w[title language studentSubmissions].freeze
       ALLOWED_PARAMS = %w[title language useFingerprints minimumMatchLength sizeOfNGram studentSubmissions
                           mappingFile].freeze
       ALLOWED_LANGUAGES = %w[java python3 c cpp javascript r ocaml matlab scala].freeze
