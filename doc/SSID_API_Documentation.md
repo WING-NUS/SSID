@@ -181,7 +181,7 @@ Content-Type: application/octet-stream
 
 | Code | Status              | Return body                                                                                                              |
 | ---- | ------------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| 200  | Successful          | `{ "maxSimilaryPercentage": …, "matches": [] }` **[Note: max similarity percentage is between 0 and 100]**                 |
+| 200  | Successful          | `{ "similarity": …, "matches": [] }` **[Note: similarity is between 0 and 100]**                 |
 | 400  | Error               | `{ “error”: “Submission similarities requested does not exist." }`                                                       |
 | 401  | Unauthorized        | `{ "error": "Missing or invalid API key." }` or `{ "error": "Your API key is not authorized to access this resource." }` |
 | 503  | Service Unavailable | `{ "error": "SSID is busy or under maintenance. Please try again later." }`                                              |
