@@ -171,7 +171,7 @@ module Api
         # Valid zip file mime types that does not required to be further verified by the zip library
         if [X_ZIP_COMPRESSED_MIME_TYPE, ZIP_COMPRESSED_MIME_TYPE, APPLICATION_ZIP_MIME_TYPE,
             MULTIPART_X_ZIP_MIME_TYPE].include?(mime_type)
-          true
+          return true
         # Need to be further verified by zip library as it can be a rar file
         elsif mime_type == OCTET_STREAM_MIME_TYPE && opened_as_zip?(file_path)
           return true
