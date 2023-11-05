@@ -185,6 +185,7 @@ module Api
             <body>
               <h1>Submission Similarities Report</h1>
               <p>Assignment ID: #{submission_similarity.assignment.id}</p>
+              <p>Similarity ID: #{submission_similarity.id}</p>
               <p>Similarity: #{submission_similarity.similarity}</p>
               <h2>Matches</h2>
               <ul>
