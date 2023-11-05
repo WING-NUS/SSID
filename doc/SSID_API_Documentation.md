@@ -181,7 +181,50 @@ Content-Type: application/octet-stream
 
 | Code | Status              | Return body                                                                                                              |
 | ---- | ------------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| 200  | Successful          | `{ "similarity": …, "matches": [] }` **[Note: similarity is between 0 and 100]**                 |
+| 200  | Successful          | `{ "similarity": ..., "matches": [], "pdf_link": ... }` **[Note: similarity is between 0 and 100]**                 |
+| 400  | Error               | `{ “error”: “Submission similarities requested does not exist." }`                                                       |
+| 401  | Unauthorized        | `{ "error": "Missing or invalid API key." }` or `{ "error": "Your API key is not authorized to access this resource." }` |
+| 503  | Service Unavailable | `{ "error": "SSID is busy or under maintenance. Please try again later." }`                                              |
+
+---
+
+### 4. View PDF report of flagged pairwise submissions comparison results
+
+**URL**: `/api/v1/assignments/{assignment_id}/submission_similarities/{submission_similarities_id}/view_pdf`
+
+**Method**: `GET`
+
+**Authentication required**: YES
+
+**Description**: Returns details of a pair of a flagged submissions in PDF. Please use SSID's web interface to view and mark students as suspicious or guilty. The web equivalence is going to `/assignments/{assignment_id}/submission_similarities/{submission_similarity_id}`.
+
+**JSON Parameters**:
+
+- **No param**. Pass in the desired assignment id and submission similarity id in the URL.
+
+**Request Example**:
+| Header |
+| --- |
+
+```
+{
+  "Content-Type": "application/json",
+  "X-Api-Key": "YOUR_API_KEY"
+}
+```
+
+| Body |
+| ---- |
+
+```
+<empty>
+```
+
+**Possible responses**:
+
+| Code | Status              | Return body                                                                                                              |
+| ---- | ------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| 200  | Successful          | The generated PDF Report **[Note: similarity is between 0 and 100]**                 |
 | 400  | Error               | `{ “error”: “Submission similarities requested does not exist." }`                                                       |
 | 401  | Unauthorized        | `{ "error": "Missing or invalid API key." }` or `{ "error": "Your API key is not authorized to access this resource." }` |
 | 503  | Service Unavailable | `{ "error": "SSID is busy or under maintenance. Please try again later." }`                                              |
