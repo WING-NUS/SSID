@@ -146,8 +146,8 @@ module Api
           )
         end
 
-        pdf_file_path = "api/v1/assignments/#{submission_similarity.assignment_id}/" +
-          "submission_similarities/#{submission_similarity.id}/view_pdf"
+        pdf_file_path = "api/v1/assignments/#{submission_similarity.assignment_id}/" \
+                        "submission_similarities/#{submission_similarity.id}/view_pdf"
 
         render json: {
           similarity: submission_similarity.similarity,
@@ -169,7 +169,7 @@ module Api
 
         pdf_content = generate_pdf_content(submission_similarity)
         send_data pdf_content, type: 'application/pdf', 
-        disposition: 'inline', filename: "#{submission_similarity.id}.pdf"
+                              disposition: 'inline', filename: "#{submission_similarity.id}.pdf"
       end
 
       def generate_pdf_content(submission_similarity)
