@@ -169,7 +169,7 @@ module Api
 
         pdf_content = generate_pdf_content(submission_similarity)
         send_data pdf_content, type: 'application/pdf', 
-          disposition: 'inline', filename: "#{submission_similarity.id}.pdf"
+        disposition: 'inline', filename: "#{submission_similarity.id}.pdf"
       end
 
       def generate_pdf_content(submission_similarity)
@@ -201,7 +201,6 @@ module Api
               <h2>Matches</h2>
               <ul>
         HTML
-    
         matches.each do |match|
           html_content += <<-HTML
                 <li>
