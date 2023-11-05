@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'api_keys_handler'
+require 'pdfkit'
 
 module Api
   module V1
@@ -26,6 +27,13 @@ module Api
       def show
         APIKeysHandler.authenticate_api_key
         render_pair_of_flagged_submissions
+      rescue APIKeysHandler::APIKeyError => e
+        render json: { error: e.message }, status: e.status
+      end
+
+      def view_pdf
+        APIKeysHandler.authenticate_api_key
+        generate_pdf
       rescue APIKeysHandler::APIKeyError => e
         render json: { error: e.message }, status: e.status
       end
@@ -138,10 +146,71 @@ module Api
           )
         end
 
+        pdf_file_path = "api/v1/assignments/#{submission_similarity.assignment_id}/submission_similarities/#{submission_similarity.id}/view_pdf"
+
         render json: {
           similarity: submission_similarity.similarity,
-          matches: matches
+          matches: matches,
+          pdf_link: pdf_file_path
         }, status: :ok
+      end
+
+      def generate_pdf
+        submission_similarity = SubmissionSimilarity.find_by(
+          assignment_id: params[:assignment_id],
+          id: params[:id]
+        )
+
+        if submission_similarity.nil?
+          render json: { error: 'Submission similarities requested do not exist.' }, status: :bad_request
+          return
+        end
+
+        matches = []
+
+        submission_similarity.similarity_mappings.each do |similarity|
+          matches.append(
+            {
+              student1StartLine: similarity.start_line1 + 1,
+              student1EndLine: similarity.end_line1 + 1,
+              student2StartLine: similarity.start_line2 + 1,
+              student2EndLine: similarity.end_line2 + 1,
+              numOfMatchingStatements: similarity.statement_count
+            }
+          )
+        end
+
+        html_content = <<-HTML
+          <html>
+            <body>
+              <h1>Submission Similarities Report</h1>
+              <p>Assignment ID: #{submission_similarity.assignment.id}</p>
+              <p>Similarity: #{submission_similarity.similarity}</p>
+              <h2>Matches</h2>
+              <ul>
+          HTML
+    
+        matches.each do |match|
+          html_content += <<-HTML
+                <li>
+                  Student 1 Lines: #{match[:student1StartLine]} - #{match[:student1EndLine]}
+                  <br>
+                  Student 2 Lines: #{match[:student2StartLine]} - #{match[:student2EndLine]}
+                  <br>
+                  Number of Matching Statements: #{match[:numOfMatchingStatements]}
+                </li>
+          HTML
+        end
+      
+        html_content += <<-HTML
+              </ul>
+            </body>
+          </html>
+        HTML
+
+        pdf_report = PDFKit.new(html_content)
+        pdf_data = pdf_report.to_pdf
+        send_data pdf_data, type: 'application/pdf', disposition: 'inline', filename: "#{submission_similarity.id}.pdf"
       end
     end
   end

@@ -122,7 +122,11 @@ SSID::Application.routes.draw do
     namespace :v1 do
       # Assignments routes
       resources :assignments, only: [] do
-        resources :submission_similarities, only: [:index, :show]
+        resources :submission_similarities, only: [:index, :show] do
+          member do
+            get 'view_pdf'
+          end
+        end
       end
     end
   end
