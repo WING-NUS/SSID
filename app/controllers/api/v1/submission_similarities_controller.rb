@@ -166,6 +166,11 @@ module Api
           return
         end
 
+        pdf_content = generate_pdf_content(submission_similarity)
+        send_data pdf_content, type: 'application/pdf', disposition: 'inline', filename: "#{submission_similarity.id}.pdf"
+      end
+
+      def generate_pdf_content(submission_similarity)
         matches = []
 
         submission_similarity.similarity_mappings.each do |similarity|
@@ -180,6 +185,10 @@ module Api
           )
         end
 
+        return generate_html_content(matches, submission_similarity)
+      end
+
+      def generate_html_content(matches, submission_similarity)
         html_content = <<-HTML
           <html>
             <body>
@@ -210,8 +219,8 @@ module Api
         HTML
 
         pdf_report = PDFKit.new(html_content)
-        pdf_data = pdf_report.to_pdf
-        send_data pdf_data, type: 'application/pdf', disposition: 'inline', filename: "#{submission_similarity.id}.pdf"
+        pdf_content = pdf_report.to_pdf
+        return pdf_content
       end
     end
   end
