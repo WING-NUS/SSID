@@ -146,7 +146,8 @@ module Api
           )
         end
 
-        pdf_file_path = "api/v1/assignments/#{submission_similarity.assignment_id}/submission_similarities/#{submission_similarity.id}/view_pdf"
+        pdf_file_path = "api/v1/assignments/#{submission_similarity.assignment_id}/" +
+          "submission_similarities/#{submission_similarity.id}/view_pdf"
 
         render json: {
           similarity: submission_similarity.similarity,
@@ -167,7 +168,8 @@ module Api
         end
 
         pdf_content = generate_pdf_content(submission_similarity)
-        send_data pdf_content, type: 'application/pdf', disposition: 'inline', filename: "#{submission_similarity.id}.pdf"
+        send_data pdf_content, type: 'application/pdf', 
+          disposition: 'inline', filename: "#{submission_similarity.id}.pdf"
       end
 
       def generate_pdf_content(submission_similarity)
@@ -185,7 +187,7 @@ module Api
           )
         end
 
-        return generate_html_content(matches, submission_similarity)
+        generate_html_content(matches, submission_similarity)
       end
 
       def generate_html_content(matches, submission_similarity)
@@ -198,7 +200,7 @@ module Api
               <p>Similarity: #{submission_similarity.similarity}</p>
               <h2>Matches</h2>
               <ul>
-          HTML
+        HTML
     
         matches.each do |match|
           html_content += <<-HTML
@@ -211,7 +213,6 @@ module Api
                 </li>
           HTML
         end
-      
         html_content += <<-HTML
               </ul>
             </body>
@@ -219,8 +220,7 @@ module Api
         HTML
 
         pdf_report = PDFKit.new(html_content)
-        pdf_content = pdf_report.to_pdf
-        return pdf_content
+        pdf_report.to_pdf
       end
     end
   end
