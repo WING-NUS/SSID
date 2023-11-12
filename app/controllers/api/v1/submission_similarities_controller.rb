@@ -173,51 +173,8 @@ module Api
       end
 
       def generate_pdf_content(submission_similarity)
-        matches = []
-
-        submission_similarity.similarity_mappings.each do |similarity|
-          matches.append(
-            {
-              student1StartLine: similarity.start_line1 + 1,
-              student1EndLine: similarity.end_line1 + 1,
-              student2StartLine: similarity.start_line2 + 1,
-              student2EndLine: similarity.end_line2 + 1,
-              numOfMatchingStatements: similarity.statement_count
-            }
-          )
-        end
-
-        generate_html_content(matches, submission_similarity)
-      end
-
-      def generate_html_content(matches, submission_similarity)
-        html_content = <<-HTML
-          <html>
-            <body>
-              <h1>Submission Similarities Report</h1>
-              <p>Assignment ID: #{submission_similarity.assignment.id}</p>
-              <p>Similarity ID: #{submission_similarity.id}</p>
-              <p>Similarity: #{submission_similarity.similarity}</p>
-              <h2>Matches</h2>
-              <ul>
-        HTML
-        matches.each do |match|
-          html_content += <<-HTML
-                <li>
-                  Student 1 Lines: #{match[:student1StartLine]} - #{match[:student1EndLine]}
-                  <br>
-                  Student 2 Lines: #{match[:student2StartLine]} - #{match[:student2EndLine]}
-                  <br>
-                  Number of Matching Statements: #{match[:numOfMatchingStatements]}
-                </li>
-          HTML
-        end
-        html_content += <<-HTML
-              </ul>
-            </body>
-          </html>
-        HTML
-
+        @submission_similarity = submission_similarity
+        html_content = render_to_string(template: 'api/v1/submission_similarities/report_template', layout: false)
         pdf_report = PDFKit.new(html_content)
         pdf_report.to_pdf
       end
