@@ -1,0 +1,109 @@
+<html>
+    <head>
+        <style>
+            body {
+                font-family: sans-serif;
+            }
+
+            h2, h3, h4, h5, h6 {
+                margin: 50px 0 10px 0;
+            }
+
+            table, th, td {
+                padding: 10px;
+                border: 1px solid black;
+                border-collapse: collapse;
+            }
+
+            .match-line {
+                background-color: #FFD9E7;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Submission Similarity Report</h1>
+
+        <p>Assignment ID: <%= @submission_similarity.assignment.id %></p>
+        <p>Similarity ID: <%= @submission_similarity.id %></p>
+        <p>Student1 Name: <%= @submission_similarity.submission1.student.name %><p>
+        <p>Student2 Name: <%= @submission_similarity.submission2.student.name %><p>
+        <p>Similarity: <%= @submission_similarity.similarity %>%</p>
+
+        <h2>Summary of Matches</h2>
+        <div class="submission_similarity_header">
+            <div class="table-container mt-3">
+                <table id="matchingStatementsTable" class="table">
+                    <thead>
+                        <tr>
+                            <th>Key</th>
+                            <th class="lines_col"><%= @submission_similarity.submission1.student.name %></th>
+                            <th class="lines_col"><%= @submission_similarity.submission2.student.name %></th>
+                            <th>Number of Matching Statements</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% ascii_value_of_key = 65 %>
+                        <% sorted_mappings = @submission_similarity.similarity_mappings.sort_by { |m| m.start_line1 } %>
+                        <% line_num_to_key1 = {} %>
+                        <% line_num_to_key2 = {} %>
+                        <% sorted_mappings.each do |mapping| %>
+
+                        <% key = ascii_value_of_key.chr %>
+                        <% ascii_value_of_key += 1 %>
+
+                        <% mapping.line_range1.each do |n| %>
+                            <% line_num_to_key1[n + 1] = key %>
+                        <% end %>
+
+                        <% mapping.line_range2.each do |n| %>
+                            <% line_num_to_key2[n + 1] = key %>
+                        <% end %>
+
+                        <tr>
+                            <td><small><%= key %></small></td>
+                            <td>
+                                <span>Lines <%= mapping.line_range1_string %><span><br>
+                                <% mapping.line_range1.each do |n| %>
+                                    <span class="match-line"><%= @submission_similarity.submission1.lines[n] %></span><br>
+                                <% end %>
+                            </td>
+                            <td>
+                                <span>Lines <%= mapping.line_range2_string %><span><br>
+                                <% mapping.line_range2.each do |n| %>
+                                    <span class="match-line"><%= @submission_similarity.submission2.lines[n] %></span><br>
+                                <% end %>
+                            </td>
+                            <td class="num_statements_cell"><%= mapping.statement_count %></td>
+                        </tr>
+                        <% end %>
+                    </tbody>
+                </table>   
+            </div>
+        </div> 
+
+        <h2>Full Side-by-Side Code Comparison</h2>
+        <div class="submission_similarity_body">
+            <div class="table-container mt-3">
+                <table id="fullCodeComparisonTable" class="table">
+                    <thead>
+                        <tr>
+                        <th>Lines</th>
+                        <th><%= @submission_similarity.submission1.student.name %></th>
+                        <th><%= @submission_similarity.submission2.student.name %></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% max_lines = [@submission_similarity.submission1.lines.size, @submission_similarity.submission2.lines.size].max %>
+                        <% (1..max_lines).each do |line_num| %>
+                        <tr>
+                            <td><%= line_num %></td>
+                            <td class="<%= 'match-line' if sorted_mappings.any? { |m| m.line_range1.include?(line_num) } %>"><%= @submission_similarity.submission1.lines[line_num] %></td>
+                            <td class="<%= 'match-line' if sorted_mappings.any? { |m| m.line_range2.include?(line_num) } %>"><%= @submission_similarity.submission2.lines[line_num] %></td>
+                        </tr>
+                        <% end %>
+                    </tbody>
+                </table>
+            </div>
+        </div>     
+    </body>
+</html>
