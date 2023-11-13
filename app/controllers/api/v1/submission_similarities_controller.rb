@@ -69,12 +69,12 @@ module Api
 
         case submission_similarity_process.status
         when SubmissionSimilarityProcess::STATUS_RUNNING, SubmissionSimilarityProcess::STATUS_WAITING
-          render json: { status: 'processing' }, status: :ok
+          render_processing_status
         when SubmissionSimilarityProcess::STATUS_ERRONEOUS
-          render json: { status: 'error', message: 'SSID is busy or under maintenance. Please try again later.' },
-                 status: :service_unavailable
+          render_error_status
         else
-          render_filtered_submission_similarities(submission_similarities)
+          submission_similarities = apply_filters(submission_similarities)
+          render_paginated_or_limited_submission_similarities(submission_similarities)
         end
       end
 
@@ -100,17 +100,33 @@ module Api
         submission_similarities
       end
 
-      def render_paginated_submission_similarities(submission_similarities)
-        # Set the default per page value to 20
-        per_page = 20
-      
-        # Sort the submission_similarities by similarity in descending order by default
-        submission_similarities = submission_similarities.order(similarity: :desc)
-      
-        # Use will_paginate to paginate the results
-        submission_similarities = submission_similarities.paginate(page: params[:page], per_page: per_page)
-      
+      def render_paginated_or_limited_submission_similarities(submission_similarities)
+        if params[:limit].present?
+          render_json_response(submission_similarities)
+        else
+          # Set the default per page value to 20 for pagination
+          per_page = 20
+
+          # Sort the submission_similarities by similarity in descending order by default
+          submission_similarities = submission_similarities.order(similarity: :desc)
+
+          submission_similarities = submission_similarities.paginate(page: params[:page], per_page: per_page)
+
+          render_json_response(submission_similarities)
+        end
+      end
+
+      def render_json_response(submission_similarities)
         render json: { status: 'processed', submissionSimilarities: submission_similarities }, status: :ok
+      end
+
+      def render_processing_status
+        render json: { status: 'processing' }, status: :ok
+      end
+
+      def render_error_status
+        render json: { status: 'error', message: 'SSID is busy or under maintenance. Please try again later.' },
+               status: :service_unavailable
       end
 
       def render_pair_of_flagged_submissions
