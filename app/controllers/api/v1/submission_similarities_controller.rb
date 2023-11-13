@@ -57,27 +57,34 @@ module Api
           render json: { error: 'Assignment does not exist' }, status: :bad_request
           return
         end
-        # Check if the assignment has associated submission files.
+
+        submission_similarities = assignment.submission_similarities
+
         if assignment.submissions.empty?
           render json: { status: 'empty' }, status: :ok
           return
         end
 
-        # Determine process status of assignment
         submission_similarity_process = assignment.submission_similarity_process
+
         case submission_similarity_process.status
         when SubmissionSimilarityProcess::STATUS_RUNNING, SubmissionSimilarityProcess::STATUS_WAITING
           render json: { status: 'processing' }, status: :ok
-          return
         when SubmissionSimilarityProcess::STATUS_ERRONEOUS
           render json: { status: 'error', message: 'SSID is busy or under maintenance. Please try again later.' },
                  status: :service_unavailable
-          return
+        else
+          render_filtered_submission_similarities(submission_similarities)
         end
+      end
 
-        submission_similarities = assignment.submission_similarities
+      def render_filtered_submission_similarities(submission_similarities)
+        submission_similarities = apply_filters(submission_similarities)
 
-        ### Filtering Code
+        render_paginated_submission_similarities(submission_similarities)
+      end
+
+      def apply_filters(submission_similarities)
         # Apply the threshold filter
         if params[:threshold].present?
           threshold_value = params[:threshold].to_f
@@ -90,25 +97,19 @@ module Api
           submission_similarities = submission_similarities.limit(limit_value)
         end
 
+        submission_similarities
+      end
+
+      def render_paginated_submission_similarities(submission_similarities)
         # Set the default per page value to 20
         per_page = 20
-
+      
         # Sort the submission_similarities by similarity in descending order by default
         submission_similarities = submission_similarities.order(similarity: :desc)
-
-        # Check if the page parameter is present and is a positive integer
-        if params[:page].present? && params[:page].to_i.positive?
-          page_number = params[:page].to_i
-        else
-          # If the page parameter is not present or not a positive integer, default to page 1
-          page_number = 1
-        end
-
-        # Calculate the offset based on the page number
-        offset_value = (page_number - 1) * per_page
-        submission_similarities = submission_similarities.offset(offset_value).limit(per_page)
-
-
+      
+        # Use will_paginate to paginate the results
+        submission_similarities = submission_similarities.paginate(page: params[:page], per_page: per_page)
+      
         render json: { status: 'processed', submissionSimilarities: submission_similarities }, status: :ok
       end
 
