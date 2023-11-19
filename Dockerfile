@@ -42,7 +42,7 @@ WORKDIR /ssid
 # Adding gems
 COPY Gemfile Gemfile
 COPY Gemfile.lock Gemfile.lock
-RUN gem install bundler -v 2.2.17
+RUN gem install bundler -v 2.4.18
 RUN bundle install
 
 COPY . /ssid
