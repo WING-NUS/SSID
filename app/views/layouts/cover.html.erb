@@ -8,73 +8,189 @@
     <div class="alert">
       <%= flash[:alert] %>
     </div>
-  <% end %>  
-  <div class="site-introduction">
-    <div>
-      <p class="site-motto text-dark">Empowering the next generations of <em>programmers</em></p>
-      <p class="site-subtitle">Use Student Submission Integrity Diagnosis (SSID) System to uphold the highest standards of academic integrity for your courses.</p>
-      <div style="display:flex;">
-        <span style="width:300px;">  
-          <button type="button" class="btn btn-start btn-primary py-1" onclick="location.href='/signup';">Get started</button>
-        </span>
-        <span class="site-subtitle2">Join our community of <strong>50+ users</strong> and <strong>300+ assignments</strong></span>
+  <% end %>
+
+  <div class="hero-section">
+    <div class="hero-images">
+      <div class="site-screenshot">
+        <%= image_tag("ssid_cover_screenshot.png", alt: "SSID Sreenshot", class: "site-screenshot-img", width: '100%')%>     
       </div>
     </div>
-    <div class="site-clip">
-      <%= image_tag("plagiarism_cover_image.svg", size: "500", alt: "Plagiarism Cover Image")%>            
+    <div class="hero-content">
+      <div class="hero-header">
+        <div class="hero-title">
+          Detect plagiarism and empower the next generation of <em>programmers</em>
+        </div>
+        <div class="hero-subtitle">
+          Student Submission Integrity Diagnosis (SSID) System reveals borrowed
+          content, so you can maintain the highest standards of academic integrity
+          for your courses.
+        </div>
+      </div>
+      <div class="hero-buttons">
+        <button class="button-filled" onclick="location.href='/signup';">Get Started</button>
+        <button class="button-outline" onclick="location.href='/guide';">User Guide</button>
+      </div>
     </div>
   </div>
-  <div class="site-features-wrapper">
-    <div class="site-screenshot">
-      <%= image_tag("ssid_cover_screenshot.png", alt: "SSID Sreenshot", class: "site-screenshot-img")%>     
-    </div>
-    <div class="site-features">
-      <h3> Why SSID? </h3>
-      <span class="site-subtitle">Save time on the thankless task of detecting plagiarism. SSID provides advanced plagiarism detection capability with informative and easy-to-use interfaces.</span>
-      <br><br>
-      <span class="site-subtitle"><%= image_tag("check_icon.svg", size: "24", alt: "site feature") %> Advanced algorithms</span> <br>
-      <span class="site-subtitle"><%= image_tag("check_icon.svg", size: "24", alt: "site feature") %> Seamless integrations</span> <br>
-      <span class="site-subtitle"><%= image_tag("check_icon.svg", size: "24", alt: "site feature") %> Interactive results</span>
+  <div class="gradient-divider">
+    <%= image_tag("gradient-divider.png", alt: "Gradient Divider", class: "gradient-divider", width: '100%')%>     
+  </div>
+  <div class="features-container">
+    <div class="features-content">
+      <div class="section-header">
+        <div class="header-content">
+          <div class="title">Features</div>
+          <div class="subtitle">Seamless technology that just works.</div>
+        </div>
+        <div class="description">
+          Save time on the thankless task of detecting plagiarism. SSID provides
+          advanced plagiarism detection capability with informative and
+          easy-to-use interfaces.
+        </div>
+      </div>
+      <div class="features-list">
+        <div class="feature-columns">
+          <div class="feature-column">
+            <div class="feature-item">
+              <%= image_tag("integration-icon.svg", alt: "Integration Icon", width: '48px')%>
+              <div class="feature-details">
+                <div class="feature-title">Seamless integrations</div>
+                <div class="feature-description">
+                  Easily check for plagiarism within your preferred platforms,
+                  from word processors to learning systems, for added convenience.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="feature-column">
+            <div class="feature-item">
+              <%= image_tag("lightning-icon.svg", alt: "Algorithms Icon", width: '48px')%>
+              <div class="feature-details">
+                <div class="feature-title">Advanced algorithms</div>
+                <div class="feature-description">
+                  Our advanced algorithms dig deep to find plagiarism, analyzing
+                  context, lines of code, and structure for comprehensive
+                  detection.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="feature-column">
+            <div class="feature-item">
+              <%= image_tag("chart-icon.svg", alt: "Results Icon", width: '48px')%>
+              <div class="feature-details">
+                <div class="feature-title">Interactive results</div>
+                <div class="feature-description">
+                  Explore flagged content, compare it with sources, and make
+                  informed decisions with our interactive results feature.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class="site-testimonials">
-    <div class="testimonial-heading">
-      <h2 style="color: white;">Hear from our instructors</h2>
+  <div class="testimonials-carousel">
+    <div class="header-content">
+      <div class="title">Testimonials</div>
+      <div class="subtitle">Hear it for yourself from our users.</div>
     </div>
-    <div class="testimonial-cards">
-      <span class="float-child card mx-4">
-        <p class="site-subtitle2 px-4 pt-4 pb-2"><small>My teaching team have used SSID every semester since I joined SoC. It came in very handy during the large increase in class sizes at SoC, allowing us to check the programs of all of our students. The user interface is very clear, and it works with multiple program languages. In addition, the development team is very responsive to any issues we have encountered. Thank you to the team.</small></p>
-        <span class="testimonial-author">
-          <span class="px-4"><strong>Boyd Anderson</strong></span>
-          <br>
-          <span class="px-4"><small>Lecturer, NUS School of Computing</small></span>
-             </span>
-      </span>
+    <div class="testimonial-item">
+      <div class="quote-mark">“</div>
+      <div class="testimonial-text">
+        My teaching team have used SSID every semester since I joined SoC. It came
+        in very handy during the large increase in class sizes at SoC, allowing us
+        to check the programs of all of our students. The user interface is very
+        clear, and it works with multiple program languages. In addition, the
+        development team is very responsive to any issues we have encountered. Thank
+        you to the team.
+      </div>
+      <%= image_tag("avatar-icon.svg", alt: "Avatar Icon", class: 'testimonial-image', width: '64px')%>
+      <div class="author-name">Boyd Anderson</div>
+      <div class="author-details">Lecturer, NUS School of Computing</div>
+    </div>
+    <div class="testimonial-item">
+      <div class="quote-mark">“</div>
+      <div class="testimonial-text">
+        I used the SSID tool for my operating system course to find plagiarism in students' C codes.
+        The tool was easy to use with a user-friendly interface. The feature that stood out to me was the side-by-side comparison of the suspected code, 
+        as it made spotting similarities much more apparent. Furthermore, I particularly liked the option to upload skeleton codes that get exempted from 
+        the analysis resulting in an accurate comparison.
+      </div>
+      <%= image_tag("avatar-icon.svg", alt: "Avatar Icon", class: 'testimonial-image', width: '64px')%>
+      <div class="author-name">Nitya Lakshmanan</div>
+      <div class="author-details">Lecturer, NUS School of Computing</div>
+    </div>
+    <div class="testimonial-item">
+      <div class="quote-mark">“</div>
+      <div class="testimonial-text">
+        The scalability of SSID allows us to compare not only assignments written by students 
+        from the same cohort, but we could also compare against assignments written by previous cohorts.  
+        We could therefore flag out students who have submitted their senior's code as their own.
 
-      <span class="float-child card mx-4">
-        <p class="site-subtitle2 px-4 pt-4 pb-2"><small>I used the SSID tool for my operating system course to find plagiarism in students' C codes. The tool was easy to use with a user-friendly interface. The feature that stood out to me was the side-by-side comparison of the suspected code, as it made spotting similarities much more apparent. Furthermore, I particularly liked the option to upload skeleton codes that get exempted from the analysis resulting in an accurate comparison.</small></p>
-        <span class="testimonial-author">
-          <span class="px-4"><strong>Nitya Lakshmanan</strong></span>
-          <br>
-          <span class="px-4"><small>Lecturer, NUS School of Computing</small></span>
-        </span>
-      </span>
-        
-      <span class="float-child card mx-4">
-      <p class="site-subtitle2 px-4 pt-4 pb-2"><small>The scalability of SSID allows us to compare not only assignments written by students from the same cohort, but we could also compare against assignments written by previous cohorts.  We could therefore flag out students who have submitted their senior's code as their own.</small></p>
-      <span class="testimonial-author">
-        <span class="px-4"><strong>Ooi Wei Tsang</strong></span>
-        <br>
-        <span class="px-4"><small>Assoc. Prof., NUS School of Computing</small></span>
-      </span>
-    </span>
+      </div>
+      <%= image_tag("avatar-icon.svg", alt: "Avatar Icon", class: 'testimonial-image', width: '64px')%>
+      <div class="author-name">Ooi Wei Tsang</div>
+      <div class="author-details">Assoc. Prof., NUS School of Computing</div>
     </div>
   </div>
+
+  <div class="achievements-section">
+    <div class="achievements-content">
+      <div class="section-title">Inspire integrity</div>
+      <div class="section-subtitle">Foster academic excellence with integrity.</div>
+      <div class="section-description">
+        We provide the tools you need to ensure that your students deliver their
+        best, honestly and with confidence, in their academic endeavors.
+      </div>
+      <div class="statistics">
+        <div class="statistic-item">
+          <div class="statistic-number">50+</div>
+          <div class="statistic-label">Users</div>
+          <div class="statistic-text">
+            We’ve helped over 50 users, professionals and tutors included.
+          </div>
+        </div>
+        <div class="statistic-item">
+          <div class="statistic-number">300+</div>
+          <div class="statistic-label">Assignments evaluated</div>
+          <div class="statistic-text">
+            Our users have graded over 300 total assignments.
+          </div>
+        </div>
+        <div class="statistic-item">
+          <div class="statistic-number">1K</div>
+          <div class="statistic-label">Students evaluated</div>
+          <div class="statistic-text">
+            We have graded submissions from over a thousand students.
+          </div>
+        </div>
+        <div class="statistic-item">
+          <div class="statistic-number">4</div>
+          <div class="statistic-label">Semesterly modules</div>
+          <div class="statistic-text">
+            4 of the largest classes use SSID each semester.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   
-  <div class="site-faq">
-    <div class="faq-heading">
-      <h2>Frequently Asked Questions</h2>
+  <div class="site-faq faq-container">
+    <div class="gradient-divider">
+      <%= image_tag("gradient-divider.png", alt: "Gradient Divider", class: "gradient-divider", width: '100%')%>     
+    </div>
+    <div class="section-header">
+      <div class="header-content">
+        <div class="subtitle">Frequently Asked Questions</div>
+      </div>
+      <div class="description">
+        Everything you need to know about SSID.
+      </div>
     </div>
     <div class="accordion" id="accordionFAQ">
       <div class="accordion-item">
@@ -116,20 +232,22 @@
     </div>
   </div>
 
-  <div class="site-footer">
-    <div class="actioncall-heading">
-      <h2 style="color: white;">Ready to join our community?</h2>
+  <div class="footer-container">
+    <div class="footer-title">Ready to join our community?</div>
+    <div class="footer-subtitle">Join our community of 50+ professionals using SSID.</div>
+    <div class="footer-buttons">
+      <button class="button-filled" onclick="location.href='/signup';">Get started</button>
     </div>
-
-    <button class="btn btn-actioncall" onclick="location.href='/signup';">Create account</button>
-
+    <hr class="footer-divider">
     <span class="footer">
-      <span class="copyright">&copy; <%= ApplicationHelper::COPYRIGHT_DATE_RANGE %> WING NUS</span>
+      <%= link_to(image_tag("SSID_Logo.svg", width: "300", height: "60", alt: "SSID Logo"), root_path, id: "site-banner-login", style: "color:inherit; text-decoration:inherit") %>
+     <span class="copyright">&copy; <%= ApplicationHelper::COPYRIGHT_DATE_RANGE %> WING NUS</span>
       <ul>
         <li><%= link_to "About Us", "https://wing.comp.nus.edu.sg", target: "_blank" %> | </li>
         <li><%= link_to "Contact", "https://github.com/WING-NUS/SSID#contact", target: "_blank" %> | </li>
         <li><%= link_to "GitHub", "https://github.com/WING-NUS/SSID", target: "_blank" %></li>
       </ul>
     </span>
-  </div>  
+  </div>
+
 </div>
