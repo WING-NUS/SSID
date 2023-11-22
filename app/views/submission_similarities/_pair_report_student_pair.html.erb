@@ -16,10 +16,4 @@
 </style>
 
 <h4>Submission Similarities for Students <%= @submission_similarity.student1.name %> and <%= @submission_similarity.student2.name %> (<%= @submission_similarity.similarity %>%)</h4>
-<%= render partial: "side_by_side_view", locals: { submission_similarity: @submission_similarity }%>
-
-<script type="text/javascript">
-$(document).ready(function() {
-  window.print();
-});
-</script>
+<%= render partial: "submission_similarities/side_by_side_view", locals: { submission_similarity: @submission_similarity }%>

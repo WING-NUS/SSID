@@ -10,3 +10,9 @@
 <%= render partial: "pair_report_title" %>
 
 <%= render partial: "pair_report_student_pair", locals: { submission_similarity: @submission_similarity }%>
+
+<script type="text/javascript">
+$(document).ready(function() {
+  window.print();
+});
+</script>
