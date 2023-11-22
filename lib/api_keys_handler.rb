@@ -38,6 +38,11 @@ module APIKeysHandler
   end
 
   def self.authorized_for_course?(user_id, course_id)
+    # Admins are allowed to access all courses
+    user = User.find(user_id)
+    if user.is_admin
+      return true
+    end
     user_course_membership = UserCourseMembership.find_by(user_id: user_id, course_id: course_id)
     user_course_membership.present?
   end
