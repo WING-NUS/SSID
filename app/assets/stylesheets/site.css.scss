@@ -94,8 +94,14 @@ h2, h3, h4, h5, h6 {
   .menu-icon {
     display: inline-block;
     cursor: pointer;
-    float: right;
-    margin: auto;
+    position: absolute;
+    top: 50%;
+  }
+
+  .menu-icon-container {
+    position: relative;
+    display: inline-block;
+    width: 32px;
   }
 
   .navicon {
@@ -445,12 +451,14 @@ div.notice {
   position: relative;
   align-items: center;
   padding: 12px 25vw 0;
+  z-index: -1;
 }
 
 @media (max-width: 768px) {
   .hero-images {
     margin-top: 0rem;
     padding: 0;
+    z-index: -1;
   }
 }
 
