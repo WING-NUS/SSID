@@ -25,11 +25,11 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 <body class="<%= controller_name %> <%= controller_name %>_<%= action_name %>">
   <%= javascript_tag "if (window.#{controller_name.singularize.camelize} && #{controller_name.singularize.camelize}.onLoad) { #{controller_name.singularize.camelize}.onLoad(); };" %>
   <header class="site_header">
-    <div class="container d-flex flex-row w-100">
+    <div class="container d-flex justify-content-between flex-row w-100">
       <% unless user_signed_in?%>
           <%= link_to(image_tag("SSID_Logo.svg", width: "300", height: "60", alt: "SSID Logo"), root_path, id: "site-banner-login", style: "color:inherit; text-decoration:inherit") %>
           <input class="menu-btn" type="checkbox" id="menu-btn" />
-          <label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
+          <div class="menu-icon-container"><label class="menu-icon" for="menu-btn"><span class="navicon"></span></label></div>
 
           <div class="site-login w-20">
             <ul id="menu" <%= %Q{ class="admin"}.html_safe if user_signed_in? and current_user.is_admin %>>
