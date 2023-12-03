@@ -1,8 +1,8 @@
 FROM ruby:2.6.6
 
 # install java & set path
-RUN apt-get update && \
-    apt-get -y install -y sudo
+RUN apt-get update 
+RUN apt-get -y install -y sudo
 
 RUN apt-get install -y openjdk-11-jdk
 RUN sudo update-alternatives --config java
@@ -32,7 +32,9 @@ RUN apt update
 RUN apt-get install default-mysql-client -y
 
 # install rails dependencies
-RUN apt-get clean all && apt-get update -qq && apt-get install -y build-essential libpq-dev \
+RUN apt-get clean all 
+RUN apt-get update -qq 
+RUN apt-get install -y build-essential libpq-dev \
     curl gnupg2 apt-utils default-libmysqlclient-dev git libcurl3-dev cmake \
     libssl-dev pkg-config openssl imagemagick file nodejs yarn
 
