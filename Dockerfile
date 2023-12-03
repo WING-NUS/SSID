@@ -14,7 +14,7 @@ RUN javac -version
 # install ant
 RUN apt update
 RUN apt -y install ant
-RUN ant -version
+# RUN ant -version # Causes issues with docker build
 
 # install antlr
 WORKDIR /usr/local/lib

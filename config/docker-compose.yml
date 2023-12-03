@@ -1,7 +1,7 @@
 version: "3.7"
 services:
   db:
-    image: "mysql:5.7"
+    image: "mariadb:10.4" # Equivalent to mysql:5.7 and works on M1 Macs
     restart: always
     environment:
      MYSQL_ROOT_PASSWORD: root
