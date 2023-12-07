@@ -169,7 +169,7 @@ module Api
 
         pdf_content = generate_pdf_content(submission_similarity)
         send_data pdf_content, type: 'application/pdf', 
-                              disposition: 'inline', filename: "#{submission_similarity.id}.pdf"
+                              disposition: 'attachment', filename: "#{submission_similarity.id}.pdf"
       end
 
       def generate_pdf_content(submission_similarity)
