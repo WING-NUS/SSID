@@ -25,8 +25,8 @@
 
         <p>Assignment ID: <%= @submission_similarity.assignment.id %></p>
         <p>Similarity ID: <%= @submission_similarity.id %></p>
-        <p>Student1 Name: <%= @submission_similarity.submission1.student.name %><p>
-        <p>Student2 Name: <%= @submission_similarity.submission2.student.name %><p>
+        <p>Student1 ID: <%= @submission_similarity.submission1.student_id %><p>
+        <p>Student2 ID: <%= @submission_similarity.submission2.student_id %><p>
         <p>Similarity: <%= @submission_similarity.similarity %>%</p>
 
         <h2>Summary of Matches</h2>
@@ -35,32 +35,18 @@
                 <table id="matchingStatementsTable" class="table">
                     <thead>
                         <tr>
-                            <th>Key</th>
-                            <th class="lines_col"><%= @submission_similarity.submission1.student.name %></th>
-                            <th class="lines_col"><%= @submission_similarity.submission2.student.name %></th>
+                            <th class="lines_col"><%= @submission_similarity.submission1.student_id %></th>
+                            <th class="lines_col"><%= @submission_similarity.submission2.student_id %></th>
                             <th>Number of Matching Statements</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <% ascii_value_of_key = 65 %>
                         <% sorted_mappings = @submission_similarity.similarity_mappings.sort_by { |m| m.start_line1 } %>
                         <% line_num_to_key1 = {} %>
                         <% line_num_to_key2 = {} %>
                         <% sorted_mappings.each do |mapping| %>
 
-                        <% key = ascii_value_of_key.chr %>
-                        <% ascii_value_of_key += 1 %>
-
-                        <% mapping.line_range1.each do |n| %>
-                            <% line_num_to_key1[n + 1] = key %>
-                        <% end %>
-
-                        <% mapping.line_range2.each do |n| %>
-                            <% line_num_to_key2[n + 1] = key %>
-                        <% end %>
-
                         <tr>
-                            <td><small><%= key %></small></td>
                             <td>
                                 <span>Lines <%= mapping.line_range1_string %><span><br>
                                 <% mapping.line_range1.each do |n| %>
@@ -88,8 +74,8 @@
                     <thead>
                         <tr>
                         <th>Lines</th>
-                        <th><%= @submission_similarity.submission1.student.name %></th>
-                        <th><%= @submission_similarity.submission2.student.name %></th>
+                        <th><%= @submission_similarity.submission1.student_id %></th>
+                        <th><%= @submission_similarity.submission2.student_id %></th>
                         </tr>
                     </thead>
                     <tbody>
