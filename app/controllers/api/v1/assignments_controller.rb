@@ -37,7 +37,7 @@ module Api
       OCTET_STREAM_MIME_TYPE = 'application/octet-stream'
       REQUIRED_PARAMS = %w[title language studentSubmissions].freeze
       ALLOWED_PARAMS = %w[title language useFingerprints minimumMatchLength sizeOfNGram studentSubmissions
-                          mappingFile].freeze
+                          mappingFile references].freeze
       ALLOWED_LANGUAGES = %w[java python3 c cpp javascript r ocaml matlab scala].freeze
 
       def init_api_key_handler
@@ -113,15 +113,15 @@ module Api
           return render action: 'new' unless @assignment.save
 
           is_map_enabled = !params['mappingFile'].nil?
-          used_fingerprints = params['useFingerprints'] == 'Yes'
+          used_fingerprints = (params['useFingerprints'] == 'Yes') && (!params['references']) # if references supplied, defaults to false
 
           # No student submission file was uploaded
           # Student submission file is a valid zip
           if valid_zip?(params['studentSubmissions'].content_type, params['studentSubmissions'].path)
             # Don't process the file and show error if the mapping was enabled but no mapping file was uploaded
             if valid_map_or_no_map?(is_map_enabled, params['mappingFile'])
-              start_upload(@assignment, params['studentSubmissions'], is_map_enabled, params['mappingFile'],
-                           used_fingerprints)
+              start_upload(@assignment, params['studentSubmissions'], params['references'], is_map_enabled, params['mappingFile'],
+                            used_fingerprints)
             # Don't process the file and show error if the mapping was enabled but no mapping file was uploaded
             else
               @assignment.errors.add :mapfile, 'containing mapped student names must be a valid csv file'
@@ -141,11 +141,11 @@ module Api
         end
       end
 
-      def start_upload(assignment, submission_file, is_map_enabled, map_file, used_fingerprints)
+      def start_upload(assignment, submission_file, references, is_map_enabled, map_file, used_fingerprints)
         require 'submissions_handler'
 
         # Process upload file
-        submissions_path = SubmissionsHandler.process_upload(submission_file, is_map_enabled, map_file, assignment)
+        submissions_path = SubmissionsHandler.process_upload(submission_file, references, is_map_enabled, map_file, assignment)
         if submissions_path
           # Launch java program to process submissions
           SubmissionsHandler.process_submissions(submissions_path, assignment, is_map_enabled, used_fingerprints)
