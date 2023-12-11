@@ -45,6 +45,8 @@ public final class SimComparer {
 
 	private static SimComparer instance = new SimComparer();
 	private static final String SKELETON = "skeleton";
+	private static final String REFERENCES_PREFIX = "references_";
+	
 	private static Logger logger = LogManager.getLogger();
 	private static final int WINDOW_SIZE = 4;
 
@@ -59,47 +61,25 @@ public final class SimComparer {
 			ArrayList<Submission> submissions, int nGramSize, int minMatch) {
 
 		Submission skeleton = getSkeletonCode(submissions);
-    assert(skeleton != null);
+    	assert(skeleton != null);
+		
 		ArrayList<Result> results = new ArrayList<Result>();
 
-		int noOfSub = submissions.size();
 		Submission s1, s2;
 		TokenList s1Tokens, s2Tokens, bTokens = skeleton.getCodeTokens();
 		Result result;
+		
+		// Divide submissions into 2 bags, currentSemSubmissions for current semester's submissions and referenceSubmissions for past semester's submissions.
+		// Note that skeleton code is excluded from both bags, and a common skeleton -- that of current semester -- is used in all comparisons.
+		ArrayList<Submission> currentSemSubmissions = getCurrentSemSubmissions(submissions);
+		ArrayList<Submission> referenceSubmissions = getReferenceSubmissions(submissions);
 
-		long wholeAssFingerprintsNbr = 0;
-		HashMap<BigInteger, ArrayList<FingerPrint>> invertedIndexesOfAssignmentFingerPrints = new HashMap<BigInteger, ArrayList<FingerPrint>>();
-		for (Submission s : submissions) {
-			ArrayList<FingerPrint> subFingerPrints = computeDocumentFingerPrints(s, nGramSize-1);
+		// Compare submissions within the current semester
+		for (int i = 0; i < currentSemSubmissions.size(); i++) {
+			s1 = currentSemSubmissions.get(i);
 
-			for (FingerPrint fPrint : subFingerPrints) {
-				BigInteger hash = fPrint.getHash();
-				if (invertedIndexesOfAssignmentFingerPrints.containsKey(hash)) {
-					ArrayList<FingerPrint> listOFingerPrints = invertedIndexesOfAssignmentFingerPrints.get(hash);
-					listOFingerPrints.add(fPrint);
-				} else {
-					ArrayList<FingerPrint> listOFingerPrints = new ArrayList<FingerPrint>();
-					listOFingerPrints.add(fPrint);
-					invertedIndexesOfAssignmentFingerPrints.put(hash, listOFingerPrints);
-				}
-			}
-
-			long nbrOfFingerprints = subFingerPrints.size();
-			wholeAssFingerprintsNbr += nbrOfFingerprints; 
-		}
-
-		logger.debug("Assignment fingerprints: {}", wholeAssFingerprintsNbr);
-
-		for (int i = 0; i < noOfSub; i++) {
-			s1 = submissions.get(i);
-			if (s1.isSkeletonCode()) {
-				continue;
-			}
-			for (int j = i + 1; j < noOfSub; j++) {
+			for (int j = i + 1; j < currentSemSubmissions.size(); j++) {
 				s2 = submissions.get(j);
-				if (s2.isSkeletonCode()) {
-					continue;
-				}
 
 				logger.info("Start comparing submissions: {} vs {}", s1.getID(), s2.getID());
 				s1Tokens = s1.getCodeTokens();
@@ -121,6 +101,33 @@ public final class SimComparer {
 			}
 		}
 
+		// For each submission in the current semester, compare them against every reference submission"
+		for (int i = 0; i < currentSemSubmissions.size(); i++) {
+			s1 = currentSemSubmissions.get(i);
+
+			for (int j = 0; j < referenceSubmissions.size(); j++) {
+				s2 = referenceSubmissions.get(j);
+
+				logger.info("Start comparing submissions: {} vs {}", s1.getID(), s2.getID());
+				s1Tokens = s1.getCodeTokens();
+				s2Tokens = s2.getCodeTokens();
+				if (s1Tokens.size() < s2Tokens.size()) {
+					result = compareSubmissions(s1, s2, skeleton, nGramSize,
+							minMatch);
+					computeSims(s1Tokens, s2Tokens, result);
+				} else {
+					result = compareSubmissions(s2, s1, skeleton, nGramSize,
+							minMatch);
+					computeSims(s2Tokens, s1Tokens, result);
+				}
+
+				results.add(result);
+
+				unmarkTokens(s1Tokens, s2Tokens, bTokens);
+
+			}					
+		}
+		
 		return results;
 	}
 
@@ -280,6 +287,7 @@ public final class SimComparer {
 
 	}
 
+	// Determines skeleton among submissions and set their isSkeletonCode attribute to true
 	private Submission getSkeletonCode(ArrayList<Submission> submissions) {
 		Submission reply = null;
 		for (Submission s : submissions) {
@@ -294,6 +302,29 @@ public final class SimComparer {
 			reply.setIsSkeletonCode(true);
 		}
 
+		return reply;
+	}
+
+	// Finds and returns reference submissions among input submissions.  
+	// Note that IDs of refererences are of the form "references_{semester name}_{student name}.
+	private ArrayList<Submission> getReferenceSubmissions(ArrayList<Submission> submissions) {
+		ArrayList<Submission> reply = new ArrayList<>();
+		for (Submission s: submissions) {
+			if (s.getID().contains(REFERENCES_PREFIX)) {
+				reply.add(s);
+			}
+		}
+		return reply;
+	}
+
+	// Finds and returns submissions of current semester (i.e. those that are not references) among input submissions
+	private ArrayList<Submission> getCurrentSemSubmissions(ArrayList<Submission> submissions) {
+		ArrayList<Submission> reply = new ArrayList<>();
+		for (Submission s: submissions) {
+			if (!s.getID().contains(REFERENCES_PREFIX)) {
+				reply.add(s);
+			}
+		}
 		return reply;
 	}
 
