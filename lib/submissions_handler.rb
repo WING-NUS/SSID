@@ -58,7 +58,7 @@ module SubmissionsHandler
   MAX_DATA_CHAR_SIZE = 64000
   DATA_TRUNCATE_MSG = "... (Data  got truncated)"
 
-  def self.process_upload(file, references, isMapEnabled, mapfile, assignment)
+  def self.process_upload(file, references = nil, isMapEnabled, mapfile, assignment)
     submissions_dir = File.join(".", "upload", assignment.id.to_s)
 
     # Clear upload dir if exists
@@ -113,12 +113,6 @@ module SubmissionsHandler
   end
 
   def self.extract_and_sanitize_zips(file, path)
-    puts "---debug---"
-    puts "Called extract_and_sanitize_zips with"
-    puts file
-    puts path
-    puts "---end debug---"
-
     accepted_extensions = [".ipynb", ".py",".java", ".cpp", ".c", ".h", ".scala", ".m", ".ml", ".mli", ".r"]
 
     # Regexes for special characters (emojis etc.) be removed
