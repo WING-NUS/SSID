@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'api_keys_handler'
+require 'pdfkit'
 
 module Api
   module V1
@@ -26,6 +27,13 @@ module Api
       def show
         APIKeysHandler.authenticate_api_key
         render_pair_of_flagged_submissions
+      rescue APIKeysHandler::APIKeyError => e
+        render json: { error: e.message }, status: e.status
+      end
+
+      def view_pdf
+        APIKeysHandler.authenticate_api_key
+        generate_pdf
       rescue APIKeysHandler::APIKeyError => e
         render json: { error: e.message }, status: e.status
       end
@@ -138,10 +146,37 @@ module Api
           )
         end
 
+        pdf_file_path = "api/v1/assignments/#{submission_similarity.assignment_id}/" \
+                        "submission_similarities/#{submission_similarity.id}/view_pdf"
+
         render json: {
           similarity: submission_similarity.similarity,
-          matches: matches
+          matches: matches,
+          pdf_link: pdf_file_path
         }, status: :ok
+      end
+
+      def generate_pdf
+        submission_similarity = SubmissionSimilarity.find_by(
+          assignment_id: params[:assignment_id],
+          id: params[:id]
+        )
+
+        if submission_similarity.nil?
+          render json: { error: 'Submission similarities requested do not exist.' }, status: :bad_request
+          return
+        end
+
+        pdf_content = generate_pdf_content(submission_similarity)
+        send_data pdf_content, type: 'application/pdf', 
+                              disposition: 'attachment', filename: "#{submission_similarity.id}.pdf"
+      end
+
+      def generate_pdf_content(submission_similarity)
+        @submission_similarity = submission_similarity
+        html_content = render_to_string(template: 'api/v1/submission_similarities/report_template', layout: false)
+        pdf_report = PDFKit.new(html_content)
+        pdf_report.to_pdf
       end
     end
   end
