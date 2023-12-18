@@ -236,6 +236,25 @@ module SubmissionsHandler
               %Q{#{assignment.id} #{compare_dir} #{assignment.language.downcase} } +
               %Q{#{assignment.min_match_length} #{assignment.ngram_size} } +
               %Q{#{host} #{database} #{username} #{password} #{isMapEnabled} #{used_fingerprints}}  
+
+    process = assignment.submission_similarity_process
+
+    if process.nil? # Create process
+      SubmissionSimilarityProcess.create do |p|
+        p.assignment_id = assignment.id
+        p.status = SubmissionSimilarityProcess::STATUS_RUNNING
+      end
+
+      # reload assignment and process
+      assignment = Assignment.find(assignment.id)
+      process = assignment.submission_similarity_process
+    else
+      process.status = SubmissionSimilarityProcess::STATUS_RUNNING
+      process.save
+    end
+
+    return if Rails.env.test? # Don't launch Java program in test environment
+
     # Fork to run java program in background
     ruby_pid = Process.fork do
       java_log = ""
@@ -250,9 +269,7 @@ module SubmissionsHandler
       upload_log << assignment.upload_log if assignment.upload_log
       upload_log << java_log.truncate(MAX_DATA_CHAR_SIZE, separator: ' ', omission: DATA_TRUNCATE_MSG)
       assignment.upload_log = upload_log.join("\n")
-      
-      # Update status
-      process = assignment.submission_similarity_process
+
       if java_status.exitstatus == 0
         process.status = SubmissionSimilarityProcess::STATUS_COMPLETED
       else
@@ -268,20 +285,7 @@ module SubmissionsHandler
       end
     end
 
-    # Create process with pid
-    process = assignment.submission_similarity_process
-    if process.nil?
-      SubmissionSimilarityProcess.create do |p|
-        p.assignment_id = assignment.id
-        p.pid = ruby_pid
-        p.status = SubmissionSimilarityProcess::STATUS_RUNNING
-      end
-    else
-      process.pid = ruby_pid
-      process.status = SubmissionSimilarityProcess::STATUS_RUNNING
-      process.save
-    end
-
+    process.pid = ruby_pid
     Process.detach(ruby_pid) # Parent will not wait
   end
 
