@@ -24,6 +24,7 @@ class Assignment < ActiveRecord::Base
   has_many :confirmed_plagiarism_cases, -> { where("status = #{SubmissionSimilarity::STATUS_CONFIRMED_AS_PLAGIARISM}") }, class_name: "SubmissionSimilarity"
   has_many :submissions
   belongs_to :course
+  attr_accessor :used_fingerprints
 
   validates :title, :language, :min_match_length, :ngram_size, presence: true
   validates_numericality_of :min_match_length, only_integer: true, greater_than: 0
@@ -79,9 +80,11 @@ class Assignment < ActiveRecord::Base
     }.flatten
   end
 
-  def submission_similarities_for_student(student)
-    self.submission_similarities.select { |ss|
-      ss.submission1.student == student or ss.submission2.student == student
-    }
+  def submission_similarities_for_student(student, num_display)
+    the_submission = self.submissions.find_by_student_id(student.id)
+
+    if the_submission
+      self.submission_similarities.where(["submission1_id = ? or submission2_id = ?", the_submission.id, the_submission.id]).order('assignment_id, similarity DESC').limit(num_display)
+    end
   end
 end

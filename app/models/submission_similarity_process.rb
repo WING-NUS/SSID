@@ -20,6 +20,7 @@ class SubmissionSimilarityProcess < ActiveRecord::Base
   STATUS_ERRONEOUS = 0
   STATUS_RUNNING = 1
   STATUS_COMPLETED = 2
+  STATUS_WAITING = 3
   STATUS_STRINGS = %w{erroneous running completed}
 
   belongs_to :assignment

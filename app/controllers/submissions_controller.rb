@@ -40,7 +40,7 @@ class SubmissionsController < ApplicationController
     respond_to do |format|
       format.json { 
         render json: @submissions.collect { |s| 
-          { id: s.id, student_id: s.student.id, student_id_string: s.student_id_string } 
+          { id: s.id, student_id: s.student.id, student_name: s.student_name } 
         } 
       }
     end
@@ -56,7 +56,7 @@ class SubmissionsController < ApplicationController
       SubmissionLog.create { |sl|
         sl.submission_similarity = @submission_similarity
         sl.submission = @submission
-        sl.marker = @user
+        sl.marker = current_user
         sl.log_type = SubmissionLog::TYPE_STUDENT_MARK_AS_GUILTY
       }
     end
@@ -70,7 +70,7 @@ class SubmissionsController < ApplicationController
       SubmissionLog.create { |sl|
         sl.submission_similarity = @submission_similarity
         sl.submission = @submission
-        sl.marker = @user
+        sl.marker = current_user
         sl.log_type = SubmissionLog::TYPE_STUDENT_MARK_AS_NOT_GUILTY
       }
     end

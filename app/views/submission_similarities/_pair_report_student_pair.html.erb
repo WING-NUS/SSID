@@ -1,0 +1,19 @@
+<%
+  @submission1 = @submission_similarity.submission1
+  @submission2 = @submission_similarity.submission2
+  @student1 = @submission1.student
+  @student2 = @submission2.student
+%>
+
+<style type="text/css" >
+  .unselectable {
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+</style>
+
+<h4>Submission Similarities for Students <%= @submission_similarity.student1.name %> and <%= @submission_similarity.student2.name %> (<%= @submission_similarity.similarity %>%)</h4>
+<%= render partial: "submission_similarities/side_by_side_view", locals: { submission_similarity: @submission_similarity }%>

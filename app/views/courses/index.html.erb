@@ -16,9 +16,7 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 %>
 <header class="course_header">
   <h4>Courses</h4>
-  <% if @user.is_admin %>
-    <%= link_to image_tag("add_circle_outline_blue_24dp.svg", size: "28", alt: "New Course"), new_course_url, {'data-toggle' => 'tooltip', 'data-placement' => 'bottom', 'title' => 'New Course'} %>
-  <% end %>  
+  <%= link_to image_tag("add_circle_outline_blue_24dp.svg", size: "28", alt: "New Course"), new_course_url, {'data-toggle' => 'tooltip', 'data-placement' => 'bottom', 'title' => 'New Course'} %>
 </header>
 
 <% if flash[:notice] %>
@@ -34,11 +32,11 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
       <th class="course_name">Name</th>
       <th class="course_year_sem">Academic Year (Semester)</th>
       <th class="course_role">Your Role</th>
-      <% unless @user.is_admin %>
+      <% unless current_user.is_admin %>
         <th class="course_assignments_col">Assignments</th>
       <% end %>
       <th>View</th>
-      <% if @user.is_admin %>
+      <% if current_user.is_admin %>
         <th class="course_other_actions">Actions</th>
       <% end %>      
     </tr>
@@ -54,16 +52,16 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
     <td><%= course.code %></td>
     <td><%= course.name %></td>
     <td><%= course.academic_year %> Semester <%= course.semester %></td>
-    <td><%= course.role_string_for_user(@user) %></td>
-    <% unless @user.is_admin %>
+    <td><%= course.role_string_for_user(current_user) %></td>
+    <% unless current_user.is_admin %>
       <td><%= course.assignments.size %></td>
     <% end %>
     <td class="course_view_actions">
       <%= link_to image_tag("assignment_black_24dp.svg", alt: "Assignments"), course_assignments_url(course), { :class => 'tooltips', 'data-toggle' => 'tooltip', 'data-placement' => 'bottom', 'title' => 'Assignments' } %>
-      <%= link_to image_tag("people_black_24dp.svg", alt: "Users"), course_users_url(course), {'data-toggle' => 'tooltip', 'data-placement' => 'bottom', 'title' => 'Users'} %>
+      <%= link_to image_tag("people_black_24dp.svg", alt: "Users"), course_user_course_memberships_url(course), {'data-toggle' => 'tooltip', 'data-placement' => 'bottom', 'title' => 'Users'} %>
       <%= link_to image_tag("show_chart_black_24dp.svg", alt: "Visuals"), course_visualize_url(course), {'data-toggle' => 'tooltip', 'data-placement' => 'bottom', 'title' => 'Visuals'} %>
     </td>
-    <% if @user.is_admin %>   
+    <% if current_user.is_admin %>   
       <td>
         <div class="dropdown">
           <a data-toggle="dropdown" id="courseDropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">

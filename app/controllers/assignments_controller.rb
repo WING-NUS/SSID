@@ -31,7 +31,7 @@ class AssignmentsController < ApplicationController
       @course = Course.find(params[:course_id])
       controller.send :authenticate_actions_for_role, UserCourseMembership::ROLE_TEACHING_ASSISTANT,
                                                       course: @course,
-                                                      only: [ :index, :cluster_students, :new, :create, :edit, :update]
+                                                      only: [ :index, :cluster_students, :new, :create, :show, :update]
       controller.send :authenticate_actions_for_role, UserCourseMembership::ROLE_STUDENT,
                                                       course: @course,
                                                       only: [ ]
@@ -63,7 +63,7 @@ class AssignmentsController < ApplicationController
     respond_to do |format|
       format.json { 
         render json: @assignment.cluster_students.collect { |s| 
-          { id: s.id, id_string: s.id_string } 
+          { id: s.id, name: s.name } 
         } 
       }
     end
@@ -94,6 +94,8 @@ class AssignmentsController < ApplicationController
       a.course_id = @course.id
     }
 
+    puts "DEBUG 06: Enable fingerprints checkbox?"
+    puts "Checkbox: #{params[:assignment]["used_fingerprints"]}"
     # Process file if @assignment is valid and file was uploaded
     if @assignment.valid?
  
@@ -101,6 +103,7 @@ class AssignmentsController < ApplicationController
       return render action: "new" unless @assignment.save
 
       isMapEnabled = (params[:assignment]["mapbox"] == "Yes")? true : false;
+      used_fingerprints = (params[:assignment]["used_fingerprints"] == "Yes")? true : false
 
       # No student submission file was uploaded
       if params[:assignment]["file"].nil?
@@ -110,7 +113,7 @@ class AssignmentsController < ApplicationController
       elsif (is_valid_zip?(params[:assignment]["file"].content_type, params[:assignment]["file"].path))
         # Don't process the file and show error if the mapping was enabled but no mapping file was uploaded
         if (is_valid_map_or_no_map?(isMapEnabled, params[:assignment]["mapfile"])) 
-          self.start_upload(@assignment, params[:assignment]["file"], isMapEnabled, params[:assignment]["mapfile"])
+          self.start_upload(@assignment, params[:assignment]["file"], isMapEnabled, params[:assignment]["mapfile"], used_fingerprints)
         # Don't process the file and show error if the mapping was enabled but no mapping file was uploaded
         elsif (isMapEnabled && params[:assignment]["mapfile"].nil?)
           @assignment.errors.add(:mapfile, "containing mapped student names need to be uploaded if the 'Upload map file' box is ticked")
@@ -140,6 +143,7 @@ class AssignmentsController < ApplicationController
     @assignment = Assignment.find(params[:id])
 
     isMapEnabled = (params[:assignment]["mapbox"] == "Yes")? true : false;
+    used_fingerprints = (params[:assignment]["used_fingerprints"] == "Yes")? true : false
 
     # No student submission file was uploaded
     if params[:assignment]["file"].nil?
@@ -153,7 +157,7 @@ class AssignmentsController < ApplicationController
     elsif (is_valid_zip?(params[:assignment]["file"].content_type, params[:assignment]["file"].path))
       # Don't process the file and show error if the mapping was enabled but no mapping file was uploaded
       if (is_valid_map_or_no_map?(isMapEnabled, params[:assignment]["mapfile"])) 
-        self.start_upload(@assignment, params[:assignment]["file"], isMapEnabled, params[:assignment]["mapfile"])
+        self.start_upload(@assignment, params[:assignment]["file"], isMapEnabled, params[:assignment]["mapfile"], used_fingerprints)
       # Don't process the file and show error if the mapping was enabled but no mapping file was uploaded
       elsif (isMapEnabled && params[:assignment]["mapfile"].nil?)
         @assignment.errors.add(:mapfile, "containing mapped student names need to be uploaded if the 'Upload map file' box is ticked")
@@ -183,15 +187,21 @@ class AssignmentsController < ApplicationController
     redirect_to course_assignments_url(@course), notice: 'Assignment was successfully deleted.'
   end
   
-  def start_upload(assignment, submissionFile, isMapEnabled, mapFile)
+  def start_upload(assignment, submissionFile, isMapEnabled, mapFile, used_fingerprints)
       require 'submissions_handler'
 
       # Process upload file
       submissions_path = SubmissionsHandler.process_upload(submissionFile, isMapEnabled, mapFile, assignment)
       if submissions_path
         # Launch java program to process submissions
-        SubmissionsHandler.process_submissions(submissions_path, assignment, isMapEnabled)
-        redirect_to course_assignments_url(@course), notice: 'SSID will start to process the assignment now. Please refresh this page after a few minutes to view the similarity results.'
+        SubmissionsHandler.process_submissions(submissions_path, assignment, isMapEnabled, used_fingerprints)
+        
+        process = assignment.submission_similarity_process
+        notice = 'SSID will start to process the assignment now. Please refresh this page after a few minutes to view the similarity results.'
+        if process && process.status == SubmissionSimilarityProcess::STATUS_WAITING
+          notice = 'Your assignment has been put into a waiting list. SSID will process it soon. Thank you for your patience.'
+        end
+        redirect_to course_assignments_url(@course), notice: notice
       else
         assignment.errors.add "Submission zip file", ": SSID supports both directory-based and file-based submissions. Please select the submissions you want to evaluate and compress." 
         return render action: "show"

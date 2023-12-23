@@ -17,7 +17,7 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 
 class CoursesController < ApplicationController
   before_action { |controller|
-    controller.send :authenticate_actions_for_admin, only: [ :new, :create, :edit, :update, :destroy ]
+    controller.send :authenticate_actions_for_admin, only: [ :destroy ]
   }
   before_action { |controller|
     if params[:course_id]
@@ -28,10 +28,10 @@ class CoursesController < ApplicationController
     if @course
       controller.send :authenticate_actions_for_role, UserCourseMembership::ROLE_TEACHING_STAFF,
                                                       course: @course,
-                                                      only: [ :index, :cluster_students , :status]
+                                                      only: [ :index, :cluster_students , :status ]
       controller.send :authenticate_actions_for_role, UserCourseMembership::ROLE_TEACHING_ASSISTANT,
                                                       course: @course,
-                                                      only: [ :index, :cluster_students , :status]
+                                                      only: [ :index, :cluster_students , :status ]
       controller.send :authenticate_actions_for_role, UserCourseMembership::ROLE_STUDENT,
                                                       course: @course,
                                                       only: [ :index ]
@@ -49,7 +49,7 @@ class CoursesController < ApplicationController
 
   # GET /courses
   def index
-    @courses = @user.is_admin ? Course.all : @user.courses
+    @courses = current_user.is_admin ? Course.all : current_user.courses
   end
 
   # GET /courses/new
@@ -72,11 +72,23 @@ class CoursesController < ApplicationController
       expiry_date = expiry_time.to_date
       c.expiry = Time.zone.local_to_utc(DateTime.new(expiry_date.year, expiry_date.month, expiry_date.mday, expiry_time.hour, expiry_time.min))
     }
-    
-    if @course.errors.empty? and @course.save
-      redirect_to courses_url, notice: 'Course was successfully created.'
+
+    if @course.valid? and @course.save
     else
       render action: "new"
+      return
+    end
+
+    @membership = UserCourseMembership.new { |m|
+      m.user = current_user
+      m.course = @course
+      m.role = UserCourseMembership::ROLE_TEACHING_STAFF
+    }
+
+    if @membership.valid? && @membership.save
+      redirect_to courses_url, notice: 'Course was successfully created.'
+    else
+      render action: 'new'
     end
   end
 
@@ -117,9 +129,11 @@ class CoursesController < ApplicationController
     respond_to do |format|
       format.json { 
         render json: @course.cluster_students.collect { |s| 
-          { id: s.id, id_string: s.id_string } 
+          { id: s.id, name: s.name } 
         } 
       }
     end
   end
+
 end
+

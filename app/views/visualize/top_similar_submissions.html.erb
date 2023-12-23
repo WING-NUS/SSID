@@ -11,7 +11,7 @@
   <hr />
   <div id="options">
     <p>Visualize top similar submissions for assignment <%= select_tag "submissions_assignment_selector", options_for_select([["All", @course.id]] + @course.assignments.collect { |a| [ a.title, a.id ] }), onchange: "VisualizeTopSimilarSubmissions.selectAssignmentForSubmissions(this);" %> for each of the following students:
-    <%= select_tag "submissions", options_from_collection_for_select(@course.students, "id", "id_string"), multiple: true, include_blank: true, class: "submissions" %>
+    <%= select_tag "submissions", options_from_collection_for_select(@course.students, "id", "name"), multiple: true, include_blank: true, class: "submissions" %>
     <span>(selected 0 of <%= @course.students.size %>)</span></p>
     <p>Display up to <%= text_field_tag "num_most_similar_submissions", 5 %> most similar submissions for each student ID for each assignment</p>
     <hr />

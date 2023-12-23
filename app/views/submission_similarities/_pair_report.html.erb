@@ -1,0 +1,18 @@
+<% content_for :head do %>
+  <%= javascript_include_tag "site_modal.js" %>
+  <%= javascript_include_tag "prettify/prettify.js" %>
+
+  <%= stylesheet_link_tag "prettify/prettify.css" %>
+<% end %>
+
+<%= render :template => 'layouts/pdf_report' %>
+
+<%= render partial: "pair_report_title" %>
+
+<%= render partial: "pair_report_student_pair", locals: { submission_similarity: @submission_similarity }%>
+
+<script type="text/javascript">
+$(document).ready(function() {
+  window.print();
+});
+</script>

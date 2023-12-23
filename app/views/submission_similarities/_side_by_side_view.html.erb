@@ -1,0 +1,93 @@
+<%
+  @submission1 = @submission_similarity.submission1
+  @submission2 = @submission_similarity.submission2
+  @student1 = @submission1.student
+  @student2 = @submission2.student
+%>
+
+<style type="text/css" >
+  .unselectable {
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+</style>
+
+<div class="submission_similarity_header">
+  <div class="table-container mt-3">
+    <table id="matchingStatementsTable" class="table">
+      <thead>
+        <tr>
+          <th>Key</th>
+          <th class="lines_col">Submission by <%= @student1.name %></th>
+          <th class="lines_col">Submission by <%= @student2.name %></th>
+          <th>Num of Matching Statements</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% ascii_value_of_key = 65 %>
+        <% sorted_mappings = @submission_similarity.similarity_mappings.sort_by { |m| m.start_line1 } %>
+        <% line_num_to_key1 = {} %>
+        <% line_num_to_key2 = {} %>
+        <% sorted_mappings.each { |mapping| %>
+        
+        <% key = ascii_value_of_key.chr %>
+        <% ascii_value_of_key += 1 %>
+
+        <%
+        mapping.line_range1.each do |n|
+          line_num_to_key1[n + 1] = key
+        end
+
+        mapping.line_range2.each do |n|
+          line_num_to_key2[n + 1] = key
+        end
+        %>
+        <tr>
+          <td><small><%= key %></small></td>
+          <td>Lines <%= mapping.line_range1_string %></td>
+          <td>Lines <%= mapping.line_range2_string %></td>
+          <td class="num_statements_cell"><%= mapping.statement_count %></td>
+          <%= hidden_field_tag "skeleton_lines", mapping.submission_similarity_skeleton_mappings.collect { |s_mapping| 
+            s_mapping.start_line1.to_s + "_" + s_mapping.end_line1.to_s + "_" + s_mapping.start_line2.to_s + "_" + s_mapping.end_line2.to_s
+          }, { :class => "skeleton-lines" } 
+          %>
+        </tr>
+        <% } %>
+      </tbody>
+    </table>   
+  </div>
+</div>
+
+<% current_line_num = 1 %>
+<% current_mapping = sorted_mappings.shift %>
+
+<h5 style="float:left; width: 50%;">Submission by <%= @student1.name %></h5>
+<h5 style="float:right; width: 50%;">Submission by <%= @student2.name %></h5>
+
+<% while current_line_num <= @submission1.lines.size %>
+<div class="submissions">
+        <%  next_mapping = sorted_mappings.first %>
+        <div class="submission1">
+              <pre class="prettyprint linenums:<%= current_line_num %> <%= @assignment.prettify_js_lang %>">
+                <% while current_line_num <= @submission1.lines.size %>
+                <% if next_mapping.present? and current_line_num - 1 >= next_mapping.start_line1 %>
+                  <% break %>
+                <% end %>
+    <small class="unselectable"><%= line_num_to_key1[current_line_num].to_s + "  " %></small> <% current_line_num += 1 %><%= @submission1.lines[current_line_num] %> 
+                <% end %>
+              </pre>
+        </div>
+
+        <div class="submission2">
+          <pre class="prettyprint linenums:<%= current_mapping.start_line2 + 1 %> <%= @assignment.prettify_js_lang %>">
+          <% for i in current_mapping.start_line2..current_mapping.end_line2 %>
+    <small class="unselectable"><%= line_num_to_key2[i + 1].to_s + "  " %></small> <%= @submission2.lines[i] %> 
+          <% end %>
+          </pre>
+        </div>
+        <%  current_mapping = sorted_mappings.shift %>
+  </div>
+<% end %>            

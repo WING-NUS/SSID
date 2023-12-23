@@ -14,7 +14,7 @@
 
   <target name="compile">
     <mkdir dir="${classes.dir}"/>
-    <javac srcdir="${src.dir}" destdir="${classes.dir}" debug="true" debuglevel="lines,vars,source" classpath="${classpath.dir}/snakeyaml-1.10.jar;${classpath.dir}/log4j-api-2.17.2.jar;${classpath.dir}/log4j-core-2.17.2.jar">
+    <javac srcdir="${src.dir}" destdir="${classes.dir}" debug="true" debuglevel="lines,vars,source" classpath="${classpath.dir}/snakeyaml-1.10.jar;${classpath.dir}/log4j-api-2.17.2.jar;${classpath.dir}/log4j-core-2.17.2.jar;${classpath.dir}/antlr-4.8-complete.jar">
       <compilerarg value="-Xlint:unchecked"/>
     </javac>
   </target>

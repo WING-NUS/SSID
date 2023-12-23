@@ -6,8 +6,8 @@
     <% elsif action_name == "edit" or action_name == "update" %>
       <li class="breadcrumb-item">Edit Course</li>
     <% end %>
-  <% elsif controller_name == "users" and action_name == "index" %>
-      <li class="breadcrumb-item"><%= link_to "#{course.code} Users", course_users_url(course) %></li>
+  <% elsif controller_name == "user_course_memberships" %>
+      <li class="breadcrumb-item"><%= link_to "#{course.code} Users", course_user_course_memberships_url(course) %></li>
   <% elsif controller_name == "visualize" %>
       <li class="breadcrumb-item"><%= link_to "#{course.code} Visualizations", course_visualize_url(course) %></li>
     <% if action_name != "index" %>
@@ -28,10 +28,10 @@
     <% elsif controller_name == "submission_similarities" %>
       <li class="breadcrumb-item"><%= link_to %Q{Assignment: #{assignment.title} Submission Similarities}, assignment_submission_similarities_url(assignment) %></li>
       <% if action_name == "show" %>
-      <li class="breadcrumb-item">Submissions from Student <%= submission_similarity.student1.id_string %> and <%= submission_similarity.student2.id_string %></li>
+      <li class="breadcrumb-item">Submissions from Student <%= submission_similarity.student1.name %> and <%= submission_similarity.student2.name %></li>
       <% end %>
     <% elsif controller_name == "submission_logs" %>
-      <li class="breadcrumb-item"><%= %Q{Assignment: #{assignment.title} Submission Log for Student #{submission.student_id_string}} %></li>
+      <li class="breadcrumb-item"><%= %Q{Assignment: #{assignment.title} Submission Log for Student #{submission.student_name}} %></li>
     <% end %>
   <% end %>
   <% if controller_name == "submission_cluster_groups" or controller_name == "submission_clusters" %>

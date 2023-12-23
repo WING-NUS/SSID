@@ -1,40 +1,59 @@
-<h4>Submission Similarities for Students <%= @submission_similarity.student1.id_string %> and <%= @submission_similarity.student2.id_string %> (<%= @submission_similarity.similarity %>%)</h4>
-<div class="submission_similarity_header">
-  <div>
-    <%= link_to "Show matching statements", "#matchingStatementsTable", data: { "bs-toggle" => "collapse" }, :"aria-expanded" => "false", :"aria-controls" => "matchingStatementsTable", class: "d-inline pr-2" %>
-    <div class="dropdown d-inline p-2">
-      <a data-toggle="dropdown" id="actionsDropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-        <%= image_tag("more_vert_black_24dp.svg", alt: "Actions taken on submission similarities menu dropdown")%>                 
-      </a>
-      <ul class="dropdown-menu" aria-labelledby="actionsDropdownMenuLink">
-        <% if @submission_similarity.status == SubmissionSimilarity::STATUS_NOT_PLAGIARISM %>
-          <li>
-            <%= button_tag "Confirm plagiarism", class: "dropdown-item", data: { "bs-toggle" => "modal", "bs-target" => "#confirmPlagiarismModal", "bs-url" => "#{assignment_submission_similarity_confirm_as_plagiarism_url(@assignment, @submission_similarity)}" } %>
-          </li>
-          <li>
-            <%= button_tag "Mark as suspicious", class: "dropdown-item", data: { "bs-toggle" => "modal", "bs-target" => "#markAsSuspiciousModal", "bs-url" => "#{assignment_submission_similarity_suspect_as_plagiarism_url(@assignment, @submission_similarity)}" } %>
-          </li>
-        <% elsif @submission_similarity.status == SubmissionSimilarity::STATUS_SUSPECTED_AS_PLAGIARISM %>
-          <li>
-            <%= button_tag "Remove suspicion", class: "dropdown-item", data: { "bs-toggle" => "modal", "bs-target" => "#removeSuspicionModal", "bs-url" => "#{assignment_submission_similarity_unmark_as_plagiarism_url(@assignment, @submission_similarity)}" } %>
-          </li>
-          <li>
-            <%= button_tag "Confirm plagiarism", class: "dropdown-item", data: { "bs-toggle" => "modal", "bs-target" => "#confirmPlagiarismModal", "bs-url" => "#{assignment_submission_similarity_confirm_as_plagiarism_url(@assignment, @submission_similarity)}" } %>
-          </li>        
-        <% elsif %>
-          <li>
-            <%= button_tag "Remove plagiarism", class: "dropdown-item", data: { "bs-toggle" => "modal", "bs-target" => "#removePlagiarismModal", "bs-url" => "#{assignment_submission_similarity_unmark_as_plagiarism_url(@assignment, @submission_similarity)}" } %>
-          </li>        
-        <% end %>      
-      </ul>
-    </div>
-  </div>
-  <div class="table-container mt-3">
+<h4>Submission Similarities for Students <%= @submission_similarity.student1.name %> and <%= @submission_similarity.student2.name %> (<%= @submission_similarity.similarity %>%)</h4>
+
+<span> Choose your view type:&nbsp; <%= select_tag "view_type_selector", options_for_select([["Interactive"], ["Side-by-side"]]), onchange: "SubmissionSimilarity.changeViewType(this);" %> </span>
+<div class="dropdown d-inline p-2">
+  <a data-toggle="dropdown" id="actionsDropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+    <%= image_tag("more_vert_black_24dp.svg", alt: "Actions taken on submission similarities menu dropdown")%>                 
+  </a>
+  <ul class="dropdown-menu" aria-labelledby="actionsDropdownMenuLink">
+    <% if @submission_similarity.status == SubmissionSimilarity::STATUS_NOT_PLAGIARISM %>
+      <li>
+        <%= button_tag "Confirm plagiarism", class: "dropdown-item", data: { "bs-toggle" => "modal", "bs-target" => "#confirmPlagiarismModal", "bs-url" => "#{assignment_submission_similarity_confirm_as_plagiarism_url(@assignment, @submission_similarity)}" } %>
+      </li>
+      <li>
+        <%= button_tag "Mark as suspicious", class: "dropdown-item", data: { "bs-toggle" => "modal", "bs-target" => "#markAsSuspiciousModal", "bs-url" => "#{assignment_submission_similarity_suspect_as_plagiarism_url(@assignment, @submission_similarity)}" } %>
+      </li>
+    <% elsif @submission_similarity.status == SubmissionSimilarity::STATUS_SUSPECTED_AS_PLAGIARISM %>
+      <li>
+        <%= button_tag "Remove suspicion", class: "dropdown-item", data: { "bs-toggle" => "modal", "bs-target" => "#removeSuspicionModal", "bs-url" => "#{assignment_submission_similarity_unmark_as_plagiarism_url(@assignment, @submission_similarity)}" } %>
+      </li>
+      <li>
+        <%= button_tag "Confirm plagiarism", class: "dropdown-item", data: { "bs-toggle" => "modal", "bs-target" => "#confirmPlagiarismModal", "bs-url" => "#{assignment_submission_similarity_confirm_as_plagiarism_url(@assignment, @submission_similarity)}" } %>
+      </li>        
+    <% elsif %>
+      <li>
+        <%= button_tag "Remove plagiarism", class: "dropdown-item", data: { "bs-toggle" => "modal", "bs-target" => "#removePlagiarismModal", "bs-url" => "#{assignment_submission_similarity_unmark_as_plagiarism_url(@assignment, @submission_similarity)}" } %>
+      </li>        
+    <% end %>      
+  </ul>
+</div>
+
+<br></br>
+
+<% if @submission_similarity.status == SubmissionSimilarity::STATUS_CONFIRMED_AS_PLAGIARISM %>
+<div>
+  <span>These similarities were confirmed as plagiarism. Mark student(s) as guilty:</span>
+  <p class="check_boxes">
+    <label><%= check_box_tag "toggle_guilty_#{@submission_similarity.id}_#{@submission1.id}", nil, @submission1.is_plagiarism, class: "guilty_check_box" %> Student <%= @student1.name %></label>
+    <label><%= check_box_tag "toggle_guilty_#{@submission_similarity.id}_#{@submission2.id}", nil, @submission2.is_plagiarism, class: "guilty_check_box" %> Student <%= @student2.name %></label>
+  </p>
+</div>
+<% end %>
+
+<% if @submission_similarity.status == SubmissionSimilarity::STATUS_SUSPECTED_AS_PLAGIARISM %>
+<div>
+  <span>These similarities were marked as suspicious.</span>
+</div>
+<% end %>
+
+<div class="submission_similarity_header interactive">
+  <%= link_to "Show matching statements", "#matchingStatementsTable", data: { "bs-toggle" => "collapse" }, :"aria-expanded" => "false", :"aria-controls" => "matchingStatementsTable", class: "d-inline pr-2" %>
+  <div class="table-container mt-3 interactive">
     <table id="matchingStatementsTable" class="lines collapse show">
       <thead>
         <tr>
-          <th class="lines_col">Submission by <%= @student1.id_string %></th>
-          <th class="lines_col">Submission by <%= @student2.id_string %></th>
+          <th class="lines_col">Submission by <%= @student1.name %></th>
+          <th class="lines_col">Submission by <%= @student2.name %></th>
           <th>Num of Matching Statements</th>
           <th class="check_box_col"><%= check_box_tag nil, nil, false %></th>
         </tr>
@@ -57,23 +76,7 @@
   </div>
 </div>
 
-<% if @submission_similarity.status == SubmissionSimilarity::STATUS_CONFIRMED_AS_PLAGIARISM %>
-<div>
-  <p>These similarities were confirmed as plagiarism. Mark student(s) as guilty:</p>
-  <p class="check_boxes">
-    <label><%= check_box_tag "toggle_guilty_#{@submission_similarity.id}_#{@submission1.id}", nil, @submission1.is_plagiarism, class: "guilty_check_box" %> Student <%= @student1.id_string %></label>
-    <label><%= check_box_tag "toggle_guilty_#{@submission_similarity.id}_#{@submission2.id}", nil, @submission2.is_plagiarism, class: "guilty_check_box" %> Student <%= @student2.id_string %></label>
-  </p>
-</div>
-<% end %>
-
-<% if @submission_similarity.status == SubmissionSimilarity::STATUS_SUSPECTED_AS_PLAGIARISM %>
-<div>
-  <p>These similarities were marked as suspicious.</p>
-</div>
-<% end %>
-
-<div class="submissions">
+<div class="submissions interactive">
   <div class="submissions-legend">
     <strong>Line colors</strong>
     <br>
@@ -83,7 +86,7 @@
     </ul>
   </div>
   <div class="submission1">
-    <h5>Submission by <%= @student1.id_string %> (<%= link_to "Log", assignment_submission_log_url(@assignment, @submission1) %>)</h5>
+    <h5>Submission by <%= link_to @student1.name, assignment_submission_log_url(@assignment, @submission1) %></h5>
     <pre class="prettyprint linenums <%= @assignment.prettify_js_lang %>">
     <% @submission1.lines.each { |line| %>
       <%= line %>
@@ -91,13 +94,17 @@
     </pre>
   </div>
   <div class="submission2">
-    <h5>Submission by <%= @student2.id_string %> (<%= link_to "Log", assignment_submission_log_url(@assignment, @submission2) %>)</h5>
+    <h5>Submission by <%= link_to @student2.name, assignment_submission_log_url(@assignment, @submission2) %></h5>
     <pre class="prettyprint linenums <%= @assignment.prettify_js_lang %>">
     <% @submission2.lines.each { |line| %>
       <%= line %>
     <% } %>
     </pre>
   </div>
+</div>
+
+<div style="display:none" class="submissions side-by-side">
+  <%= render partial: "side_by_side_view", locals: { submission_similarity: @submission_similarity }%>
 </div>
 
 <div class="modal fade" id="confirmPlagiarismModal" tabindex="-1" role="dialog" aria-hidden="true">
