@@ -276,7 +276,7 @@ public final class ANTLRDynamicTokenizer extends Tokenizer {
         }
         tokenClassString = this.tokenNameMappings.get(tokenName);
         if (tokenClassString == null) {
-          throw new Exception("Unrecognized token nameee: " + tokenName + " " + this.tokenNameMappings.toString());
+          throw new Exception("Unrecognized token name: " + tokenName + " " + this.tokenNameMappings.toString());
         }
       } else {
         tokenClassString = "Ignore";
