@@ -49,6 +49,66 @@ The content type of the request should be `multipart/form-data`. Each parameter 
 - `mappingFile (Optional) csv`: csv map file that allows you to map between a directory name (in the uploaded zip file) and the student roster that you might be using for your modules. For more details, see SSID's User Guide.
 - `references zip`: zip file of student submissions from past semesters to be used as reference. The uploaded reference zip file should contain a number of folders each for a past semester. Each of those folders contains student submissions in SSID's stardard format. Skeleton code of current semester will be used if supplied; skeleton code in past semesters' folders, if supplied, will be ignored. Students from past semesters will appear as `references_{semester name}_{student name}` in flagged matches. This function is not yet available in the web interface.
 
+Example of structure of student submissions zip file whereby each `AXXXXXX` denote the ID of a student:
+```
+.
+├── A013601
+│   ├── CitiesDriver.java
+│   └── MyTree.java
+├── A136682
+│   ├── CitiesDriver.java
+│   └── MyTree.java
+├── A374086
+│   ├── CitiesDriver.java
+│   └── MyTree.java
+├── A791459
+│   ├── CitiesDriver.java
+│   └── MyTree.java
+└── A902453
+    ├── CitiesDriver.java
+    └── MyTree.java
+```
+
+
+Example of structure of references zip file whereby each `AXXXXXX` denote the ID of a student and `fall_1920` and `spring_1920` are two past semesters to check against:
+
+```
+.
+├── fall_1920
+│   ├── A125972
+│   │   ├── CitiesDriver.java
+│   │   └── MyTree.java
+│   ├── A268671
+│   │   ├── CitiesDriver.java
+│   │   └── MyTree.java
+│   ├── A403618
+│   │   ├── CitiesDriver.java
+│   │   └── MyTree.java
+│   ├── A819987
+│   │   ├── CitiesDriver.java
+│   │   └── MyTree.java
+│   └── A940578
+│       ├── CitiesDriver.java
+│       └── MyTree.java
+└── spring_1920
+    ├── A115539
+    │   ├── CitiesDriver.java
+    │   └── MyTree.java
+    ├── A420529
+    │   ├── CitiesDriver.java
+    │   └── MyTree.java
+    ├── A495754
+    │   ├── CitiesDriver.java
+    │   └── MyTree.java
+    ├── A559473
+    │   ├── CitiesDriver.java
+    │   └── MyTree.java
+    └── A703457
+        ├── CitiesDriver.java
+        └── MyTree.java
+
+```
+
 **Request Example**:
 | Header |
 | --- |
