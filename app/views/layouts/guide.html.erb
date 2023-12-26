@@ -17,33 +17,20 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 %>
 
-<!--
+
 <%
-
-def genBlankLink(text)
-  "<a class='normalLink' href='' onclick='return false;'>#{text}</a>".html_safe
-end
-
 def image(file)
-  image_tag(file, :border => 1, :style => "margin-top: 2px; max-width: 1050px;")
+  image_tag(file, :border => 0, :style => "margin-top: 2px; max-width: 1080px;")
 end
 
-def imagefaq(file)
-  image_tag(file, :border => 1, :style => "margin-top: 2px; max-width: 1010px;")
-end
-
-def backToTop()
-  "<a class=\"normalLink\" style=\"color : blue;\" href=\"#top\">Back to top</a>".html_safe
+def imageGuide(file)
+  image_tag(file, :border => 0, :style => "margin-top: 2px; max-width: 500px;")
 end
 %>
--->
-
-<!--NEW USER GUIDE CODE BEGINS HERE-->
 
 <div class="user-guide">
   <div class="user-guide-heading">
     <h2>User Guide</h2>
-    <h4>Welcome to SSID, a plagiarism detection system built in NUS.</h4>
     Designed to assist teaching teams, this guide will help you effectively utilise SSID to detect and address plagiarism.</p>
   </div>
   
@@ -56,14 +43,13 @@ end
         </button>
       </h2>
       <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionCourse">
-        <div class="accordion-body">
+        <div class="accordion-body", style="width:fit-content";>
           1. Click on the 'Courses' tab on the navigation bar. In this tab, you will be able to see the list of courses viewable to you. <br>
           2. To add a new course, click on <%=image("add_circle_outline_blue_24dp.svg")%><br>
           3. Fill in the information of the course.<br>
-          <!--<%=image("xxx.png")%> INCLUDE PICS-->
+          <%=imageGuide("add-course-info.jpeg")%><br>
           4. Click on CREATE COURSE button.<br>
           5. You should see a confirmation indicating that your course has been created.<br>
-          <!--<%=image("xxx.png")%> INCLUDE PICS-->
         </div>
       </div>
     </div>
@@ -74,10 +60,10 @@ end
         </button>
       </h2>
       <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionCourse">
-        <div class="accordion-body">
+        <div class="accordion-body", style="width:fit-content";>
           1. Select <%=image("people_black_24dp.svg")%> in the 'View' column.<br>
-          <!--<%=image("xxx.png")%> INCLUDE PICS-->
-          2. If you are the creator of the course, you should see yourself as a user by default.
+          2. If you are the creator of the course, you should see yourself as a user by default.<br>
+          <%=image("view-course-users.jpeg")%>
         </div>
       </div>
     </div>
@@ -88,13 +74,12 @@ end
         </button>
       </h2>
       <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionCourse">
-        <div class="accordion-body">
+        <div class="accordion-body", style="width:fit-content";>
           1. Click on <%=image("person_add_blue_24dp.svg")%><br>
           2. Fill in the information of this user. There are three course roles to choose from: Teaching Staff, Teaching Assistance, and Guest.<br>
+          <%=imageGuide("add-users.jpeg")%><br>
           3. Click on ‘Create User course membership’ button to confirm the addition of the user.<br>
-          <!--<%=image("xxx.png")%> INCLUDE PICS-->
           4. You should see a confirmation indicating that the user has been added to the course.<br>
-          <!--<%=image("xxx.png")%> INCLUDE PICS-->
         </div>
       </div>
     </div>
@@ -105,11 +90,10 @@ end
         </button>
       </h2>
       <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#accordionCourse">
-        <div class="accordion-body">
+        <div class="accordion-body", style="width:fit-content";>
           1. In the ‘Actions’ column, click on the ellipsis to reveal the ‘Edit’ button.<br>
-          <!--<%=image("xxx.png")%> INCLUDE PICS-->
           2. Update the necessary information.<br>
-          <!--<%=image("xxx.png")%> INCLUDE PICS-->
+          <%=imageGuide("update-course-user.jpeg")%><br>
           3. Click on ‘Update User course membership’ button to save your updates.
         </div>
       </div>
@@ -121,14 +105,13 @@ end
         </button>
       </h2>
       <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#accordionCourse">
-        <div class="accordion-body">
+        <div class="accordion-body", style="width:fit-content";>
           1. In the ‘Actions’ column, click on the ellipsis to reveal the ‘Remove’ button.<br>
-          <!--<%=image("xxx.png")%> INCLUDE PICS-->
+          <%=image("remove-user.jpeg")%><br>
           2. A pop-up notification will appear to confirm the removal of the user.<br>
-          <!--<%=image("xxx.png")%> INCLUDE PICS-->
-          3. Click ‘OK’ to confirm the removal.
+          <%=imageGuide("user-removal-confirmation.jpeg")%><br>
+          3. Click ‘OK’ to confirm the removal.<br>
           4. You should see a confirmation indicating that the user has been removed from the course.<br>
-          <!--<%=image("xxx.png")%> INCLUDE PICS-->
         </div>
       </div>
     </div>
@@ -145,25 +128,21 @@ end
         </button>
       </h2>
       <div id="collapseSix" class="accordion-collapse collapse" aria-labelledby="headingSix" data-bs-parent="#accordionAssignment">
-        <div class="accordion-body">
+        <div class="accordion-body", style="width:fit-content";>
           1. Navigate to the course listing page.<br>
-          <!--<%=image("xxx.png")%> INCLUDE PICS-->
           2. Select <%=image("assignment_black_24dp.svg")%> under the ‘View’ column.<br>
           3. You will be brought to a page showing the list of assignments uploaded for this course.<br>
           4. Click on <%=image("add_circle_outline_blue_24dp.svg")%><br>
-          <!--<%=image("xxx.png")%> INCLUDE PICS-->
+          <%=imageGuide("create-assignment.jpeg")%><br>
           5. Enter the title of the assignment.<br>
-          <!--<%=image("xxx.png")%> INCLUDE PICS-->
           6. Upload a zipped file of the students’ submissions.<br>
           <i>Note: SSID currently supports both file-based and directory-based submissions.
           Each file or folder should be placed at the top level. You can include skeleton file e.g. "skeleton.py" or folder "skeleton" to exclude sample codes from checking by the system. 
           Tip: You can move your cursor over the [i] for explanation of the term.</i><br>
           7. Upload map file will allow you to map between a directory name (in the uploaded zip file) and the student roster that you might be using for your modules.
           A csv file with no header, and row with format: student-submission-folder-name,student-custom-id will be needed.<br>
-          8. Click on the ‘Create Assignment’ button to add the assignment to the course.
-          <!--<%=image("xxx.png")%> INCLUDE PICS-->
+          8. Click on the ‘Create Assignment’ button to add the assignment to the course.<br>
           9. You should see a confirmation indicating that the assignment is being processed by the system. Refresh the page to view the similarity results.<br>
-          <!--<%=image("xxx.png")%> INCLUDE PICS-->
           10. After refreshing the page, there will be a quick view of the number of Submission, Suspected Cases, and Confirmed Cases.
         </div>
       </div>
@@ -175,14 +154,12 @@ end
         </button>
       </h2>
       <div id="collapseSeven" class="accordion-collapse collapse" aria-labelledby="headingSeven" data-bs-parent="#accordionAssignment">
-        <div class="accordion-body">
+        <div class="accordion-body", style="width:fit-content";>
           1. In the page with the list of assignments, select <%=image("plagiarism_black_24dp.svg")%> in the 'View' column.<br>
-          <!--<%=image("xxx.png")%> INCLUDE PICS-->
           2. You would be able to see a detailed table showing a pairwise comparison of students’ submissions.<br>
-          <!--<%=image("xxx.png")%> INCLUDE PICS-->
           3. Click on the relevant pairwise comparison results and select ‘Print Report for Selected’ to print a report for the selected pairs.<br>
-          <!--<%=image("xxx.png")%> INCLUDE PICS-->
-          4. A pop-up window will appear to save the report as a pdf file.
+          4. A pop-up window will appear to save the report as a pdf file.<br>
+          <%=imageGuide("print-report-page.jpeg")%>
         </div>
       </div>
     </div>
@@ -193,14 +170,13 @@ end
         </button>
       </h2>
       <div id="collapseEight" class="accordion-collapse collapse" aria-labelledby="headingEight" data-bs-parent="#accordionAssignment">
-        <div class="accordion-body">
+        <div class="accordion-body", style="width:fit-content";>
           <i>Important: You must have at least one assignment to view pairwise submissions comparison.</i><br>
           1. Under the ‘Actions’ column, select the ‘View Submission’ button to view the pairwise submissions comparison result for the selected pair of students.<br>
-          <!--<%=image("xxx.png")%> INCLUDE PICS-->
+          <%=imageGuide("view-submissions-prompt.jpeg")%><br>
           2. A detailed comparison of the pair of students’ work will be shown.<br>
-          <!--<%=image("xxx.png")%> INCLUDE PICS-->
           3. You can click on the checkboxes to highlight specific lines of code. The matched region will be highlighted in yellow.<br>
-          <!--<%=image("xxx.png")%> INCLUDE PICS-->
+          <%=imageGuide("pairwise-submission-highlight.jpeg")%>
         </div>
       </div>
     </div>
@@ -217,11 +193,10 @@ end
         </button>
       </h2>
       <div id="collapseNine" class="accordion-collapse collapse" aria-labelledby="headingNine" data-bs-parent="#accordionPlagiarism">
-        <div class="accordion-body">
+        <div class="accordion-body", style="width:fit-content";>
           1. In the ‘Submission Similarities’ page, click on the ellipsis to reveal the ‘Mark as suspicious’ button.<br>
-          <!--<%=image("xxx.png")%> INCLUDE PICS-->
+          <%=imageGuide("mark-as-suspicious-prompt.jpeg")%><br>
           2. A confirmation popup box will appear. Click on ‘OK’ to mark this pair of students as suspicious.<br>
-          <!--<%=image("xxx.png")%> INCLUDE PICS-->
         </div>
       </div>
     </div>
@@ -232,15 +207,13 @@ end
         </button>
       </h2>
       <div id="collapseTen" class="accordion-collapse collapse" aria-labelledby="headingTen" data-bs-parent="#accordionPlagiarism">
-        <div class="accordion-body">
+        <div class="accordion-body", style="width:fit-content";>
           <i>Important: You must be assigned with the teaching staff role for the module to confirm plagiarism cases.<br>
           Important: A pair of submissions can only be confirmed for plagiarism after it has been reported suspicious.</i><br>
           1. In the ‘Submission Similarities’ page, click on the ellipsis to reveal the ‘Confirm plagiarism’ button.<br>
-          <!--<%=image("xxx.png")%> INCLUDE PICS-->
+          <%=imageGuide("confirm-plagiarism-prompt.jpeg")%><br>
           2. A confirmation popup box will appear. Click on ‘OK’ to confirm that this pair of students has plagiarised.<br>
-          <!--<%=image("xxx.png")%> INCLUDE PICS-->
           3. This pair of submissions will be classified as a plagiarism case.<br>
-          <!--<%=image("xxx.png")%> INCLUDE PICS-->
         </div>
       </div>
     </div>
@@ -251,13 +224,12 @@ end
         </button>
       </h2>
       <div id="collapseEleven" class="accordion-collapse collapse" aria-labelledby="headingEleven" data-bs-parent="#accordionPlagiarism">
-        <div class="accordion-body">
+        <div class="accordion-body", style="width:fit-content";>
           <i>Important: You must be assigned with the teaching staff role for the module to declare a suspicious case innocent.<br>
           Important: A pair of submissions can only be declared innocent after it has been reported suspicious.</i><br>
           1. In the ‘Submission Similarities’ page, click on the ellipsis to reveal the ‘Remove plagiarism’ button.<br>
-          <!--<%=image("xxx.png")%> INCLUDE PICS-->
+          <%=imageGuide("remove-plagiarism.jpeg")%><br>
           2. A confirmation popup box will appear. Click on ‘OK’ to remove plagiarism for this pair of students.<br>
-          <!--<%=image("xxx.png")%> INCLUDE PICS-->
         </div>
       </div>
     </div>
@@ -274,20 +246,17 @@ end
         </button>
       </h2>
       <div id="collapseTwelve" class="accordion-collapse collapse" aria-labelledby="headingTwelve" data-bs-parent="#accordionGroupingAndVisuals">
-        <div class="accordion-body">
+        <div class="accordion-body", style="width:fit-content";>
           <i>Important: You must have at least one assignment to create grouping.</i><br>
           1. On the page for the specific assignment, click on <%=image("scatter_plot_black_24dp.svg")%><br>
-          <!--<%=image("xxx.png")%> INCLUDE PICS-->
           2. Click on <%=image("add_circle_outline_blue_24dp.svg")%><br>
-          <!--<%=image("xxx.png")%> INCLUDE PICS-->
+          <%=imageGuide("create-groupings.jpeg")%><br>
           3. Select the desired cut-off criterion.<br>
           <i>Note:
           The criterion “To include all currently Confirmed or Suspected Plagiarism Cases” is only available if there is at least one confirmed plagiarism case or reported suspicious case.
           The criterion “To include all currently Confirmed Plagiarism Cases” is only available if there is at least one confirmed plagiarism case.</i><br>
-          <!--<%=image("xxx.png")%> INCLUDE PICS-->
           4. Click on the ‘Create Submission cluster group’ button.<br>
           5. You should see a confirmation indicating that the submission cluster group was successfully created.<br>
-          <!--<%=image("xxx.png")%> INCLUDE PICS-->
         </div>
       </div>
     </div>
@@ -298,16 +267,13 @@ end
         </button>
       </h2>
       <div id="collapseThirteen" class="accordion-collapse collapse" aria-labelledby="headingThirteen" data-bs-parent="#accordionGroupingAndVisuals">
-        <div class="accordion-body">
+        <div class="accordion-body", style="width:fit-content";>
           <i>Important: You need to have at least two assignments with at least one grouping each to fully utilize all the visuals.</i><br>
           1. On the ‘Courses’ page, click on <%=image("show_chart_black_24dp.svg")%><br>
-          <!--<%=image("xxx.png")%> INCLUDE PICS-->
+          <%=imageGuide("view-visuals.jpeg")%><br>
           2. Select the desired visualization and fill in the required information stated.<br>
-          <!--<%=image("xxx.png")%> INCLUDE PICS-->
           <i>i. Similarity Cluster Table<br></i>
-          <!--<%=image("xxx.png")%> INCLUDE PICS-->
           <i>ii. Top Similar Submissions</i>
-          <!--<%=image("xxx.png")%> INCLUDE PICS-->
         </div>
       </div>
     </div>
@@ -324,13 +290,12 @@ end
         </button>
       </h2>
       <div id="collapseFourteen" class="accordion-collapse collapse" aria-labelledby="headingFourteen" data-bs-parent="#accordionGeneralFAQ">
-        <div class="accordion-body">
+        <div class="accordion-body", style="width:fit-content";>
           <i>If you are assigned with teaching assistant role for a module, you can only access the student's history within the module.<br>
           If you are assigned with teaching staff role for a module, you can access the student's history throughout all modules.</i><br>
           1. In the ‘Submission Similarities’ page, click on the student's name/ID. <br>
-          <!--<%=image("xxx.png")%> INCLUDE PICS-->
           2. The student’s history is displayed in a table.<br>
-          <!--<%=image("xxx.png")%> INCLUDE PICS-->
+          <%=imageGuide("student-history-page.jpeg")%><br>
         </div>
       </div>
     </div>
@@ -341,7 +306,7 @@ end
         </button>
       </h2>
       <div id="collapseFifteen" class="accordion-collapse collapse" aria-labelledby="headingFifteen" data-bs-parent="#accordionGeneralFAQ">
-        <div class="accordion-body">
+        <div class="accordion-body", style="width:fit-content";>
           There is no static lower-bound percentage of matching.<br>
           However, based on our experiment, the lowest similarity between a pair of plagiarized submission is 57%, with the minimum-match-length be 2 and size of N-gram be 4.
         </div>
@@ -354,7 +319,7 @@ end
         </button>
       </h2>
       <div id="collapseSixteen" class="accordion-collapse collapse" aria-labelledby="headingSixteen" data-bs-parent="#accordionGeneralFAQ">
-        <div class="accordion-body">
+        <div class="accordion-body", style="width:fit-content";>
           You can include a skeleton file e.g. "skeleton.py" or folder "skeleton" to exclude sample codes from checking by the system.
         </div>
       </div>
