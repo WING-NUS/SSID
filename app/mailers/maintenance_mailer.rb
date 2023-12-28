@@ -4,6 +4,6 @@ class MaintenanceMailer < ApplicationMailer
     def maintenance_mailer(user_email, start_time, end_time)
         @start_time = start_time
         @end_time = end_time
-        mail(to: user_email, subject: "[SSID] Scheduled maintenance!")
+        mail(to: user_email, subject: "Scheduled maintenance for SSID")
       end
 end
