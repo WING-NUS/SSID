@@ -32,9 +32,11 @@ class AnnouncementsController < ApplicationController
 
   # GET /announcements
   def index
-    path = 'config/product_update/update_msg.yml'
-    update_msg_yaml = YAML.load_file(path)
-    flash[:product_update_msg] = "✨✨ Update from SSID: " + update_msg_yaml["msg"] + " ✨✨"
+    path = 'config/product_update/product_update.yml'
+    product_update_yaml = YAML.load_file(path)
+    if (product_update_yaml["is_visible"] == 'Y')
+      flash[:product_update_msg] = "✨✨ Update from SSID: " + product_update_yaml["message"] + " ✨✨"
+    end
     @announcements = current_user.courses.collect { |c| c.announcements }.flatten
   end
 

@@ -18,31 +18,33 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 require 'yaml'
 
 namespace :SSID do
-  desc "Sets product update message"
-  task :set_product_update_message, [:message] => :environment do |t, args|
+  desc "Sets whether product update message is visible"
+  task :set_product_update_visibility, [:is_visible] => :environment do |t, args|
     require 'pp'
 
     # Parse arguments
-    if args[:message].nil?
+    if (args[:is_visible].nil?) or (not ['Y', 'N'].include?(args[:is_visible]))
         $stderr.puts  "Error parsing arguments\n\n" + 
-        "Usage: rake SSID:set_product_update_message[message]\n"
+        "Usage:\n" +
+        "rake SSID:set_product_update_visibility['Y'] if you wish to show product update message\n" +
+        "rake SSID:set_product_update_visibility['N'] otherwise."
       exit
     end
 
     path = SSID::Application.config.product_update_config_path
     config = YAML.load_file(path)
 
-    old_message = config['message']
-    config['message'] = args[:message]
+    config = YAML.load_file(path)
+    config['is_visible'] = args[:is_visible]
 
     File.open(path,'w') do |h| 
       h.write config.to_yaml
     end
 
-    puts "Successfully updated product announcement message"
-    puts "Old message: " + old_message
-    puts "Updated message: " + config['message']
-
-
+    if (args[:is_visible] == 'Y')
+      puts "Successfully made product message visible"
+    else
+      puts "Successfully made product message invisible"
+    end
   end
 end
