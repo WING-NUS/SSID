@@ -27,6 +27,8 @@ curl -i \
  -F sizeOfNGram=5 \
  -F studentSubmissions=@cs1101_a1.zip
 ```
+Here, `cpp17` is an invalid value (but `cpp` is an allowed parameter).
+
 
 #### 3. {"error" : "Missing required parameter {parameterName}"}
 ```
@@ -37,6 +39,9 @@ curl -i \
  -F sizeOfNGram=5 \
  -F studentSubmissions=@cs1101_a1.zip
 ```
+Here, `title` parameter which is required is missing.
+
+
 
 #### 4. {"error" : "Parameter {parameterName} is invalid or not yet supported."}
 ```
@@ -49,6 +54,9 @@ curl -i \
  -F studentSubmissions=@cs1101_a1.zip \
  -F sensitivity=100
 ```
+
+Here, `sensitivity` is an invalid parameter not supported by SSID.
+
 
 #### 5. {"error" : "Missing or invalid API key."}
 ```
