@@ -12,6 +12,7 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with SSID.  If not, see <http://www.gnu.org/licenses/>.
+@import url("http://fonts.googleapis.com/css?family=Inter:400,300,500,600,700");
 @import "bootstrap/functions";
 @import "bootstrap/variables";
 @import "bootstrap/mixins";
@@ -22,7 +23,7 @@
 body {
   background-color: #fff;
   color: var(--bs-body-color);
-  font-family: var(--bs-font-sans-serif);
+  font-family: 'Inter', sans-serif;
   font-size: var(--bs-body-font-size);
   font-weight: var(--bs-body-font-weight);
   line-height: var(--bs-body-line-height);
@@ -35,7 +36,7 @@ body {
 }
 
 p, ol, ul, li, td {
-  font-family: var(--bs-font-sans-serif);
+  font-family: 'Inter', sans-serif;
   font-size: 0.9375rem;
 }
 

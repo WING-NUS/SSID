@@ -72,9 +72,14 @@ SSID::Application.configure do
   # whitelist attributes for mass-assignment
   config.active_record.whitelist_attributes = true
 
+  config.eager_load = true
+  
   # Set time zone
   config.time_zone = "Singapore"
+  config.eager_load = true  
   
   config.host = "ssid.comp.nus.edu.sg"
   config.protocol = "https"
+  config.action_mailer.default_url_options = { host: config.host, protocol: config.protocol }
+
 end

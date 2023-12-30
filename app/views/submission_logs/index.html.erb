@@ -1,4 +1,4 @@
-<h4>Student: <%= @submission.student.name %></h4>
+<h4>History of Student <%= @submission.student.name %></h4>
 
 <table>
   <thead>
@@ -8,20 +8,26 @@
       <th class="similarity_col">Assignment</th>
       <th class="similarity_col">Grader</th>
       <th>Remarks</th>
-      <!-- <th>View</th> -->
+      <% if current_user.is_admin %>
+        <th>View</th>
+      <% end %>
     </tr>
   </thead>
   <tbody>
     <% @submission.student.submissions.each do |sub| %>
+        <% @submission_similarity_ids = [] %>
         <% sub.logs.reverse.each do |log| %>
           <% if !log.submission.assignment.nil? %>
+          <% @submission_similarity_ids.append(log.submission_similarity.id) %>
           <tr>
               <td><%= log.created_at.in_time_zone.strftime '%Y-%m-%d %H:%M:%S' %></td>
               <td><%= log.submission.course.code_and_name %></td>
               <td><%= log.submission.assignment.title %></td>
               <td><%= log.marker.full_name %></td>
               <td><%= log.log_string %></td>
-              <!-- <td class="view-similarity"><%= link_to image_tag("link.svg", size: "24", alt: "View submission similarities"), guest_view_similarity_path(log.submission.assignment, log.submission_similarity), { :class => 'tooltips', 'data-toggle' => 'tooltip', 'data-placement' => 'bottom', 'title' => 'View submission similarities' }%></td> -->
+              <% if current_user.is_admin %>
+                <td class="view-similarity"><%= link_to image_tag("link.svg", size: "24", alt: "View submission similarities"), guest_view_similarity_path(log.submission.assignment, log.submission_similarity), { :class => 'tooltips', 'data-toggle' => 'tooltip', 'data-placement' => 'bottom', 'title' => 'View submission similarities' }%></td>
+              <% end %>
           </tr>
           <% end %>
         <% end %>
@@ -29,3 +35,4 @@
   </tbody>
 </table>
 
+<%=  render partial: "submission_similarities/student_history" %>

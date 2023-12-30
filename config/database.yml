@@ -25,7 +25,7 @@ test:
   pool: 5
   host: 127.0.0.1
   username: root
-  password: lostworld
+  password: root
   socket: /var/lib/mysql/mysql.sock
 
 production:

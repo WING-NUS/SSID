@@ -42,10 +42,22 @@ class SubmissionSimilaritiesController < ApplicationController
     @hashed_url = session[:hashed_url]
     @displayDialog = session[:displayDialog]
     session[:displayDialog] = false
- 
-    @submission_similarities = SubmissionSimilarity.where(
-      assignment_id: @assignment.id 
-    ).order('similarity desc').paginate(page: params[:page], per_page: 20)
+
+    # Determine sort direction
+    sort_direction = params[:sort_direction] || 'descending'
+    order_string = sort_direction == 'ascending' ? 'status asc' : 'status desc'
+
+    page_size = params[:page_size] || 20
+    if params[:sort_direction] && params[:sort_direction] != 'default'
+      @submission_similarities = SubmissionSimilarity.where(
+        assignment_id: @assignment.id
+      ).order(order_string, 'similarity desc').paginate(page: params[:page], per_page: page_size)
+    else
+      @submission_similarities = SubmissionSimilarity.where(
+        assignment_id: @assignment.id
+      ).order('(similarity_1_to_2 + similarity_2_to_1)/2 desc, Greatest(similarity_1_to_2, similarity_2_to_1) desc')
+      .paginate(page: params[:page], per_page: page_size)
+    end
   end
 
   def create_guest_user
@@ -149,13 +161,13 @@ class SubmissionSimilaritiesController < ApplicationController
       SubmissionLog.create { |sl|
         sl.submission_similarity = @submission_similarity
         sl.submission = @submission_similarity.submission1
-        sl.marker = @user
+        sl.marker = current_user
         sl.log_type = SubmissionLog::TYPE_PAIR_CONFIRM_AS_PLAGIARISM
       }
       SubmissionLog.create { |sl|
         sl.submission_similarity = @submission_similarity
         sl.submission = @submission_similarity.submission2
-        sl.marker = @user
+        sl.marker = current_user
         sl.log_type = SubmissionLog::TYPE_PAIR_CONFIRM_AS_PLAGIARISM
       }
     end
@@ -172,13 +184,13 @@ class SubmissionSimilaritiesController < ApplicationController
       SubmissionLog.create { |sl|
         sl.submission_similarity = @submission_similarity
         sl.submission = @submission_similarity.submission1
-        sl.marker = @user
+        sl.marker = current_user
         sl.log_type = SubmissionLog::TYPE_PAIR_SUSPECT_AS_PLAGIARISM
       }
       SubmissionLog.create { |sl|
         sl.submission_similarity = @submission_similarity
         sl.submission = @submission_similarity.submission2
-        sl.marker = @user
+        sl.marker = current_user
         sl.log_type = SubmissionLog::TYPE_PAIR_SUSPECT_AS_PLAGIARISM
       }
     end
@@ -195,13 +207,13 @@ class SubmissionSimilaritiesController < ApplicationController
       SubmissionLog.create { |sl|
         sl.submission_similarity = @submission_similarity
         sl.submission = @submission_similarity.submission1
-        sl.marker = @user
+        sl.marker = current_user
         sl.log_type = SubmissionLog::TYPE_PAIR_UNMARK_AS_PLAGIARISM
       }
       SubmissionLog.create { |sl|
         sl.submission_similarity = @submission_similarity
         sl.submission = @submission_similarity.submission2
-        sl.marker = @user
+        sl.marker = current_user
         sl.log_type = SubmissionLog::TYPE_PAIR_UNMARK_AS_PLAGIARISM
       }
     end
@@ -217,7 +229,7 @@ class SubmissionSimilaritiesController < ApplicationController
       SubmissionLog.create { |sl|
         sl.submission_similarity = submission_similarity
         sl.submission = submission
-        sl.marker = @user
+        sl.marker = current_user
         sl.log_type = SubmissionLog::TYPE_STUDENT_MARK_AS_NOT_GUILTY
       }
     end

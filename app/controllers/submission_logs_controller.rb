@@ -41,18 +41,18 @@ class SubmissionLogsController < ApplicationController
   def view_similarity
     @assignment = Assignment.find(params[:assignment_id])
 
-    unless @user.is_admin
+    unless current_user.is_admin
       course = @assignment.course
-      membership = course.membership_for_user(@user)
-      has_guest_detail = GuestUsersDetail.find_by_user_id_and_assignment_id(@user.id, @assignment.id)
+      membership = course.membership_for_user(current_user)
+      has_guest_detail = GuestUsersDetail.find_by_user_id_and_assignment_id(current_user.id, @assignment.id)
 
       if membership.nil?
         # Create a guest membership for current user
-        CoursesService.create_guest_membership(course, @user)    
-        CoursesService.create_guest_detail_entry(@assignment, @user)
+        CoursesService.create_guest_membership(course, current_user)    
+        CoursesService.create_guest_detail_entry(@assignment, current_user)
       else
         if membership.role == UserCourseMembership::ROLE_GUEST && has_guest_detail.nil?
-          CoursesService.create_guest_detail_entry(@assignment, @user)
+          CoursesService.create_guest_detail_entry(@assignment, current_user)
         end
       end
     end
