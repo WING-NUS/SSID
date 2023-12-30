@@ -141,12 +141,16 @@ public class NGram {
 		return nGram;		
 	}
 
-	public BigInteger nGramHash() throws NoSuchAlgorithmException {
-		String nGram = nGramValue();
+	public BigInteger nGramHash() {
+		try {
+			String nGram = nGramValue();
 
-		MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
-		byte[] digest = messageDigest.digest(nGram.getBytes(StandardCharsets.UTF_8));
-		BigInteger nbr = new BigInteger(1, digest);
-		return nbr;
+			MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+			byte[] digest = messageDigest.digest(nGram.getBytes(StandardCharsets.UTF_8));
+			BigInteger nbr = new BigInteger(1, digest);
+			return nbr;
+		} catch (NoSuchAlgorithmException e) {
+			return null;
+		}
 	}
 }
