@@ -310,7 +310,7 @@ public final class SimComparer {
 	private ArrayList<Submission> getReferenceSubmissions(ArrayList<Submission> submissions) {
 		ArrayList<Submission> reply = new ArrayList<>();
 		for (Submission s: submissions) {
-			if (s.getID().contains(REFERENCES_PREFIX)) {
+			if (s.getID().contains(REFERENCES_PREFIX) && !s.isSkeletonCode()) {
 				reply.add(s);
 			}
 		}
@@ -321,7 +321,7 @@ public final class SimComparer {
 	private ArrayList<Submission> getCurrentSemSubmissions(ArrayList<Submission> submissions) {
 		ArrayList<Submission> reply = new ArrayList<>();
 		for (Submission s: submissions) {
-			if (!s.getID().contains(REFERENCES_PREFIX)) {
+			if (!s.getID().contains(REFERENCES_PREFIX) && !s.isSkeletonCode()) {
 				reply.add(s);
 			}
 		}
