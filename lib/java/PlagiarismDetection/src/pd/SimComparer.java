@@ -79,7 +79,7 @@ public final class SimComparer {
 			s1 = currentSemSubmissions.get(i);
 
 			for (int j = i + 1; j < currentSemSubmissions.size(); j++) {
-				s2 = submissions.get(j);
+				s2 = currentSemSubmissions.get(j);
 
 				logger.info("Start comparing submissions: {} vs {}", s1.getID(), s2.getID());
 				s1Tokens = s1.getCodeTokens();
