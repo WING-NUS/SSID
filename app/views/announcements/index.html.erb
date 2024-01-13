@@ -33,6 +33,11 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 </header>
 
 
+<% if flash[:product_update_msg] %>
+  <div class="alert alert-primary" style="color: #003d7c">
+    <%= flash[:product_update_msg] %><span>
+  </div>
+<% end %>
 
 <% if @announcements.empty? %>
   <div class="announcement">No announcements</div>
