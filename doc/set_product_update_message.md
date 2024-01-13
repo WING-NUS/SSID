@@ -16,5 +16,7 @@ You can toggle the visibility of the message using the following rake tasks:
 
 The commands should be appropriately adapted based on your local setup. For instance, you might need to prepend it with `bundle exec` or use escape characters for symbols e.g. `bundle exec rake SSID:set_product_update_message\["Now you can print reports with multiple student pairs\!"\]`).
 
+On production, prepend the commands with `RACK_ENV=production`. e.g. `RACK_ENV=production bundle exec rails SSID:set_product_update_visibility['N']`
+
 Refer to this video demo for usage example: 
 [https://youtu.be/DtyGSvB5m-U](https://youtu.be/DtyGSvB5m-U)
