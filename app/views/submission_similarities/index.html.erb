@@ -88,7 +88,7 @@
 <p></p>
 <%= form_with url: request.path, method: :get do |form| %>
   <%= form.label :query, "Page size:" %>
-  <%= form.number_field :page_size, step: 1, min: 20 %>
+  <%= form.number_field :page_size, step: 1, min: 20, value: 20, required: true %>
   <%= form.hidden_field  :sort_direction, value: params[:sort_direction] ? params[:sort_direction] : 'default'%>
   <%= form.submit "Update" %>
 <% end %>

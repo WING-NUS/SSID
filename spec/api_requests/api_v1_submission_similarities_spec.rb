@@ -37,7 +37,7 @@ def init_submisision_similarities_tests
 
   submission2 = Submission.new do |submission2|
     submission2.assignment_id = assignment.id
-    submission2.student_id = 999_999_998
+    submission2.student_id = 999_999_999
     submission2.lines = ['import java.util.*;', '', '/**', ' * Driver class', ' */', '', 'public class CitiesDriver {',
                          '', '    ', '    public static void main(String[] args) {', "\t\tSystem.out.println(\"test\");", "\t\tSystem.out.println(\"test2\");", '', '    }', '', '}']
     submission2.is_plagiarism = false
@@ -185,6 +185,92 @@ RSpec.describe 'api v1 submission_similarities requests show', type: :request do
         assignment = Assignment.find_by(course_id: course_id)
         submission_similarity = assignment.submission_similarities.first
         get "/api/v1/assignments/#{assignment.id}/submission_similarities/#{submission_similarity.id}", headers: {
+          'X-API-KEY' => 'EVIL_API_KEY'
+        }
+      end
+
+      after do
+        clear_tests
+      end
+
+      it 'returns a 401 status' do
+        expect(response).to have_http_status(:unauthorized)
+      end
+
+      it 'returns correct error message' do
+        response.body.should include 'Missing or invalid API key.'
+      end
+    end
+  end
+end
+
+
+RSpec.describe 'api v1 submission_similarities requests view_pdf', type: :request do
+  describe 'GET /api/v1/assignments/:assignment_id/submission_similarities/:submission_similarity_id/view_pdf' do
+    context 'successful PDF generation' do
+      before do
+        init_submisision_similarities_tests
+
+        assignment = Assignment.find_by(title: 'RSpec Assignment')
+        @submission_similarity = assignment.submission_similarities.first
+        get "/api/v1/assignments/#{assignment.id}/submission_similarities/#{@submission_similarity.id}/view_pdf", headers: {
+          'X-API-KEY' => 'SSID_RSPEC_API_KEY'
+        }
+      end
+
+      after do
+        clear_tests
+      end
+
+      it 'returns an ok response' do
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'sets the content type to PDF' do
+        expect(response.headers['Content-Type']).to eq 'application/pdf'
+      end
+
+      it 'prompts to download the file' do
+        expect(response.headers['Content-Disposition']).to include 'attachment'
+      end
+
+      it 'includes the correct filename' do
+        expect(response.headers['Content-Disposition']).to include "filename=\"#{@submission_similarity.id}.pdf\""
+      end
+    end
+
+    context 'submission similarities requested do not exist' do
+      before do
+        init_submisision_similarities_tests
+        course_id = Course.find_by(name: 'Introduction to Programming').id
+        assignment = Assignment.find_by(course_id: course_id)
+
+        get "/api/v1/assignments/#{assignment.id}/submission_similarities/99999999/view_pdf", headers: {
+          'X-API-KEY' => 'SSID_RSPEC_API_KEY'
+        }
+      end
+
+      after do
+        clear_tests
+      end
+
+      it 'returns a 400 status' do
+        expect(response).to have_http_status(:bad_request)
+      end
+
+      it 'returns correct error message' do
+        response.body.should include 'Submission similarities requested do not exist.'
+      end
+    end
+
+    context 'with missing/ invalid API key' do
+      before do
+        init_submisision_similarities_tests
+
+        course_id = Course.find_by(name: 'Introduction to Programming').id
+        assignment = Assignment.find_by(course_id: course_id)
+        submission_similarity = assignment.submission_similarities.first
+        get "/api/v1/assignments/#{assignment.id}/submission_similarities/#{submission_similarity.id}/view_pdf", headers: {
           'X-API-KEY' => 'EVIL_API_KEY'
         }
       end

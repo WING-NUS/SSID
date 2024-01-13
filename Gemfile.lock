@@ -192,6 +192,7 @@ GEM
     passenger (6.0.18)
       rack
       rake (>= 0.8.1)
+    pdfkit (0.8.7.3)
     popper_js (2.9.3)
     prettier_print (1.2.1)
     pronto (0.11.1)
@@ -388,6 +389,7 @@ DEPENDENCIES
   omniauth-google-oauth2
   omniauth-rails_csrf_protection
   passenger
+  pdfkit
   prettier_print
   pronto
   pronto-eslint

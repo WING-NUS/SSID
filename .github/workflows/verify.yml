@@ -96,6 +96,11 @@ jobs:
           bundle exec rails db:migrate RAILS_ENV=test
           bundle exec rails db:seed
 
+      - name: Install wkhtmltopdf
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wkhtmltopdf
+
       - name: Install chrome
         id: setup-chrome
         uses: browser-actions/setup-chrome@v1
