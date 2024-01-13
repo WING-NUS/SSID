@@ -161,7 +161,7 @@ h2, h3, h4, h5, h6 {
   }
   .accordion-button {
     font: 600 18px/20px Inter, sans-serif;
-    min-width: unquote("min(600px, 80vw)");
+    min-width: 80vw;
     background: white !important;
     color: black !important;    
   }
@@ -173,7 +173,7 @@ h2, h3, h4, h5, h6 {
 
 .accordion-body {
   font: 400 16px/18px Inter, sans-serif;
-  width: unquote("min(600px, 80vw)");
+  width: 80vw;
   line-height: 150%;
 }
 
