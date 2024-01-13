@@ -12,8 +12,6 @@
             return;
         }
 
-        // console.log("Masking student name now");
-
         // Masking inside all h4 elements with id "submission_similarities_for_students" to get the student pairings
         let h4Element = document.querySelector('h4[class="submission_similarities_for_students"]');
         if (h4Element) {
@@ -32,8 +30,6 @@
             h5Element.innerHTML = h5Element.innerHTML.replace(/Submission by [\w-]+[_\w]*/, 'Submission by ******');
         });
 
-
-
         // Masking inside table header with class "student2_submission" in every table
         let tables = document.querySelectorAll('table');
         tables.forEach(table => {
@@ -46,8 +42,6 @@
                 }
             }
         });
-
-
     };
 
     // Expose SubmissionObfuscation to the global context
