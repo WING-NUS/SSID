@@ -1,0 +1,18 @@
+all:
+  exclude:
+    - 'spec/**/*'
+# exclude files for single runner
+eslint:
+  exclude:
+    - 'app/assets/**/*'
+    - 'coverage/**/*'
+github:
+  slug: prontolabs/pronto
+  access_token: ${{ secrets.GITHUB_TOKEN }}
+  api_endpoint: https://api.github.com/
+  web_endpoint: https://github.com/
+max_warnings: 150
+warnings_per_review: 30
+verbose: false
+runners: [rubocop, eslint] # only listed runners will be executed
+skip_runners: [reek] # all, except listed runners will be executed

@@ -49,6 +49,8 @@ SSID::Application.configure do
   # whitelist attributes for mass-assignment
   # config.active_record.whitelist_attributes = true
 
+  config.eager_load = false
+  
   # Set time zone
   config.time_zone = "Singapore"
 
@@ -59,4 +61,5 @@ SSID::Application.configure do
 
   config.eager_load = false
 
+  config.web_console.permissions = '172.20.0.1'
 end
