@@ -57,27 +57,34 @@ module Api
           render json: { error: 'Assignment does not exist' }, status: :bad_request
           return
         end
-        # Check if the assignment has associated submission files.
+
+        submission_similarities = assignment.submission_similarities
+
         if assignment.submissions.empty?
           render json: { status: 'empty' }, status: :ok
           return
         end
 
-        # Determine process status of assignment
         submission_similarity_process = assignment.submission_similarity_process
+
         case submission_similarity_process.status
         when SubmissionSimilarityProcess::STATUS_RUNNING, SubmissionSimilarityProcess::STATUS_WAITING
-          render json: { status: 'processing' }, status: :ok
-          return
+          render_processing_status
         when SubmissionSimilarityProcess::STATUS_ERRONEOUS
-          render json: { status: 'error', message: 'SSID is busy or under maintenance. Please try again later.' },
-                 status: :service_unavailable
-          return
+          render_error_status
+        else
+          submission_similarities = apply_filters(submission_similarities)
+          render_paginated_or_limited_submission_similarities(submission_similarities)
         end
+      end
 
-        submission_similarities = assignment.submission_similarities
+      def render_filtered_submission_similarities(submission_similarities)
+        submission_similarities = apply_filters(submission_similarities)
 
-        ### Filtering Code
+        render_paginated_submission_similarities(submission_similarities)
+      end
+
+      def apply_filters(submission_similarities)
         # Apply the threshold filter
         if params[:threshold].present?
           threshold_value = params[:threshold].to_f
@@ -90,27 +97,36 @@ module Api
           submission_similarities = submission_similarities.limit(limit_value)
         end
 
-        # Apply the page filter
-        if params[:page].present?
-          per_page = params[:limit].present? ? limit_value : 20 # Default per page value is 20, limit to use a page size
-          page_number = params[:page].to_i
-          submission_similarities = submission_similarities.offset(per_page * (page_number - 1))
+        submission_similarities
+      end
+
+      def render_paginated_or_limited_submission_similarities(submission_similarities)
+        if params[:limit].present?
+          render_json_response(submission_similarities)
+        else
+          # Set the default per page value to 20 for pagination
+          per_page = 20
+
+          # Sort the submission_similarities by similarity in descending order by default
+          submission_similarities = submission_similarities.order(similarity: :desc)
+
+          submission_similarities = submission_similarities.paginate(page: params[:page], per_page: per_page)
+
+          render_json_response(submission_similarities)
         end
+      end
 
-        # Process subnission similarities into readable format for returning via JSON
-        result_submission_similarities = []
+      def render_json_response(submission_similarities)
+        render json: { status: 'processed', submissionSimilarities: submission_similarities }, status: :ok
+      end
 
-        submission_similarities.each { |submission_similarity|
-          result_submission_similarities.append( {
-              submissionSimilarityID: submission_similarity.id,
-              student1ID: submission_similarity.submission1.student_id,
-              student2ID: submission_similarity.submission2.student_id,
-              similarity: submission_similarity.similarity
-            }
-          )
-        }
+      def render_processing_status
+        render json: { status: 'processing' }, status: :ok
+      end
 
-        render json: { status: 'processed', submissionSimilarities: result_submission_similarities }, status: :ok
+      def render_error_status
+        render json: { status: 'error', message: 'SSID is busy or under maintenance. Please try again later.' },
+               status: :service_unavailable
       end
 
       def render_pair_of_flagged_submissions
@@ -124,22 +140,21 @@ module Api
           return
         end
 
+        max_similarity_percentage = submission_similarity.similarity
         matches = []
 
         submission_similarity.similarity_mappings.each do |similarity|
           matches.append(
             {
-              student1StartLine: similarity.start_line1 + 1,
-              student1EndLine: similarity.end_line1 + 1,
-              student2StartLine: similarity.start_line2 + 1,
-              student2EndLine: similarity.end_line2 + 1,
-              numOfMatchingStatements: similarity.statement_count
+              student1: similarity.line_range1_string,
+              student2: similarity.line_range2_string,
+              statementCount: similarity.statement_count
             }
           )
         end
 
         render json: {
-          similarity: submission_similarity.similarity,
+          maxSimilarityPercentage: max_similarity_percentage,
           matches: matches
         }, status: :ok
       end
