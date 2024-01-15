@@ -21,8 +21,8 @@
       <thead>
         <tr>
           <th>Key</th>
-          <th class="lines_col">Submission by <%= @student1.name %></th>
-          <th class="lines_col">Submission by <%= @student2.name %></th>
+          <th class="lines_col student1_submission">Submission by <%= @student1.name %></th>
+          <th class="lines_col student2_submission">Submission by <%= @student2.name %></th>
           <th>Num of Matching Statements</th>
         </tr>
       </thead>
@@ -64,8 +64,8 @@
 <% current_line_num = 1 %>
 <% current_mapping = sorted_mappings.shift %>
 
-<h5 style="float:left; width: 50%;">Submission by <%= @student1.name %></h5>
-<h5 style="float:right; width: 50%;">Submission by <%= @student2.name %></h5>
+<h5 class="submission1_by_student1" style="float:left; width: 50%;">Submission by <%= @student1.name %></h5>
+<h5 class="submission2_by_student2" style="float:right; width: 50%;">Submission by <%= @student2.name %></h5>
 
 <% while current_line_num <= @submission1.lines.size %>
 <div class="submissions">

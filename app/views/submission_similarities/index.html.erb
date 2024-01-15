@@ -55,6 +55,9 @@
   function viewMultipairsReport() {
     var idsToPrint = [...document.querySelectorAll('.checkbox:checked')].map(e => e.value);
 
+    var shouldNotObfuscate = document.getElementById('obfuscationToggle').checked;
+    localStorage.setItem('shouldNotObfuscate', shouldNotObfuscate);
+
     var baseUrl = "view_printable_multiple?submission_similarity_ids="
     
     window.open(baseUrl + idsToPrint.join(","), '_blank').focus();
@@ -84,7 +87,12 @@
   <li>To allow non-SSID users to view and analyse the results, <%= link_to "create", guest_user_create_path(:id => @assignment) %> a sharable link </li> 
 </ul>
 
-<button type="button" class="btn btn-primary" onclick="viewMultipairsReport()">Print Report for Selected</button>
+<button type="button" class="btn btn-primary" onclick="viewMultipairsReport()")>Print Report for Selected</button>
+
+<label>
+  <input type="checkbox" id="obfuscationToggle"> Reveal Student Names
+</label>
+
 <p></p>
 <%= form_with url: request.path, method: :get do |form| %>
   <%= form.label :query, "Page size:" %>
