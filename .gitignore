@@ -42,3 +42,8 @@
 yarn-debug.log*
 .yarn-integrity
 *.yml
+
+# Ignore vendor folder
+vendor
+lib/java/PlagiarismDetection/build/*
+log.txt
