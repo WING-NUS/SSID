@@ -19,6 +19,7 @@
 require 'capybara/rspec'
 require 'simplecov'
 require 'simplecov-lcov'
+require 'pdfkit'
 
 Capybara.register_driver :chrome do |app|
   Capybara::Selenium::Driver.new(app, browser: :chrome)

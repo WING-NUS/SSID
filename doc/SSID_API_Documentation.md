@@ -47,7 +47,67 @@ The content type of the request should be `multipart/form-data`. Each parameter 
 - `discardAfter (Optional) number`: If specified, discard files after such duration in seconds. **[Note: Currently SSID stores all data persistently and data is manually cleared every semester. This parameter accommodates the future auto-discard functionality. This function is not yet available in both web interface and API, so we need to first build it for SSID, then allow it to be used via API]**.
 - `studentSubmissions (Required) zip`: zip file of student submissions in SSID’s standard format. **[Note: The zip file should be in SSID's standard format (potentially includes skeleton codes). For more details, please refer to SSID's User's Guide. Removed file size limit as there might be users with bigger file sizes.]**.
 - `mappingFile (Optional) csv`: csv map file that allows you to map between a directory name (in the uploaded zip file) and the student roster that you might be using for your modules. For more details, see SSID's User Guide.
-- `references zip`: zip files for past semesters to be used as reference. Maximum of 5 reference zips allowed. **[Note: This function is not yet available in both web interface and API, so we need to first build it for SSID, then allow it to be used via API.]**.
+- `references zip`: zip file of student submissions from past semesters to be used as reference. The uploaded reference zip file should contain a number of folders each for a past semester. Each of those folders contains student submissions in SSID's stardard format. Skeleton code of current semester will be used if supplied; skeleton code in past semesters' folders, if supplied, will be ignored. Students from past semesters will appear as `references_{semester name}_{student name}` in flagged matches. This function is not yet available in the web interface.
+
+Example of structure of student submissions zip file whereby each `AXXXXXX` denote the ID of a student:
+```
+.
+├── A013601
+│   ├── CitiesDriver.java
+│   └── MyTree.java
+├── A136682
+│   ├── CitiesDriver.java
+│   └── MyTree.java
+├── A374086
+│   ├── CitiesDriver.java
+│   └── MyTree.java
+├── A791459
+│   ├── CitiesDriver.java
+│   └── MyTree.java
+└── A902453
+    ├── CitiesDriver.java
+    └── MyTree.java
+```
+
+
+Example of structure of references zip file whereby each `AXXXXXX` denote the ID of a student and `fall_1920` and `spring_1920` are two past semesters to check against:
+
+```
+.
+├── fall_1920
+│   ├── A125972
+│   │   ├── CitiesDriver.java
+│   │   └── MyTree.java
+│   ├── A268671
+│   │   ├── CitiesDriver.java
+│   │   └── MyTree.java
+│   ├── A403618
+│   │   ├── CitiesDriver.java
+│   │   └── MyTree.java
+│   ├── A819987
+│   │   ├── CitiesDriver.java
+│   │   └── MyTree.java
+│   └── A940578
+│       ├── CitiesDriver.java
+│       └── MyTree.java
+└── spring_1920
+    ├── A115539
+    │   ├── CitiesDriver.java
+    │   └── MyTree.java
+    ├── A420529
+    │   ├── CitiesDriver.java
+    │   └── MyTree.java
+    ├── A495754
+    │   ├── CitiesDriver.java
+    │   └── MyTree.java
+    ├── A559473
+    │   ├── CitiesDriver.java
+    │   └── MyTree.java
+    └── A703457
+        ├── CitiesDriver.java
+        └── MyTree.java
+
+```
 
 **Request Example**:
 | Header |
@@ -181,7 +241,50 @@ Content-Type: application/octet-stream
 
 | Code | Status              | Return body                                                                                                              |
 | ---- | ------------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| 200  | Successful          | `{ "similarity": …, "matches": [] }` **[Note: similarity is between 0 and 100]**                 |
+| 200  | Successful          | `{ "similarity": ..., "matches": [], "pdf_link": ... }` **[Note: similarity is between 0 and 100]**                 |
+| 400  | Error               | `{ “error”: “Submission similarities requested does not exist." }`                                                       |
+| 401  | Unauthorized        | `{ "error": "Missing or invalid API key." }` or `{ "error": "Your API key is not authorized to access this resource." }` |
+| 503  | Service Unavailable | `{ "error": "SSID is busy or under maintenance. Please try again later." }`                                              |
+
+---
+
+### 4. View PDF report of flagged pairwise submissions comparison results
+
+**URL**: `/api/v1/assignments/{assignment_id}/submission_similarities/{submission_similarities_id}/view_pdf`
+
+**Method**: `GET`
+
+**Authentication required**: YES
+
+**Description**: Returns details of a pair of a flagged submissions in PDF. Please use SSID's web interface to view and mark students as suspicious or guilty. The web equivalence is going to `/assignments/{assignment_id}/submission_similarities/{submission_similarity_id}`.
+
+**JSON Parameters**:
+
+- **No param**. Pass in the desired assignment id and submission similarity id in the URL.
+
+**Request Example**:
+| Header |
+| --- |
+
+```
+{
+  "Content-Type": "application/json",
+  "X-Api-Key": "YOUR_API_KEY"
+}
+```
+
+| Body |
+| ---- |
+
+```
+<empty>
+```
+
+**Possible responses**:
+
+| Code | Status              | Return body                                                                                                              |
+| ---- | ------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| 200  | Successful          | The generated PDF Report **[Note: similarity is between 0 and 100]**                 |
 | 400  | Error               | `{ “error”: “Submission similarities requested does not exist." }`                                                       |
 | 401  | Unauthorized        | `{ "error": "Missing or invalid API key." }` or `{ "error": "Your API key is not authorized to access this resource." }` |
 | 503  | Service Unavailable | `{ "error": "SSID is busy or under maintenance. Please try again later." }`                                              |

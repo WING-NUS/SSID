@@ -1,0 +1,11 @@
+<div>
+  <p>Dear SSID user,</p>
+
+  <p>There will be a scheduled maintenance from <%= @start_time %> to <%= @end_time %>. During this time, you will not be able to access SSID.</p>
+
+  <p>We apologize for any inconvenience this may cause. If you have any questions, please <%= mail_to ApplicationHelper::SSID_MAINTAINER_EMAIL, "contact us" %></p>
+
+  <p>Thank you.</p>
+
+  <p><%= ApplicationHelper::SSID_MAINTAINER %></p>
+</div> 

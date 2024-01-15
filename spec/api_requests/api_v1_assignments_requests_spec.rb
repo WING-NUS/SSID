@@ -67,6 +67,38 @@ RSpec.describe 'api v1 assignments requests', type: :request do
       end
     end
 
+    context 'successful with references' do
+      before do
+        init_tests
+        course = Course.find_by(name: 'Introduction to Programming')
+        post "/api/v1/courses/#{course.id}/assignments/", params:
+                          {
+                            title: 'assignment',
+                            language: 'java',
+                            sizeOfNGram: 5,
+                            studentSubmissions: fixture_file_upload('minimal_student_submissions.zip',
+                                                                    'application/octet-stream'),
+                            references: fixture_file_upload('minimal_references.zip',
+                                                             'application/octet-stream')
+                          },
+                                                          headers: {
+                                                            'X-API-KEY' => 'SSID_RSPEC_API_KEY'
+                                                          }
+      end
+
+      after do
+        clear_tests
+      end
+
+      it 'returns an ok status' do
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'returns an assignmentID' do
+        response.body.should include 'assignmentID'
+      end
+    end
+
     context 'with invalid language value' do
       before do
         init_tests

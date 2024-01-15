@@ -17,383 +17,315 @@ along with SSID.  If not, see <http://www.gnu.org/licenses/>.
 =end
 %>
 
+
 <%
-
-def genBlankLink(text)
-  "<a class='normalLink' href='' onclick='return false;'>#{text}</a>".html_safe
-end
-
 def image(file)
-  image_tag(file, :border => 1, :style => "margin-top: 2px; max-width: 1050px;")
+  image_tag(file, :border => 0, :style => "margin-top: 2px; max-width: 1080px;")
 end
 
-def imagefaq(file)
-  image_tag(file, :border => 1, :style => "margin-top: 2px; max-width: 1010px;")
-end
-
-def backToTop()
-  "<a class=\"normalLink\" style=\"color : blue;\" href=\"#top\">Back to top</a>".html_safe
+def imageGuide(file)
+  image_tag(file, :border => 0, :style => "margin-top: 2px; max-width: 500px;")
 end
 %>
 
-<style type="text/css">
-  ol.step, ul.faq {
-    margin-top: 0px;
-    margin-bottom: 30px;
-  }
-  li.step, li.faq {
-    margin-bottom: 15px;
-  }
-  span.important {
-    font-style: italic;
-    color: red;
-  }
-  span.note {
-    font-style: italic;
-  }
-  div.main {
-    margin: 0px;
-    padding: 0px;
-    max-width: 1024px;
-  }
-</style>
+<div class="user-guide">
+  <div class="user-guide-heading">
+    <h2>User Guide</h2>
+    Designed to assist teaching teams, this guide will help you effectively utilise SSID to detect and address plagiarism.</p>
+  </div>
+  
+  <div class="accordion" id="accordionCourse">
+    <h5>Course</h5>
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingOne">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+          How do I create a new course?
+        </button>
+      </h2>
+      <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionCourse">
+        <div class="accordion-body", style="width:fit-content";>
+          1. Click on the 'Courses' tab on the navigation bar. In this tab, you will be able to see the list of courses viewable to you. <br>
+          2. To add a new course, click on <%=image("add_circle_outline_blue_24dp.svg")%><br>
+          3. Fill in the information of the course.<br>
+          <%=imageGuide("add-course-info.png")%><br>
+          4. Click on CREATE COURSE button.<br>
+          5. You should see a confirmation indicating that your course has been created.<br>
+        </div>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingTwo">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+          How do I view the course users?
+        </button>
+      </h2>
+      <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionCourse">
+        <div class="accordion-body", style="width:fit-content";>
+          1. Select <%=image("people_black_24dp.svg")%> in the 'View' column.<br>
+          2. If you are the creator of the course, you should see yourself as a user by default.<br>
+          <%=image("view-course-users.png")%>
+        </div>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingThree">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+          How do I add new course users?
+        </button>
+      </h2>
+      <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionCourse">
+        <div class="accordion-body", style="width:fit-content";>
+          1. Click on <%=image("person_add_blue_24dp.svg")%><br>
+          2. Fill in the information of this user. There are three course roles to choose from: Teaching Staff, Teaching Assistance, and Guest.<br>
+          <%=imageGuide("add-users.png")%><br>
+          3. Click on ‘Create User course membership’ button to confirm the addition of the user.<br>
+          4. You should see a confirmation indicating that the user has been added to the course.<br>
+        </div>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingFour">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+          How do I edit the information of existing course users?
+        </button>
+      </h2>
+      <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#accordionCourse">
+        <div class="accordion-body", style="width:fit-content";>
+          1. In the ‘Actions’ column, click on the ellipsis to reveal the ‘Edit’ button.<br>
+          2. Update the necessary information.<br>
+          <%=imageGuide("update-course-user.png")%><br>
+          3. Click on ‘Update User course membership’ button to save your updates.
+        </div>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingFive">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+          How do I remove existing course users?
+        </button>
+      </h2>
+      <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#accordionCourse">
+        <div class="accordion-body", style="width:fit-content";>
+          1. In the ‘Actions’ column, click on the ellipsis to reveal the ‘Remove’ button.<br>
+          <%=image("remove-user.png")%><br>
+          2. A pop-up notification will appear to confirm the removal of the user.<br>
+          <%=imageGuide("user-removal-confirmation.png")%><br>
+          3. Click ‘OK’ to confirm the removal.<br>
+          4. You should see a confirmation indicating that the user has been removed from the course.<br>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <br>
 
-<div class="main">
-  <h3 id="top">User Guide</h3>
-  <h4>Welcome to SSID, a plagiarism detection system built in NUS.</h4>
-  This system provides assistance to teaching teams in detecting plagiarism.
-  Compare to many of the existing systems, this system not only provides the pairwise plagiarism detection in submissions,
-  but also provides clustering analysis and the plagiarism history of students.
-  <p/>
-  To learn how SSID can help you detect and prevent plagiarism, click the following topics:
-  <ul>
-    <li><a class="normalLink" href="#create_a_course">Create a course</a></li>
-    <li><a class="normalLink" href="#add_a_course_user">Add a course user</a></li>    
-    <li><a class="normalLink" href="#view_assignments">View assignments</a></li>
-    <li><a class="normalLink" href="#create_an_assignment">Create an assignment</a></li>
-    <li><a class="normalLink" href="#view_pairwise_code_comparison">View pairwise submissions comparison</a></li>
-    <li><a class="normalLink" href="#view_history">View student history</a></li>
-    <li><a class="normalLink" href="#report_plagiarism">Report a plagiarism case</a></li>
-    <li><a class="normalLink" href="#confirm_plagiarism">Confirm a plagiarism case </a></li>
-    <li><a class="normalLink" href="#decline_plagiarism">Decline a plagiarism case </a></li>
-    <li><a class="normalLink" href="#create_grouping">Create grouping</a></li>
-    <li><a class="normalLink" href="#view_graphs">View Visuals</a></li>
-    <li><a class="normalLink" href="#faq">FAQ</a></li>
-  </ul>
-  <p/>
-  <table cellpadding="0" cellspacing="0">
-    <tr>
-      <td><h4 id="create_a_course">Create a course</h4></td>
-      <td align="right"><%= backToTop%></td>
-    </tr>
-    <tr>
-      <td colspan="2">
-        <ol class="step">
-          <li class="step">
-            From courses listing, click <%=genBlankLink("New Course")%> icon.<br/>
-            <%=image("creating-courses-01.png")%>
-          </li>
-          <li class="step">
-            Fill in the information of this course.<br/>
-            <%=image("creating-courses-02.png")%>
-          </li>
-          <li class="step">
-            Click <b>Create Course</b>.
-          </li>
-        </ol>
-      </td>
-    </tr>
+  <div class="accordion" id="accordionAssignment">
+    <h5>Assignment</h5>
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingSix">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
+          How do I create a new assignment?
+        </button>
+      </h2>
+      <div id="collapseSix" class="accordion-collapse collapse" aria-labelledby="headingSix" data-bs-parent="#accordionAssignment">
+        <div class="accordion-body", style="width:fit-content";>
+          1. Navigate to the course listing page.<br>
+          2. Select <%=image("assignment_black_24dp.svg")%> under the ‘View’ column.<br>
+          3. You will be brought to a page showing the list of assignments uploaded for this course.<br>
+          4. Click on <%=image("add_circle_outline_blue_24dp.svg")%><br>
+          <%=imageGuide("create-assignment.png")%><br>
+          5. Enter the title of the assignment.<br>
+          6. Upload a zipped file of the students’ submissions.<br>
+          <i>Note: SSID currently supports both file-based and directory-based submissions.
+          Each file or folder should be placed at the top level. You can include skeleton file e.g. "skeleton.py" or folder "skeleton" to exclude sample codes from checking by the system. 
+          Tip: You can move your cursor over the [i] for explanation of the term.</i><br>
+          7. Upload map file will allow you to map between a directory name (in the uploaded zip file) and the student roster that you might be using for your modules.
+          A csv file with no header, and row with format: student-submission-folder-name,student-custom-id will be needed.<br>
+          8. Click on the ‘Create Assignment’ button to add the assignment to the course.<br>
+          9. You should see a confirmation indicating that the assignment is being processed by the system. Refresh the page to view the similarity results.<br>
+          10. After refreshing the page, there will be a quick view of the number of Submission, Suspected Cases, and Confirmed Cases.
+        </div>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingSeven">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven">
+          How do I view and print submissions similarity?
+        </button>
+      </h2>
+      <div id="collapseSeven" class="accordion-collapse collapse" aria-labelledby="headingSeven" data-bs-parent="#accordionAssignment">
+        <div class="accordion-body", style="width:fit-content";>
+          1. In the page with the list of assignments, select <%=image("plagiarism_black_24dp.svg")%> in the 'View' column.<br>
+          2. You would be able to see a detailed table showing a pairwise comparison of students’ submissions.<br>
+          3. Click on the relevant pairwise comparison results and select ‘Print Report for Selected’ to print a report for the selected pairs.<br>
+          4. A pop-up window will appear to save the report as a pdf file.<br>
+          <%=imageGuide("print-report-page.png")%>
+        </div>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingEight">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEight" aria-expanded="false" aria-controls="collapseEight">
+          How do I view pairwise submissions comparison results?
+        </button>
+      </h2>
+      <div id="collapseEight" class="accordion-collapse collapse" aria-labelledby="headingEight" data-bs-parent="#accordionAssignment">
+        <div class="accordion-body", style="width:fit-content";>
+          <i>Important: You must have at least one assignment to view pairwise submissions comparison.</i><br>
+          1. Under the ‘Actions’ column, select the ‘View Submission’ button to view the pairwise submissions comparison result for the selected pair of students.<br>
+          <%=imageGuide("view-submissions-prompt.png")%><br>
+          2. A detailed comparison of the pair of students’ work will be shown.<br>
+          3. You can click on the checkboxes to highlight specific lines of code. The matched region will be highlighted in yellow.<br>
+          <%=imageGuide("pairwise-submission-highlight.png")%>
+        </div>
+      </div>
+    </div>
+  </div>
 
-    <tr>
-      <td><h4 id="add_a_course_user">Add a course user</h4></td>
-      <td align="right"><%= backToTop%></td>
-    </tr>
-    <tr>
-      <td colspan="2">
-        <ol class="step">
-          <li class="step">
-            From courses listing, click View Users icon of the desired course.<br/>
-            <%=image("add-course-users-01.png")%>
-          </li>
-          <li class="step">
-            Click <%=genBlankLink("Add Course User")%> icon in users listing.<br/>
-            <%=image("add-course-users-02.png")%>
-          </li>
-          <li class="step">
-            Fill in the information of this user.<br/>
-            <%=image("add-course-users-03.png")%>            
-          </li>
-          <li class="step">
-            Click <b>Add Course User</b>.
-          </li>          
-        </ol>
-      </td>
-    </tr>
+  <br>
 
-    <tr>
-      <td><h4 id="view_assignments">View assignments</h4></td>
-      <td align="right"><%= backToTop%></td>
-    </tr>
-    <tr>
-      <td colspan="2">
-        <ol class="step">
-          <li class="step">
-            From the menu on the top, click <%=genBlankLink("Courses")%>.<br/>
-            <%=image("p1.png")%>
-          </li>
-          <li class="step">
-            Click the Assignments icon of desired course to view its assignments.<br/>
-            <%=image("p2.png")%>
-          </li>
-        </ol>
-      </td>
-    </tr>
+  <div class="accordion" id="accordionPlagiarism">
+    <h5>Plagiarism Cases</h5>
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingNine">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNine" aria-expanded="false" aria-controls="collapseNine">
+          How do I report a suspicious case?
+        </button>
+      </h2>
+      <div id="collapseNine" class="accordion-collapse collapse" aria-labelledby="headingNine" data-bs-parent="#accordionPlagiarism">
+        <div class="accordion-body", style="width:fit-content";>
+          1. In the ‘Submission Similarities’ page, click on the ellipsis to reveal the ‘Mark as suspicious’ button.<br>
+          <%=imageGuide("mark-as-suspicious-prompt.png")%><br>
+          2. A confirmation popup box will appear. Click on ‘OK’ to mark this pair of students as suspicious.<br>
+        </div>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingTen">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTen" aria-expanded="false" aria-controls="collapseTen">
+          How do I flag a plagiarism case?
+        </button>
+      </h2>
+      <div id="collapseTen" class="accordion-collapse collapse" aria-labelledby="headingTen" data-bs-parent="#accordionPlagiarism">
+        <div class="accordion-body", style="width:fit-content";>
+          <i>Important: You must be assigned with the teaching staff role for the module to confirm plagiarism cases.<br>
+          Important: A pair of submissions can only be confirmed for plagiarism after it has been reported suspicious.</i><br>
+          1. In the ‘Submission Similarities’ page, click on the ellipsis to reveal the ‘Confirm plagiarism’ button.<br>
+          <%=imageGuide("confirm-plagiarism-prompt.png")%><br>
+          2. A confirmation popup box will appear. Click on ‘OK’ to confirm that this pair of students has plagiarised.<br>
+          3. This pair of submissions will be classified as a plagiarism case.<br>
+        </div>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingEleven">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEleven" aria-expanded="false" aria-controls="collapseEleven">
+          How do I remove plagiarism status?
+        </button>
+      </h2>
+      <div id="collapseEleven" class="accordion-collapse collapse" aria-labelledby="headingEleven" data-bs-parent="#accordionPlagiarism">
+        <div class="accordion-body", style="width:fit-content";>
+          <i>Important: You must be assigned with the teaching staff role for the module to declare a suspicious case innocent.<br>
+          Important: A pair of submissions can only be declared innocent after it has been reported suspicious.</i><br>
+          1. In the ‘Submission Similarities’ page, click on the ellipsis to reveal the ‘Remove plagiarism’ button.<br>
+          <%=imageGuide("remove-plagiarism.png")%><br>
+          2. A confirmation popup box will appear. Click on ‘OK’ to remove plagiarism for this pair of students.<br>
+        </div>
+      </div>
+    </div>
+  </div>
 
-    <tr>
-      <td><h4 id="create_an_assignment">Create an assignment</h4></td>
-      <td align="right"><%=backToTop%></td>
-    </tr>
-    <tr>
-      <td colspan="2">
-        <span class="note">Note: Refer to <a class="normalLink" href="#view_assignments">View assignments</a></span><p/>
-        <ol class="step">
-          <li class="step">
-            From assignments listing, click New Assignment icon.<br/>
-            <%=image("p3.png")%>
-          </li>
-          <li class="step">
-            Fill in the information of this assignment and select the zipped submission file (*.zip) to upload.<br/>
-            <%=image("p5.png")%><br/>
-            <i>Note: SSID currently supports both file-based and directory-based submissions. Each file or folder should be placed at the top level.</i><br/>
-            <i>You can include skeleton file e.g. "skeleton.py" or folder "skeleton" to exclude sample codes from checking by the system.</i><br/>
-            <i>Tip: You can move your cursor over the [i] for explanation of the term.</i>
-          </li>
-          <li class="step">
-            Upload map file will allow you to map between a directory name (in the uploaded zip file) and the student roster that you might be using for your modules.<br/>
-            A csv file with no header, and row with format: <i>student-submission-folder-name,student-custom-id</i> will be needed.
-          </li>          
-          <li class="step">
-            Click <b>Create</b>.
-          </li>
-        </ol>
-      </td>
-    </tr>
+  <br>
 
-    <tr>
-      <td><h4 id="view_pairwise_code_comparison">View pairwise submissions comparison results</h4></td>
-      <td align="right"><%=backToTop%></td>
-    </tr>
-    <tr>
-      <td colspan="2">
-        <span class="important">Important: You must have at least one assignment to view pairwise submissions comparison. To create an assignment, refer to <a class="normalLink" href="#create_an_assignment">Create an assignment</a>.</span><br/>
-        <span class="note">Note: Refer to <a class="normalLink" href="#view_assignments">View assignments</a></span><p/>
-        <ol class="step">
-          <li class="step">
-          From the rightmost column, click <%=genBlankLink("View Submissions")%> of the desired pair of student submissions to view the pairwise submissions comparison result.<br/>
-          <%=image("p7.png")%>
-          </li>
-          <li class="step">
-            From the rightmost column, click <%=genBlankLink("Print Report")%> of the desired pair of student submissions to print/ save as PDF pairwise submission comparison result.<br/>
-            <%=image("p8.png")%>
-          </li>
-        </ol>
-      </td>
-    </tr>
+  <div class="accordion" id="accordionGroupingAndVisuals">
+    <h5>Grouping and Visuals</h5>
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingTwelve">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwelve" aria-expanded="false" aria-controls="collapseTwelve">
+          How do I create groupings?
+        </button>
+      </h2>
+      <div id="collapseTwelve" class="accordion-collapse collapse" aria-labelledby="headingTwelve" data-bs-parent="#accordionGroupingAndVisuals">
+        <div class="accordion-body", style="width:fit-content";>
+          <i>Important: You must have at least one assignment to create grouping.</i><br>
+          1. On the page for the specific assignment, click on <%=image("scatter_plot_black_24dp.svg")%><br>
+          2. Click on <%=image("add_circle_outline_blue_24dp.svg")%><br>
+          <%=imageGuide("create-groupings.png")%><br>
+          3. Select the desired cut-off criterion.<br>
+          <i>Note:
+          The criterion “To include all currently Confirmed or Suspected Plagiarism Cases” is only available if there is at least one confirmed plagiarism case or reported suspicious case.
+          The criterion “To include all currently Confirmed Plagiarism Cases” is only available if there is at least one confirmed plagiarism case.</i><br>
+          4. Click on the ‘Create Submission cluster group’ button.<br>
+          5. You should see a confirmation indicating that the submission cluster group was successfully created.<br>
+        </div>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingThirteen">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThirteen" aria-expanded="false" aria-controls="collapseThirteen">
+          How do I view visuals for the assignments?
+        </button>
+      </h2>
+      <div id="collapseThirteen" class="accordion-collapse collapse" aria-labelledby="headingThirteen" data-bs-parent="#accordionGroupingAndVisuals">
+        <div class="accordion-body", style="width:fit-content";>
+          <i>Important: You need to have at least two assignments with at least one grouping each to fully utilize all the visuals.</i><br>
+          1. On the ‘Courses’ page, click on <%=image("show_chart_black_24dp.svg")%><br>
+          <%=imageGuide("view-visuals.png")%><br>
+          2. Select the desired visualization and fill in the required information stated.<br>
+          <i>i. Similarity Cluster Table<br></i>
+          <i>ii. Top Similar Submissions</i>
+        </div>
+      </div>
+    </div>
+  </div>
 
-    <tr>
-    <td><h4 id="view_history">View student history</h4></td>
-    <td align="right"><%=backToTop%></td>
-    </tr>
-    <tr>
-      <td colspan="2">
-        <span class="note">Note: Refer to <a class='normalLink'  href="#view_pairwise_code_comparison">View pairwise submissions comparison</a></span><br/>
-        <span class="note">Note: If you are assigned with teaching assistant role for a module, you can only access the student's history within the module</span><br/>
-        <span class="note">Note: If you are assigned with teaching staff role for a module, you can access the student's history throughout all modules</span><p/>        
-        <ol class="step">
-          <li class="step">
-            From pairwise submissions comparison, click on the student name above the submission of the student.<br/>
-            <%=image("p13.png")%>
-            <p/>
-            <i>
-              Student history will be displayed.<br/>
-            </i>
-          </li>
-        </ol>
-      </td>
-    </tr>
+  <br>
 
-    <tr>
-      <td><h4 id="report_plagiarism">Report a suspicious case</h4></td>
-      <td align="right"><%=backToTop%></td>
-    </tr>
-    <tr>
-      <td colspan="2">
-        <span class="note">Note: Refer to <a class="normalLink" href="#view_pairwise_code_comparison">View pairwise submissions comparison</a></span><p/>
-        <ol class="step">
-          <li class="step">
-            From pairwise submissions comparison, click <%=genBlankLink("Mark as suspicious")%>.<br/>
-            <%=image("p9.png")%>
-          </li>
-          <li class="step">
-            In the confirmation popup box, click <b>OK</b> to report this pair of students as suspicious.<br/>
-            <%=image("p10.png")%>
-          </li>
-        </ol>
-      </td>
-    </tr>
-
-    <tr>
-      <td><h4 id="confirm_plagiarism">Confirm a plagiarism case</h4></td>
-      <td align="right"><%=backToTop%></td>
-    </tr>
-    <tr>
-      <td colspan="2">
-        <span class="important">Important: You must be assigned with the teaching staff role for the module to confirm plagiarism cases.</span><br/>
-        <span class="important">Important: A pair of submissions can only be comfirmed for plagiarism after it has been reported suspicious. For details on reporting suspicious case, refer to <a class='normalLink'  href="#report_plagiarism">Report a suspicious case</a></span><br/>
-        <span class="note">Note: Refer to <a class='normalLink'  href="#view_pairwise_code_comparison">View pairwise submissions comparison</a></span><p/>
-        <ol class="step">
-          <li class="step">
-            From pairwise submissions comparison, click <%=genBlankLink("Confirm Plagiarism")%> next to the student id whom is found guilty.<br/>
-            <%=image("p11.png")%>
-          </li>
-          <li class="step">
-            In the confirmation popup box, click <b>OK</b> to confirm this student is found guilty in the act of plagiarism.<br/>
-            <%=image("p12.png")%><p/>
-            <i>This pair of submissions will be classified as a plagiarism case and the student id will be colored in <span style="color: red;">red</span> for this assignment</i>
-          </li>
-        </ol>
-      </td>
-    </tr>
-
-    <tr>
-      <td><h4 id="decline_plagiarism">Remove plagiarism status</h4></td>
-      <td align="right"><%=backToTop%></td>
-    </tr>
-    <tr>
-      <td colspan="2">
-        <span class="important">Important: You must be assigned with the teaching staff role for the module to declare a suspicious case innocnet.</span><br/>
-        <span class="important">Important: A pair of submissions can only be declared innocent after it has been reported suspicious. For details on reporting suspicious pairs, refer to <a class='normalLink'  href="#report_plagiarism">Report a suspicious case</a></span><br/>
-        <span class="note">Note: Refer to <a class='normalLink'  href="#view_pairwise_code_comparison">View pairwise submissions comparison</a></span><p/>
-        <ol class="step">
-          <li class="step">
-            From pairwise submissions comparison, click <%=genBlankLink("Remove plagiarism")%> on the top.<br/>
-            <%=image("p14.png")%>
-          </li>
-          <li class="step">
-            In the confirmation popup box, click <b>OK</b> to confirm this student is found guilty in the act of plagiarism.<br/>
-            <%=image("p15.png")%><p/>
-            <i>Plagiarism status for this pair of submissions will be cleared.</i>
-          </li>
-        </ol>
-      </td>
-    </tr>
-
-    <tr>
-      <td><h4 id="create_grouping">Create grouping</h4></td>
-      <td align="right"><%=backToTop%></td>
-    </tr>
-    <tr>
-      <td colspan="2">
-        <span class="important">Important: You must have at least one assignment to create grouping. To create an assignment, refer to <a class='normalLink'  href="#create_an_assignment">Create an assignment</a>.</span><br/>
-        <span class="note">Note: Refer to <a class='normalLink'  href="#view_assignments">View Assignments</a></span><p/>
-        <ol class="step">
-          <li class="step">
-            From assignment listing, click Similarity groups icon of desired assignment<br/>
-            <%=image("p16.png")%>
-          </li>
-          <li class="step">
-            Click New Cluster Group icon.<br/>
-            <%=image("p17.png")%>
-          </li>
-          <li class="step">
-            Select the desired cut off criterion.<br/>
-            <%=image("p18.png")%><p/>
-            <span class="note">Note: Option - "Confirmed plagiarism cases" is only available if there exists at least one confirmed plagiarism case.</span><br/>
-            <span class="note">Note: Option - "Suspicious or confirmed plagiarism cases" is only available if there exists at least one confirmed plagiarism case or reported suspicious case.</span><br/>
-            <i>Tip: You can move your cursor over the [?] for explaination of the term.</i>
-          </li>
-          <li class="step">
-            Click <b>Create</b>.
-          </li>
-        </ol>
-      </td>
-    </tr>
-
-    <tr>
-      <td><h4 id="view_graphs">View Visuals</h4></td>
-      <td align="right"><%=backToTop%></td>
-    </tr>
-    <tr>
-      <td colspan="2">
-        <span class="important">Important: You need to have at least two assignments with at least one grouping each to fully utilize all the visuals. To create an assignment, refer to <a class='normalLink'  href="#create_an_assignment">Create an assignment</a>. To create grouping, refer to <a class='normalLink'  href="#create_grouping">Create grouping</a>.</span><br/>
-        <span class="note">Note: Refer to <a class='normalLink'  href="#view_assignments">View Assignments</a></span><p/>
-        <ol class="step">
-          <li class="step">
-            From Assignments Listing, click Visuals icon.<br/>
-            <%=image("p19.png")%><p/>
-            <i>The visual type selection interface will be displayed.</i>
-          </li>
-          <li class="step">
-            From the left of the new window, select the desired graph type.<br/>
-            <%=image("p20.png")%>
-          </li>
-          <li class="step">
-            Select the desired option(s) and/or fill in the required information as instructed in the center frame.
-          </li>
-          <li class="step">
-            Depends on the visual / graph type, Click <b>Show Visual</b> / <b>Show Graph</b>.
-          </li>
-        </ol>
-      </td>
-    </tr>
-
-    <tr>
-      <td><h4 id="faq">FAQ</h4></td>
-      <td align="right"><%=backToTop%></td>
-    </tr>
-    <tr>
-      <td colspan="2">
-        <ul class="faq">
-          <li style="padding-bottom:10px;">
-            <b>What is the recommended percentage value to define a pair of plagiarized submissions?</b><br/>
-            <span class="note">Refer to <a class="normalLink" href="http://wing.comp.nus.edu.sg/publications/theses/2010/Jonathan.pdf">SSID paper</a></span><br/>
-            There exists no static lower-bound percentage of matching. However, based on our experiment, the lowest similarity between a pair of plagiarized submission is 57%, with the minimum-match-length be 2 and size of <i>N</i>-gram be 4.
-          </li>
-
-          <li>
-            <b>How to focus on one matched region in pairwise submissions comparison result?</b><br/>
-            <span class="note">Refer to <a class='normalLink'  href="#view_pairwise_code_comparison">View pairwise submissions comparison</a></span>
-            <ol class="step">
-              <li class="step">
-                From pairwise submissions comparison, click <%=genBlankLink("Show matching statements")%> on the top of the Mapping List if the list is hidden.<br/>
-                <%=imagefaq("p21.png")%><p/>
-                <i>
-                  The mapping list will be displayed.
-                </i>
-              </li>
-              <li class="step">
-                The mapping list has 3 columns:<br/>
-                The first column shows the range of lines matched in student 05's submissions.<br/>
-                The second column shows the range of lines matched in student 04's submissions.<p/>
-                The third column shows the number of statements found in a match, matches are sorted by the number of statements in descending order;<br/>             
-                To highlight a matched region, select the checkboxes corresponding to desired lines.<br/>
-                <%=imagefaq("p22.png")%><p/>
-                <i>The respective matched region will be colored in yellow.</i><br/>
-              </li>
-            </ol>
-          </li>
-        </ul>
-      </td>
-    </tr>
-    <!--
-    <tr>
-      <td><h2 id="create_an_assignment">Create an assignment</h2></td>
-      <td align="right"><%=backToTop%></td>
-    </tr>
-    <tr>
-      <td colspan="2">ddd</td>
-    </tr>
-    -->
-  </table>
+  <div class="accordion" id="accordionGeneralFAQ">
+    <h5>General FAQ</h5>
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingFourteen">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFourteen" aria-expanded="false" aria-controls="collapseFourteen">
+          Can I check students' plagiarism records?
+        </button>
+      </h2>
+      <div id="collapseFourteen" class="accordion-collapse collapse" aria-labelledby="headingFourteen" data-bs-parent="#accordionGeneralFAQ">
+        <div class="accordion-body", style="width:fit-content";>
+          <i>If you are assigned with teaching assistant role for a module, you can only access the student's history within the module.<br>
+          If you are assigned with teaching staff role for a module, you can access the student's history throughout all modules.</i><br>
+          1. In the ‘Submission Similarities’ page, click on the student's name/ID. <br>
+          2. The student’s history is displayed in a table.<br>
+          <%=imageGuide("student-history-page.png")%><br>
+        </div>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingFifteen">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFifteen" aria-expanded="false" aria-controls="collapseFifteen">
+          What is the recommended percentage value to define a pair of plagiarised submissions?
+        </button>
+      </h2>
+      <div id="collapseFifteen" class="accordion-collapse collapse" aria-labelledby="headingFifteen" data-bs-parent="#accordionGeneralFAQ">
+        <div class="accordion-body", style="width:fit-content";>
+          There is no static lower-bound percentage of matching.<br>
+          However, based on our experiment, the lowest similarity between a pair of plagiarized submission is 57%, with the minimum-match-length be 2 and size of N-gram be 4.
+        </div>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingSixteen">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSixteen" aria-expanded="false" aria-controls="collapseSixteen">
+          I have a template in the code, how can I ensure that the system will exclude that from being falsely flagged as a plagiarism case?
+        </button>
+      </h2>
+      <div id="collapseSixteen" class="accordion-collapse collapse" aria-labelledby="headingSixteen" data-bs-parent="#accordionGeneralFAQ">
+        <div class="accordion-body", style="width:fit-content";>
+          You can include a skeleton file e.g. "skeleton.py" or folder "skeleton" to exclude sample codes from checking by the system.
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <br>
 
 </div>
