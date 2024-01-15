@@ -384,7 +384,7 @@ DEPENDENCIES
   dotenv-rails
   jbuilder (~> 2.7)
   jquery-rails (~> 4.4)
-  mysql2 (~> 0.5.3)
+  mysql2 (~> 0.5.5)
   omniauth
   omniauth-google-oauth2
   omniauth-rails_csrf_protection

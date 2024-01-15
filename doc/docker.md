@@ -7,6 +7,9 @@ This guide will list the steps required to setup the application using Docker.
 
 Please ensure that you have downloaded Docker in your local machine. Docker can be installed from https://www.docker.com/products/docker-desktop/. When you open the Docker web application, the application should be displaying a green icon on the bottom left with the hover text, "Running". 
 
+### M series Mac users
+In  `config\docker-compose.yml`, change the line `image: "mysql:8.0"` to `image: "arm64v8/mysql:8.0"`.
+
 ### Set-up commands
 1. Clone SSID's source code onto your computer
     <pre>git clone https://github.com/WING-NUS/SSID.git</pre>
