@@ -94,6 +94,13 @@
 </label>
 
 <p></p>
+<%= form_with url: request.path, method: :get do |form| %>
+  <%= form.label :query, "Page size:" %>
+  <%= form.number_field :page_size, step: 1, min: 20, value: 20, required: true %>
+  <%= form.hidden_field  :sort_direction, value: params[:sort_direction] ? params[:sort_direction] : 'default'%>
+  <%= form.submit "Update" %>
+<% end %>
+<p></p>
 <table>
   <thead>
     <tr>
@@ -104,7 +111,19 @@
       <th class="student_col">Student 2</th>
       <th class="similarity_col">Maximum Similarity</th>
       <th class="similarity_col">Average Similarity</th>
-      <th>Remarks</th>
+      <th>
+        <a href="<%= request.path + "?sort_direction=" + (
+          params[:sort_direction] == 'ascending' ? 'descending' 
+          : params[:sort_direction] == 'descending' ? 'default' 
+          : 'ascending') + "&page_size=" + (params[:page_size] ? params[:page_size] : '20')
+          %>" style="text-decoration: none; background-color: #007bff; color: white; padding: 5px 10px; border-radius: 5px;">
+
+          Remarks 
+          <%= params[:sort_direction] == 'ascending' ? '↑' 
+          : params[:sort_direction] == 'descending' ? '↓' 
+          : '⇅' %>
+        </a>
+      </th>
       <th class="action_col">Actions</th>
     </tr>
   </thead>

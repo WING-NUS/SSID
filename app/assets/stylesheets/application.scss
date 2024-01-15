@@ -15,44 +15,92 @@
  */
  // Custom bootstrap variables must be set or imported *before* bootstrap.
  @import "bootstrap_custom";
-//  @import "announcements";
-//  @import "assignments";
-//  @import "courses.css";
-//  @import "scaffolds.css";
-//  @import "sessions.css";
-//  @import "site.css";
-//  @import "submission_cluster_groups.css";
+ // Other component specific styles (uncomment as necessary)
+ // @import "announcements";
+ // @import "assignments";
+ // @import "courses";
+ // @import "scaffolds";
+ // @import "sessions";
+ // @import "site";
+ // @import "submission_cluster_groups";
+ // @import "submission_clusters";
+ // @import "submission_logs";
+ // @import "submission_similarities";
+ // @import "users";
  
-//  @import "submission_clusters";
-//  @import "submission_logs.css";
-//  @import "submission_similarities.css";
-//  @import "users.css";
-
-/*flash*/
-.alert-error {
-    background-color: #f2dede;
-    border-color: #eed3d7;
-    color: #b94a48;
-    text-align: left;
+ // ---------------------------------------------------------------------------
+ // 2. Application-Wide Variables
+ // ---------------------------------------------------------------------------
+ 
+ // Defining common color variables for reuse throughout the application
+ $color-error: #b94a48;
+ $color-success: #468847;
+ $background-error: #f2dede;
+ $background-success: #dff0d8;
+ $primary-color: #3b76f6;
+ $secondary-color: #64748B;
+ $signup-hover-bg: #2563eb;
+ $signup-hover-color: white;
+ 
+ // ---------------------------------------------------------------------------
+ // 3. Component-Specific Styles
+ // ---------------------------------------------------------------------------
+ 
+ // Alerts - Different variations for feedback messages
+ .alert-error, .alert-alert {
+     background-color: $background-error;
+     border-color: lighten($background-error, 5%);
+     color: $color-error;
+     text-align: left;
  }
-
-.alert-alert {
-    background-color: #f2dede;
-    border-color: #eed3d7;
-    color: #b94a48;
-    text-align: left;
+ 
+ .alert-success, .alert-notice {
+     background-color: $background-success;
+     border-color: lighten($background-success, 5%);
+     color: $color-success;
+     text-align: left;
  }
-
-.alert-success {
-    background-color: #dff0d8;
-    border-color: #d6e9c6;
-    color: #468847;
-    text-align: left;
+ 
+ // Buttons - Primary actions and form submissions
+ .btn-signup {
+     @extend .btn-primary;
+     background-color: $primary-color;
+     height: 3rem; 
+     color: white;
+ 
+     &:hover {
+         background-color: $signup-hover-bg;
+         color: $signup-hover-color;
+     }
+ 
+     &:active {
+         border-style: outset; 
+     }
  }
-
-.alert-notice {
-    background-color: #dff0d8;
-    border-color: #d6e9c6;
-    color: #468847;
-    text-align: left;
+ 
+ .btn-login {
+     background-color: transparent;
+     height: 3rem; 
+     color: $secondary-color;
+     padding: 1rem;
  }
+ 
+ // ---------------------------------------------------------------------------
+ // 4. Helper Classes and Utilities
+ // ---------------------------------------------------------------------------
+ 
+ // [Add helper classes and utility styles here, such as text utilities, spacing, or visibility helpers]
+ 
+ // ---------------------------------------------------------------------------
+ // 5. Responsive Adjustments
+ // ---------------------------------------------------------------------------
+ 
+ // Media queries for responsive breakpoints and adaptive styling
+ @media (max-width: 768px) {
+
+ 
+     // [Add other responsive adjustments here]
+ }
+ 
+ // Additional notes or comments can be added below as required for ongoing development documentation.
+ 
